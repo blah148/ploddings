@@ -1,10 +1,15 @@
+// Access to: pathname, query, asPath, route
 import { useRouter } from 'next/router';
+// Centralized location to globally manage database queries/operations
 const { fetchSlugsFromTable, fetchDataBySlug } = require('../../db-utilities');
 
 export default function Song({ songData }) {
+  // Initializing router object, containing info about current route
   const router = useRouter();
+	// Destructures the "id" parameter from the router.query property      
   const { id } = router.query;
-
+	
+	// Conditional rendering while there's fetching from the db about dynamic id
   if (router.isFallback) {
     return <div>Loading...</div>;
   }
