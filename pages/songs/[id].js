@@ -18,8 +18,8 @@ export default function Song({ songData }) {
   return (
     <div>
       {/* Link to the thread */}
-      {songData.threadSlug && (
-        <Link href={`/threads/${songData.threadSlug}`}>
+      {songData.slug && (
+        <Link href={`/threads/${songData.slug}`}>
           Go to parent thread
         </Link>
 			)}
