@@ -1,7 +1,8 @@
 // Access to: pathname, query, asPath, route
 import { useRouter } from 'next/router';
+import Link from 'next/link';
 // Centralized location to globally manage database queries/operations
-const { fetchSlugsFromTable, fetchDataBySlug } = require('../../db-utilities');
+const { fetchSlugsFromTable, fetchDataBySlug, getParentObject } = require('../../db-utilities');
 
 export default function Song({ songData }) {
   // Initializing router object, containing info about current route
@@ -16,9 +17,15 @@ export default function Song({ songData }) {
 
   return (
     <div>
-      <h1>{songData.song_name}</h1>
+      {/* Link to the thread */}
+      {songData.threadSlug && (
+        <Link href={`/threads/${songData.threadSlug}`}>
+          Go to parent thread
+        </Link>
+			)}
+			<h1>{songData.song_name}</h1>
+			<div>{songData.thread_name}</div>
       <p>{songData.meta_description}</p>
-      {/* Render other song details */}
     </div>
   );
 }
@@ -33,9 +40,21 @@ export async function getStaticPaths() {
   return { paths, fallback: true };
 }
 
+
 export async function getStaticProps({ params }) {
   // Fetch the song data based on the slug
   const songData = await fetchDataBySlug('songs', params.id);
-  return { props: { songData } };
-}
 
+  if (!songData) {
+    return { notFound: true };
+  }
+
+  // Fetch parent object data
+  const {thread_name, featured_img_alt_text, featured_img_200px, slug} = await getParentObject(songData.thread_id);
+
+  return { 
+    props: { 
+      songData: { ...songData, thread_name, featured_img_alt_text, featured_img_200px, slug } 
+    } 
+  };
+}
