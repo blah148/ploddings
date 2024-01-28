@@ -25,7 +25,16 @@ export default function Song({ songData }) {
 			)}
 			<h1>{songData.song_name}</h1>
 			<div>{songData.thread_name}</div>
-      <p>{songData.meta_description}</p>
+			{songData.musescore_embed && (
+					<iframe
+						width="100%"
+						height="480px"
+						src={songData.musescore_embed}
+						frameBorder="0"
+						allowFullScreen
+						allow="autoplay; fullscreen">
+					</iframe>   
+				)}
     </div>
   );
 }
