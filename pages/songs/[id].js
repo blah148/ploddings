@@ -39,7 +39,7 @@ export default function Song({ songData }) {
 						allow="autoplay; fullscreen">
 					</iframe>   
 				)}
-			<SlowDowner />
+			<SlowDowner mp3={songData.dropbox_mp3_link} />
     </div>
   );
 }
