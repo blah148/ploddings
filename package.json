@@ -9,9 +9,15 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@babel/plugin-transform-modules-commonjs": "^7.23.3",
     "next": "14.1.0",
     "pg": "^8.11.3",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "soundtouchjs": "^0.1.30"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.9",
+    "@babel/preset-env": "^7.23.9"
   }
 }

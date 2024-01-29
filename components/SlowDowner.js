@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
-import {PitchShifter} from 'soundtouchjs';
 import messages from './language.json';
 import dynamic from 'next/dynamic';
+const { PitchShifter } = dynamic(() => import('soundtouchjs'), { ssr: false });
 
 var m = messages.us;
 var audioCtx;

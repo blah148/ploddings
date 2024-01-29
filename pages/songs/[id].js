@@ -1,6 +1,10 @@
 // Access to: pathname, query, asPath, route
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import React, { useEffect, useState } from 'react';
+
+import SlowDowner from '../../components/SlowDowner'; // Import SlowDowner directly
+
 // Centralized location to globally manage database queries/operations
 const { fetchSlugsFromTable, fetchDataBySlug, getParentObject } = require('../../db-utilities');
 
@@ -35,6 +39,7 @@ export default function Song({ songData }) {
 						allow="autoplay; fullscreen">
 					</iframe>   
 				)}
+			<SlowDowner />
     </div>
   );
 }
