@@ -3,10 +3,6 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import dynamic from 'next/dynamic'; // Correctly import dynamic
 import React, { useEffect, useState } from 'react';
-let PitchShifter;
-if (typeof window !== 'undefined') {
-  PitchShifter = dynamic(() => import('soundtouchjs'), { ssr: false });
-}
 const SlowDowner = dynamic(() => import('../../components/SlowDowner'), { ssr: false });
 
 // Centralized location to globally manage database queries/operations

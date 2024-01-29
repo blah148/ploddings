@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
 import {PitchShifter} from 'soundtouchjs';
 import messages from './language.json';
-import dynamic from 'next/dynamic';
-// Rest of your code
+// ATTENTION: CRASHES IF MP3 ISN'T FETCHED YET... NEED TO WAIT FOR DB QUERY of MP3
 
 var m = messages.us;
 var audioCtx;
