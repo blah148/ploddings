@@ -1,6 +1,11 @@
 // Access to: pathname, query, asPath, route
 import { useRouter } from 'next/router';
 import Link from 'next/link';
+import dynamic from 'next/dynamic'; // Correctly import dynamic
+import React, { useEffect, useState } from 'react';
+const SlowDowner = dynamic(() => import('../../components/SlowDowner'), { ssr: false });
+import YoutubeEmbed from '../../components/YoutubeVideo.js';
+
 // Centralized location to globally manage database queries/operations
 const { fetchSlugsFromTable, fetchDataBySlug, getParentObject } = require('../../db-utilities');
 
@@ -25,6 +30,7 @@ export default function Song({ songData }) {
 			)}
 			<h1>{songData.song_name}</h1>
 			<div>{songData.thread_name}</div>
+			<div>{songData.song_id}</div>
 			{songData.musescore_embed && (
 					<iframe
 						width="100%"
@@ -35,6 +41,10 @@ export default function Song({ songData }) {
 						allow="autoplay; fullscreen">
 					</iframe>   
 				)}
+			<SlowDowner mp3={songData.dropbox_mp3_link} />
+			{songData.youtube_link && (
+				<YoutubeEmbed youtube_link={songData.youtube_link} />	
+			)}
     </div>
   );
 }

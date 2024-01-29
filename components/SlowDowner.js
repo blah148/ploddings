@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import {PitchShifter} from 'soundtouchjs';
 import messages from './language.json';
-import dynamic from 'next/dynamic';
+// ATTENTION: CRASHES IF MP3 ISN'T FETCHED YET... NEED TO WAIT FOR DB QUERY of MP3
 
 var m = messages.us;
 var audioCtx;
@@ -66,6 +66,7 @@ class SlowDowner extends Component {
     audioCtx = new window.AudioContext()
     gainNode = audioCtx.createGain()
     window.addEventListener('beforeClosing', this.handleWindowClose)
+		console.log(this.props.mp3);
 		this.loadFile();
   }
 
@@ -173,7 +174,7 @@ async loadFile() {
   this.params.filename = '/test.mp3';
 
   try {
-    const response = await fetch('/test.mp3'); // Path to the file in the public directory
+    const response = await fetch(this.props.mp3); // Path to the file in the public directory
     const arrayBuffer = await response.arrayBuffer();
 
     // Close existing audio context if any
@@ -357,7 +358,6 @@ async loadFile() {
 
   playAB(timeA, timeB) {
 
-     if (this.params.isPlaying) return;
      if (this.params.audioBuffer === null) return;
 
      if (audioCtx.state === 'suspended') audioCtx.resume()
@@ -376,7 +376,7 @@ async loadFile() {
      let partialAudioBuffer = audioCtx.createBuffer(2,
           to - from + offset, audioBuffer.sampleRate);
      let left  = audioBuffer.getChannelData(0);
-     let right = audioBuffer.getChannelData(1);
+     let right = audioBuffer.getChannelData(0);
 
      left  = left.subarray(from, to);
      let tmp = partialAudioBuffer.getChannelData(0);
