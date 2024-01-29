@@ -356,93 +356,82 @@ async loadFile() {
   } // END handleLoop
 
 
-playAB(timeA, timeB) {
-    if (this.params.isPlaying) return;
-    if (this.params.audioBuffer === null) return;
+  playAB(timeA, timeB) {
 
-    if (audioCtx.state === 'suspended') audioCtx.resume();
+     if (this.params.audioBuffer === null) return;
 
-    if (timeB <= timeA) {
-        timeB = timeA + 5; // min 5 sec
-        this.setState({timeB: timeB});
-    }
+     if (audioCtx.state === 'suspended') audioCtx.resume()
 
-    const { audioBuffer, loopInterval } = this.params;
-    const from = timeA * audioBuffer.sampleRate;
-    const to = timeB * audioBuffer.sampleRate;
-    let offset = 0;
+     if (timeB <= timeA){
+       timeB = timeA + 5; // min 5 sec
+       this.setState({timeB: timeB});
+     }
 
-    let partialAudioBuffer = audioCtx.createBuffer(
-        audioBuffer.numberOfChannels,
-        to - from + offset,
-        audioBuffer.sampleRate
-    );
+     const {audioBuffer, loopInterval} = this.params;
 
-    // Copy the left channel (or the only channel in case of a mono file)
-    let left = audioBuffer.getChannelData(0);
-    let tmpLeft = partialAudioBuffer.getChannelData(0);
-    for (let sample = 0; sample < left.length; sample++) {
-        tmpLeft[sample + offset] = left[sample];
-    }
+     const from = timeA*audioBuffer.sampleRate;
+     const to = timeB*audioBuffer.sampleRate;
+     let offset = 0;
 
-    // Copy the right channel if it exists
-    if (audioBuffer.numberOfChannels > 1) {
-        let right = audioBuffer.getChannelData(1);
-        let tmpRight = partialAudioBuffer.getChannelData(1);
-        right = right.subarray(from, to);
-        for (let sample = 0; sample < right.length; sample++) {
-            tmpRight[sample + offset] = right[sample];
-        }
-    }
+     let partialAudioBuffer = audioCtx.createBuffer(2,
+          to - from + offset, audioBuffer.sampleRate);
+     let left  = audioBuffer.getChannelData(0);
+     let right = audioBuffer.getChannelData(0);
 
-    // Create PitchShifter and Play
-    let bufferSize = 16384;
-    if (shifter) {
-        shifter.disconnect();
-        shifter.off();
-        shifter = null;
-    }
-    shifter = new PitchShifter(audioCtx, partialAudioBuffer, bufferSize);
-    partialAudioBuffer = null;
-    shifter.tempo = this.state.playSpeed / 100.0;
-    shifter.pitch = Math.pow(2.0, this.state.playPitch / 12.0);
+     left  = left.subarray(from, to);
+     let tmp = partialAudioBuffer.getChannelData(0);
 
-    let duration = shifter.formattedDuration;
+     for (let sample=0; sample < left.length; sample++) 
+        tmp[sample + offset] = left[sample];
 
-    shifter.on('play', detail => {
-        let currentPos = parseFloat(timeA) + parseFloat(detail.timePlayed);
-        if (this.params.loop) currentPos -= loopInterval;
+     if (audioBuffer.numberOfChannels >= 2) {
+       tmp = partialAudioBuffer.getChannelData(1);
+       right = right.subarray(from, to);
 
-        this.setState({playingAt: currentPos, playingAtSlider: currentPos});
+       for (let sample=0; sample < right.length; sample++) 
+         tmp[sample + offset] = right[sample];
+     }
+     tmp = null; 
 
-        if (detail.formattedTimePlayed >= duration) {
-            shifter.off();
-            shifter.disconnect();
-            shifter = null;
-            gainNode.disconnect();
+// create PitchShifter and Play
+     let bufferSize = 16384;
+     if (shifter) { shifter.disconnect(); shifter.off(); shifter= null;}
+     shifter = new PitchShifter(audioCtx, partialAudioBuffer, bufferSize)
+     partialAudioBuffer = null
+     shifter.tempo = this.state.playSpeed/100.0
+     shifter.pitch = Math.pow(2.0,this.state.playPitch/12.0)
 
-            this.params.isPlaying = false;
-            if (this.state.startButtonStr === m.pause) {
-                this.setState({
-                    playingAt: 0,
-                    playingAtSlider: 0,
-                    startButtonStr: m.playOnce
-                });
-            }
+     let duration = shifter.formattedDuration;
 
-            if (this.params.loop) {
-                this.playAB(this.state.timeA, this.state.timeB);
-            }
-        }
-    });
+     shifter.on('play', detail => {
 
+       let currentPos =  parseFloat(timeA) + parseFloat(detail.timePlayed);
+       if (this.params.loop) currentPos -= loopInterval;
+
+       this.setState({playingAt: currentPos, playingAtSlider: currentPos}); 
+
+       if (detail.formattedTimePlayed >= duration) {
+         shifter.off(); shifter.disconnect(); shifter = null;
+         gainNode.disconnect();
+
+         this.params.isPlaying = false;
+         if (this.state.startButtonStr === m.pause)
+           this.setState ({playingAt: 0, playingAtSlider: 0,
+             startButtonStr: m.playOnce}); 
+
+         if (this.params.loop)
+           this.playAB(this.state.timeA, this.state.timeB);
+         return;
+       }
+
+     }); // end shifter.on
+ 
     shifter.connect(gainNode);
     gainNode.connect(audioCtx.destination); // start play
 
-    this.params.isPlaying = true;
-    if (!this.params.loop) {
-        this.setState({startButtonStr: m.pause});
-    }
+    this.params.isPlaying = true; 
+    if (!this.params.loop)
+      this.setState({startButtonStr: m.pause});
 
     return;
   } // END playAB()
