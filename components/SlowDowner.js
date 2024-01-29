@@ -174,7 +174,7 @@ async loadFile() {
   this.params.filename = '/test.mp3';
 
   try {
-    const response = await fetch('/test2.mp3'); // Path to the file in the public directory
+    const response = await fetch(this.props.mp3); // Path to the file in the public directory
     const arrayBuffer = await response.arrayBuffer();
 
     // Close existing audio context if any
