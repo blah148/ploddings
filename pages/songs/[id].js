@@ -20,6 +20,21 @@ export default function Song({ songData }) {
     return <div>Loading...</div>;
   }
 
+function escapeHtml(unsafe) {
+  return unsafe
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+// Removing paragraph tags from songData.extra_notes
+let formattedExtraNotes = songData.extra_notes;
+if (songData.extra_notes) {
+  formattedExtraNotes = songData.extra_notes.replace(/<\/?p>/g, '');
+}
+
   return (
     <div>
       {/* Link to the thread */}
@@ -45,6 +60,12 @@ export default function Song({ songData }) {
 			{songData.youtube_link && (
 				<YoutubeEmbed youtube_link={songData.youtube_link} />	
 			)}
+			{songData.extra_notes && (
+				<div className="extraInfo" dangerouslySetInnerHTML={{ __html: songData.extra_notes }} />
+			)}
+      {songData.lyrics && (
+        <div className="lyrics" dangerouslySetInnerHTML={{ __html: songData.lyrics }} />
+      )}
     </div>
   );
 }

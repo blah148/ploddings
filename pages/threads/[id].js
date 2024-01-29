@@ -1,5 +1,6 @@
 // Access to: pathname, query, asPath, route
 import { useRouter } from 'next/router';
+import React, { useEffect, useState } from 'react';
 // Centralized location to globally manage database queries/operations
 const { fetchSlugsFromTable, fetchDataBySlug } = require('../../db-utilities');
 
@@ -17,8 +18,10 @@ export default function Thread({ threadData }) {
   return (
     <div>
       <h1>{threadData.thread_name}</h1>
-      <p>{threadData.meta_description}</p>
-      {/* Render other thread details */}
+			<img src={threadData.featured_img_550px}/>
+			<div>{threadData.blurb}</div>
+			{threadData.life_and_death && (<div>{threadData.life_and_death}</div>
+)}			
     </div>
   );
 } 
