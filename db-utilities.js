@@ -37,15 +37,13 @@ async function getParentObject(threadId) {
   }
 }
 
-async function fetchSongsByThreadId(slug) {
+async function fetchChildrenByThreadId(contentType, slug) {
 
 	let threadId;
 	
 	try {
-		console.log(`this is the slug: ${slug}`);
 		const result = await db.query(`SELECT thread_id FROM threads WHERE slug = $1`, [slug]);
 		threadId = result.rows[0].thread_id;
-		console.log(`fetched thread ID: ${threadId}`);
 	} catch (err) {
 		console.error(err);
 		return [];
@@ -53,8 +51,8 @@ async function fetchSongsByThreadId(slug) {
 	
 
   const query = `
-    SELECT song_name, slug, song_id
-    FROM songs
+    SELECT name, slug, id
+    FROM ${contentType}
     WHERE thread_id = $1;
   `;
 
@@ -72,6 +70,6 @@ module.exports = {
   fetchSlugsFromTable,
   fetchDataBySlug,
 	getParentObject,
-	fetchSongsByThreadId,
+	fetchChildrenByThreadId,
 };
 
