@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import ChatWithGPT from '../components/ChatWithGPT.js';
 
 const Home = () => {
   return (
@@ -10,6 +11,7 @@ const Home = () => {
         <p>
           Explore our collection of guitar tablature
         </p>
+			<ChatWithGPT />
       </main>
     </div>
   );

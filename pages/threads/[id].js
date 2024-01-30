@@ -1,5 +1,6 @@
 // Access to: pathname, query, asPath, route
 import { useRouter } from 'next/router';
+import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 // Centralized location to globally manage database queries/operations
 const { fetchSlugsFromTable, fetchDataBySlug, fetchChildrenByThreadId } = require('../../db-utilities');
@@ -10,6 +11,26 @@ export default function Thread({ threadData, songs, blogs }) {
   // Destructures the "id" parameter from the router.query property      
   const { id } = router.query;
 
+  // State to store the response from ChatGPT
+  const [gptResponse, setGptResponse] = useState('');
+
+  useEffect(() => {
+    if (id) {
+      getGptResponse(id);
+    }
+  }, [id]);
+
+  const getGptResponse = async (id) => {
+    try {
+      const response = await axios.post('../api/chatgpt', {
+        prompt: `Return 100 words creating a climactic short story related to ${id}`
+      });
+      setGptResponse(response.data.message);
+    } catch (error) {
+      console.error('Error fetching GPT response:', error);
+    }
+  };
+
   // Conditional rendering while there's fetching from the db about dynamic id
   if (router.isFallback) {
     return <div>Loading...</div>;
@@ -19,16 +40,13 @@ export default function Thread({ threadData, songs, blogs }) {
     <div>
       <h1>{threadData.thread_name}</h1>
 			<img src={threadData.featured_img_550px}/>
-			<div>Thread id: {threadData.thread_id}</div>
-			<div>{threadData.blurb}</div>
-			{threadData.life_and_death && (<div>{threadData.life_and_death}</div>
-			)}
+			<p>{gptResponse}</p>
       <ul>
         {songs.map(song => (
-          <li key={song.song_id}>{song.song_name} - {song.slug}</li>
+          <li key={song.id}>{song.song_name} - {song.slug}</li>
         ))}
 				{blogs.map(blog => (
-          <li key={blog.blog_id}>{blog.blog_name} - {blog.slug}</li>
+          <li key={blog.id}>{blog.blog_name} - {blog.slug}</li>
         ))}
       </ul>			
     </div>
