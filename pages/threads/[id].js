@@ -2,6 +2,7 @@
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import Typed from 'typed.js';
 import ChatWithGPT from '../../components/ChatWithGPT.js';
 // Centralized location to globally manage database queries/operations
 const { fetchSlugsFromTable, fetchDataBySlug, fetchChildrenByThreadId } = require('../../db-utilities');

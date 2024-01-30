@@ -1694,6 +1694,11 @@ tslib@^2.4.0:
   resolved "https://registry.npmjs.org/tslib/-/tslib-2.6.2.tgz"
   integrity sha512-AEYxH93jGFPn/a2iVAwW87VuUIkR1FVUKB77NwMF7nBTDkDrrT/Hpt/IrCJ0QXhW27jTBDcf5ZY7w6RiqTMw2Q==
 
+typed.js@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/typed.js/-/typed.js-2.1.0.tgz#b97a06111a5f57d6a59acfdd36d4f9b891ee13b4"
+  integrity sha512-bDuXEf7YcaKN4g08NMTUM6G90XU25CK3bh6U0THC/Mod/QPKlEt9g/EjvbYB8x2Qwr2p6J6I3NrsoYaVnY6wsQ==
+
 undici-types@~5.26.4:
   version "5.26.5"
   resolved "https://registry.yarnpkg.com/undici-types/-/undici-types-5.26.5.tgz#bcd539893d00b56e964fd2657a4866b221a65617"

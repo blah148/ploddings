@@ -16,7 +16,8 @@
     "pg": "^8.11.3",
     "react": "^18",
     "react-dom": "^18",
-    "soundtouchjs": "^0.1.30"
+    "soundtouchjs": "^0.1.30",
+    "typed.js": "^2.1.0"
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
