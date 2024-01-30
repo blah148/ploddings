@@ -11,7 +11,7 @@ export async function getOpenAIResponse(prompt) {
                 { role: 'user', content: prompt }
             ],
             model: 'gpt-3.5-turbo',
-						max_tokens: 10
+						max_tokens: 5 
         });
         return completion.choices[0].message.content;
     } catch (error) {
