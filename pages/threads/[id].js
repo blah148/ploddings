@@ -2,9 +2,9 @@
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';
 // Centralized location to globally manage database queries/operations
-const { fetchSlugsFromTable, fetchDataBySlug } = require('../../db-utilities');
+const { fetchSlugsFromTable, fetchDataBySlug, fetchSongsByThreadId } = require('../../db-utilities');
 
-export default function Thread({ threadData }) {
+export default function Thread({ threadData, songs }) {
   // Initializing router object, containing info about current route
   const router = useRouter();
   // Destructures the "id" parameter from the router.query property      
@@ -19,9 +19,15 @@ export default function Thread({ threadData }) {
     <div>
       <h1>{threadData.thread_name}</h1>
 			<img src={threadData.featured_img_550px}/>
+			<div>Thread id: {threadData.thread_id}</div>
 			<div>{threadData.blurb}</div>
 			{threadData.life_and_death && (<div>{threadData.life_and_death}</div>
-)}			
+			)}
+      <ul>
+        {songs.map(song => (
+          <li key={song.song_id}>{song.song_name} - {song.slug}</li>
+        ))}
+      </ul>			
     </div>
   );
 } 
@@ -39,6 +45,14 @@ export async function getStaticPaths() {
 export async function getStaticProps({ params }) {
   // Fetch the thread data based on the slug
   const threadData = await fetchDataBySlug('threads', params.id);
-  return { props: { threadData } };
-} 
 
+  // Fetch the songs related to the thread
+  const songs = await fetchSongsByThreadId(params.id);
+
+  return {
+    props: {
+      threadData,
+      songs,
+    },
+  };
+}
