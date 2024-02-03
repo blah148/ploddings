@@ -32,6 +32,7 @@ export default function Login() {
       if (response.status === 200) {
         // Code is valid, log the user in and redirect to a protected page
         console.log('Successfully logged in.');
+				window.location.href = '/';
       }
     } catch (error) {
       console.error('Error verifying code:', error);

@@ -9,10 +9,36 @@ const { fetchSlugsFromTable, fetchDataBySlug, fetchChildrenByThreadId } = requir
 
 export default function Thread({ threadData, songs, blogs }) {
 
+  const router = useRouter();
+
+useEffect(() => {
+  console.log('Effect check:', !router.isFallback, threadData?.thread_id);
+  if (!router.isFallback && threadData?.thread_id) {
+    console.log('Logging page visit');
+    logPageVisit();
+  } else {
+    console.log('Did not log page visit:', router.isFallback, threadData?.thread_id);
+  }
+}, [router.isFallback, threadData?.thread_id]);
+
+  // Function to log the page visit
+  const logPageVisit = async () => {
+    try {
+      await axios.post('/api/log-visit', {
+        page_type: 'threads',
+        page_id: threadData.thread_id,
+      });
+      // Optionally handle the response
+    } catch (error) {
+      console.error('Failed to log page visit:', error);
+    }
+  };
+
   return (
     <div>
       <h1>{threadData.thread_name}</h1>
 			<ChatWithGPT initialPrompt={`who is ${threadData.thread_name}`} />
+			<div>{threadData.thread_id}</div>
 			<img src={threadData.featured_img_550px}/>
       <ul>
         {songs.map(song => (

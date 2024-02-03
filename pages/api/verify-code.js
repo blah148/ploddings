@@ -54,7 +54,7 @@ export default async function handler(req, res) {
       .eq('id', verificationData.id);
 
     // Generate a JWT token for the user
-    const token = jwt.sign({ sub: userData.id }, process.env.JWT_SECRET, { expiresIn: '24h' });
+    const token = jwt.sign({ id: userData.id }, process.env.JWT_SECRET, { expiresIn: '7d' });
 
     // Set the JWT token as a secure cookie
     res.setHeader('Set-Cookie', serialize('auth_token', token, {
