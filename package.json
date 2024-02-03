@@ -10,9 +10,12 @@
   },
   "dependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.23.3",
+    "@sendgrid/mail": "^8.1.0",
     "@supabase/supabase-js": "^2.39.3",
     "axios": "^1.6.7",
     "cookie": "^0.6.0",
+    "dotenv": "^16.4.1",
+    "jsonwebtoken": "^9.0.2",
     "next": "14.1.0",
     "openai": "^4.26.0",
     "pg": "^8.11.3",

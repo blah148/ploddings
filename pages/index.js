@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import ChatWithGPT from '../components/ChatWithGPT.js';
+import Logout from '../components/Logout';
+require('dotenv').config();
+
 
 const Home = () => {
   return (
@@ -11,7 +14,7 @@ const Home = () => {
         <p>
           Explore our collection of guitar tablature
         </p>
-			<ChatWithGPT />
+			<Logout />
       </main>
     </div>
   );
