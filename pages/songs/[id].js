@@ -1,5 +1,6 @@
 // Access to: pathname, query, asPath, route
 import { useRouter } from 'next/router';
+import axios from 'axios';
 import Link from 'next/link';
 import dynamic from 'next/dynamic'; // Correctly import dynamic
 import React, { useEffect, useState } from 'react';
@@ -14,26 +15,47 @@ export default function Song({ songData }) {
   const router = useRouter();
 	// Destructures the "id" parameter from the router.query property      
   const { id } = router.query;
+
+	useEffect(() => {
+		if (!router.isFallback && songData?.id) {
+			logPageVisit();
+		} else {
+			console.log('Did not log page visit:', router.isFallback, songData?.id);
+		}
+	}, []);
+
+	// Function to log the page visit
+	const logPageVisit = async () => {
+		try {
+			await axios.post('/api/log-visit', {
+				page_type: 'songs',
+				page_id: songData.id,
+			});
+			// Optionally handle the response
+		} catch (error) {
+			console.error('Failed to log page visit:', error);
+		}
+	};
 	
 	// Conditional rendering while there's fetching from the db about dynamic id
   if (router.isFallback) {
     return <div>Loading...</div>;
   }
 
-function escapeHtml(unsafe) {
-  return unsafe
-    .replace(/&/g, "&amp;")
-    .replace(/</g, "&lt;")
-    .replace(/>/g, "&gt;")
-    .replace(/"/g, "&quot;")
-    .replace(/'/g, "&#039;");
-}
+	function escapeHtml(unsafe) {
+		return unsafe
+			.replace(/&/g, "&amp;")
+			.replace(/</g, "&lt;")
+			.replace(/>/g, "&gt;")
+			.replace(/"/g, "&quot;")
+			.replace(/'/g, "&#039;");
+	}
 
-// Removing paragraph tags from songData.extra_notes
-let formattedExtraNotes = songData.extra_notes;
-if (songData.extra_notes) {
-  formattedExtraNotes = songData.extra_notes.replace(/<\/?p>/g, '');
-}
+	// Removing paragraph tags from songData.extra_notes
+	let formattedExtraNotes = songData.extra_notes;
+	if (songData.extra_notes) {
+		formattedExtraNotes = songData.extra_notes.replace(/<\/?p>/g, '');
+	}
 
   return (
     <div>
