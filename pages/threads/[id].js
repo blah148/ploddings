@@ -12,14 +12,12 @@ export default function Thread({ threadData, songs, blogs }) {
   const router = useRouter();
 
 useEffect(() => {
-  console.log('Effect check:', !router.isFallback, threadData?.thread_id);
   if (!router.isFallback && threadData?.thread_id) {
-    console.log('Logging page visit');
     logPageVisit();
   } else {
     console.log('Did not log page visit:', router.isFallback, threadData?.thread_id);
   }
-}, [router.isFallback, threadData?.thread_id]);
+}, []);
 
   // Function to log the page visit
   const logPageVisit = async () => {
