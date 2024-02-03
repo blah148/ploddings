@@ -1,5 +1,11 @@
-// pages/api/send-code.js
-import nodemailer from 'nodemailer';
+import sgMail from '@sendgrid/mail';
+import { createClient } from '@supabase/supabase-js';
+require('dotenv').config({ path: '../../.env' });
+
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+
+// Initialize Supabase client
+const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
@@ -7,7 +13,6 @@ export default async function handler(req, res) {
   }
 
   const { email } = req.body;
-
   if (!email) {
     return res.status(400).json({ error: 'Email is required' });
   }
@@ -15,34 +20,45 @@ export default async function handler(req, res) {
   try {
     // Generate a random verification code
     const verificationCode = Math.floor(100000 + Math.random() * 900000); // 6 digits code
+    
+    // Calculate expiration date for the verification code, e.g., 24 hours from now
+    const expiresAt = new Date();
+    expiresAt.setHours(expiresAt.getHours() + 24);
 
-    // TODO: Store the code in your database associated with the user's email
+    // First, look up the user by email to get the user_id
+    const { data: userData, error: userError } = await supabase
+      .from('users')
+      .select('id')
+      .eq('email', email)
+      .single();
 
-    // Set up nodemailer transport
-    const transporter = nodemailer.createTransport({
-      // Use environment variables or configure your SMTP server details
-      host: process.env.SMTP_HOST,
-      port: process.env.SMTP_PORT,
-      secure: true, // true for 465, false for other ports
-      auth: {
-        user: process.env.SMTP_USER,
-        pass: process.env.SMTP_PASS,
-      },
-    });
+    if (userError || !userData) {
+      throw new Error('User not found');
+    }
 
-    // Send the email
-    await transporter.sendMail({
-      from: '"Your App Name" <your-email@example.com>',
+    // Then, store the code in the database using the user's id
+    const { error: insertError } = await supabase
+      .from('verification_codes')
+      .insert([
+        { user_id: userData.id, code: verificationCode, expires_at: expiresAt, used: false }
+      ]);
+
+    if (insertError) throw insertError;
+
+    const msg = {
       to: email,
+      from: 'info@2dooz.today', // Change to your verified sender
       subject: 'Your Verification Code',
       text: `Your verification code is: ${verificationCode}`,
-      html: `<b>Your verification code is:</b> ${verificationCode}`,
-    });
-
+      html: `<strong>Your verification code is:</strong> ${verificationCode}`,
+    };
+    
+    // Send the email
+    await sgMail.send(msg);
     res.status(200).json({ message: 'Verification code sent' });
   } catch (error) {
-    console.error('Error in sending email:', error);
-    res.status(500).json({ error: 'Error in sending email' });
+    console.error('Error in sending email or storing code:', error);
+    res.status(500).json({ error: 'Error in sending email or storing code', details: error });
   }
 }
 
