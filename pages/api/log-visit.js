@@ -7,23 +7,24 @@ export default async function handler(req, res) {
     return res.status(405).end('Method not allowed');
   }
 
+  const { page_type, page_id } = req.body; // Extract the page visit details from the request body
+
   try {
-    // Authenticate the user and get their details
+    // Attempt to authenticate the user
     const authResult = await verifyToken(req);
 
-    if (authResult.error) {
-      return res.status(401).json({ error: 'Authentication required' });
+    // Prepare an object for the visit_history record
+    const visitRecord = { page_type, page_id };
+
+    // If the user is authenticated, add the user_id to the record
+    if (!authResult.error && authResult.user?.id) {
+      visitRecord.user_id = authResult.user.id;
     }
-
-    const user_id = authResult.user.id; // Extract user_id from the verified token
-
-    // Extract the page visit details from the request body
-    const { page_type, page_id } = req.body;
 
     // Insert the page visit into the visit_history table
     const { error: insertError } = await supabase
       .from('visit_history')
-      .insert([{ user_id, page_type, page_id }]);
+      .insert([visitRecord]);
 
     if (insertError) {
       throw insertError;
@@ -32,8 +33,26 @@ export default async function handler(req, res) {
     // Respond with success if the visit is logged successfully
     res.status(200).json({ message: 'Visit logged successfully' });
   } catch (error) {
-    console.error('Error logging visit:', error);
-    res.status(500).json({ error: 'Error logging visit' });
+    // If there's an error, including failing to verify token (non-logged-in user), log the visit without the user_id
+    if (!error.logged) {
+      try {
+        const { error: insertError } = await supabase
+          .from('visit_history')
+          .insert([{ page_type, page_id }]); // Insert without user_id
+
+        if (insertError) {
+          throw insertError;
+        }
+
+        res.status(200).json({ message: 'Visit logged for non-authenticated user' });
+      } catch (insertError) {
+        console.error('Error logging visit for non-authenticated user:', insertError);
+        res.status(500).json({ error: 'Error logging visit for non-authenticated user' });
+      }
+    } else {
+      console.error('Error logging visit:', error);
+      res.status(500).json({ error: 'Error logging visit' });
+    }
   }
 }
 
