@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import jwt from 'jsonwebtoken';
 import { supabase } from '../utils/supabase'; // Adjust the import path as needed
 import { fetchSlugsFromTable, fetchDataBySlug, getParentObject } from '../../db-utilities';
@@ -19,26 +19,30 @@ const verifyUserSession = (req) => {
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+		console.log('decoded data', decoded);
     return decoded; // Session valid
   } catch (error) {
     return null; // Session invalid
   }
 };
 
-export default function Song({ songData, isAuthenticated }) {
+export default function Song({ songData, isAuthenticated, userId }) {
   const router = useRouter();
-
+	console.log('is this user authenticated?', isAuthenticated);
   useEffect(() => {
     if (!router.isFallback && songData?.id) {
-      logPageVisit();
+      logPageVisit(isAuthenticated);
     }
   }, [router.isFallback, songData?.id]);
 
   const logPageVisit = async () => {
     try {
+			console.log('and does it show up here too', userId);
       await axios.post('/api/log-visit', {
         page_type: 'songs',
         page_id: songData.id,
+				isAuthenticated,
+				userId,
       });
     } catch (error) {
       console.error('Failed to log page visit:', error);
@@ -98,6 +102,7 @@ export async function getServerSideProps({ params, req }) {
     props: {
       songData: { ...songData, ...additionalData },
       isAuthenticated: !!userSession,
+			userId: userSession?.id || null,
     },
   };
 }
