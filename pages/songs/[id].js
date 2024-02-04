@@ -1,90 +1,81 @@
-// Access to: pathname, query, asPath, route
+// pages/songs/[id].js
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import Link from 'next/link';
-import dynamic from 'next/dynamic'; // Correctly import dynamic
-import React, { useEffect, useState } from 'react';
+import dynamic from 'next/dynamic';
+import React, { useEffect } from 'react';
+import jwt from 'jsonwebtoken';
+import { supabase } from '../utils/supabase'; // Adjust the import path as needed
+import { fetchSlugsFromTable, fetchDataBySlug, getParentObject } from '../../db-utilities';
+
 const SlowDowner = dynamic(() => import('../../components/SlowDowner'), { ssr: false });
-import YoutubeEmbed from '../../components/YoutubeVideo.js';
+import YoutubeEmbed from '../../components/YoutubeVideo';
 
-// Centralized location to globally manage database queries/operations
-const { fetchSlugsFromTable, fetchDataBySlug, getParentObject } = require('../../db-utilities');
+// Verify the user's session using the JWT token
+const verifyUserSession = (req) => {
+  const token = req.cookies['auth_token'];
+  if (!token) {
+    return null; // No session
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return decoded; // Session valid
+  } catch (error) {
+    return null; // Session invalid
+  }
+};
 
-export default function Song({ songData }) {
-  // Initializing router object, containing info about current route
+export default function Song({ songData, isAuthenticated }) {
   const router = useRouter();
-	// Destructures the "id" parameter from the router.query property      
-  const { id } = router.query;
 
-	useEffect(() => {
-		if (!router.isFallback && songData?.id) {
-			logPageVisit();
-		} else {
-			console.log('Did not log page visit:', router.isFallback, songData?.id);
-		}
-	}, []);
+  useEffect(() => {
+    if (!router.isFallback && songData?.id) {
+      logPageVisit();
+    }
+  }, [router.isFallback, songData?.id]);
 
-	// Function to log the page visit
-	const logPageVisit = async () => {
-		try {
-			await axios.post('/api/log-visit', {
-				page_type: 'songs',
-				page_id: songData.id,
-			});
-			// Optionally handle the response
-		} catch (error) {
-			console.error('Failed to log page visit:', error);
-		}
-	};
-	
-	// Conditional rendering while there's fetching from the db about dynamic id
+  const logPageVisit = async () => {
+    try {
+      await axios.post('/api/log-visit', {
+        page_type: 'songs',
+        page_id: songData.id,
+      });
+    } catch (error) {
+      console.error('Failed to log page visit:', error);
+    }
+  };
+
   if (router.isFallback) {
     return <div>Loading...</div>;
   }
 
-	function escapeHtml(unsafe) {
-		return unsafe
-			.replace(/&/g, "&amp;")
-			.replace(/</g, "&lt;")
-			.replace(/>/g, "&gt;")
-			.replace(/"/g, "&quot;")
-			.replace(/'/g, "&#039;");
-	}
-
-	// Removing paragraph tags from songData.extra_notes
-	let formattedExtraNotes = songData.extra_notes;
-	if (songData.extra_notes) {
-		formattedExtraNotes = songData.extra_notes.replace(/<\/?p>/g, '');
-	}
-
   return (
     <div>
-      {/* Link to the thread */}
       {songData.slug && (
         <Link href={`/threads/${songData.slug}`}>
           Go to parent thread
         </Link>
-			)}
-			<h1>{songData.song_name}</h1>
-			<div>{songData.thread_name}</div>
-			<div>{songData.song_id}</div>
-			{songData.musescore_embed && (
-					<iframe
-						width="100%"
-						height="480px"
-						src={songData.musescore_embed}
-						frameBorder="0"
-						allowFullScreen
-						allow="autoplay; fullscreen">
-					</iframe>   
-				)}
-			<SlowDowner mp3={songData.dropbox_mp3_link} />
-			{songData.youtube_link && (
-				<YoutubeEmbed youtube_link={songData.youtube_link} />	
-			)}
-			{songData.extra_notes && (
-				<div className="extraInfo" dangerouslySetInnerHTML={{ __html: songData.extra_notes }} />
-			)}
+      )}
+      <h1>{songData.song_name}</h1>
+      <div>{songData.thread_name}</div>
+      <div>{songData.song_id}</div>
+      {songData.musescore_embed && (
+        <iframe
+          width="100%"
+          height="480px"
+          src={songData.musescore_embed}
+          frameBorder="0"
+          allowFullScreen
+          allow="autoplay; fullscreen">
+        </iframe>
+      )}
+      <SlowDowner mp3={songData.dropbox_mp3_link} />
+      {songData.youtube_link && (
+        <YoutubeEmbed youtube_link={songData.youtube_link} />
+      )}
+      {songData.extra_notes && (
+        <div className="extraInfo" dangerouslySetInnerHTML={{ __html: songData.extra_notes }} />
+      )}
       {songData.lyrics && (
         <div className="lyrics" dangerouslySetInnerHTML={{ __html: songData.lyrics }} />
       )}
@@ -92,31 +83,22 @@ export default function Song({ songData }) {
   );
 }
 
-export async function getStaticPaths() {
-  // Fetch the list of slugs from your songs table
-  const slugs = await fetchSlugsFromTable('songs');
-  const paths = slugs.map(slug => ({
-    params: { id: slug },
-  }));
+// This replaces getStaticProps and getStaticPaths for this page
+export async function getServerSideProps({ params, req }) {
+  const userSession = verifyUserSession(req);
 
-  return { paths, fallback: true };
-}
-
-
-export async function getStaticProps({ params }) {
-  // Fetch the song data based on the slug
   const songData = await fetchDataBySlug('songs', params.id);
-
   if (!songData) {
     return { notFound: true };
   }
 
-  // Fetch parent object data
-  const {thread_name, featured_img_alt_text, featured_img_200px, slug} = await getParentObject(songData.thread_id);
+  const additionalData = await getParentObject(songData.thread_id);
 
-  return { 
-    props: { 
-      songData: { ...songData, thread_name, featured_img_alt_text, featured_img_200px, slug } 
-    } 
+  return {
+    props: {
+      songData: { ...songData, ...additionalData },
+      isAuthenticated: !!userSession,
+    },
   };
 }
+

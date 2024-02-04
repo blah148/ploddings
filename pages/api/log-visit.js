@@ -36,10 +36,14 @@ export default async function handler(req, res) {
     // If there's an error, including failing to verify token (non-logged-in user), log the visit without the user_id
     if (!error.logged) {
       try {
+				console.log('testing here 1');
+				console.log('heres the page type:', page_type);
+				console.log('heres the page id', page_id);
+				
         const { error: insertError } = await supabase
           .from('visit_history')
           .insert([{ page_type, page_id }]); // Insert without user_id
-
+				console.log('testing here 2');
         if (insertError) {
           throw insertError;
         }
