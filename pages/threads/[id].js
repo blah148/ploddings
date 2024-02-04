@@ -6,7 +6,6 @@ import jwt from 'jsonwebtoken';
 import Typed from 'typed.js';
 import { supabase } from '../utils/supabase'; // Adjust the import path as needed
 import ChatWithGPT from '../../components/ChatWithGPT.js';
-// Centralized location to globally manage database queries/operations
 const { fetchSlugsFromTable, fetchDataBySlug, fetchChildrenByThreadId } = require('../../db-utilities');
 
 // Verify the user's session using the JWT token
@@ -26,6 +25,7 @@ const verifyUserSession = (req) => {
 export default function Thread({ threadData, songs, blogs, isAuthenticated, userId }) {
 
   const router = useRouter();
+	const [isFavorite, setIsFavorite] = useState(false);
 
 	useEffect(() => {
 		if (!router.isFallback && threadData?.thread_id) {
@@ -49,6 +49,24 @@ export default function Thread({ threadData, songs, blogs, isAuthenticated, user
       console.error('Failed to log page visit:', error);
     }
   };
+	
+	// Function to toggle the favorite status
+	const toggleFavorite = async () => {
+		const action = isFavorite ? 'remove' : 'add';
+		try {
+			const response = await axios.post('/api/favorites', {
+				userId,
+				pageId: threadData.thread_id,
+				pageType: 'threads',
+				action,
+			});
+
+			setIsFavorite(!isFavorite); // Toggle the local favorite state
+			console.log(response.data.message); // Optional: handle response
+		} catch (error) {
+			console.error('Error toggling favorite:', error);
+		}
+	};
 
   return (
     <div>
@@ -64,6 +82,11 @@ export default function Thread({ threadData, songs, blogs, isAuthenticated, user
           <li key={blog.id}>{blog.blog_name} - {blog.slug}</li>
         ))}
       </ul>			
+      {isAuthenticated && (
+        <button onClick={toggleFavorite}>
+          {isFavorite ? 'Unfavorite' : 'Favorite'}
+         </button>
+      )}
     </div>
   );
 } 
@@ -71,7 +94,7 @@ export default function Thread({ threadData, songs, blogs, isAuthenticated, user
 export async function getServerSideProps({ params, req }) {
 
 	const userSession = verifyUserSession(req);
-	console.log('this is the getserverside data', userSession);
+
   // Fetch the thread data based on the slug
   const threadData = await fetchDataBySlug('threads', params.id);
 

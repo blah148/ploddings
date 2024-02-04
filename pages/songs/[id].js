@@ -99,13 +99,11 @@ export default function Song({ songData, isAuthenticated, userId }) {
       {songData.lyrics && (
         <div className="lyrics" dangerouslySetInnerHTML={{ __html: songData.lyrics }} />
       )}
-		   <div>
-    		 {isAuthenticated && (
-      		 <button onClick={toggleFavorite}>
-        		 {isFavorite ? 'Unfavorite' : 'Favorite'}
-      		 </button>
-    		 )}
-  		 </div>
+      {isAuthenticated && (
+    		 <button onClick={toggleFavorite}>
+        	 {isFavorite ? 'Unfavorite' : 'Favorite'}
+      	 </button>
+      )}
     </div>
   );
 }
