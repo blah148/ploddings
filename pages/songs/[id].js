@@ -19,7 +19,6 @@ const verifyUserSession = (req) => {
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-		console.log('decoded data', decoded);
     return decoded; // Session valid
   } catch (error) {
     return null; // Session invalid
@@ -28,7 +27,7 @@ const verifyUserSession = (req) => {
 
 export default function Song({ songData, isAuthenticated, userId }) {
   const router = useRouter();
-	console.log('is this user authenticated?', isAuthenticated);
+
   useEffect(() => {
     if (!router.isFallback && songData?.id) {
       logPageVisit(isAuthenticated);
@@ -37,7 +36,6 @@ export default function Song({ songData, isAuthenticated, userId }) {
 
   const logPageVisit = async () => {
     try {
-			console.log('and does it show up here too', userId);
       await axios.post('/api/log-visit', {
         page_type: 'songs',
         page_id: songData.id,

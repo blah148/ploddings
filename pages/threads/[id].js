@@ -17,13 +17,11 @@ const verifyUserSession = (req) => {
   }
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    console.log('decoded data', decoded);
     return decoded; // Session valid
   } catch (error) {
     return null; // Session invalid
   }
 };
-
 
 export default function Thread({ threadData, songs, blogs, isAuthenticated, userId }) {
 
