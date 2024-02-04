@@ -2,18 +2,36 @@
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
+import jwt from 'jsonwebtoken';
 import Typed from 'typed.js';
+import { supabase } from '../utils/supabase'; // Adjust the import path as needed
 import ChatWithGPT from '../../components/ChatWithGPT.js';
 // Centralized location to globally manage database queries/operations
 const { fetchSlugsFromTable, fetchDataBySlug, fetchChildrenByThreadId } = require('../../db-utilities');
 
-export default function Thread({ threadData, songs, blogs }) {
+// Verify the user's session using the JWT token
+const verifyUserSession = (req) => {
+  const token = req.cookies['auth_token'];
+  if (!token) {
+    return null; // No session
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    console.log('decoded data', decoded);
+    return decoded; // Session valid
+  } catch (error) {
+    return null; // Session invalid
+  }
+};
+
+
+export default function Thread({ threadData, songs, blogs, isAuthenticated, userId }) {
 
   const router = useRouter();
 
 	useEffect(() => {
 		if (!router.isFallback && threadData?.thread_id) {
-			logPageVisit();
+			logPageVisit(isAuthenticated);
 		} else {
 			console.log('Did not log page visit:', router.isFallback, threadData?.thread_id);
 		}
@@ -25,6 +43,8 @@ export default function Thread({ threadData, songs, blogs }) {
       await axios.post('/api/log-visit', {
         page_type: 'threads',
         page_id: threadData.thread_id,
+				isAuthenticated,
+				userId,
       });
       // Optionally handle the response
     } catch (error) {
@@ -50,31 +70,34 @@ export default function Thread({ threadData, songs, blogs }) {
   );
 } 
 
-export async function getStaticPaths() {
-  // Fetch the list of slugs from your threads table
-  const slugs = await fetchSlugsFromTable('threads');
-  const paths = slugs.map(slug => ({
-    params: { id: slug },
-  }));
-   
-  return { paths, fallback: true };
-} 
+export async function getServerSideProps({ params, req }) {
 
-export async function getStaticProps({ params }) {
+	const userSession = verifyUserSession(req);
+	console.log('this is the getserverside data', userSession);
   // Fetch the thread data based on the slug
   const threadData = await fetchDataBySlug('threads', params.id);
 
   // Fetch the songs related to the thread
   const songs = await fetchChildrenByThreadId('songs', params.id);
 
-	// Fetch the blogs related to the thread
-	const blogs = await fetchChildrenByThreadId('blog', params.id)
+  // Fetch the blogs related to the thread
+  const blogs = await fetchChildrenByThreadId('blog', params.id);
+
+  // Check if threadData exists to handle not found case
+  if (!threadData) {
+    return {
+      notFound: true,
+    };
+  }
 
   return {
     props: {
       threadData,
       songs,
-			blogs,
+      blogs,
+			isAuthenticated: !!userSession,
+			userId: userSession?.id || null,
     },
   };
 }
+
