@@ -27,6 +27,7 @@ const verifyUserSession = (req) => {
 
 export default function Song({ songData, isAuthenticated, userId }) {
   const router = useRouter();
+	const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     if (!router.isFallback && songData?.id) {
@@ -50,6 +51,23 @@ export default function Song({ songData, isAuthenticated, userId }) {
   if (router.isFallback) {
     return <div>Loading...</div>;
   }
+
+	// Function to toggle the favorite status
+	const toggleFavorite = async () => {
+		const action = isFavorite ? 'remove' : 'add';
+		try {
+			const response = await axios.post('/api/favorites', {
+				userId, // Assume userId is passed as a prop from getServerSideProps
+				pageId: songData.id,
+				pageType: 'songs',
+				action,
+			});
+			setIsFavorite(!isFavorite); // Toggle the local favorite state
+			console.log(response.data.message); // Optional: handle response
+		} catch (error) {
+			console.error('Error toggling favorite:', error);
+		}
+	};
 
   return (
     <div>
@@ -81,6 +99,13 @@ export default function Song({ songData, isAuthenticated, userId }) {
       {songData.lyrics && (
         <div className="lyrics" dangerouslySetInnerHTML={{ __html: songData.lyrics }} />
       )}
+		   <div>
+    		 {isAuthenticated && (
+      		 <button onClick={toggleFavorite}>
+        		 {isFavorite ? 'Unfavorite' : 'Favorite'}
+      		 </button>
+    		 )}
+  		 </div>
     </div>
   );
 }
