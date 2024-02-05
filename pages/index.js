@@ -3,9 +3,11 @@ import Logout from '../components/Logout';
 import React, { useEffect, useState } from 'react';
 import { supabase } from './utils/supabase';
 import Loader from '../components/Loader';
+import { useAuth } from '../context/AuthContext';
 
 export default function Home() {
 
+	const { isAuthenticated, login, logout } = useAuth();
   const [categories, setCategories] = useState([]);
   const [threads, setThreads] = useState([]);
   const [songs, setSongs] = useState([]);

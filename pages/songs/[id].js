@@ -108,7 +108,6 @@ export default function Song({ songData, isAuthenticated, userId }) {
   );
 }
 
-// This replaces getStaticProps and getStaticPaths for this page
 export async function getServerSideProps({ params, req }) {
   const userSession = verifyUserSession(req);
 
