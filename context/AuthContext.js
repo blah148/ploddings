@@ -13,15 +13,19 @@ export const AuthProvider = ({ children }) => {
 	useEffect(() => {
 		const checkAuthStatus = async () => {
 			try {
-				const response = await fetch('/api/status');
+				// Include credentials in the fetch call
+				const response = await fetch('/api/status', {
+					credentials: 'include'
+				});
 				const data = await response.json();
+				console.log('this is the authcontext test', data);
 				setIsAuthenticated(data.isAuthenticated);
 			} catch (error) {
 				console.error('Failed to verify auth status:', error);
 				setIsAuthenticated(false);
 			}
 		};
-
+		
 		checkAuthStatus();
 	}, []);
 

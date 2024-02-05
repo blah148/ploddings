@@ -157,6 +157,7 @@ export default function Home() {
 
     <div>
 			<Loader isLoading={isLoading} />
+			<Logout />
       <div>
         <button onClick={() => changeTab('categories')}>Categories</button>
         <button onClick={() => changeTab('threads')}>Threads</button>

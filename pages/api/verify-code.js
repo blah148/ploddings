@@ -60,7 +60,7 @@ export default async function handler(req, res) {
     res.setHeader('Set-Cookie', serialize('auth_token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV !== 'development',
-      maxAge: 24 * 60 * 60, // 24 hours
+      maxAge: 24 * 60 * 60 * 7, // 7 days
       path: '/',
     }));
 
