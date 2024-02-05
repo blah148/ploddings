@@ -11,6 +11,7 @@ export default function Home() {
   const [songs, setSongs] = useState([]);
   const [activeTab, setActiveTab] = useState('categories');
 	const [isLoading, setIsLoading] = useState(false);
+	const [loadedTabs, setLoadedTabs] = useState({ categories: false, threads: false, songs: false });
   const minLoadingTime = 400;
 
   // Effect hook to manage activeTab state with localStorage
@@ -18,24 +19,36 @@ export default function Home() {
     const savedTab = localStorage.getItem('activeTab');
     if (savedTab && savedTab !== activeTab) {
       setActiveTab(savedTab);
+    } else {
+      // Potentially set a default tab and load its data
+      setActiveTab('categories');
     }
   }, []);
 
-  // Fetch data for the active tab only
   useEffect(() => {
-    if (activeTab === 'categories') {
-      fetchCategoriesAndChildren();
-    } else if (activeTab === 'threads') {
-      fetchAllThreads();
-    } else if (activeTab === 'songs') {
-      fetchAllSongs();
-    }
+    const fetchDataForTab = async (tab) => {
+      if (loadedTabs[tab]) {
+        // If the data for this tab is already loaded, do nothing
+        return;
+      }
 
-    // Save the active tab to localStorage when it changes
-    if (typeof window !== 'undefined') { // Check if window is defined to avoid SSR issues
-      localStorage.setItem('activeTab', activeTab);
-    }
-  }, [activeTab]); // Depend on activeTab state
+      setIsLoading(true);
+
+      if (tab === 'categories') {
+        await fetchCategoriesAndChildren();
+      } else if (tab === 'threads') {
+        await fetchAllThreads();
+      } else if (tab === 'songs') {
+        await fetchAllSongs();
+      }
+
+      setIsLoading(false);
+      // Mark this tab's data as loaded
+      setLoadedTabs(prev => ({ ...prev, [tab]: true }));
+    };
+
+    fetchDataForTab(activeTab);
+  }, [activeTab, loadedTabs]);
 
   const fetchCategoriesAndChildren = async () => {
 		
@@ -132,6 +145,7 @@ export default function Home() {
   // Change active tab and clear the previous tab's data to release memory
   const changeTab = (newTab) => {
     setActiveTab(newTab);
+		localStorage.setItem('activeTab', newTab);
 //    if (newTab !== 'categories') setCategories([]);
 //    if (newTab !== 'threads') setThreads([]);
 //    if (newTab !== 'songs') setSongs([]);
