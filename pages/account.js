@@ -2,12 +2,26 @@ import { useAuth } from '../context/AuthContext';
 import Link from 'next/link';
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from './utils/supabase';
+import fetchVisitHistory from '../components/fetchVisitHistory';
 
 export default function Account() {
   const { userId } = useAuth();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
+	const [visitHistory, setVisitHistory] = useState([]);
+
+  useEffect(() => {
+    if (userId) {
+      fetchVisitHistory(userId)
+        .then(data => {
+          setVisitHistory(data);
+        })
+        .catch(error => {
+          console.error('Failed to fetch visit history:', error);
+        });
+    }
+  }, [userId]);
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -75,6 +89,16 @@ export default function Account() {
         </button>
       </form>
       {message && <p>{message}</p>}
+		  <div>
+        <h2>Visit History</h2>
+        <ul>
+          {visitHistory.map((visit, index) => (
+            <li key={index}>
+              {visit.page_type} - {visit.page_id} - {new Date(visit.visited_at).toLocaleString()}
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
