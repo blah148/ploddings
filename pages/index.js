@@ -2,6 +2,7 @@ import Link from 'next/link';
 import Logout from '../components/Logout';
 import React, { useEffect, useState } from 'react';
 import { supabase } from './utils/supabase';
+import Loader from '../components/Loader';
 
 export default function Home() {
 
@@ -9,12 +10,13 @@ export default function Home() {
   const [threads, setThreads] = useState([]);
   const [songs, setSongs] = useState([]);
   const [activeTab, setActiveTab] = useState('categories');
+	const [isLoading, setIsLoading] = useState(false);
+  const minLoadingTime = 400;
 
   // Effect hook to manage activeTab state with localStorage
   useEffect(() => {
     const savedTab = localStorage.getItem('activeTab');
     if (savedTab && savedTab !== activeTab) {
-			console.log('testing this', savedTab);
       setActiveTab(savedTab);
     }
   }, []);
@@ -35,8 +37,11 @@ export default function Home() {
     }
   }, [activeTab]); // Depend on activeTab state
 
-
   const fetchCategoriesAndChildren = async () => {
+		
+		setIsLoading(true);
+    const loadingStarted = Date.now();
+
     const { data: categoriesData, error: categoriesError } = await supabase
       .from('categories')
       .select('id, category_name');
@@ -47,6 +52,7 @@ export default function Home() {
     }
 
     const categoriesWithChildren = await Promise.all(categoriesData.map(async (category) => {
+
       const { data: songs } = await supabase
         .from('songs')
         .select('id, name, slug')
@@ -66,44 +72,75 @@ export default function Home() {
     }));
 
     setCategories(categoriesWithChildren);
+
+    const loadingDuration = Date.now() - loadingStarted;
+		if (loadingDuration < minLoadingTime) {
+		  setTimeout(() => setIsLoading(false), minLoadingTime - loadingDuration);
+		} else {
+			setIsLoading(false);
+		}
   };
 
   const fetchAllThreads = async () => {
+		setIsLoading(true);
+		const loadingStarted = Date.now();
+
     const { data: threadsData, error: threadsError } = await supabase
       .from('threads')
-      .select('thread_name, slug');
+      .select('thread_id, thread_name, slug');
 
     if (threadsError) {
       console.error('Error fetching threads:', threadsError);
     } else {
       setThreads(threadsData); // Set the fetched threads data to state
     }
+		const loadingDuration = Date.now() - loadingStarted;
+		if (loadingDuration < minLoadingTime) {
+			// If the loading duration is less than the minimum, delay the loading state change
+			setTimeout(() => setIsLoading(false), minLoadingTime - loadingDuration);
+		} else {
+			// If it's already been longer than the minimum, set loading to false immediately
+			setIsLoading(false);
+		}
   };
 
   // Function to fetch all songs
   const fetchAllSongs = async () => {
+		setIsLoading(true);
+		const loadingStarted = Date.now();	
+
     const { data: songsData, error: songsError } = await supabase
       .from('songs')
-      .select('name, slug');
+      .select('id, name, slug');
 
     if (songsError) {
       console.error('Error fetching songs:', songsError);
     } else {
       setSongs(songsData); // Set the fetched songs data to state
     }
+		const loadingDuration = Date.now() - loadingStarted;
+		if (loadingDuration < minLoadingTime) {
+			// If the loading duration is less than the minimum, delay the loading state change
+			setTimeout(() => setIsLoading(false), minLoadingTime - loadingDuration);
+		} else {
+			// If it's already been longer than the minimum, set loading to false immediately
+			setIsLoading(false);
+		}
+
   };
 
   // Change active tab and clear the previous tab's data to release memory
   const changeTab = (newTab) => {
     setActiveTab(newTab);
-    if (newTab !== 'categories') setCategories([]);
-    if (newTab !== 'threads') setThreads([]);
-    if (newTab !== 'songs') setSongs([]);
+//    if (newTab !== 'categories') setCategories([]);
+//    if (newTab !== 'threads') setThreads([]);
+//    if (newTab !== 'songs') setSongs([]);
   };
 
   return (
 
     <div>
+			<Loader isLoading={isLoading} />
       <div>
         <button onClick={() => changeTab('categories')}>Categories</button>
         <button onClick={() => changeTab('threads')}>Threads</button>
