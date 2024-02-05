@@ -1,10 +1,17 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import Logout from '../components/Logout';
 import Link from 'next/link';
 import { useAuth } from '../path/to/authContext';
+import { useRouter } from 'next/router';
 
 export default function Footer () {
 	const { isAuthenticated } = useAuth();
+	const router = useRouter();
+
+	const handleLogout = async () => {
+    await fetch('/api/logout', { method: 'POST' });
+    router.push('/');
+  };
+
 
   return (
     <div className="footerContainer">
@@ -13,14 +20,14 @@ export default function Footer () {
             <h2 className="footer_header">Usage</h2>
             {!isAuthenticated && (
                 <>
-                  <Link href="/register"><a className="footer_link-item">Create account</a></Link>
+                  <Link href="/create-account"><a className="footer_link-item">Create account</a></Link>
                   <Link href="/login"><a className="footer_link-item">Login</a></Link>
                 </>
             )}
             {isAuthenticated && (
                 <>
                   <Link href="/account"><a className="footer_link-item">My account</a></Link>
-										<Logout />
+									<a onClick={handleLogout} className="footer_link-item">Logout</a>
                 </>
             )}
 			<div className="footer_column">
