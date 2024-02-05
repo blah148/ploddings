@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useAuth } from '../path/to/authContext';
+import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'next/router';
 import Logout from './Logout';
 import Link from 'next/link';
@@ -8,7 +8,7 @@ export default function Menu() {
 
   const [showMenu, setShowMenu] = useState(false);
   const menuRef = useRef(); // Create a ref for the menu
-	const { isAuthenticated } = useAuth();
+	const { isAuthenticated, logout } = useAuth();
 	const router = useRouter();
   
   const toggleMenu = () => {
@@ -35,7 +35,7 @@ export default function Menu() {
   }, [showMenu]); // Only re-run if showMenu changes
 
 	const handleLogout = async () => {
-    await fetch('/api/logout', { method: 'POST' });
+		logout();
     router.push('/');
   };
 

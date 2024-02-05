@@ -7,17 +7,14 @@ export default function handler(req, res) {
   const cookies = parse(req.headers.cookie || '');
   const token = cookies['auth_token'];
 
-  console.log('this is the token data from status.js first', token);
   
   if (!token) {
     return res.status(200).json({ isAuthenticated: false });
   }
   
   try {
-    jwt.verify(token, process.env.JWT_SECRET);
-    // Token is valid
-    console.log('this is the token data from status.js', token);
-    return res.status(200).json({ isAuthenticated: true });
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return res.status(200).json({ isAuthenticated: true, userId: decoded.id });
   } catch (error) {
     // Token verification failed
     return res.status(200).json({ isAuthenticated: false });

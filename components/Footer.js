@@ -1,14 +1,14 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import Link from 'next/link';
-import { useAuth } from '../path/to/authContext';
+import { useAuth } from '../context/AuthContext';
 import { useRouter } from 'next/router';
 
 export default function Footer () {
-	const { isAuthenticated } = useAuth();
+	const { isAuthenticated, logout } = useAuth();
 	const router = useRouter();
 
 	const handleLogout = async () => {
-    await fetch('/api/logout', { method: 'POST' });
+		logout();
     router.push('/');
   };
 
