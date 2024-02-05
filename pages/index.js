@@ -68,17 +68,17 @@ export default function Home() {
 
       const { data: songs } = await supabase
         .from('songs')
-        .select('id, name, slug')
+        .select('id, name, slug, page_views, pdf_embed, tuning')
         .eq('category_id', category.id);
 
       const { data: threads } = await supabase
         .from('threads')
-        .select('thread_id, thread_name, slug')
+        .select('thread_id, thread_name, slug, page_views, featured_img_200px, blurb')
         .eq('category_id', category.id);
 
       const { data: blogs } = await supabase
         .from('blog')
-        .select('id, name, slug')
+        .select('id, name, slug, page_views, featured_img, featured_img_alt_text')
         .eq('category_id', category.id);
 
       return { ...category, songs, threads, blogs };
@@ -100,7 +100,7 @@ export default function Home() {
 
     const { data: threadsData, error: threadsError } = await supabase
       .from('threads')
-      .select('thread_id, thread_name, slug');
+      .select('thread_id, thread_name, slug, page_views, featured_img_200px, blurb');
 
     if (threadsError) {
       console.error('Error fetching threads:', threadsError);
@@ -124,7 +124,7 @@ export default function Home() {
 
     const { data: songsData, error: songsError } = await supabase
       .from('songs')
-      .select('id, name, slug');
+      .select('id, name, slug, page_views, pdf_embed, tuning');
 
     if (songsError) {
       console.error('Error fetching songs:', songsError);
