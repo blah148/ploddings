@@ -3,6 +3,8 @@ import Link from 'next/link';
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from './utils/supabase';
 import fetchVisitHistory from '../components/fetchVisitHistory';
+import fetchStarred from '../components/fetchStarred';
+import ThemeSelector from '../components/ThemeSelector';
 
 export default function Account() {
   const { userId } = useAuth();
@@ -10,6 +12,7 @@ export default function Account() {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
 	const [visitHistory, setVisitHistory] = useState([]);
+	const [starred, setStarred] = useState([]);
 
   useEffect(() => {
     if (userId) {
@@ -19,6 +22,18 @@ export default function Account() {
         })
         .catch(error => {
           console.error('Failed to fetch visit history:', error);
+        });
+    }
+  }, [userId]);
+
+  useEffect(() => {
+    if (userId) {
+      fetchStarred(userId)
+        .then(data => {
+          setStarred(data);
+        })
+        .catch(error => {
+          console.error('Failed to fetch starred:', error);
         });
     }
   }, [userId]);
@@ -99,6 +114,17 @@ export default function Account() {
           ))}
         </ul>
       </div>
-    </div>
+			<div>
+				<h2>Starred</h2>
+					<ul>
+						{starred.map((star, index) => (
+							<li key={index}>
+								{star.page_type} - {star.page_id} - {new Date(star.created_at).toLocaleString()}
+							</li>
+						))}
+					</ul>
+				</div>
+				<ThemeSelector />
+			</div>
   );
 }
