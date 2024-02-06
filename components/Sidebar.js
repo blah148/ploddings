@@ -54,9 +54,11 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
   useEffect(() => {
     // Ensure objectLimit is passed correctly and only fetch when necessary
     if (objectLimit > 0) {
+			console.log('heres some data', userId, ip, objectLimit);
       fetchBeingWatched(userId, ip, objectLimit)
         .then(({ data, count }) => {
           setBeingWatched(data);
+					console.log('this is the beingWatched data', data);
           console.log('Count of being watched items:', count);
         })
         .catch(error => {

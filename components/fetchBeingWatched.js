@@ -10,24 +10,20 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
  * @returns {Promise<{ data: Array, count: number }>} A promise that resolves to an object containing an array of entries and the count of objects.
  */
 async function fetchBeingWatched(userId, userIp, limit = null) {
-  try {
-    let query = supabase
-      .from('visit_history') // Table name
-      .select('page_type, page_id, name, slug, visited_at', { count: 'exact' }) // Include count in the same query
-      .order('visited_at', { ascending: false }); // Most recent visits first
+		try {
+			let query = supabase
+				.from('visit_history') // Table name
+				.select('page_type, page_id, name, slug, visited_at', { count: 'exact' })
+				.order('visited_at', { ascending: false }); // Most recent visits first
 
-    // Filter out the current user's visits based on userId or IP
-    if (userId) {
-      query = query.not('user_id', 'eq', userId);
-    } else if (userIp) {
-      query = query.not('ip', 'eq', userIp);
-    }
-
-    if (limit !== null) {
-      query = query.limit(limit);
-    }
+			if (userId) {
+				query = query.or(`userId.neq.${userId},userId.is.null`);
+			} else if (userIp) {
+				query = query.or(`ip.neq.${userIp},ip.is.null`);
+			}
 
     const { data, error, count } = await query;
+		console.log('this should have stuff... inside the query', data);
 
     if (error) {
       throw error;
