@@ -19,6 +19,7 @@ async function fetchVisitHistory(userId, limit = null) {
     let query = supabase
       .from('visit_history') // Table name
       .select('page_type, page_id, name, slug, visited_at', { count: 'exact' }) // Include count in the same query to reduce calls
+			.order('visited_at', { ascending: false }) // Most recent visits first
       .eq('user_id', userId); // Match rows where user_id column equals userId
 
     if (limit !== null) {
