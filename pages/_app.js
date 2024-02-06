@@ -8,7 +8,7 @@ const ThemedAppContent = ({ Component, pageProps }) => {
   const { theme } = useTheme();
 
   return (
-    <div className={`app ${theme}`}>
+    <div className={`ploddings ${theme}`}>
       <Component {...pageProps} />
     </div>
   );
