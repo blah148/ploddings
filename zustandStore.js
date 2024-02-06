@@ -46,10 +46,8 @@ const useStore = create(set => ({
   }),
 
   beingWatched: [],
-  setBeingWatched: (data) => set(() => ({ beingWatched: data })),
-
   fetchAndSetBeingWatched: async (userId, ip, objectLimit) => {
-    if (objectLimit > 0 && userId && ip) {
+    if (objectLimit > 0) {
       try {
         const { data, count } = await fetchBeingWatched(userId, ip, objectLimit);
         set({ beingWatched: data });

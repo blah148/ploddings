@@ -16,8 +16,8 @@ async function fetchBeingWatched(userId, userIp, limit = null) {
 				.select('page_type, page_id, name, slug, visited_at', { count: 'exact' })
 				.order('visited_at', { ascending: false }); // Most recent visits first
 
-			if (userId) {
-				query = query.or(`userId.neq.${userId},userId.is.null`);
+			if (userId) {	
+				query = query.or(`user_id.neq.${userId},user_id.is.null`);
 			} else if (userIp) {
 				query = query.or(`ip.neq.${userIp},ip.is.null`);
 			}
@@ -25,9 +25,8 @@ async function fetchBeingWatched(userId, userIp, limit = null) {
     if (limit !== null) {
       query = query.limit(limit);
     }
-
+		
     const { data, error, count } = await query;
-		console.log('this should have stuff... inside the query', data);
 
     if (error) {
       throw error;

@@ -68,6 +68,16 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 					))}
 				</ul>
 			</div>
+			<div>
+				<h2>Being Watched</h2>
+				<ul>
+					{beingWatched.map((watch, index) => (
+						<li key={index}>
+							{watch.page_type} - {watch.page_id} - {new Date(watch.created_at).toLocaleString()}
+						</li>
+					))}
+				</ul>
+			</div>
 		</div>
 	);
 }
