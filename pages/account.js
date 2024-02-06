@@ -2,44 +2,29 @@ import { useAuth } from '../context/AuthContext';
 import Link from 'next/link';
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from './utils/supabase';
-import fetchVisitHistory from '../components/fetchVisitHistory';
-import fetchStarred from '../components/fetchStarred';
 import ThemeSelector from '../components/ThemeSelector';
+import useStore from '../zustandStore';
+import Loader from '../components/Loader';
 
 export default function Account() {
-  const { userId } = useAuth();
+  const { userId, isLoading } = useAuth();
+	const { visitHistory, starred, fetchAndSetStarred, fetchAndSetVisitHistory } = useStore();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-	const [visitHistory, setVisitHistory] = useState([]);
-	const [starred, setStarred] = useState([]);
 	const objectLimit = 8;
 		
-	useEffect(() => {
-		if (userId) {
-			fetchStarred(userId)
-				.then(({ data, count }) => {
-					setStarred(data);
-					console.log('Count of starred items:', count);
-				})
-				.catch(error => {
-					console.error('Failed to fetch starred:', error);
-				});
-		}
-	}, [userId]);
+  useEffect(() => {
+    if (userId) {
+      fetchAndSetStarred(userId, 3); // Assuming groupMax is 3 as defined in your store
+    }
+  }, [userId, fetchAndSetStarred]); // Added fetchAndSetStarred to dependency array
 
-	useEffect(() => {
-		if (userId) {
-			fetchVisitHistory(userId)
-				.then(({ data, count }) => {
-					setVisitHistory(data);
-					console.log('Count of visit history items:', count);
-				})
-				.catch(error => {
-					console.error('Failed to fetch visit history:', error);
-				});
-		}
-	}, [userId]);
+  useEffect(() => {
+    if (userId) {
+      fetchAndSetVisitHistory(userId, 3); // Assuming groupMax is 3 as defined in your store
+    }
+  }, [userId, fetchAndSetVisitHistory]); // Added fetchAndSetVisitHistory to dependency array
 
   useEffect(() => {
     const fetchUserData = async () => {
@@ -85,6 +70,10 @@ export default function Account() {
     e.preventDefault(); // Prevent default form submission behavior
     updateEmail(email);
   };
+
+  if (isLoading) {
+    return <Loader isLoading={isLoading} />; // Render the Loader while checking authentication status
+  }
 
   if (!userId) {
     return <p>Please log in to view and update your account information.</p>;

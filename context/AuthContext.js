@@ -10,26 +10,28 @@ export function useAuth() {
 export const AuthProvider = ({ children }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 	const [userId, setUserId] = useState(null);
+	const [isLoading, setIsLoading] = useState(true);
 
-	useEffect(() => {
-		const checkAuthStatus = async () => {
-			try {
-				// Include credentials in the fetch call
-				const response = await fetch('/api/status', {
-					credentials: 'include'
-				});
-				const data = await response.json();
-				setIsAuthenticated(data.isAuthenticated);
-				setUserId(data.userId);
-			} catch (error) {
-				console.error('Failed to verify auth status:', error);
-				setIsAuthenticated(false);
-				setUserId(null);
-			}
-		};
-		
-		checkAuthStatus();
-	}, []);
+  useEffect(() => {
+    const checkAuthStatus = async () => {
+      try {
+        const response = await fetch('/api/status', {
+          credentials: 'include',
+        });
+        const data = await response.json();
+        setIsAuthenticated(data.isAuthenticated);
+        setUserId(data.userId);
+      } catch (error) {
+        console.error('Failed to verify auth status:', error);
+        setIsAuthenticated(false);
+        setUserId(null);
+      } finally {
+        setIsLoading(false); // Set loading to false after the check completes
+      }
+    };
+
+    checkAuthStatus();
+  }, []);
 
   // Function to handle logout
   const logout = async () => {
@@ -51,6 +53,7 @@ export const AuthProvider = ({ children }) => {
   const value = {
     isAuthenticated,
 		userId,
+		isLoading,
     login: () => setIsAuthenticated(true), // Placeholder for login logic
     logout: () => setIsAuthenticated(false), // Placeholder for logout logic
   };

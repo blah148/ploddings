@@ -14,15 +14,15 @@ export default function Thread({ ip, threadData, songs, blogs }) {
 
   const router = useRouter();
 	const [isFavorite, setIsFavorite] = useState(false);
-	const { userId, isAuthenticated } = useAuth();
+	const { userId, isAuthenticated, loading } = useAuth();
 
 	useEffect(() => {
-		if (!router.isFallback && threadData?.id) {
+		if (!loading && !router.isFallback && threadData?.id) {
 			logPageVisit(isAuthenticated);
 		} else {
 			console.log('Did not log page visit:', router.isFallback, threadData?.id);
 		}
-	}, []);
+	}, [loading, router.isFallback]);
 		
   // Function to log the page visit
   const logPageVisit = async () => {

@@ -1,71 +1,35 @@
 import { supabase } from '../pages/utils/supabase';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import fetchVisitHistory from './fetchVisitHistory.js';
-import fetchStarred from './fetchStarred.js';
-import fetchBeingWatched from './fetchBeingWatched.js';
+import useStore from '../zustandStore';
 
 export default function Sidebar({ userId, isAuthenticated, ip }) {
+  // Destructure the necessary states and actions from the store
+  const {
+    visitHistory,
+    starred,
+    beingWatched,
+    fetchAndSetVisitHistory,
+    fetchAndSetStarred,
+    fetchAndSetBeingWatched,
+    objectLimit,
+    groupMax,
+  } = useStore();
 
-	const [visitHistory, setVisitHistory] = useState([]);
-	const [starred, setStarred] = useState([]);
-	const [beingWatched, setBeingWatched] = useState([]);
-	const maximumObjects = 8;
-	const [objectLimit, setObjectLimit] = useState(maximumObjects);
-	const groupMax = 3;
-  const [starredCount, setStarredCount] = useState(0);
-  const [visitHistoryCount, setVisitHistoryCount] = useState(0);
-
-	useEffect(() => {
-		if (userId) {
-			fetchStarred(userId, groupMax)
-				.then(({ data, count }) => {
-					setStarred(data);
-					setStarredCount(count);
-					console.log('Count of starred items:', count);
-				})
-				.catch(error => {
-					console.error('Failed to fetch starred:', error);
-				});
-		}
-	}, [userId]);
-
-	useEffect(() => {
-		if (userId) {
-			fetchVisitHistory(userId, groupMax)
-				.then(({ data, count }) => {
-					setVisitHistory(data);
-					setVisitHistoryCount(count);
-					console.log('Count of visit history items:', count);
-				})
-				.catch(error => {
-					console.error('Failed to fetch visit history:', error);
-				});
-		}
-	}, [userId]);
-
+  // Effect to fetch visit history and starred items
   useEffect(() => {
-    // Recalculate objectLimit based on the fetched counts
-    const usedSpace = starredCount + visitHistoryCount;
-    const remainingSpace = maximumObjects - usedSpace;
-    setObjectLimit(Math.max(remainingSpace, 0)); // Ensure it doesn't go negative
-  }, [starredCount, visitHistoryCount]);
-	
-  useEffect(() => {
-    // Ensure objectLimit is passed correctly and only fetch when necessary
-    if (objectLimit > 0) {
-			console.log('heres some data', userId, ip, objectLimit);
-      fetchBeingWatched(userId, ip, objectLimit)
-        .then(({ data, count }) => {
-          setBeingWatched(data);
-					console.log('this is the beingWatched data', data);
-          console.log('Count of being watched items:', count);
-        })
-        .catch(error => {
-          console.error('Failed to fetch being watched:', error);
-      });
+    if (userId) {
+      fetchAndSetStarred(userId, groupMax);
+      fetchAndSetVisitHistory(userId, groupMax);
     }
-  }, [userId, ip, objectLimit]); // Ensure useEffect triggers when objectLimit changes
+  }, [userId, fetchAndSetStarred, fetchAndSetVisitHistory, groupMax]);
+
+  // Effect to fetch being watched items
+  useEffect(() => {
+    if (userId && ip && objectLimit > 0) {
+      fetchAndSetBeingWatched(userId, ip, objectLimit);
+    }
+  }, [userId, ip, objectLimit, fetchAndSetBeingWatched]);
 
 	return (
 		<div>
@@ -84,6 +48,26 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 				</svg>
 				<div>Home</div>
 			</a>
+			<div>
+				<h2>Visit History</h2>
+				<ul>
+					{visitHistory.map((visit, index) => (
+						<li key={index}>
+							{visit.page_type} - {visit.page_id} - {new Date(visit.visited_at).toLocaleString()}
+						</li>
+					))}
+				</ul>
+			</div>
+			<div>
+				<h2>Starred</h2>
+				<ul>
+					{starred.map((star, index) => (
+						<li key={index}>
+							{star.page_type} - {star.page_id} - {new Date(star.created_at).toLocaleString()}
+						</li>
+					))}
+				</ul>
+			</div>
 		</div>
 	);
 }
