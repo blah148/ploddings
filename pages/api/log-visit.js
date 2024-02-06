@@ -7,18 +7,17 @@ export default async function handler(req, res) {
   }
 
   // Extract the page visit details and isAuthenticated flag from the request body
-  const { ip, page_type, page_id, isAuthenticated, userId } = req.body;
+  const { ip, page_type, page_id, isAuthenticated, userId, page_name, page_slug } = req.body;
 
   try {
     // Prepare an object for the visit_history record
-    const visitRecord = { page_type, page_id };
+    const visitRecord = { page_type, page_id, slug: page_slug, name: page_name };
 
     // If the user is authenticated, add the user_id to the record
     if (isAuthenticated && userId) {
       visitRecord.user_id = userId;
     } else {
 			visitRecord.ip = ip;
-			console.log('this is the guest ip', ip);
 		}
 
     // Insert the page visit into the visit_history table

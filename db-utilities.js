@@ -43,8 +43,8 @@ async function getParentObject(threadId) {
   try {
     const { data, error } = await supabase
       .from('threads')
-      .select('thread_name, featured_img_alt_text, featured_img_200px, slug')
-      .eq('thread_id', threadId)
+      .select('name, featured_img_alt_text, featured_img_200px, slug')
+      .eq('id', threadId)
       .single();
 
     if (error || !data) {
@@ -63,7 +63,7 @@ async function fetchChildrenByThreadId(contentType, slug) {
   try {
     const { data: threadData, error: threadError } = await supabase
       .from('threads')
-      .select('thread_id')
+      .select('id')
       .eq('slug', slug)
       .single();
 
@@ -72,11 +72,12 @@ async function fetchChildrenByThreadId(contentType, slug) {
       return [];
     }
 
-    const threadId = threadData.thread_id;
+    const threadId = threadData.id;
 
     const { data, error } = await supabase
       .from(contentType)
       .select('name, slug, id')
+			// Calls the thread_id field inside the "songs" or "blog" tables
       .eq('thread_id', threadId);
 
     if (error) {

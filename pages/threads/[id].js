@@ -1,7 +1,8 @@
 // Access to: pathname, query, asPath, route
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, createContext, useContext } from 'react';
+import { useAuth } from '../../context/AuthContext';
 import jwt from 'jsonwebtoken';
 import Sidebar from '../../components/Sidebar';
 import Typed from 'typed.js';
@@ -9,30 +10,17 @@ import { supabase } from '../utils/supabase'; // Adjust the import path as neede
 import ChatWithGPT from '../../components/ChatWithGPT.js';
 const { fetchSlugsFromTable, fetchDataBySlug, fetchChildrenByThreadId } = require('../../db-utilities');
 
-// Verify the user's session using the JWT token
-const verifyUserSession = (req) => {
-  const token = req.cookies['auth_token'];
-  if (!token) {
-    return null; // No session
-  }
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return decoded; // Session valid
-  } catch (error) {
-    return null; // Session invalid
-  }
-};
-
-export default function Thread({ ip, threadData, songs, blogs, isAuthenticated, userId }) {
+export default function Thread({ ip, threadData, songs, blogs }) {
 
   const router = useRouter();
 	const [isFavorite, setIsFavorite] = useState(false);
+	const { userId, isAuthenticated } = useAuth();
 
 	useEffect(() => {
-		if (!router.isFallback && threadData?.thread_id) {
+		if (!router.isFallback && threadData?.id) {
 			logPageVisit(isAuthenticated);
 		} else {
-			console.log('Did not log page visit:', router.isFallback, threadData?.thread_id);
+			console.log('Did not log page visit:', router.isFallback, threadData?.id);
 		}
 	}, []);
 		
@@ -41,7 +29,9 @@ export default function Thread({ ip, threadData, songs, blogs, isAuthenticated, 
     try {
       await axios.post('/api/log-visit', {
         page_type: 'threads',
-        page_id: threadData.thread_id,
+        page_id: threadData.id,
+				page_slug: threadData.slug,
+				page_name: threadData.name,
 				isAuthenticated,
 				userId,
 				ip: !isAuthenticated ? ip : undefined,
@@ -52,13 +42,12 @@ export default function Thread({ ip, threadData, songs, blogs, isAuthenticated, 
     }
   };
 	
-	// Function to toggle the favorite status
 	const toggleFavorite = async () => {
 		const action = isFavorite ? 'remove' : 'add';
 		try {
 			const response = await axios.post('/api/favorites', {
 				userId,
-				pageId: threadData.thread_id,
+				pageId: threadData.id,
 				pageType: 'threads',
 				action,
 			});
@@ -73,16 +62,16 @@ export default function Thread({ ip, threadData, songs, blogs, isAuthenticated, 
   return (
     <div>
 			<Sidebar userId={userId} ip={ip} />
-      <h1>{threadData.thread_name}</h1>
-			<ChatWithGPT initialPrompt={`who is ${threadData.thread_name}`} />
-			<div>{threadData.thread_id}</div>
+      <h1>{threadData.name}</h1>
+			<ChatWithGPT initialPrompt={`who is ${threadData.name}`} />
+			<div>{threadData.id}</div>
 			<img src={threadData.featured_img_550px}/>
       <ul>
         {songs.map(song => (
-          <li key={song.id}>{song.song_name} - {song.slug}</li>
+          <li className="song_list-item" key={song.id}>{song.song_name} - {song.slug}</li>
         ))}
 				{blogs.map(blog => (
-          <li key={blog.id}>{blog.blog_name} - {blog.slug}</li>
+          <li className="blog_list-item" key={blog.id}>{blog.blog_name} - {blog.slug}</li>
         ))}
       </ul>			
       {isAuthenticated && (
@@ -96,14 +85,31 @@ export default function Thread({ ip, threadData, songs, blogs, isAuthenticated, 
 
 export async function getServerSideProps({ params, req }) {
 
-	const userSession = verifyUserSession(req);
-
   // Fetch the thread data based on the slug
   const threadData = await fetchDataBySlug('threads', params.id);
 
   // Extract the client's IP address from the request object
   const ip = req.connection.remoteAddress;
 	console.log('this is the getSSP ip', ip);
+
+
+  // Before fetching related songs and blogs, increment page views if threadData exists
+  if (threadData) {
+    try {
+      const { data, error } = await supabase
+        .rpc('increment_page_views', { row_id: threadData.id });
+      
+      if (error) {
+        console.error('Error incrementing page views:', error.message);
+        // Optionally handle the error, e.g., by logging or sending to an error tracking service
+      }
+    } catch (error) {
+      console.error('Failed to call increment_page_views function:', error);
+      // Handle or log the error as needed
+    }
+		console.log('this is the threadData.id', threadData.id);
+
+  }
 
   // Fetch the songs related to the thread
   const songs = await fetchChildrenByThreadId('songs', params.id);
@@ -124,8 +130,6 @@ export async function getServerSideProps({ params, req }) {
       songs,
       blogs,
 			ip,
-			isAuthenticated: !!userSession,
-			userId: userSession?.id || null,
     },
   };
 }
