@@ -13,30 +13,33 @@ export default function Account() {
   const [message, setMessage] = useState('');
 	const [visitHistory, setVisitHistory] = useState([]);
 	const [starred, setStarred] = useState([]);
+	const objectLimit = 8;
+		
+	useEffect(() => {
+		if (userId) {
+			fetchStarred(userId)
+				.then(({ data, count }) => {
+					setStarred(data);
+					console.log('Count of starred items:', count);
+				})
+				.catch(error => {
+					console.error('Failed to fetch starred:', error);
+				});
+		}
+	}, [userId]);
 
-  useEffect(() => {
-    if (userId) {
-      fetchVisitHistory(userId)
-        .then(data => {
-          setVisitHistory(data);
-        })
-        .catch(error => {
-          console.error('Failed to fetch visit history:', error);
-        });
-    }
-  }, [userId]);
-
-  useEffect(() => {
-    if (userId) {
-      fetchStarred(userId)
-        .then(data => {
-          setStarred(data);
-        })
-        .catch(error => {
-          console.error('Failed to fetch starred:', error);
-        });
-    }
-  }, [userId]);
+	useEffect(() => {
+		if (userId) {
+			fetchVisitHistory(userId)
+				.then(({ data, count }) => {
+					setVisitHistory(data);
+					console.log('Count of visit history items:', count);
+				})
+				.catch(error => {
+					console.error('Failed to fetch visit history:', error);
+				});
+		}
+	}, [userId]);
 
   useEffect(() => {
     const fetchUserData = async () => {
