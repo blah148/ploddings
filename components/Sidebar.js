@@ -73,7 +73,7 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 				<ul>
 					{beingWatched.map((watch, index) => (
 						<li key={index}>
-							{watch.page_type} - {watch.page_id} - {new Date(watch.created_at).toLocaleString()}
+							{watch.page_type} - {watch.page_id} - {new Date(watch.visited_at).toLocaleString()}
 						</li>
 					))}
 				</ul>
