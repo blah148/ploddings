@@ -12,7 +12,7 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
 async function fetchBeingWatched(userId, userIp, limit = null) {
 		try {
 			let query = supabase
-				.from('visit_history') // Table name
+				.from('latest_visit_history') // Table name
 				.select('page_type, page_id, name, slug, visited_at', { count: 'exact' })
 				.order('visited_at', { ascending: false }); // Most recent visits first
 
