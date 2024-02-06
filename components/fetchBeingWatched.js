@@ -22,6 +22,10 @@ async function fetchBeingWatched(userId, userIp, limit = null) {
 				query = query.or(`ip.neq.${userIp},ip.is.null`);
 			}
 
+    if (limit !== null) {
+      query = query.limit(limit);
+    }
+
     const { data, error, count } = await query;
 		console.log('this should have stuff... inside the query', data);
 
