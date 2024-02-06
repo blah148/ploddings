@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import jwt from 'jsonwebtoken';
+import Sidebar from '../../components/Sidebar';
 import Typed from 'typed.js';
 import { supabase } from '../utils/supabase'; // Adjust the import path as needed
 import ChatWithGPT from '../../components/ChatWithGPT.js';
@@ -22,7 +23,7 @@ const verifyUserSession = (req) => {
   }
 };
 
-export default function Thread({ threadData, songs, blogs, isAuthenticated, userId }) {
+export default function Thread({ ip, threadData, songs, blogs, isAuthenticated, userId }) {
 
   const router = useRouter();
 	const [isFavorite, setIsFavorite] = useState(false);
@@ -43,6 +44,7 @@ export default function Thread({ threadData, songs, blogs, isAuthenticated, user
         page_id: threadData.thread_id,
 				isAuthenticated,
 				userId,
+				ip: !isAuthenticated ? ip : undefined,
       });
       // Optionally handle the response
     } catch (error) {
@@ -70,6 +72,7 @@ export default function Thread({ threadData, songs, blogs, isAuthenticated, user
 
   return (
     <div>
+			<Sidebar userId={userId} ip={ip} />
       <h1>{threadData.thread_name}</h1>
 			<ChatWithGPT initialPrompt={`who is ${threadData.thread_name}`} />
 			<div>{threadData.thread_id}</div>
@@ -98,6 +101,10 @@ export async function getServerSideProps({ params, req }) {
   // Fetch the thread data based on the slug
   const threadData = await fetchDataBySlug('threads', params.id);
 
+  // Extract the client's IP address from the request object
+  const ip = req.connection.remoteAddress;
+	console.log('this is the getSSP ip', ip);
+
   // Fetch the songs related to the thread
   const songs = await fetchChildrenByThreadId('songs', params.id);
 
@@ -116,6 +123,7 @@ export async function getServerSideProps({ params, req }) {
       threadData,
       songs,
       blogs,
+			ip,
 			isAuthenticated: !!userSession,
 			userId: userSession?.id || null,
     },

@@ -18,7 +18,7 @@ async function fetchStarred(userId, limit = null) {
   try {
     let query = supabase
       .from('favorites') // Table name
-      .select('page_type, page_id, created_at', { count: 'exact' }) // Include count in the same query to reduce calls
+      .select('page_type, page_id, slug, name, created_at', { count: 'exact' }) // Include count in the same query to reduce calls
       .eq('user_id', userId); // Match rows where user_id column equals userId
 
     if (limit !== null) {
