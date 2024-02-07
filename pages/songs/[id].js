@@ -15,11 +15,14 @@ import YoutubeEmbed from '../../components/YoutubeVideo';
 export default function Song({ threadData, ip, songData }) {
 	const { userId, isAuthenticated, loading } = useAuth();
 
+	console.log('this is the ip,', ip);
+	console.log('this is the isAuthenticated', isAuthenticated);
+
   useEffect(() => {
-    if (userId != null && songData?.id) {
+    if (isAuthenticated != null && songData?.id) {
       logPageVisit();
     }
-  }, [userId]);
+  }, [userId, isAuthenticated]);
 
   const logPageVisit = async () => {
     try {
@@ -30,7 +33,7 @@ export default function Song({ threadData, ip, songData }) {
 				page_name: songData.name,
 				isAuthenticated,
 				userId,
-				ip: !isAuthenticated ? ip : undefined,
+				ip: ip,
       });
     } catch (error) {
       console.error('Failed to log page visit:', error);

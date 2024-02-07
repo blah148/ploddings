@@ -14,10 +14,10 @@ export default function Thread({ ip, threadData, songs, blogs }) {
 	const { userId, isAuthenticated, loading } = useAuth();
 
 	useEffect(() => {
-		if (userId != null && threadData?.id) {
+		if (isAuthenticated != null && threadData?.id) {
 			logPageVisit();
 		}
-	}, [userId]);
+	}, [isAuthenticated]);
 		
   const logPageVisit = async () => {
     try {

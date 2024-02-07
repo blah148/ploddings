@@ -11,7 +11,6 @@ import React, { useState, useEffect, createContext, useContext } from 'react'
 
 async function fetchStarred(userId, limit = null) {
   if (!userId) {
-    console.error('fetchStarred called without a userId');
     return { data: [], count: 0 };
   }
 
