@@ -10,33 +10,45 @@ import React, { useState, useEffect, createContext, useContext } from 'react'
  */
 
 async function fetchVisitHistory(userId, limit = null, ip) {
-  if (!userId) {
-		console.log('inside of fetchVisitHistory this is the ip', ip);
+  let query;
+
+  // Determine the query based on whether userId is provided
+  if (userId) {
+    // Query for fetching visit history by userId
+    query = supabase
+      .from('latest_visit_history')
+      .select('page_type, page_id, name, slug, visited_at', { count: 'exact' })
+      .order('visited_at', { ascending: false })
+      .eq('user_id', userId);
+  } else if (ip) {
+    // Query for fetching visit history by ip
+    console.log('inside of fetchVisitHistory this is the ip', ip);
+    query = supabase
+      .from('latest_visit_history')
+      .select('page_type, page_id, name, slug, visited_at', { count: 'exact' })
+      .order('visited_at', { ascending: false })
+      .eq('ip', ip); // Use the IP field to match rows
+  } else {
+    // If neither userId nor ip is provided, return empty result
     return { data: [], count: 0 };
   }
 
+  // Apply limit if provided
+  if (limit !== null) {
+    query = query.limit(limit);
+  }
+
   try {
-    let query = supabase
-      .from('visit_history') // Table name
-      .select('page_type, page_id, name, slug, visited_at', { count: 'exact' }) // Include count in the same query to reduce calls
-			.order('visited_at', { ascending: false }) // Most recent visits first
-      .eq('user_id', userId); // Match rows where user_id column equals userId
-
-    if (limit !== null) {
-      query = query.limit(limit);
-    }
-
-    const { data, error, count } = await query; // Access count directly from the query response
+    const { data, error, count } = await query; // Execute the query
 
     if (error) {
       throw error;
     }
 
-    // No need for a separate count query since count is obtained from the first query
     return { data, count };
   } catch (error) {
     console.error('Error fetching visit history', error.message);
-    return { data: [], count: 0 }; // Return an empty array and count in case of error
+    return { data: [], count: 0 };
   }
 }
 export default fetchVisitHistory;
