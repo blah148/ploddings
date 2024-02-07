@@ -12,7 +12,6 @@ export default async function handler(req, res) {
   }
 
   const { email, code } = req.body;
-	console.log('login info', email, code);
 
   if (!email || !code) {
     return res.status(400).json({ error: 'Email and code are required' });
@@ -26,8 +25,6 @@ export default async function handler(req, res) {
       .eq('email', email)
       .single();
 
-		console.log('Retrieve id', userData);
-
     if (userError || !userData) {
       throw new Error('User not found');
     }
@@ -38,8 +35,6 @@ export default async function handler(req, res) {
       .eq('user_id', userData.id) // Use user_id to retrieve code
       .eq('used', false); // Ensure the code hasn't been used
 
-		console.log('verification data', verificationData);
-
     if (verificationError || !verificationData) {
       throw new Error('Verification failed');
     }
@@ -48,8 +43,6 @@ export default async function handler(req, res) {
 
 		// Check if there is a matching and non-expired code in the verificationData array
 	const matchingCodeData = verificationData.find(v => v.code === code && new Date(v.expires_at) > new Date());
-
-	console.log('Matching code data:', matchingCodeData);
 
 	if (!matchingCodeData) {
     return res.status(401).json({ error: 'Invalid or expired code' });
