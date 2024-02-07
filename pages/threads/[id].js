@@ -37,7 +37,7 @@ export default function Thread({ ip, threadData, songs, blogs }) {
 	
   return (
     <div>
-			<Sidebar userId={userId} ip={ip} />
+			<Sidebar userId={userId} isAuthenticated={isAuthenticated} ip={ip} />
       <h1>{threadData.name}</h1>
 			<ChatWithGPT initialPrompt={`who is ${threadData.name}`} />
 			<div>{threadData.id}</div>

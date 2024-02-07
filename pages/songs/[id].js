@@ -15,9 +15,6 @@ import YoutubeEmbed from '../../components/YoutubeVideo';
 export default function Song({ threadData, ip, songData }) {
 	const { userId, isAuthenticated, loading } = useAuth();
 
-	console.log('this is the ip,', ip);
-	console.log('this is the isAuthenticated', isAuthenticated);
-
   useEffect(() => {
     if (isAuthenticated != null && songData?.id) {
       logPageVisit();
@@ -42,7 +39,7 @@ export default function Song({ threadData, ip, songData }) {
 
   return (
     <div>
-			<Sidebar userId={userId} ip={ip} />
+			<Sidebar userId={userId} isAuthenticated={isAuthenticated} ip={ip} />
       {songData.slug && (
         <Link href={`/threads/${threadData.slug}`}>
           Go to parent thread
