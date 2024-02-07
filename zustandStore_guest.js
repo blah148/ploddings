@@ -1,25 +1,34 @@
 import { create } from 'zustand';
 
 const useGuestStore = create((set, get) => ({
+	
+  maximumObjects: 3,
+  objectLimitGuest: 8,
+	visitHistoryCount: 0,
+  starredCount: 0,
+
   visitHistory: [],
   starred: [],
-  beingWatched: [],
 
-loadGuestData: () => {
-  // Helper function to sort by timestamp in descending order
-  const sortByTimestampDesc = (a, b) => new Date(b.timestamp) - new Date(a.timestamp);
+  loadGuestData: () => {
+    const sortByTimestampDesc = (a, b) => new Date(b.timestamp) - new Date(a.timestamp);
 
-  const visitHistory = JSON.parse(localStorage.getItem('visitHistory')) || [];
-  const starred = JSON.parse(localStorage.getItem('favorites')) || [];
-  const beingWatched = JSON.parse(localStorage.getItem('beingWatched')) || [];
+    let visitHistory = JSON.parse(localStorage.getItem('visitHistory')) || [];
+    let starred = JSON.parse(localStorage.getItem('favorites')) || [];
 
-  // Sort each array by timestamp in descending order before setting the state
-  set({
-    visitHistory: visitHistory.sort(sortByTimestampDesc),
-    starred: starred.sort(sortByTimestampDesc),
-    beingWatched: beingWatched.sort(sortByTimestampDesc),
-  });
-},
+    // Sort by timestamp if present, then apply limits
+    visitHistory = visitHistory.sort(sortByTimestampDesc).slice(0, get().objectLimitGuest);
+    starred = starred.sort(sortByTimestampDesc).slice(0, get().objectLimitGuest);
+
+    // Correctly setting visitHistoryCount and starredCount inside the set call
+    set({
+      visitHistory,
+      starred,
+      visitHistoryCount: visitHistory.length,
+      starredCount: starred.length,
+    });
+  },
+
   saveGuestData: (key, data) => {
     localStorage.setItem(key, JSON.stringify(data));
     // Automatically update the store after saving to ensure consistency

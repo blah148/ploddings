@@ -15,9 +15,13 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
     objectLimit,
     groupMax,
   } = useStore();
-
-  // Using the guest store for guest data
+	
   const guestStore = useGuestStore();
+	const { visitHistoryCount, starredCount } = guestStore;
+	console.log('starredCount', starredCount);
+	
+	const effectiveObjectLimit = isAuthenticated ? objectLimit : objectLimit - starredCount;
+	console.log('effectiveObjectLimit', effectiveObjectLimit);
 
 	useEffect(() => {
 		// Initialize guest data loading
@@ -29,8 +33,8 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 			fetchAndSetVisitHistory(userId, groupMax);
 		}
 		// Execute for both authenticated and unauthenticated users if objectLimit > 0
-		if (objectLimit > 0) {
-			fetchAndSetBeingWatched(userId, ip, objectLimit);
+		if (effectiveObjectLimit > 0) {
+			fetchAndSetBeingWatched(userId, ip, effectiveObjectLimit);
 		}
 	}, []);
 
