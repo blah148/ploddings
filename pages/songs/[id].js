@@ -6,6 +6,7 @@ import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
 import useStore from '../../zustandStore';
 import Sidebar from '../../components/Sidebar';
+import FavoriteButton from '../../components/songFavorite';
 import jwt from 'jsonwebtoken';
 import { supabase } from '../utils/supabase'; // Adjust the import path as needed
 import { fetchSlugsFromTable, fetchDataBySlug, getParentObject } from '../../db-utilities';
@@ -29,8 +30,6 @@ const verifyUserSession = (req) => {
 
 export default function Song({ ip, songData, isAuthenticated, userId }) {
   const router = useRouter();
-	const { refreshData } = useStore();
-	const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
     if (!router.isFallback && songData?.id) {
@@ -54,24 +53,6 @@ export default function Song({ ip, songData, isAuthenticated, userId }) {
   if (router.isFallback) {
     return <div>Loading...</div>;
   }
-
-	// Function to toggle the favorite status
-	const toggleFavorite = async () => {
-		const action = isFavorite ? 'remove' : 'add';
-		try {
-			const response = await axios.post('/api/favorites', {
-				userId, // Assume userId is passed as a prop from getServerSideProps
-				pageId: songData.id,
-				pageType: 'songs',
-				action,
-			});
-			setIsFavorite(!isFavorite); // Toggle the local favorite state
-			await refreshData(userId);
-			console.log(response.data.message); // Optional: handle response
-		} catch (error) {
-			console.error('Error toggling favorite:', error);
-		}
-	};
 
   return (
     <div>
@@ -104,10 +85,9 @@ export default function Song({ ip, songData, isAuthenticated, userId }) {
       {songData.lyrics && (
         <div className="lyrics" dangerouslySetInnerHTML={{ __html: songData.lyrics }} />
       )}
+
       {isAuthenticated && (
-    		 <button onClick={toggleFavorite}>
-        	 {isFavorite ? 'Unfavorite' : 'Favorite'}
-      	 </button>
+        <FavoriteButton songId={songData.id} userId={userId} isAuthenticated={isAuthenticated} />
       )}
     </div>
   );
