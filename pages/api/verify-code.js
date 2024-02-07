@@ -12,6 +12,7 @@ export default async function handler(req, res) {
   }
 
   const { email, code } = req.body;
+	console.log('login info', email, code);
 
   if (!email || !code) {
     return res.status(400).json({ error: 'Email and code are required' });
@@ -25,33 +26,38 @@ export default async function handler(req, res) {
       .eq('email', email)
       .single();
 
+		console.log('Retrieve id', userData);
+
     if (userError || !userData) {
       throw new Error('User not found');
     }
-
     // Retrieve the verification code using user_id
     const { data: verificationData, error: verificationError } = await supabase
       .from('verification_codes')
       .select('*')
       .eq('user_id', userData.id) // Use user_id to retrieve code
-      .eq('used', false) // Ensure the code hasn't been used
-      .single();
+      .eq('used', false); // Ensure the code hasn't been used
+
+		console.log('verification data', verificationData);
 
     if (verificationError || !verificationData) {
       throw new Error('Verification failed');
     }
-
     // Check if the code matches and is not expired
     const isCodeValid = verificationData.code === code && new Date(verificationData.expires_at) > new Date();
-    if (!isCodeValid) {
-      return res.status(401).json({ error: 'Invalid or expired code' });
-    }
 
-    // Optionally, mark the code as used
+		// Check if there is a matching and non-expired code in the verificationData array
+	const matchingCodeData = verificationData.find(v => v.code === code && new Date(v.expires_at) > new Date());
+
+	console.log('Matching code data:', matchingCodeData);
+
+	if (!matchingCodeData) {
+    return res.status(401).json({ error: 'Invalid or expired code' });
+  }
     await supabase
       .from('verification_codes')
       .update({ used: true })
-      .eq('id', verificationData.id);
+      .eq('id', matchingCodeData.id);
 
     // Generate a JWT token for the user
     const token = jwt.sign({ id: userData.id }, process.env.JWT_SECRET, { expiresIn: '7d' });

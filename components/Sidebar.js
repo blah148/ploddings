@@ -21,7 +21,6 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 	
 	const effectiveObjectLimit = isAuthenticated ? objectLimit : objectLimit - starredCount;
 
-	console.log('effectiveObjectLimit', isAuthenticated,groupMax, effectiveObjectLimit);
 	useEffect(() => {
 		// Initialize guest data loading
 		if (!userId && !isAuthenticated) {
