@@ -17,7 +17,6 @@ const FavoriteButton = ({ songId, userId, isAuthenticated }) => {
             .select('*')
             .eq('user_id', userId)
             .eq('page_id', songId)
-            .single();
 
           if (error) {
             throw error;
