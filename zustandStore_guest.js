@@ -5,14 +5,21 @@ const useGuestStore = create((set, get) => ({
   starred: [],
   beingWatched: [],
 
-  loadGuestData: () => {
-    set({
-      visitHistory: JSON.parse(localStorage.getItem('visitHistory')) || [],
-      starred: JSON.parse(localStorage.getItem('favorites')) || [],
-      beingWatched: JSON.parse(localStorage.getItem('beingWatched')) || []
-    });
-  },
+loadGuestData: () => {
+  // Helper function to sort by timestamp in descending order
+  const sortByTimestampDesc = (a, b) => new Date(b.timestamp) - new Date(a.timestamp);
 
+  const visitHistory = JSON.parse(localStorage.getItem('visitHistory')) || [];
+  const starred = JSON.parse(localStorage.getItem('favorites')) || [];
+  const beingWatched = JSON.parse(localStorage.getItem('beingWatched')) || [];
+
+  // Sort each array by timestamp in descending order before setting the state
+  set({
+    visitHistory: visitHistory.sort(sortByTimestampDesc),
+    starred: starred.sort(sortByTimestampDesc),
+    beingWatched: beingWatched.sort(sortByTimestampDesc),
+  });
+},
   saveGuestData: (key, data) => {
     localStorage.setItem(key, JSON.stringify(data));
     // Automatically update the store after saving to ensure consistency
