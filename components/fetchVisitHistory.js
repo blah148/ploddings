@@ -9,9 +9,9 @@ import React, { useState, useEffect, createContext, useContext } from 'react'
  * @returns {Promise<{ data: Array, count: number }>} A promise that resolves to an object containing an array of entries and the count of objects.
  */
 
-async function fetchVisitHistory(userId, limit = null) {
+async function fetchVisitHistory(userId, limit = null, ip) {
   if (!userId) {
-    console.error('fetchVisitHistory called without a userId');
+		console.log('inside of fetchVisitHistory this is the ip', ip);
     return { data: [], count: 0 };
   }
 

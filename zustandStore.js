@@ -11,9 +11,9 @@ const useStore = create((set, get) => ({
   starredCount: 0,
   visitHistoryCount: 0,
   visitHistory: [],
-  fetchAndSetVisitHistory: async (userId, groupMax) => {
+  fetchAndSetVisitHistory: async (userId, groupMax, ip) => {
     try {
-      const { data, count } = await fetchVisitHistory(userId, groupMax);
+      const { data, count } = await fetchVisitHistory(userId, groupMax, ip);
       set(state => ({
         visitHistory: data,
         visitHistoryCount: count,

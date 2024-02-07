@@ -17,7 +17,7 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
   } = useStore();
 	
   const guestStore = useGuestStore();
-	const { visitHistoryCount, starredCount } = guestStore;
+	const { starredCount } = guestStore;
 	
 	const effectiveObjectLimit = isAuthenticated ? objectLimit : objectLimit - starredCount;
 
@@ -28,16 +28,17 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 		} else {
 			// For authenticated users, fetch from the server or database
 			fetchAndSetStarred(userId, groupMax);
-			fetchAndSetVisitHistory(userId, groupMax);
 		}
 		// Execute for both authenticated and unauthenticated users if objectLimit > 0
+		fetchAndSetVisitHistory(userId, groupMax, ip);
+
 		if (effectiveObjectLimit > 0) {
 			fetchAndSetBeingWatched(userId, ip, effectiveObjectLimit);
 		}
 	}, [effectiveObjectLimit, userId]);
 
   // Determine which data to display based on authentication state
-  const displayVisitHistory = !userId && !isAuthenticated ? guestStore.visitHistory : visitHistory;
+  const displayVisitHistory = visitHistory;
   const displayStarred = !userId && !isAuthenticated ? guestStore.starred : starred;
   const displayBeingWatched = beingWatched;
 
