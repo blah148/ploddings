@@ -12,8 +12,9 @@ import { fetchSlugsFromTable, fetchDataBySlug, getParentObject } from '../../db-
 const SlowDowner = dynamic(() => import('../../components/SlowDowner'), { ssr: false });
 import YoutubeEmbed from '../../components/YoutubeVideo';
 
-export default function Song({ ip, songData }) {
+export default function Song({ threadData, ip, songData }) {
 	const { userId, isAuthenticated, loading } = useAuth();
+	console.log('what shows up here', songData);
 
   useEffect(() => {
     if (userId != null && songData?.id) {
@@ -41,12 +42,12 @@ export default function Song({ ip, songData }) {
     <div>
 			<Sidebar userId={userId} ip={ip} />
       {songData.slug && (
-        <Link href={`/threads/${songData.slug}`}>
+        <Link href={`/threads/${threadData.slug}`}>
           Go to parent thread
         </Link>
       )}
       <h1>{songData.name}</h1>
-      <div>{songData.thread_name}</div>
+      <div>{threadData.thread_name}</div>
       <div>{songData.id}</div>
       {songData.musescore_embed && (
         <iframe
@@ -77,6 +78,7 @@ export default function Song({ ip, songData }) {
 export async function getServerSideProps({ params, req }) {
 
   const songData = await fetchDataBySlug('songs', params.id);
+	console.log('heres the song data', songData);
   if (!songData) {
     return { notFound: true };
   }
@@ -84,11 +86,12 @@ export async function getServerSideProps({ params, req }) {
 	const ip = req.connection.remoteAddress;
 	console.log('this is the getSSP ip', ip);
 
-  const additionalData = await getParentObject(songData.thread_id);
+  const threadData = await getParentObject(songData.thread_id);
 
   return {
     props: {
-      songData: { ...songData, ...additionalData },
+      songData,
+			threadData,
 			ip,
     },
   };
