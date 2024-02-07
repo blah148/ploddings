@@ -14,7 +14,6 @@ import YoutubeEmbed from '../../components/YoutubeVideo';
 
 export default function Song({ threadData, ip, songData }) {
 	const { userId, isAuthenticated, loading } = useAuth();
-	console.log('what shows up here', songData);
 
   useEffect(() => {
     if (userId != null && songData?.id) {
@@ -78,13 +77,11 @@ export default function Song({ threadData, ip, songData }) {
 export async function getServerSideProps({ params, req }) {
 
   const songData = await fetchDataBySlug('songs', params.id);
-	console.log('heres the song data', songData);
   if (!songData) {
     return { notFound: true };
   }
 
 	const ip = req.connection.remoteAddress;
-	console.log('this is the getSSP ip', ip);
 
   const threadData = await getParentObject(songData.thread_id);
 
