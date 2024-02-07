@@ -3,7 +3,7 @@ import fetchStarred from './components/fetchStarred.js';
 import fetchVisitHistory from './components/fetchVisitHistory.js';
 import fetchBeingWatched from './components/fetchBeingWatched.js';
 
-const useStore = create(set => ({
+const useStore = create((set, get) => ({
   maximumObjects: 8,
   objectLimit: 8,
   groupMax: 3,
@@ -56,6 +56,12 @@ const useStore = create(set => ({
         console.error('Failed to fetch being watched:', error);
       }
     }
+  },
+
+  refreshData: async (userId) => {
+    const { fetchAndSetStarred, fetchAndSetVisitHistory, groupMax } = get();
+    await fetchAndSetStarred(userId, groupMax);
+    await fetchAndSetVisitHistory(userId, groupMax);
   },
 
 }));

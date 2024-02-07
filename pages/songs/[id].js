@@ -4,6 +4,8 @@ import axios from 'axios';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
+import useStore from '../../zustandStore';
+import Sidebar from '../../components/Sidebar';
 import jwt from 'jsonwebtoken';
 import { supabase } from '../utils/supabase'; // Adjust the import path as needed
 import { fetchSlugsFromTable, fetchDataBySlug, getParentObject } from '../../db-utilities';
@@ -25,8 +27,9 @@ const verifyUserSession = (req) => {
   }
 };
 
-export default function Song({ songData, isAuthenticated, userId }) {
+export default function Song({ ip, songData, isAuthenticated, userId }) {
   const router = useRouter();
+	const { refreshData } = useStore();
 	const [isFavorite, setIsFavorite] = useState(false);
 
   useEffect(() => {
@@ -63,6 +66,7 @@ export default function Song({ songData, isAuthenticated, userId }) {
 				action,
 			});
 			setIsFavorite(!isFavorite); // Toggle the local favorite state
+			await refreshData(userId);
 			console.log(response.data.message); // Optional: handle response
 		} catch (error) {
 			console.error('Error toggling favorite:', error);
@@ -71,14 +75,15 @@ export default function Song({ songData, isAuthenticated, userId }) {
 
   return (
     <div>
+			<Sidebar userId={userId} ip={ip} />
       {songData.slug && (
         <Link href={`/threads/${songData.slug}`}>
           Go to parent thread
         </Link>
       )}
-      <h1>{songData.song_name}</h1>
+      <h1>{songData.name}</h1>
       <div>{songData.thread_name}</div>
-      <div>{songData.song_id}</div>
+      <div>{songData.id}</div>
       {songData.musescore_embed && (
         <iframe
           width="100%"
@@ -116,12 +121,16 @@ export async function getServerSideProps({ params, req }) {
     return { notFound: true };
   }
 
+	const ip = req.connection.remoteAddress;
+	console.log('this is the getSSP ip', ip);
+
   const additionalData = await getParentObject(songData.thread_id);
 
   return {
     props: {
       songData: { ...songData, ...additionalData },
       isAuthenticated: !!userSession,
+			ip,
 			userId: userSession?.id || null,
     },
   };
