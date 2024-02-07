@@ -50,9 +50,7 @@ export default function Thread({ ip, threadData, songs, blogs }) {
           <li className="blog_list-item" key={blog.id}>{blog.blog_name} - {blog.slug}</li>
         ))}
       </ul>
-			{isAuthenticated && (
-        <FavoriteButton page_type="threads" id={threadData.id} userId={userId} isAuthenticated={isAuthenticated} />
-      )}
+        <FavoriteButton page_name={threadData.name} page_slug={threadData.slug} page_type="threads" id={threadData.id} userId={userId} isAuthenticated={isAuthenticated} />
 
     </div>
   );
