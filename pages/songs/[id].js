@@ -1,5 +1,4 @@
 // pages/songs/[id].js
-import { useRouter } from 'next/router';
 import axios from 'axios';
 import Link from 'next/link';
 import dynamic from 'next/dynamic';
@@ -7,52 +6,36 @@ import React, { useEffect, useState } from 'react';
 import useStore from '../../zustandStore';
 import Sidebar from '../../components/Sidebar';
 import FavoriteButton from '../../components/songFavorite';
-import jwt from 'jsonwebtoken';
+import { useAuth } from '../../context/AuthContext';
 import { supabase } from '../utils/supabase'; // Adjust the import path as needed
 import { fetchSlugsFromTable, fetchDataBySlug, getParentObject } from '../../db-utilities';
-
 const SlowDowner = dynamic(() => import('../../components/SlowDowner'), { ssr: false });
 import YoutubeEmbed from '../../components/YoutubeVideo';
 
-// Verify the user's session using the JWT token
-const verifyUserSession = (req) => {
-  const token = req.cookies['auth_token'];
-  if (!token) {
-    return null; // No session
-  }
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return decoded; // Session valid
-  } catch (error) {
-    return null; // Session invalid
-  }
-};
-
-export default function Song({ ip, songData, isAuthenticated, userId }) {
-  const router = useRouter();
+export default function Song({ ip, songData }) {
+	const { userId, isAuthenticated, loading } = useAuth();
 
   useEffect(() => {
-    if (!router.isFallback && songData?.id) {
-      logPageVisit(isAuthenticated);
+    if (userId != null && songData?.id) {
+      logPageVisit();
     }
-  }, [router.isFallback, songData?.id]);
+  }, [userId]);
 
   const logPageVisit = async () => {
     try {
       await axios.post('/api/log-visit', {
         page_type: 'songs',
         page_id: songData.id,
+				page_slug: songData.slug,
+				page_name: songData.name,
 				isAuthenticated,
 				userId,
+				ip: !isAuthenticated ? ip : undefined,
       });
     } catch (error) {
       console.error('Failed to log page visit:', error);
     }
   };
-
-  if (router.isFallback) {
-    return <div>Loading...</div>;
-  }
 
   return (
     <div>
@@ -87,14 +70,13 @@ export default function Song({ ip, songData, isAuthenticated, userId }) {
       )}
 
       {isAuthenticated && (
-        <FavoriteButton songId={songData.id} userId={userId} isAuthenticated={isAuthenticated} />
+        <FavoriteButton page_type="songs" id={songData.id} userId={userId} isAuthenticated={isAuthenticated} />
       )}
     </div>
   );
 }
 
 export async function getServerSideProps({ params, req }) {
-  const userSession = verifyUserSession(req);
 
   const songData = await fetchDataBySlug('songs', params.id);
   if (!songData) {
@@ -109,9 +91,7 @@ export async function getServerSideProps({ params, req }) {
   return {
     props: {
       songData: { ...songData, ...additionalData },
-      isAuthenticated: !!userSession,
 			ip,
-			userId: userSession?.id || null,
     },
   };
 }

@@ -3,20 +3,21 @@ import useStore from '../zustandStore';
 import axios from 'axios'; // Ensure axios is installed or use fetch API
 import { supabase } from '../pages/utils/supabase'; // Adjust the import path as needed
 
-const FavoriteButton = ({ songId, userId, isAuthenticated }) => {
+const FavoriteButton = ({ id, userId, isAuthenticated, page_type }) => {
   const [isFavorite, setIsFavorite] = useState(false);
 	const { refreshData } = useStore();
 
   // Fetch the current favorite status
   useEffect(() => {
-    if (isAuthenticated && userId && songId) {
+    if (isAuthenticated && userId && id) {
       const fetchFavoriteStatus = async () => {
         try {
           const { data, error } = await supabase
             .from('favorites')
             .select('*')
             .eq('user_id', userId)
-            .eq('page_id', songId)
+						.eq('page_type', page_type)
+            .eq('page_id', id)
 
           if (error) {
             throw error;
@@ -30,7 +31,7 @@ const FavoriteButton = ({ songId, userId, isAuthenticated }) => {
 
       fetchFavoriteStatus();
     }
-  }, [userId, songId, isAuthenticated]);
+  }, [userId, id, isAuthenticated]);
 
   // Toggle favorite status
   const toggleFavorite = async () => {
@@ -38,8 +39,8 @@ const FavoriteButton = ({ songId, userId, isAuthenticated }) => {
     try {
       const response = await axios.post('/api/favorites', {
         userId,
-        pageId: songId,
-				pageType: 'songs',
+        pageId: id,
+				pageType: page_type,
         action,
       });
 

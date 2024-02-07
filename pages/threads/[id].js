@@ -2,26 +2,23 @@
 import axios from 'axios';
 import React, { useEffect, useState, createContext, useContext } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import jwt from 'jsonwebtoken';
 import Sidebar from '../../components/Sidebar';
 import Typed from 'typed.js';
+import FavoriteButton from '../../components/songFavorite';
 import { supabase } from '../utils/supabase'; // Adjust the import path as needed
 import ChatWithGPT from '../../components/ChatWithGPT.js';
 const { fetchSlugsFromTable, fetchDataBySlug, fetchChildrenByThreadId } = require('../../db-utilities');
 
 export default function Thread({ ip, threadData, songs, blogs }) {
 
-	const [isFavorite, setIsFavorite] = useState(false);
 	const { userId, isAuthenticated, loading } = useAuth();
 
 	useEffect(() => {
 		if (userId != null && threadData?.id) {
-			console.log('when its done loading', userId);
 			logPageVisit();
 		}
 	}, [userId]);
 		
-  // Function to log the page visit
   const logPageVisit = async () => {
     try {
       await axios.post('/api/log-visit', {
@@ -33,7 +30,6 @@ export default function Thread({ ip, threadData, songs, blogs }) {
 				userId,
 				ip: !isAuthenticated ? ip : undefined,
       });
-      // Optionally handle the response
     } catch (error) {
       console.error('Failed to log page visit:', error);
     }
@@ -53,7 +49,11 @@ export default function Thread({ ip, threadData, songs, blogs }) {
 				{blogs.map(blog => (
           <li className="blog_list-item" key={blog.id}>{blog.blog_name} - {blog.slug}</li>
         ))}
-      </ul>			
+      </ul>
+			{isAuthenticated && (
+        <FavoriteButton page_type="threads" id={threadData.id} userId={userId} isAuthenticated={isAuthenticated} />
+      )}
+
     </div>
   );
 } 

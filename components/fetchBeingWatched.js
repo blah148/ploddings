@@ -10,7 +10,6 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
  * @returns {Promise<{ data: Array, count: number }>} A promise that resolves to an object containing an array of entries and the count of objects.
  */
 async function fetchBeingWatched(userId, userIp, limit = null) {
-		console.log('debugging the lack of authentication on sidebar', userId, userIp, limit);
 		try {
 			let query = supabase
 				.from('latest_visit_history') // Table name
