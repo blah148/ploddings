@@ -19,24 +19,25 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
   // Using the guest store for guest data
   const guestStore = useGuestStore();
 
-  useEffect(() => {
-    // Initialize guest data loading
-    if (!userId && !isAuthenticated) {
-      guestStore.initialize();
-    } else {
-      // For authenticated users, fetch from the server or database
-      fetchAndSetStarred(userId, groupMax);
-      fetchAndSetVisitHistory(userId, groupMax);
-      if (ip && objectLimit > 0) {
-        fetchAndSetBeingWatched(userId, ip, objectLimit);
-      }
-    }
-  }, [userId, isAuthenticated]);
-	console.log('trying to output this', guestStore.visitHistory);
+	useEffect(() => {
+		// Initialize guest data loading
+		if (!userId && !isAuthenticated) {
+			guestStore.initialize();
+		} else {
+			// For authenticated users, fetch from the server or database
+			fetchAndSetStarred(userId, groupMax);
+			fetchAndSetVisitHistory(userId, groupMax);
+		}
+		// Execute for both authenticated and unauthenticated users if objectLimit > 0
+		if (objectLimit > 0) {
+			fetchAndSetBeingWatched(userId, ip, objectLimit);
+		}
+	}, []);
+
   // Determine which data to display based on authentication state
   const displayVisitHistory = !userId && !isAuthenticated ? guestStore.visitHistory : visitHistory;
   const displayStarred = !userId && !isAuthenticated ? guestStore.starred : starred;
-  const displayBeingWatched = !userId && !isAuthenticated ? guestStore.beingWatched : beingWatched;
+  const displayBeingWatched = beingWatched;
 
 	return (
 		<div>
@@ -80,9 +81,9 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 			<div>
 				<h2>Being Watched</h2>
 				<ul>
-					{beingWatched.map((watch, index) => (
+					{displayBeingWatched.map((watch, index) => (
 						<li key={index}>
-							{watch.page_type} - {watch.page_id} - {new Date(watch.visited_at).toLocaleString()}
+							{watch.page_type} - {watch.name} - {watch.slug}
 						</li>
 					))}
 				</ul>

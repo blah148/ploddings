@@ -11,6 +11,7 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
  */
 async function fetchBeingWatched(userId, userIp, limit = null) {
 		try {
+			console.log('trying this now', userId, userIp, limit);
 			let query = supabase
 				.from('latest_visit_history') // Table name
 				.select('page_type, page_id, name, slug, visited_at', { count: 'exact' })
