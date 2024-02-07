@@ -1,5 +1,4 @@
 // Access to: pathname, query, asPath, route
-import { useRouter } from 'next/router';
 import axios from 'axios';
 import React, { useEffect, useState, createContext, useContext } from 'react';
 import { useAuth } from '../../context/AuthContext';
@@ -12,17 +11,15 @@ const { fetchSlugsFromTable, fetchDataBySlug, fetchChildrenByThreadId } = requir
 
 export default function Thread({ ip, threadData, songs, blogs }) {
 
-  const router = useRouter();
 	const [isFavorite, setIsFavorite] = useState(false);
 	const { userId, isAuthenticated, loading } = useAuth();
 
 	useEffect(() => {
-		if (!loading && !router.isFallback && threadData?.id) {
-			logPageVisit(isAuthenticated);
-		} else {
-			console.log('Did not log page visit:', router.isFallback, threadData?.id);
+		if (userId != null && threadData?.id) {
+			console.log('when its done loading', userId);
+			logPageVisit();
 		}
-	}, [loading, router.isFallback]);
+	}, [userId]);
 		
   // Function to log the page visit
   const logPageVisit = async () => {
@@ -42,23 +39,6 @@ export default function Thread({ ip, threadData, songs, blogs }) {
     }
   };
 	
-	const toggleFavorite = async () => {
-		const action = isFavorite ? 'remove' : 'add';
-		try {
-			const response = await axios.post('/api/favorites', {
-				userId,
-				pageId: threadData.id,
-				pageType: 'threads',
-				action,
-			});
-
-			setIsFavorite(!isFavorite); // Toggle the local favorite state
-			console.log(response.data.message); // Optional: handle response
-		} catch (error) {
-			console.error('Error toggling favorite:', error);
-		}
-	};
-
   return (
     <div>
 			<Sidebar userId={userId} ip={ip} />
@@ -74,11 +54,6 @@ export default function Thread({ ip, threadData, songs, blogs }) {
           <li className="blog_list-item" key={blog.id}>{blog.blog_name} - {blog.slug}</li>
         ))}
       </ul>			
-      {isAuthenticated && (
-        <button onClick={toggleFavorite}>
-          {isFavorite ? 'Unfavorite' : 'Favorite'}
-         </button>
-      )}
     </div>
   );
 } 
@@ -90,26 +65,6 @@ export async function getServerSideProps({ params, req }) {
 
   // Extract the client's IP address from the request object
   const ip = req.connection.remoteAddress;
-	console.log('this is the getSSP ip', ip);
-
-
-  // Before fetching related songs and blogs, increment page views if threadData exists
-  if (threadData) {
-    try {
-      const { data, error } = await supabase
-        .rpc('increment_page_views', { row_id: threadData.id });
-      
-      if (error) {
-        console.error('Error incrementing page views:', error.message);
-        // Optionally handle the error, e.g., by logging or sending to an error tracking service
-      }
-    } catch (error) {
-      console.error('Failed to call increment_page_views function:', error);
-      // Handle or log the error as needed
-    }
-		console.log('this is the threadData.id', threadData.id);
-
-  }
 
   // Fetch the songs related to the thread
   const songs = await fetchChildrenByThreadId('songs', params.id);
