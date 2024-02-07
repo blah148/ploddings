@@ -2,9 +2,9 @@ import { supabase } from '../pages/utils/supabase';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import useStore from '../zustandStore';
+import useGuestStore from '../zustandStore_guest';
 
 export default function Sidebar({ userId, isAuthenticated, ip }) {
-  // Destructure the necessary states and actions from the store
   const {
     visitHistory,
     starred,
@@ -16,20 +16,27 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
     groupMax,
   } = useStore();
 
-  // Effect to fetch visit history and starred items
+  // Using the guest store for guest data
+  const guestStore = useGuestStore();
+
   useEffect(() => {
-    if (userId) {
+    // Initialize guest data loading
+    if (!userId && !isAuthenticated) {
+      guestStore.initialize();
+    } else {
+      // For authenticated users, fetch from the server or database
       fetchAndSetStarred(userId, groupMax);
       fetchAndSetVisitHistory(userId, groupMax);
+      if (ip && objectLimit > 0) {
+        fetchAndSetBeingWatched(userId, ip, objectLimit);
+      }
     }
-  }, [userId, fetchAndSetStarred, fetchAndSetVisitHistory, groupMax]);
-
-  // Effect to fetch being watched items
-  useEffect(() => {
-    if (userId && ip && objectLimit > 0) {
-      fetchAndSetBeingWatched(userId, ip, objectLimit);
-    }
-  }, [userId, ip, objectLimit, fetchAndSetBeingWatched]);
+  }, [userId, isAuthenticated]);
+	console.log('trying to output this', guestStore.visitHistory);
+  // Determine which data to display based on authentication state
+  const displayVisitHistory = !userId && !isAuthenticated ? guestStore.visitHistory : visitHistory;
+  const displayStarred = !userId && !isAuthenticated ? guestStore.starred : starred;
+  const displayBeingWatched = !userId && !isAuthenticated ? guestStore.beingWatched : beingWatched;
 
 	return (
 		<div>
@@ -53,9 +60,9 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 			<div>
 				<h2>Visit History</h2>
 				<ul>
-					{visitHistory.map((visit, index) => (
+					{displayVisitHistory.map((visit, index) => (
 						<li key={index}>
-							{visit.page_type} - {visit.page_id} - {new Date(visit.visited_at).toLocaleString()}
+							{visit.page_type} - {visit.name} - {visit.slug}
 						</li>
 					))}
 				</ul>
@@ -63,9 +70,9 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 			<div>
 				<h2>Starred</h2>
 				<ul>
-					{starred.map((star, index) => (
+					{displayStarred.map((star, index) => (
 						<li key={index}>
-							{star.page_type} - {star.page_id} - {new Date(star.created_at).toLocaleString()}
+							{star.page_type} - {star.name} - {star.slug}
 						</li>
 					))}
 				</ul>

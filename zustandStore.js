@@ -1,4 +1,4 @@
-import create from 'zustand';
+import { create } from 'zustand';
 import fetchStarred from './components/fetchStarred.js';
 import fetchVisitHistory from './components/fetchVisitHistory.js';
 import fetchBeingWatched from './components/fetchBeingWatched.js';

@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import useStore from '../zustandStore';
+import useStore from '../zustandStore'; // For authenticated users
+import useGuestStore from '../zustandStore_guest'; // Adjust the import path as needed
 import axios from 'axios';
 import { supabase } from '../pages/utils/supabase';
 
 const FavoriteButton = ({ userId, isAuthenticated, id, page_slug, page_name, page_type }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const { refreshData } = useStore();
+  const guestStore = useGuestStore(); // Use guest store for guest functionality
 
   // Use a single localStorage key for all favorites
   const localStorageKey = "favorites";
@@ -16,7 +18,7 @@ const FavoriteButton = ({ userId, isAuthenticated, id, page_slug, page_name, pag
     return favorites.some(favorite => favorite.slug === page_slug);
   };
 
-  // Update favorite status in localStorage for guest users
+  // Update favorite status in localStorage and refresh Zustand store for guest users
   const updateFavoriteLocal = () => {
     let favorites = JSON.parse(localStorage.getItem(localStorageKey)) || [];
     if (isFavorite) {
@@ -27,6 +29,7 @@ const FavoriteButton = ({ userId, isAuthenticated, id, page_slug, page_name, pag
       favorites.push({ slug: page_slug, name: page_name, page_type: page_type, timestamp: new Date().toISOString() });
     }
     localStorage.setItem(localStorageKey, JSON.stringify(favorites));
+    guestStore.loadGuestData(); // Refresh the guest Zustand store after updating
   };
 
   useEffect(() => {
@@ -67,8 +70,8 @@ const FavoriteButton = ({ userId, isAuthenticated, id, page_slug, page_name, pag
           userId,
           pageId: id,
           pageType: page_type,
-					pageName: page_name,
-					pageSlug: page_slug,
+          pageName: page_name,
+          pageSlug: page_slug,
           action,
         });
 
@@ -79,9 +82,10 @@ const FavoriteButton = ({ userId, isAuthenticated, id, page_slug, page_name, pag
         console.error('Error toggling favorite:', error);
       }
     } else {
-      // Toggle favorite status in localStorage for guests
+      // Toggle favorite status in localStorage for guests and refresh guest store
       updateFavoriteLocal();
       setIsFavorite(!isFavorite);
+      // Optionally, if you have a specific method in guestStore to handle this action, call it here
     }
   };
 
