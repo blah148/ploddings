@@ -67,6 +67,8 @@ const FavoriteButton = ({ userId, isAuthenticated, id, page_slug, page_name, pag
           userId,
           pageId: id,
           pageType: page_type,
+					pageName: page_name,
+					pageSlug: page_slug,
           action,
         });
 

@@ -69,9 +69,7 @@ export default function Song({ ip, songData }) {
         <div className="lyrics" dangerouslySetInnerHTML={{ __html: songData.lyrics }} />
       )}
 
-      {isAuthenticated && (
-        <FavoriteButton page_type="songs" id={songData.id} userId={userId} isAuthenticated={isAuthenticated} />
-      )}
+      <FavoriteButton page_name={songData.name} page_slug={songData.slug} page_type="songs" id={songData.id} userId={userId} isAuthenticated={isAuthenticated} />
     </div>
   );
 }
