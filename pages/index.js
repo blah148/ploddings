@@ -75,7 +75,7 @@ export default function Home() {
 
       const { data: threads } = await supabase
         .from('threads')
-        .select('thread_id, thread_name, slug, page_views, featured_img_200px, blurb')
+        .select('id, name, slug, page_views, featured_img_200px, blurb')
         .eq('category_id', category.id);
 
       const { data: blogs } = await supabase
@@ -102,7 +102,7 @@ export default function Home() {
 
     const { data: threadsData, error: threadsError } = await supabase
       .from('threads')
-      .select('thread_id, thread_name, slug, page_views, featured_img_200px, blurb');
+      .select('id, name, slug, page_views, featured_img_200px, blurb');
 
     if (threadsError) {
       console.error('Error fetching threads:', threadsError);
@@ -179,7 +179,7 @@ export default function Home() {
 							<div>
 								<ul>
 									{category.threads.map((thread) => (
-										<li key={thread.thread_id}>{thread.thread_name}</li>
+										<li key={thread.id}>{thread.name}</li>
 									))}
 								</ul>
 							</div>
@@ -200,8 +200,8 @@ export default function Home() {
           <h2>Threads Feed</h2>
           <ul>
             {threads.map((thread) => (
-              <li key={thread.thread_id}>
-                <h3>{thread.thread_name}</h3>
+              <li key={thread.id}>
+                <h3>{thread.name}</h3>
                 <p>{thread.slug}</p>
               </li>
             ))}
