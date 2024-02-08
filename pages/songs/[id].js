@@ -9,6 +9,7 @@ import FavoriteButton from '../../components/songFavorite';
 import { supabase } from '../utils/supabase'; // Adjust the import path as needed
 import { fetchDataBySlug } from '../../db-utilities';
 const SlowDowner = dynamic(() => import('../../components/SlowDowner'), { ssr: false });
+import jwt from 'jsonwebtoken'; 
 import YoutubeEmbed from '../../components/YoutubeVideo';
 
 const verifyUserSession = (req) => {
@@ -43,8 +44,13 @@ export default function Song({ userId, isAuthenticated, ip, songData }) {
       console.error('Failed to log page visit:', error);
     }
   };
-  
-  logPageVisit();
+
+	useEffect(() => {
+		console.log('heres the userId', userId);
+		if (userId !== null) {
+			logPageVisit();
+		}
+	}, [userId]);
 
   useEffect(() => {
     const fetchThreadData = async () => {
@@ -60,7 +66,6 @@ export default function Song({ userId, isAuthenticated, ip, songData }) {
             throw error;
           }
           setThreadData(data);
-					console.log(threadData);
         } catch (error) {
           console.error('Error fetching thread data:', error.message);
         }

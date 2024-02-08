@@ -40,8 +40,13 @@ export default function Thread({ userId, isAuthenticated, ip, threadData }) {
       console.error('Failed to log page visit:', error);
     }
   };
-	
-	logPageVisit();
+
+	useEffect(() => {
+		if (userId !== null) {
+			console.log('the userId', userId);
+			logPageVisit();
+		}
+	}, [userId]);
 	
   return (
     <div>
