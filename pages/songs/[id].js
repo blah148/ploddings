@@ -6,20 +6,27 @@ import React, { useEffect, useState } from 'react';
 import useStore from '../../zustandStore';
 import Sidebar from '../../components/Sidebar';
 import FavoriteButton from '../../components/songFavorite';
-import { useAuth } from '../../context/AuthContext';
 import { supabase } from '../utils/supabase'; // Adjust the import path as needed
-import { fetchSlugsFromTable, fetchDataBySlug, getParentObject } from '../../db-utilities';
+import { fetchDataBySlug } from '../../db-utilities';
 const SlowDowner = dynamic(() => import('../../components/SlowDowner'), { ssr: false });
 import YoutubeEmbed from '../../components/YoutubeVideo';
 
-export default function Song({ threadData, ip, songData }) {
-	const { userId, isAuthenticated, loading } = useAuth();
+const verifyUserSession = (req) => {
+  const token = req.cookies['auth_token'];
+  if (!token) {
+    return null; // No session
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return decoded; // Session valid
+  } catch (error) {
+    return null; // Session invalid
+  }
+};
 
-  useEffect(() => {
-    if (isAuthenticated != null && songData?.id) {
-      logPageVisit();
-    }
-  }, [userId, isAuthenticated]);
+export default function Song({ userId, isAuthenticated, ip, songData }) {
+
+	const [threadData, setThreadData] = useState(null);
 
   const logPageVisit = async () => {
     try {
@@ -36,17 +43,43 @@ export default function Song({ threadData, ip, songData }) {
       console.error('Failed to log page visit:', error);
     }
   };
+  
+  logPageVisit();
+
+  useEffect(() => {
+    const fetchThreadData = async () => {
+      if (songData?.thread_id) {
+        try {
+          const { data, error } = await supabase
+            .from('threads')
+            .select('slug, name')
+            .eq('id', songData.thread_id)
+            .single();
+
+          if (error) {
+            throw error;
+          }
+          setThreadData(data);
+					console.log(threadData);
+        } catch (error) {
+          console.error('Error fetching thread data:', error.message);
+        }
+      }
+    };
+
+    fetchThreadData();
+  }, [songData?.thread_id]);
 
   return (
     <div>
 			<Sidebar userId={userId} isAuthenticated={isAuthenticated} ip={ip} />
-      {songData.slug && (
+      {threadData && (
         <Link href={`/threads/${threadData.slug}`}>
           Go to parent thread
         </Link>
       )}
       <h1>{songData.name}</h1>
-      <div>{threadData.thread_name}</div>
+			{threadData && <div>{threadData.name}</div>}
       <div>{songData.id}</div>
       {songData.musescore_embed && (
         <iframe
@@ -76,20 +109,16 @@ export default function Song({ threadData, ip, songData }) {
 
 export async function getServerSideProps({ params, req }) {
 
+	const userSession = verifyUserSession(req);
   const songData = await fetchDataBySlug('songs', params.id);
-  if (!songData) {
-    return { notFound: true };
-  }
-
 	const ip = req.connection.remoteAddress;
-
-  const threadData = await getParentObject(songData.thread_id);
 
   return {
     props: {
       songData,
-			threadData,
 			ip,
+			isAuthenticated: !!userSession,
+			userId: userSession?.id || null,
     },
   };
 }

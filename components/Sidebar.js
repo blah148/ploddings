@@ -32,7 +32,7 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 		// Execute for both authenticated and unauthenticated users if objectLimit > 0
 		fetchAndSetVisitHistory(userId, groupMax, ip);
 
-		if (effectiveObjectLimit > 0) {
+		if (effectiveObjectLimit > 0 && userId != null) {
 			fetchAndSetBeingWatched(userId, ip, effectiveObjectLimit);
 		}
 	}, [effectiveObjectLimit, userId]);
