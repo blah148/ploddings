@@ -18,7 +18,7 @@ useEffect(() => {
     if (localStorage.getItem('songComponentOrder') !== null && switcher !== null) {
       localStorage.setItem('songComponentOrder', switcher);
       let storageItem = localStorage.getItem('songComponentOrder');
-      console.log('UPDATE: switcher, localStorage', switcher, storageItem);
+//      console.log('UPDATE: switcher, localStorage', switcher, storageItem);
     } else if (localStorage.getItem('songComponentOrder') !== null && switcher === null) {
       let storageItem = localStorage.getItem('songComponentOrder')
 			setSwitcher(storageItem);
