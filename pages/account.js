@@ -36,7 +36,7 @@ export default function Account({ ip }) {
 		// Execute for both authenticated and unauthenticated users if objectLimit > 0
 		fetchAndSetVisitHistory(userId, null, ip);
 
-	}, [isAuthenticated]);
+	}, [userId, isAuthenticated]);
 
 	// Determine which data to display based on authentication state
 	const displayVisitHistory = visitHistory;

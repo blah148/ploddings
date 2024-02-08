@@ -31,7 +31,8 @@ async function fetchVisitHistory(userId, limit = null, ip) {
     // If neither userId nor ip is provided, return empty result
     return { data: [], count: 0 };
   }
-
+  console.log('fetchVisitHistory...userId limit', userId, limit);
+	
   // Apply limit if provided
   if (limit !== null) {
     query = query.limit(limit);
