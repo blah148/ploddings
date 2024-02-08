@@ -41,6 +41,7 @@ export default function Account({ ip }) {
 	// Determine which data to display based on authentication state
 	const displayVisitHistory = visitHistory;
 	const displayStarred = !userId && !isAuthenticated ? guestStore.starred : starred;
+	console.log('/account, guestStore.starred', guestStore.starred);
 
   if (isLoading) {
     return <Loader isLoading={isLoading} />; // Render the Loader while checking authentication status
@@ -53,7 +54,7 @@ export default function Account({ ip }) {
 		  <div>
         <h2>Visit History</h2>
         <ul>
-          {visitHistory.map((visit, index) => (
+          {displayVisitHistory.map((visit, index) => (
             <li key={index}>
               {visit.page_type} - {visit.page_id} - {new Date(visit.visited_at).toLocaleString()}
             </li>
@@ -63,7 +64,7 @@ export default function Account({ ip }) {
 			<div>
 				<h2>Starred</h2>
 					<ul>
-						{starred.map((star, index) => (
+						{displayStarred.map((star, index) => (
 							<li key={index}>
 								{star.page_type} - {star.page_id} - {new Date(star.created_at).toLocaleString()}
 							</li>
