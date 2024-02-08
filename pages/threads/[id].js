@@ -43,10 +43,10 @@ export default function Thread({ ip, threadData, songs, blogs }) {
 			<div>{threadData.id}</div>
 			<img src={threadData.featured_img_550px}/>
       <ul>
-        {songs.map(song => (
+        {songs && songs.map(song => (
           <li className="song_list-item" key={song.id}>{song.song_name} - {song.slug}</li>
         ))}
-				{blogs.map(blog => (
+				{blogs && blogs.map(blog => (
           <li className="blog_list-item" key={blog.id}>{blog.blog_name} - {blog.slug}</li>
         ))}
       </ul>
@@ -57,18 +57,23 @@ export default function Thread({ ip, threadData, songs, blogs }) {
 } 
 
 export async function getServerSideProps({ params, req }) {
-
   // Fetch the thread data based on the slug
   const threadData = await fetchDataBySlug('threads', params.id);
 
   // Extract the client's IP address from the request object
   const ip = req.connection.remoteAddress;
 
-  // Fetch the songs related to the thread
-  const songs = await fetchChildrenByThreadId('songs', params.id);
+  // Declare variables for songs and blogs outside of the if blocks
+  let songs, blogs;
 
-  // Fetch the blogs related to the thread
-  const blogs = await fetchChildrenByThreadId('blog', params.id);
+  // Conditional fetching based on child_type
+  if (threadData && threadData.child_type === "songs") {
+    songs = await fetchChildrenByThreadId('songs', params.id);
+  }
+  
+  if (threadData && threadData.child_type === "blog") {
+    blogs = await fetchChildrenByThreadId('blog', params.id);
+  }
 
   // Check if threadData exists to handle not found case
   if (!threadData) {
@@ -76,14 +81,12 @@ export async function getServerSideProps({ params, req }) {
       notFound: true,
     };
   }
+  
+  // Construct props object conditionally including songs and blogs only if they exist
+  const props = { threadData, ip };
+  if (songs) props.songs = songs;
+  if (blogs) props.blogs = blogs;
 
-  return {
-    props: {
-      threadData,
-      songs,
-      blogs,
-			ip,
-    },
-  };
+  return { props };
 }
 
