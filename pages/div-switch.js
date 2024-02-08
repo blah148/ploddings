@@ -7,8 +7,9 @@ export default function YourComponent() {
 	const [switcher, setSwitcher] = useState(null);
 
 	function swapOrder () {
-    setDiv1({ ...div1, text: "Up" });
-    setDiv2({ ...div2, text: "Down" });
+		let storageItem = localStorage.getItem('songComponentOrder')
+		setDiv1(storageItem === "column" ? { ...div1, text: "Up" } : { ...div1, text: "Down" });
+    setDiv2(storageItem === "column" ? { ...div2, text: "Down" } : { ...div2, text: "Up" });
 		setSwitcher(switcher === "column" ? "column-reverse" : "column");
 	};
 
@@ -19,8 +20,11 @@ useEffect(() => {
       let storageItem = localStorage.getItem('songComponentOrder');
       console.log('UPDATE: switcher, localStorage', switcher, storageItem);
     } else if (localStorage.getItem('songComponentOrder') !== null && switcher === null) {
-      setSwitcher(localStorage.getItem('songComponentOrder'));
-			
+      let storageItem = localStorage.getItem('songComponentOrder')
+			setSwitcher(storageItem);
+			setDiv1(storageItem === "column" ? { ...div1, text: "Down" } : { ...div1, text: "Up" });
+			setDiv2(storageItem === "column" ? { ...div2, text: "Up" } : { ...div2, text: "Down" });
+
     }
   }
 }, [switcher]);
