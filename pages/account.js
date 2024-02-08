@@ -3,98 +3,52 @@ import Link from 'next/link';
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from './utils/supabase';
 import ThemeSelector from '../components/ThemeSelector';
+import EmailUpdater from '../components/ChangeEmail';
 import useStore from '../zustandStore';
+import useGuestStore from '../zustandStore_guest';
 import Loader from '../components/Loader';
 
-export default function Account() {
-  const { userId, isLoading } = useAuth();
-	const { visitHistory, starred, fetchAndSetStarred, fetchAndSetVisitHistory } = useStore();
+export default function Account({ ip }) {
+  const { userId, isAuthenticated, isLoading } = useAuth();
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
-	const objectLimit = 8;
+	const { 
+		visitHistory, 
+		starred, 
+		fetchAndSetStarred, 
+		fetchAndSetVisitHistory,
+	} = useStore();
+	const guestStore = useGuestStore();
+	const {
+		starredCount
+	} = useGuestStore();
 		
-  useEffect(() => {
-    if (userId) {
-      fetchAndSetStarred(userId, 3); // Assuming groupMax is 3 as defined in your store
-    }
-  }, [userId, fetchAndSetStarred]); // Added fetchAndSetStarred to dependency array
 
-  useEffect(() => {
-    if (userId) {
-      fetchAndSetVisitHistory(userId, 3); // Assuming groupMax is 3 as defined in your store
-    }
-  }, [userId, fetchAndSetVisitHistory]); // Added fetchAndSetVisitHistory to dependency array
+	useEffect(() => {
+		// Initialize guest data loading
+		if (!isAuthenticated) {
+			guestStore.initialize();
+		} else {
+			// For authenticated users, fetch from the server or database
+			fetchAndSetStarred(userId);
+		}
+		// Execute for both authenticated and unauthenticated users if objectLimit > 0
+		fetchAndSetVisitHistory(userId, null, ip);
 
-  useEffect(() => {
-    const fetchUserData = async () => {
-      if (!userId) return;
+	}, [isAuthenticated]);
 
-      const { data, error } = await supabase
-        .from('users')
-        .select('email')
-        .eq('id', userId)
-        .single();
-
-      if (error) {
-        console.error('Error fetching user data:', error);
-        return;
-      }
-
-      setEmail(data.email);
-    };
-
-    fetchUserData();
-  }, [userId]);
-
-  const updateEmail = async (newEmail) => {
-    setLoading(true);
-
-    const { data, error } = await supabase
-      .from('users')
-      .update({ email: newEmail })
-      .eq('id', userId);
-
-    setLoading(false);
-
-    if (error) {
-      setMessage('Failed to update email.');
-      console.error('Error updating email:', error);
-    } else {
-      setMessage('Email updated successfully.');
-      setEmail(newEmail); // Update email state to reflect the change
-    }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent default form submission behavior
-    updateEmail(email);
-  };
+	// Determine which data to display based on authentication state
+	const displayVisitHistory = visitHistory;
+	const displayStarred = !userId && !isAuthenticated ? guestStore.starred : starred;
 
   if (isLoading) {
     return <Loader isLoading={isLoading} />; // Render the Loader while checking authentication status
   }
 
-  if (!userId) {
-    return <p>Please log in to view and update your account information.</p>;
-  }
-
   return (
     <div>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label htmlFor="email">Email:</label>
-          <input
-            id="email"
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Updating...' : 'Update Email'}
-        </button>
-      </form>
+			<EmailUpdater userId={userId} />
       {message && <p>{message}</p>}
 		  <div>
         <h2>Visit History</h2>
@@ -119,4 +73,15 @@ export default function Account() {
 				<ThemeSelector />
 			</div>
   );
+}
+
+export async function getServerSideProps({ params, req }) {
+
+  const ip = req.connection.remoteAddress;
+
+  return {
+    props: {
+      ip,
+    },
+  };
 }

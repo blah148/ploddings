@@ -22,7 +22,6 @@ async function fetchVisitHistory(userId, limit = null, ip) {
       .eq('user_id', userId);
   } else if (ip) {
     // Query for fetching visit history by ip
-    console.log('inside of fetchVisitHistory this is the ip', ip);
     query = supabase
       .from('latest_visit_history')
       .select('page_type, page_id, name, slug, visited_at', { count: 'exact' })
