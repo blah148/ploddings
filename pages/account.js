@@ -7,6 +7,7 @@ import EmailUpdater from '../components/ChangeEmail';
 import useStore from '../zustandStore';
 import useGuestStore from '../zustandStore_guest';
 import Loader from '../components/Loader';
+import CreateAccountForm from '../components/createAccount';
 
 export default function Account({ ip }) {
   const { userId, isAuthenticated, isLoading } = useAuth();
@@ -41,7 +42,6 @@ export default function Account({ ip }) {
 	// Determine which data to display based on authentication state
 	const displayVisitHistory = visitHistory;
 	const displayStarred = !userId && !isAuthenticated ? guestStore.starred : starred;
-	console.log('/account, guestStore.starred', guestStore.starred);
 
   if (isLoading) {
     return <Loader isLoading={isLoading} />; // Render the Loader while checking authentication status
@@ -49,6 +49,7 @@ export default function Account({ ip }) {
 
   return (
     <div>
+			{!isAuthenticated && <CreateAccountForm />}
 			<EmailUpdater userId={userId} />
       {message && <p>{message}</p>}
 		  <div>
