@@ -63,7 +63,7 @@ export default function Sidebar() {
   const resizerStyle = {
     height: '5px',
     backgroundColor: 'red',
-    cursor: 'pointer',
+    cursor: 'row-resize',
   };
 
   const paneStyle = {
@@ -90,12 +90,13 @@ export default function Sidebar() {
           onChange={newSize => setSize(newSize)}
           split="horizontal"
           size={size}
+					maxSize={-50}
           resizerStyle={resizerStyle}
           style={{ overflowY: 'auto', position: 'relative' }}>
           <div style={paneStyle}>First Pane</div>
           <SplitPane 
               onChange={newSize => setSize2(newSize)}
-              maxSize="-10000" 
+              maxSize={-50} 
               split="horizontal" 
               size={size2} 
               resizerStyle={resizerStyle}>
