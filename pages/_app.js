@@ -1,6 +1,6 @@
 // Import your dependencies
 import "@/styles/globals.css";
-import { AuthProvider } from '../context/AuthContext';
+import { LoadingProvider } from '../context/LoadingContext';
 import { ThemeProvider, useTheme } from '../context/ThemeContext';
 
 // This is a new component that consumes the useTheme hook
@@ -16,12 +16,12 @@ const ThemedAppContent = ({ Component, pageProps }) => {
 
 export default function App({ Component, pageProps }) {
   return (
-    <AuthProvider>
+    <LoadingProvider>
       <ThemeProvider>
         {/* Use the ThemedAppContent component to wrap your page content */}
         <ThemedAppContent Component={Component} pageProps={pageProps} />
       </ThemeProvider>
-    </AuthProvider>
+    </LoadingProvider>
   );
 }
 
