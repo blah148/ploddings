@@ -3,11 +3,23 @@ import Logout from '../components/Logout';
 import React, { useEffect, useState } from 'react';
 import { supabase } from './utils/supabase';
 import Loader from '../components/Loader';
-import { useAuth } from '../context/AuthContext';
 
-export default function Home() {
+const verifyUserSession = (req) => {
+  const token = req.cookies['auth_token'];
+  if (!token) {
+    return null; // No session
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return decoded; // Session valid
+  } catch (error) {
+    return null; // Session invalid
+  }
+};
 
-	const { isAuthenticated, login, logout } = useAuth();
+
+export default function Home({ isAuthenticated, userId, ip  }) {
+
   const [categories, setCategories] = useState([]);
   const [threads, setThreads] = useState([]);
   const [songs, setSongs] = useState([]);
@@ -224,5 +236,19 @@ export default function Home() {
       )}
     </div>
   );
+}
+
+export async function getServerSideProps({ params, req }) {
+
+  const userSession = verifyUserSession(req);
+  const ip = req.connection.remoteAddress;
+  
+  return {
+    props: {
+      ip,
+      isAuthenticated: !!userSession,
+      userId: userSession?.id || null,
+    },
+  };
 }
 

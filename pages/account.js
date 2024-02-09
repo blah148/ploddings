@@ -1,4 +1,3 @@
-import { useAuth } from '../context/AuthContext';
 import Link from 'next/link';
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from './utils/supabase';
@@ -9,11 +8,25 @@ import useGuestStore from '../zustandStore_guest';
 import Loader from '../components/Loader';
 import CreateAccountForm from '../components/createAccount';
 
-export default function Account({ ip }) {
-  const { userId, isAuthenticated, isLoading } = useAuth();
+const verifyUserSession = (req) => {
+  const token = req.cookies['auth_token'];
+  if (!token) {
+    return null; // No session
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return decoded; // Session valid
+  } catch (error) {
+    return null; // Session invalid
+  }
+};
+
+export default function Account({ ip, isAuthenticated, userId }) {
   const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
+	const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
+
 	const { 
 		visitHistory, 
 		starred, 
@@ -44,7 +57,7 @@ export default function Account({ ip }) {
 	const displayStarred = !userId && !isAuthenticated ? guestStore.starred : starred;
 
   if (isLoading) {
-    return <Loader isLoading={isLoading} />; // Render the Loader while checking authentication status
+    return <Loader isLoading={isLoading} />;
   }
 
   return (
@@ -79,11 +92,15 @@ export default function Account({ ip }) {
 
 export async function getServerSideProps({ params, req }) {
 
+  const userSession = verifyUserSession(req);
   const ip = req.connection.remoteAddress;
-
+  
   return {
     props: {
       ip,
+      isAuthenticated: !!userSession,
+      userId: userSession?.id || null,
     },
   };
 }
+
