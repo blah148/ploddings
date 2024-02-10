@@ -1,8 +1,12 @@
 // pages/login.js
 import { useState } from 'react';
 import axios from 'axios';
+import { useLoading } from '../context/LoadingContext';
+import Loader from '../components/Loader';
 
 export default function Login() {
+
+	const { isLoading, setIsLoading } = useLoading();
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
 

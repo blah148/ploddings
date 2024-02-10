@@ -6,6 +6,9 @@ import jwt from 'jsonwebtoken';
 import { supabase } from '../utils/supabase'; // Adjust the import path as needed
 import ChatWithGPT from '../../components/ChatWithGPT.js';
 import { fetchSlugsFromTable, fetchDataBySlug, getParentObject } from '../../db-utilities';
+import { useLoading } from '../../context/LoadingContext';
+import Loader from '../../components/Loader';
+
 
 // Verify the user's session using the JWT token
 const verifyUserSession = (req) => {
@@ -23,6 +26,7 @@ const verifyUserSession = (req) => {
 
 export default function Blog({ blogData, isAuthenticated, userId }) {
 
+	const { isLoading, setIsLoading } = useLoading();
   const router = useRouter();
 	const [isFavorite, setIsFavorite] = useState(false);
 

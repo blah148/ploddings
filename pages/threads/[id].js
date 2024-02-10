@@ -9,6 +9,8 @@ import { supabase } from '../utils/supabase'; // Adjust the import path as neede
 import ChatWithGPT from '../../components/ChatWithGPT.js';
 import jwt from 'jsonwebtoken';
 const { fetchDataBySlug } = require('../../db-utilities');
+import { useLoading } from '../../context/LoadingContext';
+import Loader from '../../components/Loader';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -24,6 +26,8 @@ const verifyUserSession = (req) => {
 };
 
 export default function Thread({ userId, isAuthenticated, ip, threadData }) {
+
+	const { isLoading, setIsLoading } = useLoading();
 
   const logPageVisit = async () => {
     try {

@@ -11,6 +11,9 @@ import { fetchDataBySlug } from '../../db-utilities';
 const SlowDowner = dynamic(() => import('../../components/SlowDowner'), { ssr: false });
 import jwt from 'jsonwebtoken'; 
 import YoutubeEmbed from '../../components/YoutubeVideo';
+import YoutubeVideo from '../../components/youtubePlayerAPI';
+import { useLoading } from '../../context/LoadingContext';
+import Loader from '../../components/Loader';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -27,6 +30,7 @@ const verifyUserSession = (req) => {
 
 export default function Song({ userId, isAuthenticated, ip, songData }) {
 
+	const { isLoading, setIsLoading } = useLoading();
 	const [threadData, setThreadData] = useState(null);
 
   const logPageVisit = async () => {
@@ -46,7 +50,6 @@ export default function Song({ userId, isAuthenticated, ip, songData }) {
   };
 
 	useEffect(() => {
-		console.log('heres the userId', userId);
 		if (userId !== null) {
 			logPageVisit();
 		}
@@ -78,6 +81,7 @@ export default function Song({ userId, isAuthenticated, ip, songData }) {
   return (
     <div>
 			<Sidebar userId={userId} isAuthenticated={isAuthenticated} ip={ip} />
+			<Loader isLoading={isLoading} />
       {threadData && (
         <Link href={`/threads/${threadData.slug}`}>
           Go to parent thread
@@ -98,7 +102,7 @@ export default function Song({ userId, isAuthenticated, ip, songData }) {
       )}
       <SlowDowner mp3={songData.dropbox_mp3_link} />
       {songData.youtube_link && (
-        <YoutubeEmbed youtube_link={songData.youtube_link} />
+				<YoutubeVideo videoId={songData.youtube_link} />
       )}
       {songData.extra_notes && (
         <div className="extraInfo" dangerouslySetInnerHTML={{ __html: songData.extra_notes }} />

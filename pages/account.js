@@ -5,8 +5,9 @@ import ThemeSelector from '../components/ThemeSelector';
 import EmailUpdater from '../components/ChangeEmail';
 import useStore from '../zustandStore';
 import useGuestStore from '../zustandStore_guest';
-import Loader from '../components/Loader';
 import CreateAccountForm from '../components/createAccount';
+import { useLoading } from '../context/LoadingContext';
+import Loader from '../components/Loader';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -22,9 +23,9 @@ const verifyUserSession = (req) => {
 };
 
 export default function Account({ ip, isAuthenticated, userId }) {
+
+	const { isLoading, setIsLoading } = useLoading();
   const [email, setEmail] = useState('');
-  const [loading, setLoading] = useState(false);
-	const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
 
 	const { 

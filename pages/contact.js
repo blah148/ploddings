@@ -1,6 +1,11 @@
 import { useState } from 'react';
+import { useLoading } from '../context/LoadingContext';
+import Loader from '../components/Loader';
 
 const ContactForm = () => {
+
+	const { isLoading, setIsLoading } = useLoading();
+
   const [formData, setFormData] = useState({
     fname: '',
     email: '',

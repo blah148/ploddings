@@ -13,14 +13,12 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
  */
 async function fetchBeingWatched(userId, userIp, limit = null) {
 		try {
-			console.log('fetchBeingWatched userId', userId);
 			let query = supabase
 				.from('latest_visit_history') // Table name
 				.select('page_type, page_id, name, slug, visited_at', { count: 'exact' })
 				.order('visited_at', { ascending: false }); // Most recent visits first
 
 			if (userId) {	
-				console.log('inner userid', userId);
 				query = query.or(`user_id.neq.${userId},user_id.is.null`);
 			} else {
 				query = query.or(`ip.neq.${userIp},ip.is.null`);

@@ -3,6 +3,7 @@ import Logout from '../components/Logout';
 import React, { useEffect, useState } from 'react';
 import { supabase } from './utils/supabase';
 import Loader from '../components/Loader';
+import { useLoading } from '../context/LoadingContext';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -24,8 +25,8 @@ export default function Home({ isAuthenticated, userId, ip  }) {
   const [threads, setThreads] = useState([]);
   const [songs, setSongs] = useState([]);
   const [activeTab, setActiveTab] = useState('categories');
-	const [isLoading, setIsLoading] = useState(false);
 	const [loadedTabs, setLoadedTabs] = useState({ categories: false, threads: false, songs: false });
+	const { isLoading, setIsLoading } = useLoading();
   const minLoadingTime = 400;
 
   // Effect hook to manage activeTab state with localStorage
