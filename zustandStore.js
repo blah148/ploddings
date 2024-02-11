@@ -4,9 +4,7 @@ import fetchVisitHistory from './components/fetchVisitHistory.js';
 import fetchBeingWatched from './components/fetchBeingWatched.js';
 
 const useStore = create((set, get) => ({
-  maximumObjects: 8,
-  objectLimit: 8,
-  groupMax: 3,
+  groupMax: 10,
 
   starredCount: 0,
   visitHistoryCount: 0,
@@ -17,8 +15,6 @@ const useStore = create((set, get) => ({
       set(state => ({
         visitHistory: data,
         visitHistoryCount: count,
-        // Optionally recalculate objectLimit here if it depends on visitHistoryCount
-        objectLimit: state.maximumObjects - (state.starredCount + count)
       }));
     } catch (error) {
       console.error('Failed to fetch visit history:', error);
@@ -31,22 +27,14 @@ const useStore = create((set, get) => ({
       set(state => ({
         starred: data,
         starredCount: count,
-        // Optionally recalculate objectLimit here if it depends on starredCount
-        objectLimit: state.maximumObjects - (count + state.visitHistoryCount)
       }));
     } catch (error) {
       console.error('Failed to fetch starred:', error);
     }
   },
 
-  recalculateObjectLimit: () => set((state) => {
-    const usedSpace = state.starredCount + state.visitHistoryCount;
-    const remainingSpace = state.maximumObjects - usedSpace;
-    return { objectLimit: Math.max(remainingSpace, 0) };
-  }),
-
   beingWatched: [],
-  fetchAndSetBeingWatched: async (userId, ip, objectLimit) => {
+  fetchAndSetBeingWatched: async (userId, ip, groupMax) => {
     if (objectLimit > 0) {
       try {
         const { data, count } = await fetchBeingWatched(userId, ip, objectLimit);

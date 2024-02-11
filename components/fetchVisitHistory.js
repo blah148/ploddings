@@ -11,7 +11,7 @@ import React, { useState, useEffect, createContext, useContext } from 'react'
  * @returns {Promise<{ data: Array, count: number }>} A promise that resolves to an object containing an array of entries and the count of objects.
  */
 
-async function fetchVisitHistory(userId, limit = null, ip) {
+async function fetchVisitHistory(userId, limit = 10, ip) {
   let query;
 
   // Determine the query based on whether userId is provided
