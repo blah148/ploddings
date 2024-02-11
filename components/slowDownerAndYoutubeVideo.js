@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import { supabase } from '../pages/utils/supabase';
-
 import YoutubeVideo from './youtubePlayerAPI';
 const SlowDowner = dynamic(() => import('./SlowDowner'), { ssr: false });
-
 
 export default function DivSwitcher ({ dropbox_mp3_link, youtube_link }) {
   // Define state variables for box order
@@ -19,21 +17,21 @@ export default function DivSwitcher ({ dropbox_mp3_link, youtube_link }) {
 		setSwitcher(switcher === "column" ? "column-reverse" : "column");
 	};
 
-useEffect(() => {
-  if (typeof window !== 'undefined') {
-    if (localStorage.getItem('songComponentOrder') !== null && switcher !== null) {
-      localStorage.setItem('songComponentOrder', switcher);
-      let storageItem = localStorage.getItem('songComponentOrder');
-//      console.log('UPDATE: switcher, localStorage', switcher, storageItem);
-    } else if (localStorage.getItem('songComponentOrder') !== null && switcher === null) {
-      let storageItem = localStorage.getItem('songComponentOrder')
-			setSwitcher(storageItem);
-			setDiv1(storageItem === "column" ? { ...div1, text: "Down" } : { ...div1, text: "Up" });
-			setDiv2(storageItem === "column" ? { ...div2, text: "Up" } : { ...div2, text: "Down" });
+	useEffect(() => {
+		if (typeof window !== 'undefined') {
+			if (localStorage.getItem('songComponentOrder') !== null && switcher !== null) {
+				localStorage.setItem('songComponentOrder', switcher);
+				let storageItem = localStorage.getItem('songComponentOrder');
+	//      console.log('UPDATE: switcher, localStorage', switcher, storageItem);
+			} else if (localStorage.getItem('songComponentOrder') !== null && switcher === null) {
+				let storageItem = localStorage.getItem('songComponentOrder')
+				setSwitcher(storageItem);
+				setDiv1(storageItem === "column" ? { ...div1, text: "Down" } : { ...div1, text: "Up" });
+				setDiv2(storageItem === "column" ? { ...div2, text: "Up" } : { ...div2, text: "Down" });
 
-    }
-  }
-}, [switcher]);
+			}
+		}
+	}, [switcher]);
 
 return (
   <div>
