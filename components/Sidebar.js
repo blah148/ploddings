@@ -3,8 +3,12 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import useStore from '../zustandStore';
 import useGuestStore from '../zustandStore_guest';
+import { useLoading } from '../context/LoadingContext';
 
 export default function Sidebar({ userId, isAuthenticated, ip }) {
+
+	const { isLoading, startLoading, stopLoading } = useLoading();
+
   const {
     visitHistory,
     starred,
@@ -21,21 +25,36 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 	
 	const effectiveObjectLimit = isAuthenticated ? objectLimit : objectLimit - starredCount;
 
-	useEffect(() => {
-		// Initialize guest data loading
-		if (!userId && !isAuthenticated) {
-			guestStore.initialize();
-		} else {
-			// For authenticated users, fetch from the server or database
-			fetchAndSetStarred(userId, groupMax);
-		}
-		// Execute for both authenticated and unauthenticated users if objectLimit > 0
-		fetchAndSetVisitHistory(userId, groupMax, ip);
+useEffect(() => {
+  // Start loading
+  startLoading();
+  
+  // Async IIFE
+  (async () => {
+    try {
+      if (!userId && !isAuthenticated) {
+        // Initialize guest data loading
+        guestStore.initialize();
+      } else {
+        // Fetch data for authenticated users
+        await fetchAndSetStarred(userId, groupMax);
+      }
+      
+      // Fetch visit history for all users
+      await fetchAndSetVisitHistory(userId, groupMax, ip);
 
-		if (effectiveObjectLimit > 0 && userId != null) {
-			fetchAndSetBeingWatched(userId, ip, effectiveObjectLimit);
-		}
-	}, [effectiveObjectLimit, userId]);
+      if (effectiveObjectLimit > 0 && userId != null) {
+        // Fetch being watched data if conditions are met
+        await fetchAndSetBeingWatched(userId, ip, effectiveObjectLimit);
+      }
+    } catch (error) {
+      console.error("An error occurred during data fetching:", error);
+    } finally {
+      // Stop loading regardless of success or error
+      stopLoading();
+    }
+  })();
+}, [effectiveObjectLimit, userId, isAuthenticated, guestStore, fetchAndSetStarred, fetchAndSetVisitHistory, fetchAndSetBeingWatched, groupMax, ip]);
 
   // Determine which data to display based on authentication state
   const displayVisitHistory = visitHistory;
