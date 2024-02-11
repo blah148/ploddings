@@ -26,7 +26,7 @@ export default function Home({ isAuthenticated, userId, ip  }) {
   const [songs, setSongs] = useState([]);
   const [activeTab, setActiveTab] = useState('categories');
 	const [loadedTabs, setLoadedTabs] = useState({ categories: false, threads: false, songs: false });
-	const { isLoading, setIsLoading } = useLoading();
+	const { isLoading, startLoading, stopLoading } = useLoading();
   const minLoadingTime = 400;
 
   // Effect hook to manage activeTab state with localStorage
@@ -47,7 +47,7 @@ export default function Home({ isAuthenticated, userId, ip  }) {
         return;
       }
 
-      setIsLoading(true);
+      startLoading();
 
       if (tab === 'categories') {
         await fetchCategoriesAndChildren();
@@ -57,8 +57,7 @@ export default function Home({ isAuthenticated, userId, ip  }) {
         await fetchAllSongs();
       }
 
-      setIsLoading(false);
-      // Mark this tab's data as loaded
+      stopLoading();
       setLoadedTabs(prev => ({ ...prev, [tab]: true }));
     };
 
@@ -67,7 +66,7 @@ export default function Home({ isAuthenticated, userId, ip  }) {
 
   const fetchCategoriesAndChildren = async () => {
 		
-		setIsLoading(true);
+		startLoading();
     const loadingStarted = Date.now();
 
     const { data: categoriesData, error: categoriesError } = await supabase
@@ -103,14 +102,14 @@ export default function Home({ isAuthenticated, userId, ip  }) {
 
     const loadingDuration = Date.now() - loadingStarted;
 		if (loadingDuration < minLoadingTime) {
-		  setTimeout(() => setIsLoading(false), minLoadingTime - loadingDuration);
+		  setTimeout(() => stopLoading(), minLoadingTime - loadingDuration);
 		} else {
-			setIsLoading(false);
+			stopLoading();
 		}
   };
 
   const fetchAllThreads = async () => {
-		setIsLoading(true);
+		startLoading();
 		const loadingStarted = Date.now();
 
     const { data: threadsData, error: threadsError } = await supabase
@@ -125,16 +124,16 @@ export default function Home({ isAuthenticated, userId, ip  }) {
 		const loadingDuration = Date.now() - loadingStarted;
 		if (loadingDuration < minLoadingTime) {
 			// If the loading duration is less than the minimum, delay the loading state change
-			setTimeout(() => setIsLoading(false), minLoadingTime - loadingDuration);
+			setTimeout(() => stopLoading(), minLoadingTime - loadingDuration);
 		} else {
 			// If it's already been longer than the minimum, set loading to false immediately
-			setIsLoading(false);
+			stopLoading();
 		}
   };
 
   // Function to fetch all songs
   const fetchAllSongs = async () => {
-		setIsLoading(true);
+		startLoading();
 		const loadingStarted = Date.now();	
 
     const { data: songsData, error: songsError } = await supabase
@@ -149,10 +148,10 @@ export default function Home({ isAuthenticated, userId, ip  }) {
 		const loadingDuration = Date.now() - loadingStarted;
 		if (loadingDuration < minLoadingTime) {
 			// If the loading duration is less than the minimum, delay the loading state change
-			setTimeout(() => setIsLoading(false), minLoadingTime - loadingDuration);
+			setTimeout(() => stopLoading(), minLoadingTime - loadingDuration);
 		} else {
 			// If it's already been longer than the minimum, set loading to false immediately
-			setIsLoading(false);
+			stopLoading();
 		}
 
   };

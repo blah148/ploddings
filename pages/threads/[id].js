@@ -27,7 +27,7 @@ const verifyUserSession = (req) => {
 
 export default function Thread({ userId, isAuthenticated, ip, threadData }) {
 
-	const { isLoading, setIsLoading } = useLoading();
+	const { isLoading, startLoading, stopLoading } = useLoading();
 
   const logPageVisit = async () => {
     try {

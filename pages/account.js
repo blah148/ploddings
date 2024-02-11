@@ -23,8 +23,8 @@ const verifyUserSession = (req) => {
 };
 
 export default function Account({ ip, isAuthenticated, userId }) {
-
-	const { isLoading, setIsLoading } = useLoading();
+	
+	const { isLoading, startLoading, stopLoading } = useLoading();
   const [email, setEmail] = useState('');
   const [message, setMessage] = useState('');
 

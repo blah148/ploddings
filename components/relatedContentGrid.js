@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Loader from './Loader';
 import { supabase } from '../pages/utils/supabase'; // Import Supabase client
+import { useLoading } from '../context/LoadingContext';
 
 const LazyLoadedDiv = ({ page_type, category_id, currentSongId = null }) => {
   const [isIntersecting, setIntersecting] = useState(false);
-  const [isLoading, setLoading] = useState(false); // State to manage loading state
+	const { isLoading, startLoading, stopLoading } = useLoading();
 	const [songs, setSongs] = useState([]);
   const targetRef = useRef();
 
@@ -29,7 +30,7 @@ const LazyLoadedDiv = ({ page_type, category_id, currentSongId = null }) => {
   }, []);
 
   const fetchItemsFromDatabase = async () => {
-    setLoading(true); // Set loading to true while fetching data
+		startLoading();
     try {
       const { data: songs, error } = await supabase
         .from(page_type)
@@ -41,11 +42,10 @@ const LazyLoadedDiv = ({ page_type, category_id, currentSongId = null }) => {
         throw error;
       }
      	setSongs(songs); 
-      console.log('Fetched songs:', songs);
     } catch (error) {
       console.error('Error fetching items:', error);
     } finally {
-      setLoading(false); // Set loading to false after fetching data
+			stopLoading();
     }
   };
 

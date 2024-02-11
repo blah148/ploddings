@@ -1,19 +1,17 @@
 // pages/songs/[id].js
 import axios from 'axios';
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from 'react';
 import useStore from '../../zustandStore';
 import Sidebar from '../../components/Sidebar';
 import FavoriteButton from '../../components/songFavorite';
 import { supabase } from '../utils/supabase'; // Adjust the import path as needed
 import { fetchDataBySlug } from '../../db-utilities';
-const SlowDowner = dynamic(() => import('../../components/SlowDowner'), { ssr: false });
 import jwt from 'jsonwebtoken'; 
-import YoutubeEmbed from '../../components/YoutubeVideo';
-import YoutubeVideo from '../../components/youtubePlayerAPI';
 import { useLoading } from '../../context/LoadingContext';
 import Loader from '../../components/Loader';
+import LazyLoadedDiv from '../../components/relatedContentGrid';
+import DivSwitcher from '../../components/slowDownerAndYoutubeVideo';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -30,8 +28,8 @@ const verifyUserSession = (req) => {
 
 export default function Song({ userId, isAuthenticated, ip, songData }) {
 
-	const { isLoading, setIsLoading } = useLoading();
 	const [threadData, setThreadData] = useState(null);
+	const { isLoading, startLoading, stopLoading } = useLoading();
 
   const logPageVisit = async () => {
     try {
@@ -54,6 +52,7 @@ export default function Song({ userId, isAuthenticated, ip, songData }) {
 			logPageVisit();
 		}
 	}, [userId]);
+	
 
   useEffect(() => {
     const fetchThreadData = async () => {
@@ -100,17 +99,14 @@ export default function Song({ userId, isAuthenticated, ip, songData }) {
           allow="autoplay; fullscreen">
         </iframe>
       )}
-      <SlowDowner mp3={songData.dropbox_mp3_link} />
-      {songData.youtube_link && (
-				<YoutubeVideo videoId={songData.youtube_link} />
-      )}
+			<DivSwitcher dropbox_mp3_link={songData.dropbox_mp3_link} youtube_link={songData.youtube_link} />
       {songData.extra_notes && (
         <div className="extraInfo" dangerouslySetInnerHTML={{ __html: songData.extra_notes }} />
       )}
       {songData.lyrics && (
         <div className="lyrics" dangerouslySetInnerHTML={{ __html: songData.lyrics }} />
       )}
-
+			<LazyLoadedDiv page_type="songs" category_id={songData.category_id} currentSongId = {songData.id} />
       <FavoriteButton page_name={songData.name} page_slug={songData.slug} page_type="songs" id={songData.id} userId={userId} isAuthenticated={isAuthenticated} />
     </div>
   );
