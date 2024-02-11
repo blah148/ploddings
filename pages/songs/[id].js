@@ -12,6 +12,7 @@ import { useLoading } from '../../context/LoadingContext';
 import Loader from '../../components/Loader';
 import LazyLoadedDiv from '../../components/relatedContentGrid';
 import DivSwitcher from '../../components/slowDownerAndYoutubeVideo';
+import TabsComponent from '../../components/extraNotesTabs';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -100,12 +101,7 @@ export default function Song({ userId, isAuthenticated, ip, songData }) {
         </iframe>
       )}
 			<DivSwitcher dropbox_mp3_link={songData.dropbox_mp3_link} youtube_link={songData.youtube_link} />
-      {songData.extra_notes && (
-        <div className="extraInfo" dangerouslySetInnerHTML={{ __html: songData.extra_notes }} />
-      )}
-      {songData.lyrics && (
-        <div className="lyrics" dangerouslySetInnerHTML={{ __html: songData.lyrics }} />
-      )}
+			<TabsComponent extra_notes={songData.extra_notes} song_lyrics={songData.lyrics} />
 			<LazyLoadedDiv page_type="songs" category_id={songData.category_id} currentSongId = {songData.id} />
       <FavoriteButton page_name={songData.name} page_slug={songData.slug} page_type="songs" id={songData.id} userId={userId} isAuthenticated={isAuthenticated} />
     </div>
