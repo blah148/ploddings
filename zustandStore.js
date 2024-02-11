@@ -4,9 +4,9 @@ import fetchVisitHistory from './components/fetchVisitHistory.js';
 import fetchBeingWatched from './components/fetchBeingWatched.js';
 
 const useStore = create((set, get) => ({
-  maximumObjects: 8,
-  objectLimit: 8,
-  groupMax: 3,
+  maximumObjects: 15,
+  objectLimit: 15,
+  groupMax: 5,
 
   starredCount: 0,
   visitHistoryCount: 0,

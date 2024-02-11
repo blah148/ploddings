@@ -2,8 +2,8 @@ import { create } from 'zustand';
 
 const useGuestStore = create((set, get) => ({
 	
-  maximumObjects: 3,
-  objectLimitGuest: 8,
+  maximumObjects: 5,
+  objectLimitGuest: 15,
 	visitHistoryCount: 0,
   starredCount: 0,
 
