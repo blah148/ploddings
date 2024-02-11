@@ -101,7 +101,9 @@ export default function Song({ userId, isAuthenticated, ip, songData }) {
         </iframe>
       )}
 			<DivSwitcher dropbox_mp3_link={songData.dropbox_mp3_link} youtube_link={songData.youtube_link} />
-			<TabsComponent extra_notes={songData.extra_notes} song_lyrics={songData.lyrics} />
+			{(songData.extra_notes || songData.lyrics) && (
+  			<TabsComponent extra_notes={songData.extra_notes} song_lyrics={songData.lyrics} />
+			)}
 			<LazyLoadedDiv page_type="songs" category_id={songData.category_id} currentSongId = {songData.id} />
       <FavoriteButton page_name={songData.name} page_slug={songData.slug} page_type="songs" id={songData.id} userId={userId} isAuthenticated={isAuthenticated} />
     </div>

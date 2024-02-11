@@ -27,12 +27,12 @@ export default function TabsComponent ({ extra_notes = null, song_lyrics = null 
   return (
     <div>
       <div className="tabs">
-        <button className={selectedTab === 1 ? 'active' : ''} onClick={() => handleTabClick(1)}>Tab 1</button>
-        <button className={selectedTab === 2 ? 'active' : ''} onClick={() => handleTabClick(2)}>Tab 2</button>
+        {extra_notes && (<button className={selectedTab === 1 ? 'active' : ''} onClick={() => handleTabClick(1)}>Tab 1</button>)}
+        {song_lyrics && (<button className={selectedTab === 2 ? 'active' : ''} onClick={() => handleTabClick(2)}>Tab 2</button>)}
       </div>
       <div className="tab-content">
-        <div dangerouslySetInnerHTML={{ __html: extra_notes }} style={{ display: selectedTab === 1 ? 'block' : 'none' }} className={selectedTab === 1 ? 'tab-pane active' : 'tab-pane'}></div>
-        <div dangerouslySetInnerHTML={{ __html: song_lyrics }} style={{ display: selectedTab === 2 ? 'block' : 'none' }} className={selectedTab === 2 ? 'tab-pane active' : 'tab-pane'}></div>
+        {extra_notes && (<div dangerouslySetInnerHTML={{ __html: extra_notes }} style={{ display: selectedTab === 1 ? 'block' : 'none' }} className={selectedTab === 1 ? 'tab-pane active' : 'tab-pane'}></div>)}
+        {song_lyrics && (<div dangerouslySetInnerHTML={{ __html: song_lyrics }} style={{ display: selectedTab === 2 ? 'block' : 'none' }} className={selectedTab === 2 ? 'tab-pane active' : 'tab-pane'}></div>)}
       </div>
     </div>
   );
