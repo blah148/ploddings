@@ -3,7 +3,7 @@ import YouTube from 'react-youtube';
 import { useLoading } from '../context/LoadingContext';
 
 const YouTubeVideo = ({ videoId }) => {
-	const { isLoading, setIsLoading } = useLoading();
+	const { isLoading, startLoading, stopLoading } = useLoading();
 	
 	var slicedLink = videoId.substring("https://www.youtube.com/watch?v=".length);
 	var finishedLink = slicedLink.split('&')[0];
@@ -17,12 +17,12 @@ const YouTubeVideo = ({ videoId }) => {
   };
 
   useEffect(() => {
-    setIsLoading(true); // Set isLoading to true when the component mounts
+    startLoading(); // Set isLoading to true when the component mounts
   }, []);
 
   const onReady = (event) => {
     // Access to player in all event handlers via event.target
-    setIsLoading(false);
+    stopLoading();
   };
 
   return (

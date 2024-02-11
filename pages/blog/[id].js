@@ -26,7 +26,7 @@ const verifyUserSession = (req) => {
 
 export default function Blog({ blogData, isAuthenticated, userId }) {
 
-	const { isLoading, setIsLoading } = useLoading();
+	const { isLoading, startLoading, stopLoading } = useLoading();
   const router = useRouter();
 	const [isFavorite, setIsFavorite] = useState(false);
 
