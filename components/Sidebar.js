@@ -3,6 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import useStore from '../zustandStore';
 import useGuestStore from '../zustandStore_guest';
+import ResizePanes from './SidebarResizers';
 
 export default function Sidebar({ userId, isAuthenticated, ip }) {
   const {
@@ -17,10 +18,7 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
   } = useStore();
 	
   const guestStore = useGuestStore();
-	const { starredCount } = guestStore;
 	
-	const effectiveObjectLimit = isAuthenticated ? objectLimit : objectLimit - starredCount;
-
 	useEffect(() => {
 		// Initialize guest data loading
 		if (!userId && !isAuthenticated) {
@@ -32,10 +30,10 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 		// Execute for both authenticated and unauthenticated users if objectLimit > 0
 		fetchAndSetVisitHistory(userId, groupMax, ip);
 
-		if (effectiveObjectLimit > 0 && userId != null) {
-			fetchAndSetBeingWatched(userId, ip, effectiveObjectLimit);
+		if (userId != null) {
+			fetchAndSetBeingWatched(userId, ip, groupMax);
 		}
-	}, [effectiveObjectLimit, userId]);
+	}, [userId]);
 
   // Determine which data to display based on authentication state
   const displayVisitHistory = visitHistory;
@@ -61,36 +59,7 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 				<div>Home</div>
 			</a>
 		</Link>
-			<div>
-				<h2>Visit History</h2>
-				<ul>
-					{displayVisitHistory.map((visit, index) => (
-						<li key={index}>
-							{visit.page_type} - {visit.name} - {visit.slug}
-						</li>
-					))}
-				</ul>
-			</div>
-			<div>
-				<h2>Starred</h2>
-				<ul>
-					{displayStarred.map((star, index) => (
-						<li key={index}>
-							{star.page_type} - {star.name} - {star.slug}
-						</li>
-					))}
-				</ul>
-			</div>
-			<div>
-				<h2>Being Watched</h2>
-				<ul>
-					{displayBeingWatched.map((watch, index) => (
-						<li key={index}>
-							{watch.page_type} - {watch.name} - {watch.slug}
-						</li>
-					))}
-				</ul>
-			</div>
+		  <ResizePanes displayVisitHistory={displayVisitHistory} displayStarred={displayStarred} displayBeingWatched={displayBeingWatched} />
 		</div>
 	);
 }
