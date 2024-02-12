@@ -97,14 +97,16 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 				</a>
 			</Link>
 			<div>
-				<h2>Visit History</h2>
+				<h2>History</h2>
 				<ul>
 					{displayVisitHistory.map((visit, index) => (
 						<li className={styles.listElement} key={visit.page_id}>
 							<a className={styles.listLink} href={`/${visit.page_type}/${visit.slug}`}>
-								{visit.name}
+								<div>
+									{visit.name.length > 20 ? visit.name.slice(0, 20) + '...' : visit.name}
+								</div>
+								<div className={`${styles.led} ${getLedClassName(visit.page_type)}`}></div>
 							</a>
-							<div className={`${styles.led} ${getLedClassName(visit.page_type)}`}></div>
 						</li>
 					))}
 				</ul>
@@ -114,23 +116,27 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 				<ul>
 					{displayStarred.map((star, index) => (
 						<li className={styles.listElement} key={star.page_id}>
-							<a href={`/${star.page_type}/${star.slug}`} className={styles.listLink}>
-								{star.name}
+							<a className={styles.listLink} href={`/${star.page_type}/${star.slug}`}>
+								<div>
+									{star.name.length > 20 ? star.name.slice(0, 20) + '...' : star.name}
+								</div>
+								<div className={`${styles.led} ${getLedClassName(star.page_type)}`}></div>
 							</a>
-							<div className={`${styles.led} ${getLedClassName(star.page_type)}`}></div>
-						</li> 
+						</li>
 					))}
 				</ul>
 			</div>
 			<div>
-				<h2>Being Watched</h2>
+				<h2>Being watched</h2>
 				<ul>
 					{displayBeingWatched.map((watch, index) => (
 						<li key={watch.page_id} className={styles.listElement}>
-							<a href={`/${watch.page_type}/${watch.slug}`} className={styles.listLink}>
-								{watch.name}
+							<a className={styles.listLink} href={`/${watch.page_type}/${watch.slug}`}>
+								<div>
+									{watch.name.length > 20 ? watch.name.slice(0, 20) + '...' : watch.name}
+								</div>
+								<div className={`${styles.led} ${getLedClassName(watch.page_type)}`}></div>
 							</a>
-							<div className={`${styles.led} ${getLedClassName(watch.page_type)}`}></div>
 						</li>
 					))}
 				</ul>

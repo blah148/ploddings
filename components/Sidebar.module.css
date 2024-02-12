@@ -22,7 +22,8 @@ li.listElement {
 	display: flex;
 }
 a.listLink {
-	display: block;
+	display: flex;
+	width: 100%;
 }
 div.led {
   width: 13px;
@@ -34,7 +35,10 @@ div.led {
   box-shadow: 0 0 6px 1px rgba(38,175,52,.88);
 }
 div.threadsLed {
+	background-color: #f08e25;
+	box-shadow: 0 0 6px 1px #f08e25;
 }
 div.songsLed {
-	background-color: red;
+ box-shadow: 0 0 6px 1px rgba(38,175,52,.88);
+ background-color: #2ac64f;
 }
