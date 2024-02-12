@@ -13,6 +13,7 @@ import Loader from '../../components/Loader';
 import LazyLoadedDiv from '../../components/relatedContentGrid';
 import DivSwitcher from '../../components/slowDownerAndYoutubeVideo';
 import TabsComponent from '../../components/extraNotesTabs';
+import styles from '../../styles/bodyA.module.css';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -79,33 +80,35 @@ export default function Song({ userId, isAuthenticated, ip, songData }) {
   }, [songData?.thread_id]);
 
   return (
-    <div>
+    <div className="bodyA">
 			<Sidebar userId={userId} isAuthenticated={isAuthenticated} ip={ip} />
-			<Loader isLoading={isLoading} />
-      {threadData && (
-        <Link href={`/threads/${threadData.slug}`}>
-          Go to parent thread
-        </Link>
-      )}
-      <h1>{songData.name}</h1>
-			{threadData && <div>{threadData.name}</div>}
-      <div>{songData.id}</div>
-      {songData.musescore_embed && (
-        <iframe
-          width="100%"
-          height="480px"
-          src={songData.musescore_embed}
-          frameBorder="0"
-          allowFullScreen
-          allow="autoplay; fullscreen">
-        </iframe>
-      )}
-			<DivSwitcher dropbox_mp3_link={songData.dropbox_mp3_link} youtube_link={songData.youtube_link} />
-			{(songData.extra_notes || songData.lyrics) && (
-  			<TabsComponent extra_notes={songData.extra_notes} song_lyrics={songData.lyrics} />
-			)}
-			<LazyLoadedDiv page_type="songs" category_id={songData.category_id} currentSongId = {songData.id} />
-      <FavoriteButton page_name={songData.name} page_slug={songData.slug} page_type="songs" id={songData.id} userId={userId} isAuthenticated={isAuthenticated} />
+			<div className="mainFeed">
+				<Loader isLoading={isLoading} />
+				{threadData && (
+					<Link href={`/threads/${threadData.slug}`}>
+						Go to parent thread
+					</Link>
+				)}
+				<h1>{songData.name}</h1>
+				{threadData && <div>{threadData.name}</div>}
+				<div>{songData.id}</div>
+				{songData.musescore_embed && (
+					<iframe
+						width="100%"
+						height="480px"
+						src={songData.musescore_embed}
+						frameBorder="0"
+						allowFullScreen
+						allow="autoplay; fullscreen">
+					</iframe>
+				)}
+				<DivSwitcher dropbox_mp3_link={songData.dropbox_mp3_link} youtube_link={songData.youtube_link} />
+				{(songData.extra_notes || songData.lyrics) && (
+					<TabsComponent extra_notes={songData.extra_notes} song_lyrics={songData.lyrics} />
+				)}
+				<LazyLoadedDiv page_type="songs" category_id={songData.category_id} currentSongId = {songData.id} />
+				<FavoriteButton page_name={songData.name} page_slug={songData.slug} page_type="songs" id={songData.id} userId={userId} isAuthenticated={isAuthenticated} />
+			</div>
     </div>
   );
 }

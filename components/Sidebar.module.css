@@ -1,0 +1,35 @@
+div.sidebarContainer {
+  width: 275px;
+	padding: 8px 14px;
+}
+a.returnHome {
+  display: flex;
+	align-items: center;
+}
+a.returnHome svg {
+	margin-right: 12px;
+}
+svg.home-active-icon {
+  margin-right: 7px;
+  color: #141414;
+}
+
+.sidebarContainer ul {
+	list-style: none;
+	padding: 0;
+}
+li.listElement {
+	display: flex;
+}
+a.listLink {
+	display: block;
+}
+div.led {
+  width: 13px;
+  height: 13px;
+  background-color: #2ac64f;
+  border-radius: 100px;
+  margin: auto 0 auto auto;
+  display: block;
+  box-shadow: 0 0 6px 1px rgba(38,175,52,.88);
+}
