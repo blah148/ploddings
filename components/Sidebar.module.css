@@ -33,3 +33,8 @@ div.led {
   display: block;
   box-shadow: 0 0 6px 1px rgba(38,175,52,.88);
 }
+div.threadsLed {
+}
+div.songsLed {
+	background-color: red;
+}

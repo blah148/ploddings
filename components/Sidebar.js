@@ -26,36 +26,51 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 	
 	const effectiveObjectLimit = isAuthenticated ? objectLimit : objectLimit - starredCount;
 
-useEffect(() => {
-  // Start loading
-  startLoading();
-  
-  // Async IIFE
-  (async () => {
-    try {
-      if (!userId && !isAuthenticated) {
-        // Initialize guest data loading
-        guestStore.initialize();
-      } else {
-        // Fetch data for authenticated users
-        await fetchAndSetStarred(userId, groupMax);
-      }
-      
-      // Fetch visit history for all users
-      await fetchAndSetVisitHistory(userId, groupMax, ip);
+	useEffect(() => {
+		// Start loading
+		startLoading();
+		
+		// Async IIFE
+		(async () => {
+			try {
+				if (!userId && !isAuthenticated) {
+					// Initialize guest data loading
+					guestStore.initialize();
+				} else {
+					// Fetch data for authenticated users
+					await fetchAndSetStarred(userId, groupMax);
+				}
+				
+				// Fetch visit history for all users
+				await fetchAndSetVisitHistory(userId, groupMax, ip);
 
-      if (effectiveObjectLimit > 0 && userId != null) {
-        // Fetch being watched data if conditions are met
-        await fetchAndSetBeingWatched(userId, ip, effectiveObjectLimit);
-      }
-    } catch (error) {
-      console.error("An error occurred during data fetching:", error);
-    } finally {
-      // Stop loading regardless of success or error
-      stopLoading();
-    }
-  })();
-}, [effectiveObjectLimit, userId, isAuthenticated, guestStore, fetchAndSetStarred, fetchAndSetVisitHistory, fetchAndSetBeingWatched, groupMax, ip]);
+				if (effectiveObjectLimit > 0 && userId != null) {
+					// Fetch being watched data if conditions are met
+					await fetchAndSetBeingWatched(userId, ip, effectiveObjectLimit);
+				}
+			} catch (error) {
+				console.error("An error occurred during data fetching:", error);
+			} finally {
+				// Stop loading regardless of success or error
+				stopLoading();
+			}
+		})();
+	}, [effectiveObjectLimit, userId, isAuthenticated, guestStore, fetchAndSetStarred, fetchAndSetVisitHistory, fetchAndSetBeingWatched, groupMax, ip]);
+
+	function getLedClassName(pageType) {
+		switch (pageType.toLowerCase()) {
+			case 'songs':
+				return styles.songsLed;
+			case 'threads':
+				return styles.threadsLed;
+			case 'blog':
+				return styles.blogLed;
+			default:
+				return ''; // Default class or no class
+		}
+	}
+	
+	console.log('testing threads', getLedClassName("threads"));
 
   // Determine which data to display based on authentication state
   const displayVisitHistory = visitHistory;
@@ -89,7 +104,7 @@ useEffect(() => {
 							<a className={styles.listLink} href={`/${visit.page_type}/${visit.slug}`}>
 								{visit.name}
 							</a>
-							<div className={styles.led}></div>
+							<div className={`${styles.led} ${getLedClassName(visit.page_type)}`}></div>
 						</li>
 					))}
 				</ul>
@@ -102,7 +117,7 @@ useEffect(() => {
 							<a href={`/${star.page_type}/${star.slug}`} className={styles.listLink}>
 								{star.name}
 							</a>
-							<div className={styles.led}></div>
+							<div className={`${styles.led} ${getLedClassName(star.page_type)}`}></div>
 						</li> 
 					))}
 				</ul>
@@ -115,7 +130,7 @@ useEffect(() => {
 							<a href={`/${watch.page_type}/${watch.slug}`} className={styles.listLink}>
 								{watch.name}
 							</a>
-							<div className={styles.led}></div>
+							<div className={`${styles.led} ${getLedClassName(watch.page_type)}`}></div>
 						</li>
 					))}
 				</ul>
