@@ -79,67 +79,59 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 
 	return (
 		<div className={styles.sidebarContainer}>
-			<Link href="/" legacyBehavior>
-				<a className={styles.returnHome}>
-					<svg
-						role="img"
-						height="22"
-						width="22"
-						aria-hidden="true"
-						className="Svg-sc-ytk21e-0 haNxPq home-active-icon"
-						viewBox="0 0 24 24"
-						data-encore-id="icon"
-					> 
-						<path style={{ fill: 'currentColor' }} className={styles.homePath} d="M13.5 1.515a3 3 0 0 0-3 0L3 5.845a2 2 0 0 0-1 1.732 V21a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-6h4v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V7.577a2 2 0 0 0-1-1.732l-7.5-4.33z">
-						</path>
-					</svg>
-					<div>Home</div>
-				</a>
-			</Link>
-			<div>
-				<h2>History</h2>
-				<ul>
-					{displayVisitHistory.map((visit, index) => (
-						<li className={styles.listElement} key={visit.page_id}>
-							<a className={styles.listLink} href={`/${visit.page_type}/${visit.slug}`}>
-								<div>
-									{visit.name.length > 20 ? visit.name.slice(0, 20) + '...' : visit.name}
-								</div>
-								<div className={`${styles.led} ${getLedClassName(visit.page_type)}`}></div>
-							</a>
-						</li>
-					))}
-				</ul>
+			<div className={styles.sidebarHeader}>
+				<Link href="/" legacyBehavior>
+					<a className={styles.returnHome}>
+						PLODDINGS
+					</a>
+				</Link>
 			</div>
-			<div>
-				<h2>Starred</h2>
-				<ul>
-					{displayStarred.map((star, index) => (
-						<li className={styles.listElement} key={star.page_id}>
-							<a className={styles.listLink} href={`/${star.page_type}/${star.slug}`}>
-								<div>
-									{star.name.length > 20 ? star.name.slice(0, 20) + '...' : star.name}
-								</div>
-								<div className={`${styles.led} ${getLedClassName(star.page_type)}`}></div>
-							</a>
-						</li>
-					))}
-				</ul>
-			</div>
-			<div>
-				<h2>Being watched</h2>
-				<ul>
-					{displayBeingWatched.map((watch, index) => (
-						<li key={watch.page_id} className={styles.listElement}>
-							<a className={styles.listLink} href={`/${watch.page_type}/${watch.slug}`}>
-								<div>
-									{watch.name.length > 20 ? watch.name.slice(0, 20) + '...' : watch.name}
-								</div>
-								<div className={`${styles.led} ${getLedClassName(watch.page_type)}`}></div>
-							</a>
-						</li>
-					))}
-				</ul>
+			<div className={styles.sidebarItems}>
+				<div>
+					<h2>History</h2>
+					<ul>
+						{displayVisitHistory.map((visit, index) => (
+							<li className={styles.listElement} key={visit.page_id}>
+								<a className={styles.listLink} href={`/${visit.page_type}/${visit.slug}`}>
+									<div>
+										{visit.name.length > 26 ? visit.name.slice(0, 26) + '...' : visit.name}
+									</div>
+									<div className={`${styles.led} ${getLedClassName(visit.page_type)}`}></div>
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
+				<div>
+					<h2>Starred</h2>
+					<ul>
+						{displayStarred.map((star, index) => (
+							<li className={styles.listElement} key={star.page_id}>
+								<a className={styles.listLink} href={`/${star.page_type}/${star.slug}`}>
+									<div>
+										{star.name.length > 26 ? star.name.slice(0, 26) + '...' : star.name}
+									</div>
+									<div className={`${styles.led} ${getLedClassName(star.page_type)}`}></div>
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
+				<div>
+					<h2>Being watched</h2>
+					<ul>
+						{displayBeingWatched.map((watch, index) => (
+							<li key={watch.page_id} className={styles.listElement}>
+								<a className={styles.listLink} href={`/${watch.page_type}/${watch.slug}`}>
+									<div>
+										{watch.name.length > 26 ? watch.name.slice(0, 26) + '...' : watch.name}
+									</div>
+									<div className={`${styles.led} ${getLedClassName(watch.page_type)}`}></div>
+								</a>
+							</li>
+						))}
+					</ul>
+				</div>
 			</div>
 		</div>
 	);
