@@ -87,7 +87,24 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 				</Link>
 			</div>
 			<div className={styles.sidebarItems}>
-				<div>
+				{displayStarred && (
+					<div>
+						<h2>Starred</h2>
+						<ul>
+							{displayStarred.map((star, index) => (
+								<li className={styles.listElement} key={star.page_id}>
+									<a className={styles.listLink} href={`/${star.page_type}/${star.slug}`}>
+										<div>
+											{star.name.length > 26 ? star.name.slice(0, 26) + '...' : star.name}
+										</div>
+										<div className={`${styles.led} ${getLedClassName(star.page_type)}`}></div>
+									</a>
+								</li>
+							))}
+						</ul>
+					</div>
+				)}
+				{displayVisitHistory && (<div>
 					<h2>History</h2>
 					<ul>
 						{displayVisitHistory.map((visit, index) => (
@@ -101,23 +118,8 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 							</li>
 						))}
 					</ul>
-				</div>
-				<div>
-					<h2>Starred</h2>
-					<ul>
-						{displayStarred.map((star, index) => (
-							<li className={styles.listElement} key={star.page_id}>
-								<a className={styles.listLink} href={`/${star.page_type}/${star.slug}`}>
-									<div>
-										{star.name.length > 26 ? star.name.slice(0, 26) + '...' : star.name}
-									</div>
-									<div className={`${styles.led} ${getLedClassName(star.page_type)}`}></div>
-								</a>
-							</li>
-						))}
-					</ul>
-				</div>
-				<div>
+				</div>)}
+				{displayBeingWatched && (<div>
 					<h2>Being watched</h2>
 					<ul>
 						{displayBeingWatched.map((watch, index) => (
@@ -131,7 +133,7 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 							</li>
 						))}
 					</ul>
-				</div>
+				</div>)}
 			</div>
 		</div>
 	);
