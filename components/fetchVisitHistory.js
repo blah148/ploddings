@@ -12,45 +12,66 @@ import React, { useState, useEffect, createContext, useContext } from 'react'
  */
 
 async function fetchVisitHistory(userId, limit = null, ip) {
-  let query;
 
-  // Determine the query based on whether userId is provided
+  let historyQuery;
+
+  // Query for fetching visit history by userId or IP
   if (userId) {
-    // Query for fetching visit history by userId
-    query = supabase
+    historyQuery = supabase
       .from('latest_visit_history')
-      .select('page_type, page_id, name, slug, visited_at', { count: 'exact' })
+      .select('page_type, page_id', {count: 'exact'})
       .order('visited_at', { ascending: false })
       .eq('user_id', userId);
   } else if (ip) {
-    // Query for fetching visit history by ip
-    query = supabase
+    historyQuery = supabase
       .from('latest_visit_history')
-      .select('page_type, page_id, name, slug, visited_at', { count: 'exact' })
+      .select('page_type, page_id', {count: 'exact'})
       .order('visited_at', { ascending: false })
-      .eq('ip', ip); // Use the IP field to match rows
+      .eq('ip', ip);
   } else {
     // If neither userId nor ip is provided, return empty result
     return { data: [], count: 0 };
   }
-	
+
   // Apply limit if provided
   if (limit !== null) {
-    query = query.limit(limit);
+    historyQuery = historyQuery.limit(limit);
   }
 
-  try {
-    const { data, error, count } = await query; // Execute the query
+	const { data: historyData, error, count } = await historyQuery;
 
-    if (error) {
-      throw error;
-    }
-
-    return { data, count };
-  } catch (error) {
+  if (error) {
     console.error('Error fetching visit history', error.message);
     return { data: [], count: 0 };
   }
+
+  const pageDetailsPromises = historyData.map(async (item) => {
+    const { data, error } = await supabase
+      .from(item.page_type) // Use page_type to dynamically select the table
+      .select('id, slug, name, thumbnail_200x200')
+      .eq('id', item.page_id)
+      .single(); // Assuming page_id is unique within each table
+
+    if (error) {
+      console.error(`Error fetching details for ${item.page_type}`, error.message);
+      return null;
+    }
+		
+    return {
+      ...item,
+      ...data, // Merge visit history item with its corresponding page details
+    };
+  });
+
+	const detailedHistory = await Promise.all(pageDetailsPromises);
+
+  const totalCount = parseInt(count, 10) || 0; // Ensure count is parsed as an integer, default to 0 if parsing fails
+
+
+  // Return the detailed visit history along with the total count
+  return { data: detailedHistory, count: totalCount };
+
 }
+
 export default fetchVisitHistory;
 

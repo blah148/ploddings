@@ -44,7 +44,7 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 				// Fetch visit history for all users
 				await fetchAndSetVisitHistory(userId, groupMax, ip);
 
-				if (effectiveObjectLimit > 0 && userId != null) {
+				if (effectiveObjectLimit > 0) {
 					// Fetch being watched data if conditions are met
 					await fetchAndSetBeingWatched(userId, ip, effectiveObjectLimit);
 				}
@@ -106,7 +106,7 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 					<h2>History</h2>
 					<ul>
 						{displayVisitHistory.map((visit, index) => (
-							<li className={styles.listElement} key={visit.page_id}>
+							<li className={styles.listElement} key={visit.id}>
 								<a className={styles.listLink} href={`/${visit.page_type}/${visit.slug}`}>
 									<div>
 										{visit.name.length > 26 ? visit.name.slice(0, 26) + '...' : visit.name}
@@ -121,7 +121,7 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 					<h2>Being watched</h2>
 					<ul>
 						{displayBeingWatched.map((watch, index) => (
-							<li key={watch.page_id} className={styles.listElement}>
+							<li key={watch.id} className={styles.listElement}>
 								<a className={styles.listLink} href={`/${watch.page_type}/${watch.slug}`}>
 									<div>
 										{watch.name.length > 26 ? watch.name.slice(0, 26) + '...' : watch.name}
