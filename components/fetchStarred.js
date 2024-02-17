@@ -10,7 +10,6 @@ import { supabase } from '../pages/utils/supabase';
  */
 async function fetchStarred(userId, limit = null, ip) {
   // Early return if neither userId nor ip is provided
-	console.log('trying  here in fetchStarred');
   if (!userId && !ip) {
     return { data: [], count: 0 };
   }
@@ -43,7 +42,7 @@ async function fetchStarred(userId, limit = null, ip) {
     const pageDetailsPromises = favoritesData.map(async (favorite) => {
       const { data, error } = await supabase
         .from(favorite.page_type)
-        .select('slug, name, thumbnail_200x200')
+        .select('id, slug, name, thumbnail_200x200')
         .eq('id', favorite.page_id)
         .single(); // Assuming page_id is unique within each table
 

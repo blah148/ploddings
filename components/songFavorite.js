@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import useStore from '../zustandStore'; // Adjust the import path as needed
 import { supabase } from '../pages/utils/supabase';
 
-const FavoriteButton = ({ userId, isAuthenticated, id, page_slug, page_name, page_type, ip }) => {
+const FavoriteButton = ({ userId = null, isAuthenticated, id, page_slug, page_name, page_type, ip }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const { refreshData } = useStore();
 

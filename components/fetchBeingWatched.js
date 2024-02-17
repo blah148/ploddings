@@ -12,7 +12,6 @@ import React, { useState, useEffect, createContext, useContext } from 'react';
  * @returns {Promise<{ data: Array, count: number }>} A promise that resolves to an object containing an array of entries and the count of objects.
  */
 async function fetchBeingWatched(userId, userIp, limit = null) {
-    console.log('FetchBeingWatched initiated', userId, userIp);
   
     let query = supabase
         .from('latest_visit_history') // Table name
@@ -20,13 +19,10 @@ async function fetchBeingWatched(userId, userIp, limit = null) {
         .order('visited_at', { ascending: false }); // Most recent visits first
 
     if (userId) {
-        console.log('Querying for non-matching userIds and null user_ids');
         query = query.or(`user_id.neq.${userId},user_id.is.null`);
     } else if (userIp) {
-        console.log('Querying for non-matching IPs and null IPs');
         query = query.or(`ip.neq.${userIp},ip.is.null`);
     } else {
-        console.log('Neither userId nor userIp provided, returning empty result');
         return { data: [], count: 0 };
     }
 
@@ -41,8 +37,6 @@ async function fetchBeingWatched(userId, userIp, limit = null) {
         console.error('Error fetching being watched history:', error.message);
         return { data: [], count: 0 };
     }
-
-    console.log('Fetched data:', historyData);
 
     const pageDetailsPromises = historyData.map(async (item) => {
         const { data, error } = await supabase
@@ -65,7 +59,6 @@ async function fetchBeingWatched(userId, userIp, limit = null) {
     const detailedHistory = await Promise.all(pageDetailsPromises);
     const totalCount = parseInt(count, 10) || 0; // Ensure count is parsed as an integer, default to 0 if parsing fails
 
-    console.log('Total count of being watched entries:', totalCount);
     // Return the detailed visit history along with the total count
     return { data: detailedHistory, count: totalCount };
 }

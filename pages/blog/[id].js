@@ -77,7 +77,7 @@ export default function Blog({ blogData, isAuthenticated, userId }) {
       <h1>{blogData.name}</h1>
 			<div>{blogData.id}</div>
 			<img src={blogData.featured_img}/>
-			<FavoriteButton page_name={blogData.name} page_slug={blogData.slug} page_type="blog" id={blogData.id} userId={userId} isAuthenticated={isAuthenticated} ip={ip} />
+			<FavoriteButton page_type="blog" id={blogData.id} userId={userId} ip={ip} />
 
       {isAuthenticated && (
         <button onClick={toggleFavorite}>

@@ -107,7 +107,7 @@ export default function Song({ userId, isAuthenticated, ip, songData }) {
 					<TabsComponent extra_notes={songData.extra_notes} song_lyrics={songData.lyrics} tuning={songData.tuning} />
 				)}
 				<LazyLoadedDiv page_type="songs" category_id={songData.category_id} currentSongId = {songData.id} />
-				<FavoriteButton page_name={songData.name} page_slug={songData.slug} page_type="songs" id={songData.id} userId={userId} isAuthenticated={isAuthenticated} ip={ip} />
+				<FavoriteButton page_type="songs" id={songData.id} userId={userId} ip={ip} />
 			</div>
     </div>
   );
