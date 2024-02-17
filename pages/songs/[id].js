@@ -81,7 +81,6 @@ export default function Song({ userId, isAuthenticated, ip, songData }) {
 
   return (
     <div className="bodyA">
-			<Sidebar userId={userId} isAuthenticated={isAuthenticated} ip={ip} />
 			<div className="mainFeed">
 				<Loader isLoading={isLoading} />
 				{threadData && (
@@ -103,8 +102,8 @@ export default function Song({ userId, isAuthenticated, ip, songData }) {
 					</iframe>
 				)}
 				<DivSwitcher dropbox_mp3_link={songData.dropbox_mp3_link} youtube_link={songData.youtube_link} />
-				{(songData.extra_notes || songData.lyrics) && (
-					<TabsComponent extra_notes={songData.extra_notes} song_lyrics={songData.lyrics} />
+				{(songData.extra_notes || songData.lyrics || songData.tuning) && (
+					<TabsComponent extra_notes={songData.extra_notes} song_lyrics={songData.lyrics} tuning={songData.tuning} />
 				)}
 				<LazyLoadedDiv page_type="songs" category_id={songData.category_id} currentSongId = {songData.id} />
 				<FavoriteButton page_name={songData.name} page_slug={songData.slug} page_type="songs" id={songData.id} userId={userId} isAuthenticated={isAuthenticated} />

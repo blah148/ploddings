@@ -80,17 +80,17 @@ export default function Home({ isAuthenticated, userId, ip  }) {
 
     const categoriesWithChildren = await Promise.all(categoriesData.map(async (category) => {
 
-      const { data: songs } = await supabase
+      const { data: songs=[] } = await supabase
         .from('songs')
         .select('id, name, slug, page_views, pdf_embed, tuning')
         .eq('category_id', category.id);
 
-      const { data: threads } = await supabase
+      const { data: threads=[] } = await supabase
         .from('threads')
-        .select('id, name, slug, page_views, featured_img_200px, blurb')
+        .select('id, name, slug, page_views, thumbnail_200x200, blurb')
         .eq('category_id', category.id);
 
-      const { data: blogs } = await supabase
+      const { data: blogs=[] } = await supabase
         .from('blog')
         .select('id, name, slug, page_views, featured_img, featured_img_alt_text')
         .eq('category_id', category.id);
@@ -114,7 +114,7 @@ export default function Home({ isAuthenticated, userId, ip  }) {
 
     const { data: threadsData, error: threadsError } = await supabase
       .from('threads')
-      .select('id, name, slug, page_views, featured_img_200px, blurb');
+      .select('id, name, slug, page_views, thumbnail_200x200, blurb');
 
     if (threadsError) {
       console.error('Error fetching threads:', threadsError);
@@ -190,9 +190,9 @@ export default function Home({ isAuthenticated, userId, ip  }) {
 							</div>
 							<div>
 								<ul>
-									{category.threads.map((thread) => (
+									{category.threads && (category.threads.map((thread) => (
 										<li key={thread.id}>{thread.name}</li>
-									))}
+									)))}
 								</ul>
 							</div>
 							<div>
