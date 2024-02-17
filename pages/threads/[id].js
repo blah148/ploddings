@@ -53,15 +53,16 @@ export default function Thread({ userId, isAuthenticated, ip, threadData }) {
 	}, [userId]);
 	
   return (
-    <div>
+    <div className="bodyA">
 			<Sidebar userId={userId} isAuthenticated={isAuthenticated} ip={ip} />
-      <h1>{threadData.name}</h1>
-			<ChatWithGPT initialPrompt={`who is ${threadData.name}`} />
-			<div>{threadData.id}</div>
-			<img src={threadData.featured_img_550px}/>
-			<TableDataFetcher tableName={threadData.child_type} threadId={threadData.id} />
-      <FavoriteButton page_name={threadData.name} page_slug={threadData.slug} page_type="threads" id={threadData.id} userId={userId} isAuthenticated={isAuthenticated} />
-
+			<div className="mainFeed">
+				<h1>{threadData.name}</h1>
+				<ChatWithGPT initialPrompt={`who is ${threadData.name}`} />
+				<div>{threadData.id}</div>
+				<img src={threadData.featured_img_550px}/>
+				<TableDataFetcher tableName={threadData.child_type} threadId={threadData.id} />
+				<FavoriteButton page_name={threadData.name} page_slug={threadData.slug} page_type="threads" id={threadData.id} userId={userId} isAuthenticated={isAuthenticated} />
+			</div>
     </div>
   );
 } 
