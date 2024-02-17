@@ -33,13 +33,8 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 		// Async IIFE
 		(async () => {
 			try {
-				if (!userId && !isAuthenticated) {
-					// Initialize guest data loading
-					guestStore.initialize();
-				} else {
-					// Fetch data for authenticated users
-					await fetchAndSetStarred(userId, groupMax);
-				}
+			  
+        await fetchAndSetStarred(userId, groupMax, ip);
 				
 				// Fetch visit history for all users
 				await fetchAndSetVisitHistory(userId, groupMax, ip);
@@ -72,7 +67,7 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 	
   // Determine which data to display based on authentication state
   const displayVisitHistory = visitHistory;
-  const displayStarred = !userId && !isAuthenticated ? guestStore.starred : starred;
+  const displayStarred = starred;
   const displayBeingWatched = beingWatched;
 
 	return (

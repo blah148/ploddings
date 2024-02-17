@@ -8,6 +8,7 @@ import ChatWithGPT from '../../components/ChatWithGPT.js';
 import { fetchSlugsFromTable, fetchDataBySlug, getParentObject } from '../../db-utilities';
 import { useLoading } from '../../context/LoadingContext';
 import Loader from '../../components/Loader';
+import FavoriteButton from '../../components/songFavorite';
 
 
 // Verify the user's session using the JWT token
@@ -76,6 +77,8 @@ export default function Blog({ blogData, isAuthenticated, userId }) {
       <h1>{blogData.name}</h1>
 			<div>{blogData.id}</div>
 			<img src={blogData.featured_img}/>
+			<FavoriteButton page_name={blogData.name} page_slug={blogData.slug} page_type="blog" id={blogData.id} userId={userId} isAuthenticated={isAuthenticated} ip={ip} />
+
       {isAuthenticated && (
         <button onClick={toggleFavorite}>
           {isFavorite ? 'Unfavorite' : 'Favorite'}

@@ -25,9 +25,9 @@ const useStore = create((set, get) => ({
     }
   },
   starred: [],
-  fetchAndSetStarred: async (userId, groupMax) => {
+  fetchAndSetStarred: async (userId, groupMax, ip) => {
     try {
-      const { data, count } = await fetchStarred(userId, groupMax);
+      const { data, count } = await fetchStarred(userId, groupMax, ip);
       set(state => ({
         starred: data,
         starredCount: count,

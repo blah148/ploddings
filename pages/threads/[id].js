@@ -61,7 +61,7 @@ export default function Thread({ userId, isAuthenticated, ip, threadData }) {
 				<div>{threadData.id}</div>
 				<img src={threadData.featured_img_550px}/>
 				<TableDataFetcher tableName={threadData.child_type} threadId={threadData.id} />
-				<FavoriteButton page_name={threadData.name} page_slug={threadData.slug} page_type="threads" id={threadData.id} userId={userId} isAuthenticated={isAuthenticated} />
+				<FavoriteButton page_name={threadData.name} page_slug={threadData.slug} page_type="threads" id={threadData.id} userId={userId} isAuthenticated={isAuthenticated} ip={ip} />
 			</div>
     </div>
   );
