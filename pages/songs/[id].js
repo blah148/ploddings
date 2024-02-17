@@ -81,6 +81,7 @@ export default function Song({ userId, isAuthenticated, ip, songData }) {
 
   return (
     <div className="bodyA">
+			<Sidebar userId={userId} isAuthenticated={isAuthenticated} ip={ip} />
 			<div className="mainFeed">
 				<Loader isLoading={isLoading} />
 				{threadData && (

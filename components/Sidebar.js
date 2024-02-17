@@ -55,7 +55,7 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 				stopLoading();
 			}
 		})();
-	}, [effectiveObjectLimit, userId, isAuthenticated, guestStore, fetchAndSetStarred, fetchAndSetVisitHistory, fetchAndSetBeingWatched, groupMax, ip]);
+	}, [effectiveObjectLimit, userId, isAuthenticated]);
 
 	function getLedClassName(pageType) {
 		switch (pageType.toLowerCase()) {
@@ -70,8 +70,6 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 		}
 	}
 	
-	console.log('testing threads', getLedClassName("threads"));
-
   // Determine which data to display based on authentication state
   const displayVisitHistory = visitHistory;
   const displayStarred = !userId && !isAuthenticated ? guestStore.starred : starred;

@@ -4,27 +4,20 @@ const useGuestStore = create((set, get) => ({
 	
   maximumObjects: 5,
   objectLimitGuest: 15,
-	visitHistoryCount: 0,
   starredCount: 0,
 
-  visitHistory: [],
   starred: [],
 
   loadGuestData: () => {
     const sortByTimestampDesc = (a, b) => new Date(b.timestamp) - new Date(a.timestamp);
 
-    let visitHistory = JSON.parse(localStorage.getItem('visitHistory')) || [];
     let starred = JSON.parse(localStorage.getItem('favorites')) || [];
 
-    // Sort by timestamp if present, then apply limits
-    visitHistory = visitHistory.sort(sortByTimestampDesc).slice(0, get().objectLimitGuest);
     starred = starred.sort(sortByTimestampDesc).slice(0, get().objectLimitGuest);
 
-    // Correctly setting visitHistoryCount and starredCount inside the set call
+    // Correctly setting starredCount inside the set call
     set({
-      visitHistory,
       starred,
-      visitHistoryCount: visitHistory.length,
       starredCount: starred.length,
     });
   },
