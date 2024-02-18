@@ -38,8 +38,6 @@ export default function Sidebar({ userId, ip }) {
 
   // Separate effect for fetching starred data to allow updates within the page session
   useEffect(() => {
-    // This can be triggered by any event or condition that requires refreshing starred data
-    // For demonstration, it's set to refresh on userId
     fetchAndSetStarred(userId, groupMax, ip);
   }, [userId, fetchAndSetStarred, groupMax, ip]);
 
@@ -53,11 +51,6 @@ export default function Sidebar({ userId, ip }) {
     }
   }	
 
-  // Determine which data to display based on authentication state
-  const displayVisitHistory = visitHistory;
-  const displayStarred = starred;
-  const displayBeingWatched = beingWatched;
-
 	return (
 		<div className={styles.sidebarContainer}>
 			<div className={styles.sidebarHeader}>
@@ -68,48 +61,48 @@ export default function Sidebar({ userId, ip }) {
 				</Link>
 			</div>
 			<div className={styles.sidebarItems}>
-				{displayStarred && (
+				{starred && (
 					<div>
 						<h2>Starred</h2>
 						<ul>
-							{displayStarred.map((star, index) => (
-								<li className={styles.listElement} key={star.id}>
-									<a className={styles.listLink} href={`/${star.page_type}/${star.slug}`}>
+							{starred.map((star, index) => (
+								<li className={styles.listElement} key={star.content.id}>
+									<a className={styles.listLink} href={`/${star.content.page_type}/${star.content.slug}`}>
 										<div>
-											{star.name.length > 26 ? star.name.slice(0, 26) + '...' : star.name}
+											{star.content.name.length > 26 ? star.content.name.slice(0, 26) + '...' : star.content.name}
 										</div>
-										<div className={`${styles.led} ${getLedClassName(star.page_type)}`}></div>
+										<div className={`${styles.led} ${getLedClassName(star.content.page_type)}`}></div>
 									</a>
 								</li>
 							))}
 						</ul>
 					</div>
 				)}
-				{displayVisitHistory && (<div>
+				{visitHistory && (<div>
 					<h2>History</h2>
 					<ul>
-						{displayVisitHistory.map((visit, index) => (
-							<li className={styles.listElement} key={visit.id}>
-								<a className={styles.listLink} href={`/${visit.page_type}/${visit.slug}`}>
+						{visitHistory.map((visit, index) => (
+							<li className={styles.listElement} key={visit.content.id}>
+								<a className={styles.listLink} href={`/${visit.content.page_type}/${visit.content.slug}`}>
 									<div>
-										{visit.name.length > 26 ? visit.name.slice(0, 26) + '...' : visit.name}
+										{visit.content.name.length > 26 ? visit.content.name.slice(0, 26) + '...' : visit.content.name}
 									</div>
-									<div className={`${styles.led} ${getLedClassName(visit.page_type)}`}></div>
+									<div className={`${styles.led} ${getLedClassName(visit.content.page_type)}`}></div>
 								</a>
 							</li>
 						))}
 					</ul>
 				</div>)}
-				{displayBeingWatched && (<div>
+				{beingWatched && (<div>
 					<h2>Being watched</h2>
 					<ul>
-						{displayBeingWatched.map((watch, index) => (
-							<li key={watch.id} className={styles.listElement}>
-								<a className={styles.listLink} href={`/${watch.page_type}/${watch.slug}`}>
+						{beingWatched.map((watch, index) => (
+							<li key={watch.content.id} className={styles.listElement}>
+								<a className={styles.listLink} href={`/${watch.content.page_type}/${watch.content.slug}`}>
 									<div>
-										{watch.name.length > 26 ? watch.name.slice(0, 26) + '...' : watch.name}
+										{watch.content.name.length > 26 ? watch.content.name.slice(0, 26) + '...' : watch.content.name}
 									</div>
-									<div className={`${styles.led} ${getLedClassName(watch.page_type)}`}></div>
+									<div className={`${styles.led} ${getLedClassName(watch.content.page_type)}`}></div>
 								</a>
 							</li>
 						))}
