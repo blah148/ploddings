@@ -10,7 +10,8 @@ import { useLoading } from '../../context/LoadingContext';
 import Loader from '../../components/Loader';
 import FavoriteButton from '../../components/songFavorite';
 import Sidebar from '../../components/Sidebar';
-import ParentLink from '../../components/ParentBackLink';
+import IpodMenuLink from '../../components/ParentBackLink';
+import ParentInfoLink from '../../components/ParentInfoLink';
 import Link from 'next/link';
 
 // Verify the user's session using the JWT token
@@ -25,6 +26,13 @@ const verifyUserSession = (req) => {
   } catch (error) {
     return null; // Session invalid
   }
+};
+
+// Function to format the date
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  const options = { day: 'numeric', month: 'long', year: 'numeric' };
+  return date.toLocaleDateString('en-GB', options);
 };
 
 export default function Blog({ threadData, blogData, ip, userId }) {
@@ -53,9 +61,11 @@ export default function Blog({ threadData, blogData, ip, userId }) {
     <div className="bodyA">
 			<Sidebar userId={userId} ip={ip} />
 			<div className="mainFeed">
-				<ParentLink page_type={threadData.page_type} parentLink={threadData.slug} />
+				<IpodMenuLink threadData={threadData} />
 				<h1>{blogData.name}</h1>
+				<ParentInfoLink threadData={threadData} />
 				<FavoriteButton userId={userId} id={blogData.id} ip={ip} />
+				<div>Date posted: {formatDate(blogData.published_date)}</div>
 				<div>{blogData.id}</div>
 				<img src={blogData.featured_img}/>
 			</div>
