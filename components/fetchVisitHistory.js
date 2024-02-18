@@ -10,7 +10,7 @@ import { supabase } from '../pages/utils/supabase';
  */
 async function fetchVisitHistory(userId, limit = null, ip) {
   let historyQuery = supabase
-    .from('latest_visit_history')
+    .from('visit_history')
     .select('page_id', { count: 'exact' })
     .order('visited_at', { ascending: false });
 
