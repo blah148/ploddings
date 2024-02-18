@@ -25,16 +25,20 @@ const verifyUserSession = (req) => {
   }
 };
 
-export default function Thread({ userId, ip, threadData }) {
+export default function Thread({ userId, isAuthenticated, ip, threadData }) {
 
 	const { isLoading, startLoading, stopLoading } = useLoading();
 
   const logPageVisit = async () => {
     try {
       await axios.post('/api/log-visit', {
+        page_type: 'threads',
         page_id: threadData.id,
+				page_slug: threadData.slug,
+				page_name: threadData.name,
+				isAuthenticated,
 				userId,
-				ip: !userId ? ip : null,
+				ip: !isAuthenticated ? ip : undefined,
       });
     } catch (error) {
       console.error('Failed to log page visit:', error);
@@ -42,16 +46,17 @@ export default function Thread({ userId, ip, threadData }) {
   };
 
 	useEffect(() => {
-	  logPageVisit();
-	}, [userId, ip]);
+		if (userId !== null) {
+			console.log('the userId', userId);
+			logPageVisit();
+		}
+	}, [userId]);
 	
   return (
     <div className="bodyA">
-			<Sidebar userId={userId} ip={ip} />
 			<div className="mainFeed">
 				<Loader isLoading={isLoading} />
 				<h1>{threadData.name}</h1>
-				<FavoriteButton userId={userId} id={threadData.id} ip={ip} />
 				<ChatWithGPT initialPrompt={`who is ${threadData.name}`} />
 				<div>{threadData.id}</div>
 				<img src={threadData.link_3}/>
@@ -62,20 +67,17 @@ export default function Thread({ userId, ip, threadData }) {
 } 
 
 export async function getServerSideProps({ params, req }) {
-  const userSession = verifyUserSession(req);
-  const threadData = await fetchThreadData(params.id);
-  
-  let ip;
-  // Check if `userSession` is not null before trying to access its properties
-  if (userSession === null || userSession.id === null) {
-    ip = req.connection.remoteAddress;
-  }
 
-  const props = {
-    threadData, 
-    ip,
-    userId: userSession?.id || null, 
-  };
+	const userSession = verifyUserSession(req);
+  const threadData = await fetchThreadData(params.id);
+  const ip = req.connection.remoteAddress;
+
+  const props = { 
+		threadData, 
+		isAuthenticated: !!userSession, 
+		ip, 
+		userId: userSession?.id || null, 
+	};
 
   return { props };
 }

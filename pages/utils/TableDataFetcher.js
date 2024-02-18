@@ -1,31 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../utils/supabase';
+import { useLoading } from '../../context/LoadingContext';
 
-const TableDataFetcher = ({ tableName, threadId }) => {
+const TableDataFetcher = ({ threadId }) => {
   const [childData, setChildData] = useState([]);
+	const { isLoading, startLoading, stopLoading } = useLoading();
 
   useEffect(() => {
     const fetchData = async () => {
+			startLoading();
       try {
         const { data, error } = await supabase
-          .from(tableName)
-          .select('id, slug, name, page_views')
+          .from('content')
+          .select('id, slug, name, thumbnail_200x200, featured_img_alt_text, page_views')
 					.eq('thread_id', threadId);
 
         if (error) {
           throw error;
         }
-
         setChildData(data);
+				stopLoading();
       } catch (error) {
         console.error('Error fetching data:', error.message);
+				stopLoading();
       }
     };
 
-    if (tableName, threadId) {
+    if (threadId) {
       fetchData();
     }
-  }, [tableName, threadId]);
+  }, [threadId]);
 
   // Directly render the fetched data within the component
   return (

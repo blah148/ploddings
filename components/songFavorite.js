@@ -1,33 +1,55 @@
 import React, { useEffect, useState } from 'react';
-import useStore from '../zustandStore'; // Adjust the import path as needed
-import { supabase } from '../pages/utils/supabase';
+import useStore from '../zustandStore'; // Adjust import path as needed
+import { supabase } from '../pages/utils/supabase'; // Adjust import path as needed
+import { useLoading } from '../context/LoadingContext'; // Adjust import path as needed
 
-const FavoriteButton = ({ userId = null, isAuthenticated, id, page_slug, page_name, page_type, ip }) => {
+const FavoriteButton = ({ userId = null, id, ip }) => {
   const [isFavorite, setIsFavorite] = useState(false);
-  const { refreshData } = useStore();
+  const { startLoading, stopLoading } = useLoading();
+  const { refreshStarred } = useStore();
+
+  const toggleFavorite = async () => {
+    startLoading();
+    try {
+      if (isFavorite) {
+        // Case for authenticated users
+        if (userId) {
+          await supabase.from('favorites').delete().match({ user_id: userId, page_id: id });
+        }
+        // Case for guests
+        else if (ip) {
+          await supabase.from('favorites').delete().match({ ip, page_id: id });
+        }
+      } else {
+        if (userId) {
+          // Add favorite for authenticated users
+          await supabase.from('favorites').insert([{ user_id: userId, page_id: id }]);
+        } else if (ip) {
+          // Add favorite for guests based on IP
+          await supabase.from('favorites').insert([{ ip, page_id: id }]);
+        }
+      }
+      setIsFavorite(!isFavorite);
+      refreshStarred(userId, ip);
+    } catch (error) {
+      console.error('Error toggling favorite:', error);
+    } finally {
+      stopLoading();
+    }
+  };
 
   useEffect(() => {
-    // Check favorite status for both authenticated users and guests
     const fetchFavoriteStatus = async () => {
       try {
-        let query = supabase
-          .from('favorites')
-          .select('*')
-          .eq('page_type', page_type)
-          .eq('page_id', id);
-
-        if (userId && isAuthenticated) {
+        let query = supabase.from('favorites').select('*').eq('page_id', id);
+        // Adjust condition to check for userId existence
+        if (userId) {
           query = query.eq('user_id', userId);
         } else {
           query = query.eq('ip', ip);
         }
-
         const { data, error } = await query;
-
-        if (error) {
-          throw error;
-        }
-
+        if (error) throw error;
         setIsFavorite(data.length > 0);
       } catch (error) {
         console.error('Error fetching favorite status:', error);
@@ -35,43 +57,10 @@ const FavoriteButton = ({ userId = null, isAuthenticated, id, page_slug, page_na
     };
 
     fetchFavoriteStatus();
-  }, [userId, id, isAuthenticated, page_type, ip]);
-
-  // Toggle favorite status for both authenticated users and guests
-  const toggleFavorite = async () => {
-    if (userId !== null && isAuthenticated) {
-      // Handle favorite toggle for authenticated users in the database
-      // Your existing logic for authenticated users remains unchanged
-    } else {
-      // Handle favorite toggle for guests based on IP
-      try {
-        if (isFavorite) {
-          // Remove favorite for guests based on IP
-          const { error } = await supabase
-            .from('favorites')
-            .delete()
-            .match({ ip: ip, page_type: page_type, page_id: id });
-
-          if (error) throw error;
-        } else {
-          // Add favorite for guests based on IP
-          const { error } = await supabase
-            .from('favorites')
-            .insert([{ ip: ip, page_type: page_type, page_id: id, user_id: null }]);
-
-          if (error) throw error;
-        }
-
-        setIsFavorite(!isFavorite);
-        // Optionally, refresh data if needed
-      } catch (error) {
-        console.error('Error toggling favorite for guest:', error);
-      }
-    }
-  };
+  }, [userId, id, ip]);
 
   return (
-    <button onClick={toggleFavorite}>
+    <button style={{ cursor: 'pointer' }} onClick={toggleFavorite}>
       {isFavorite ? 'Unfavorite' : 'Favorite'}
     </button>
   );

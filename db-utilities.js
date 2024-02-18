@@ -19,7 +19,7 @@ async function fetchSlugsFromTable(tableName) {
   }
 }
 
-async function fetchDataBySlug(tableName, slug) {
+async function fetchDataBySlug(tableName = 'content', slug) {
   try {
     const { data, error } = await supabase
       .from(tableName)
@@ -38,6 +38,27 @@ async function fetchDataBySlug(tableName, slug) {
     return null;
   }
 }
+
+async function fetchThreadData(slug) {
+  try {
+    const { data, error } = await supabase
+      .from('content')
+      .select('id, name, page_type, child_type, link_1, link_2, link_3, body_text')
+      .eq('slug', slug)
+      .single();
+
+    if (error || !data) {
+      console.error('Error fetching threadData by slug:', error);
+      return null;
+    }
+
+    return data;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
 
 async function getParentObject(threadId) {
   try {
@@ -97,5 +118,6 @@ export {
   fetchDataBySlug,
   getParentObject,
   fetchChildrenByThreadId,
+	fetchThreadData,
 };
 

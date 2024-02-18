@@ -1,76 +1,56 @@
-// components/fetchVisitHistory.js
-
 import { supabase } from '../pages/utils/supabase';
-import React, { useState, useEffect, createContext, useContext } from 'react'
 
 /**
- * Fetches the visit history for a specific user.
+ * Fetches the visit history for a specific user or IP and batches the detailed data retrieval.
  * 
- * @param {string} userId The user ID to query the visit history for.
- * @param {number} limit (Optional) The maximum number of entries to retrieve.
+ * @param {string|null} userId The user ID of the current user, null if guest.
+ * @param {string|null} ip The IP address of the current user, used if guest.
+ * @param {number|null} limit (Optional) The maximum number of entries to retrieve.
  * @returns {Promise<{ data: Array, count: number }>} A promise that resolves to an object containing an array of entries and the count of objects.
  */
-
 async function fetchVisitHistory(userId, limit = null, ip) {
+  let historyQuery = supabase
+    .from('latest_visit_history')
+    .select('page_id', { count: 'exact' })
+    .order('visited_at', { ascending: false });
 
-  let historyQuery;
-
-  // Query for fetching visit history by userId or IP
+  // Apply user or IP filter
   if (userId) {
-    historyQuery = supabase
-      .from('latest_visit_history')
-      .select('page_type, page_id', {count: 'exact'})
-      .order('visited_at', { ascending: false })
-      .eq('user_id', userId);
+    historyQuery = historyQuery.eq('user_id', userId);
   } else if (ip) {
-    historyQuery = supabase
-      .from('latest_visit_history')
-      .select('page_type, page_id', {count: 'exact'})
-      .order('visited_at', { ascending: false })
-      .eq('ip', ip);
-  } else {
-    // If neither userId nor ip is provided, return empty result
-    return { data: [], count: 0 };
+    historyQuery = historyQuery.eq('ip', ip);
   }
 
-  // Apply limit if provided
-  if (limit !== null) {
+  // Apply limit if specified
+  if (limit) {
     historyQuery = historyQuery.limit(limit);
   }
 
-	const { data: historyData, error, count } = await historyQuery;
-
-  if (error) {
-    console.error('Error fetching visit history', error.message);
+  const { data: historyData, error, count } = await historyQuery;
+  if (error || !historyData.length) {
+    console.error('Error fetching visit history', error?.message);
     return { data: [], count: 0 };
   }
 
-  const pageDetailsPromises = historyData.map(async (item) => {
-    const { data, error } = await supabase
-      .from(item.page_type) // Use page_type to dynamically select the table
-      .select('id, slug, name, thumbnail_200x200')
-      .eq('id', item.page_id)
-      .single(); // Assuming page_id is unique within each table
+  // Use a Set to ensure unique page IDs for batch query
+  const pageIds = [...new Set(historyData.map(item => item.page_id))];
+  const { data: pagesData, error: pagesError } = await supabase
+    .from('content')
+    .select('id, slug, page_type, name, thumbnail_200x200')
+    .in('id', pageIds);
 
-    if (error) {
-      console.error(`Error fetching details for ${item.page_type}`, error.message);
-      return null;
-    }
-		
-    return {
-      ...item,
-      ...data, // Merge visit history item with its corresponding page details
-    };
-  });
+  if (pagesError) {
+    console.error('Error fetching page details', pagesError.message);
+    return { data: [], count: 0 };
+  }
 
-	const detailedHistory = await Promise.all(pageDetailsPromises);
+  // Merge details into visit history data
+  const detailedVisitHistory = historyData.map(visit => ({
+    ...visit,
+    ...pagesData.find(page => page.id === visit.page_id),
+  }));
 
-  const totalCount = parseInt(count, 10) || 0; // Ensure count is parsed as an integer, default to 0 if parsing fails
-
-
-  // Return the detailed visit history along with the total count
-  return { data: detailedHistory, count: totalCount };
-
+  return { data: detailedVisitHistory, count: parseInt(count, 10) || 0 };
 }
 
 export default fetchVisitHistory;

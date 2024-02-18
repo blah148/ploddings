@@ -6,65 +6,53 @@ import useGuestStore from '../zustandStore_guest';
 import { useLoading } from '../context/LoadingContext';
 import styles from './Sidebar.module.css';
 
-export default function Sidebar({ userId, isAuthenticated, ip }) {
+export default function Sidebar({ userId, ip }) {
+  const { startLoading, stopLoading } = useLoading();
 
-	const { isLoading, startLoading, stopLoading } = useLoading();
-
+  // Destructure state and fetch methods from the store
   const {
     visitHistory,
     starred,
     beingWatched,
     fetchAndSetVisitHistory,
-    fetchAndSetStarred,
     fetchAndSetBeingWatched,
-    objectLimit,
+    fetchAndSetStarred,
     groupMax,
   } = useStore();
-	
-  const guestStore = useGuestStore();
-	const { starredCount } = guestStore;
-	
-	const effectiveObjectLimit = isAuthenticated ? objectLimit : objectLimit - starredCount;
 
-	useEffect(() => {
-		// Start loading
-		startLoading();
-		
-		// Async IIFE
-		(async () => {
-			try {
-			  
-        await fetchAndSetStarred(userId, groupMax, ip);
-				
-				// Fetch visit history for all users
-				await fetchAndSetVisitHistory(userId, groupMax, ip);
+  // Fetch visitHistory and beingWatched only on component mount
+  useEffect(() => {
+    startLoading();
+    (async () => {
+      try {
+        await fetchAndSetVisitHistory(userId, groupMax, ip);
+        await fetchAndSetBeingWatched(userId, ip, groupMax);
+      } catch (error) {
+        console.error("An error occurred during data fetching:", error);
+      } finally {
+        stopLoading();
+      }
+    })();
+    // Empty dependency array to ensure this runs only once on component mount
+  }, []);
 
-				if (effectiveObjectLimit > 0) {
-					// Fetch being watched data if conditions are met
-					await fetchAndSetBeingWatched(userId, ip, effectiveObjectLimit);
-				}
-			} catch (error) {
-				console.error("An error occurred during data fetching:", error);
-			} finally {
-				// Stop loading regardless of success or error
-				stopLoading();
-			}
-		})();
-	}, [effectiveObjectLimit, userId, isAuthenticated]);
+  // Separate effect for fetching starred data to allow updates within the page session
+  useEffect(() => {
+    // This can be triggered by any event or condition that requires refreshing starred data
+    // For demonstration, it's set to refresh on userId
+    fetchAndSetStarred(userId, groupMax, ip);
+  }, [userId, fetchAndSetStarred, groupMax, ip]);
 
-	function getLedClassName(pageType) {
-		switch (pageType.toLowerCase()) {
-			case 'songs':
-				return styles.songsLed;
-			case 'threads':
-				return styles.threadsLed;
-			case 'blog':
-				return styles.blogLed;
-			default:
-				return ''; // Default class or no class
-		}
-	}
-	
+  // Function to determine class name based on page type
+  function getLedClassName(pageType) {
+    switch (pageType.toLowerCase()) {
+      case 'song': return styles.songsLed;
+      case 'thread': return styles.threadsLed;
+      case 'blog': return styles.blogLed;
+      default: return '';
+    }
+  }	
+
   // Determine which data to display based on authentication state
   const displayVisitHistory = visitHistory;
   const displayStarred = starred;
@@ -85,7 +73,7 @@ export default function Sidebar({ userId, isAuthenticated, ip }) {
 						<h2>Starred</h2>
 						<ul>
 							{displayStarred.map((star, index) => (
-								<li className={styles.listElement} key={star.page_id}>
+								<li className={styles.listElement} key={star.id}>
 									<a className={styles.listLink} href={`/${star.page_type}/${star.slug}`}>
 										<div>
 											{star.name.length > 26 ? star.name.slice(0, 26) + '...' : star.name}

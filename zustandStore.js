@@ -17,9 +17,9 @@ const useStore = create((set, get) => ({
       set(state => ({
         visitHistory: data,
         visitHistoryCount: count,
-        // Optionally recalculate objectLimit here if it depends on visitHistoryCount
-        objectLimit: state.maximumObjects - (state.starredCount + count)
       }));
+      // Explicitly call recalculateObjectLimit after setting new data
+      get().recalculateObjectLimit();
     } catch (error) {
       console.error('Failed to fetch visit history:', error);
     }
@@ -31,39 +31,51 @@ const useStore = create((set, get) => ({
       set(state => ({
         starred: data,
         starredCount: count,
-        // Optionally recalculate objectLimit here if it depends on starredCount
-        objectLimit: state.maximumObjects - (count + state.visitHistoryCount)
       }));
+      // Explicitly call recalculateObjectLimit after setting new data
+      get().recalculateObjectLimit();
     } catch (error) {
       console.error('Failed to fetch starred:', error);
     }
   },
-
-  recalculateObjectLimit: () => set((state) => {
-    const usedSpace = state.starredCount + state.visitHistoryCount;
-    const remainingSpace = state.maximumObjects - usedSpace;
-    return { objectLimit: Math.max(remainingSpace, 0) };
-  }),
-
+  
   beingWatched: [],
   fetchAndSetBeingWatched: async (userId, ip, objectLimit) => {
     if (objectLimit > 0) {
       try {
         const { data, count } = await fetchBeingWatched(userId, ip, objectLimit);
         set({ beingWatched: data });
-        // Log or handle the fetched data as needed
       } catch (error) {
         console.error('Failed to fetch being watched:', error);
       }
     }
   },
+  
+  // Method to recalculate the object limit based on the current counts
+  recalculateObjectLimit: () => set(state => {
+    const usedSpace = state.starredCount + state.visitHistoryCount;
+    const remainingSpace = state.maximumObjects - usedSpace;
+    return { objectLimit: Math.max(remainingSpace, 0) };
+  }),
 
-  refreshData: async (userId) => {
-    const { fetchAndSetStarred, fetchAndSetVisitHistory, groupMax } = get();
-    await fetchAndSetStarred(userId, groupMax);
-    await fetchAndSetVisitHistory(userId, groupMax);
+  refreshData: async (userId, ip) => {
+    await get().refreshVisitHistory(userId, ip);
+    await get().refreshStarred(userId, ip);
+    // Note: BeingWatched does not affect objectLimit calculation directly
+    await get().refreshBeingWatched(userId, ip);
   },
 
+  refreshVisitHistory: async (userId, ip) => {
+    await get().fetchAndSetVisitHistory(userId, get().groupMax, ip);
+  },
+
+  refreshStarred: async (userId, ip) => {
+    await get().fetchAndSetStarred(userId, get().groupMax, ip);
+  },
+
+  refreshBeingWatched: async (userId, ip) => {
+    await get().fetchAndSetBeingWatched(userId, ip, get().objectLimit);
+  },
 }));
 
 export default useStore;

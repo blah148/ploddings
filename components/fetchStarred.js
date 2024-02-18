@@ -17,7 +17,7 @@ async function fetchStarred(userId, limit = null, ip) {
   try {
     let favoritesQuery = supabase
       .from('favorites')
-      .select('page_type, page_id', { count: 'exact' }); // Include count in the same query
+      .select('page_id', { count: 'exact' }); // Include count in the same query
 
     // Apply filtering based on userId or ip, if provided
     if (userId) {
@@ -41,13 +41,13 @@ async function fetchStarred(userId, limit = null, ip) {
     // Dynamically fetch detailed data for each favorite
     const pageDetailsPromises = favoritesData.map(async (favorite) => {
       const { data, error } = await supabase
-        .from(favorite.page_type)
-        .select('id, slug, name, thumbnail_200x200')
+        .from('content')
+        .select('id, page_type, slug, name, thumbnail_200x200')
         .eq('id', favorite.page_id)
         .single(); // Assuming page_id is unique within each table
 
       if (error) {
-        console.error(`Error fetching details for ${favorite.page_type}`, error.message);
+        console.error(`Error fetching starred`, error.message);
         return null;
       }
 

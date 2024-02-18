@@ -1,66 +1,63 @@
-// components/fetchBeingWatched.js
-
 import { supabase } from '../pages/utils/supabase';
-import React, { useState, useEffect, createContext, useContext } from 'react';
 
 /**
- * Fetches what's being watched by other users.
+ * Fetches what's being watched by other users in a more efficient manner by batching the second query.
  * 
- * @param {string|null} userId The user ID of the current user, null if guest.
- * @param {string|null} userIp The IP address of the current user, used if guest.
- * @param {number} limit (Optional) The maximum number of entries to retrieve.
- * @returns {Promise<{ data: Array, count: number }>} A promise that resolves to an object containing an array of entries and the count of objects.
+ * @param {string|null} userId The user ID to query for, null if a guest user.
+ * @param {string|null} userIp The IP address to query for, used if a guest user.
+ * @param {number|null} limit The maximum number of entries to retrieve.
+ * @returns {Promise<{ data: Array, count: number }>} A promise that resolves to an object containing an array of entries and the total count.
  */
 async function fetchBeingWatched(userId, userIp, limit = null) {
-  
     let query = supabase
-        .from('latest_visit_history') // Table name
-        .select('page_type, page_id, name, slug, visited_at', { count: 'exact' })
-        .order('visited_at', { ascending: false }); // Most recent visits first
+        .from('latest_visit_history')
+        .select('page_id', { count: 'exact' })
+        .order('visited_at', { ascending: false });
 
     if (userId) {
         query = query.or(`user_id.neq.${userId},user_id.is.null`);
     } else if (userIp) {
         query = query.or(`ip.neq.${userIp},ip.is.null`);
     } else {
+        // If no user ID or IP is provided, return an empty response.
         return { data: [], count: 0 };
     }
 
-    // Apply limit if provided
-    if (limit !== null) {
+    if (limit) {
         query = query.limit(limit);
     }
 
-    let { data: historyData, error, count } = await query;
+    const { data: historyData, error, count } = await query;
 
     if (error) {
         console.error('Error fetching being watched history:', error.message);
         return { data: [], count: 0 };
     }
 
-    const pageDetailsPromises = historyData.map(async (item) => {
-        const { data, error } = await supabase
-            .from(item.page_type) // Use page_type to dynamically select the table
-            .select('id, slug, name, thumbnail_200x200')
-            .eq('id', item.page_id)
-            .single(); // Assuming page_id is unique within each table
+    // Collect unique page IDs from the history data for a batch request.
+    const pageIds = [...new Set(historyData.map(item => item.page_id))];
 
-        if (error) {
-            console.error(`Error fetching details for ${item.page_type}:`, error.message);
-            return null;
-        }
+    // Perform a single batch request to fetch all page details.
+    const { data: pageDetails, error: detailsError } = await supabase
+        .from('content') // Assuming all page types are now in a unified 'content' table
+        .select('id, slug, name, thumbnail_200x200')
+        .in('id', pageIds);
 
+    if (detailsError) {
+        console.error('Error fetching page details:', detailsError.message);
+        return { data: [], count: 0 };
+    }
+
+    // Merge the page details back into the history data.
+    const detailedHistory = historyData.map(historyItem => {
+        const detail = pageDetails.find(detail => detail.id === historyItem.page_id);
         return {
-            ...item,
-            ...data, // Merge visit history item with its corresponding page details
+            ...historyItem,
+            ...detail,
         };
     });
 
-    const detailedHistory = await Promise.all(pageDetailsPromises);
-    const totalCount = parseInt(count, 10) || 0; // Ensure count is parsed as an integer, default to 0 if parsing fails
-
-    // Return the detailed visit history along with the total count
-    return { data: detailedHistory, count: totalCount };
+    return { data: detailedHistory, count: parseInt(count, 10) || 0 };
 }
 
 export default fetchBeingWatched;

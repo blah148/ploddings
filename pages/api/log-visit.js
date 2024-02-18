@@ -7,14 +7,14 @@ export default async function handler(req, res) {
   }
 
   // Extract the page visit details and isAuthenticated flag from the request body
-  const { ip, page_type, page_id, isAuthenticated, userId, page_name, page_slug } = req.body;
+  const { ip, page_id, userId } = req.body;
 
   try {
     // Prepare an object for the visit_history record
-    const visitRecord = { page_type, page_id, slug: page_slug, name: page_name };
+    const visitRecord = { page_id };
 
     // If the user is authenticated, add the user_id to the record
-    if (isAuthenticated && userId) {
+    if (userId) {
       visitRecord.user_id = userId;
     } else {
 			visitRecord.ip = ip;
@@ -30,7 +30,7 @@ export default async function handler(req, res) {
     }
 
     // Respond with success if the visit is logged successfully
-    res.status(200).json({ message: isAuthenticated ? 'Visit logged successfully' : 'Visit logged for non-authenticated user' });
+    res.status(200).json({ message: userId ? 'Visit logged successfully' : 'Visit logged for non-authenticated user' });
   } catch (error) {
     console.error('Error logging visit:', error);
     res.status(500).json({ error: 'Error logging visit' });
