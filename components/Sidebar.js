@@ -44,8 +44,8 @@ export default function Sidebar({ userId, ip }) {
   // Function to determine class name based on page type
   function getLedClassName(pageType) {
     switch (pageType.toLowerCase()) {
-      case 'song': return styles.songsLed;
-      case 'thread': return styles.threadsLed;
+      case 'songs': return styles.songsLed;
+      case 'threads': return styles.threadsLed;
       case 'blog': return styles.blogLed;
       default: return '';
     }
