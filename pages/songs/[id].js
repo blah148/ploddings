@@ -6,7 +6,7 @@ import useStore from '../../zustandStore';
 import Sidebar from '../../components/Sidebar';
 import FavoriteButton from '../../components/songFavorite';
 import { supabase } from '../utils/supabase'; // Adjust the import path as needed
-import { fetchDataBySlug } from '../../db-utilities';
+import { fetchSongData, getParentObject } from '../../db-utilities';
 import jwt from 'jsonwebtoken'; 
 import { useLoading } from '../../context/LoadingContext';
 import Loader from '../../components/Loader';
@@ -14,6 +14,7 @@ import LazyLoadedDiv from '../../components/relatedContentGrid';
 import DivSwitcher from '../../components/slowDownerAndYoutubeVideo';
 import TabsComponent from '../../components/extraNotesTabs';
 import styles from '../../styles/bodyA.module.css';
+import ParentInfoLink from '../../components/ParentInfoLink';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -28,60 +29,29 @@ const verifyUserSession = (req) => {
   }
 };
 
-export default function Song({ userId, isAuthenticated, ip, songData }) {
+export default function Song({ userId, ip, threadData, songData }) {
 
-	const [threadData, setThreadData] = useState(null);
 	const { isLoading, startLoading, stopLoading } = useLoading();
 
-  const logPageVisit = async () => {
-    try {
-      await axios.post('/api/log-visit', {
-        page_type: 'songs',
-        page_id: songData.id,
-				page_slug: songData.slug,
-				page_name: songData.name,
-				isAuthenticated,
+	const logPageVisit = async () => {
+		try {
+			await axios.post('/api/log-visit', {
+				page_id: blogData.id,
 				userId,
-				ip: ip,
-      });
-    } catch (error) {
-      console.error('Failed to log page visit:', error);
-    }
-  };
+				ip: !userId ? ip : null,
+			});
+		} catch (error) {
+			console.error('Failed to log page visit:', error);
+		}
+	};
 
 	useEffect(() => {
-		if (userId !== null) {
-			logPageVisit();
-		}
-	}, [userId]);
-	
-
-  useEffect(() => {
-    const fetchThreadData = async () => {
-      if (songData?.thread_id) {
-        try {
-          const { data, error } = await supabase
-            .from('threads')
-            .select('slug, name')
-            .eq('id', songData.thread_id)
-            .single();
-
-          if (error) {
-            throw error;
-          }
-          setThreadData(data);
-        } catch (error) {
-          console.error('Error fetching thread data:', error.message);
-        }
-      }
-    };
-
-    fetchThreadData();
-  }, [songData?.thread_id]);
+		logPageVisit();
+	}, [userId, ip]);
 
   return (
     <div className="bodyA">
-			<Sidebar userId={userId} isAuthenticated={isAuthenticated} ip={ip} />
+			<Sidebar userId={userId} ip={ip} />
 			<div className="mainFeed">
 				<Loader isLoading={isLoading} />
 				{threadData && (
@@ -90,24 +60,25 @@ export default function Song({ userId, isAuthenticated, ip, songData }) {
 					</Link>
 				)}
 				<h1>{songData.name}</h1>
-				{threadData && <div>{threadData.name}</div>}
+				<ParentInfoLink threadData={threadData} fallBack='/' />
+				<div>is this null{threadData.thumbnail_200x200}</div>
 				<div>{songData.id}</div>
-				{songData.musescore_embed && (
+				<FavoriteButton userId={userId} id={songData.id} ip={ip} />
+				{songData.link_3 && (
 					<iframe
 						width="100%"
 						height="480px"
-						src={songData.musescore_embed}
+						src={songData.link_3}
 						frameBorder="0"
 						allowFullScreen
 						allow="autoplay; fullscreen">
 					</iframe>
 				)}
-				<DivSwitcher dropbox_mp3_link={songData.dropbox_mp3_link} youtube_link={songData.youtube_link} />
-				{(songData.extra_notes || songData.lyrics || songData.tuning) && (
-					<TabsComponent extra_notes={songData.extra_notes} song_lyrics={songData.lyrics} tuning={songData.tuning} />
+				<DivSwitcher dropbox_mp3_link={songData.link_1} youtube_link={songData.link_2} />
+				{(songData.body_text || songData.lyrics || songData.tuning) && (
+					<TabsComponent extra_notes={songData.body_text} song_lyrics={songData.lyrics} tuning={songData.tuning} />
 				)}
 				<LazyLoadedDiv page_type="songs" category_id={songData.category_id} currentSongId = {songData.id} />
-				<FavoriteButton page_type="songs" id={songData.id} userId={userId} ip={ip} />
 			</div>
     </div>
   );
@@ -116,14 +87,15 @@ export default function Song({ userId, isAuthenticated, ip, songData }) {
 export async function getServerSideProps({ params, req }) {
 
 	const userSession = verifyUserSession(req);
-  const songData = await fetchDataBySlug('songs', params.id);
+  const songData = await fetchSongData(params.id);
+	const threadData = await getParentObject(songData.thread_id);
 	const ip = req.connection.remoteAddress;
 
   return {
     props: {
       songData,
+			threadData,
 			ip,
-			isAuthenticated: !!userSession,
 			userId: userSession?.id || null,
     },
   };

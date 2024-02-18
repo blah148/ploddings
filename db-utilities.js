@@ -61,6 +61,26 @@ async function fetchThreadData(slug) {
   }
 }
 
+async function fetchSongData(slug) {
+  try {
+    const { data, error } = await supabase
+      .from('content')
+      .select('id, name, featured_img_alt_text, capo_position, tuning, link_1, link_2, link_3, thread_id, body_text') 
+      .eq('slug', slug)
+      .single();
+    
+    if (error || !data) {
+      console.error('Error fetching threadData by slug:', error);
+      return null;
+    }
+    
+    return data;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
 async function fetchBlogData(slug) {
   try {
     const { data, error } = await supabase
@@ -140,6 +160,7 @@ export {
   getParentObject,
   fetchChildrenByThreadId,
 	fetchThreadData,
+	fetchSongData,
 	fetchBlogData,
 };
 
