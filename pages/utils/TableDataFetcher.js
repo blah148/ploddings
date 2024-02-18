@@ -9,6 +9,7 @@ const TableDataFetcher = ({ threadId }) => {
   useEffect(() => {
     const fetchData = async () => {
 			startLoading();
+			console.log('test');
       try {
         const { data, error } = await supabase
           .from('content')
@@ -38,7 +39,7 @@ const TableDataFetcher = ({ threadId }) => {
         <ul>
           {childData.map((item, index) => (
             <li key={item.id}>
-              {item.name} - {item.slug} - {item.page_views}
+              {item.name} - {item.slug}
             </li>
           ))}
         </ul>

@@ -1,12 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import useStore from '../zustandStore'; // Adjust import path as needed
 import { supabase } from '../pages/utils/supabase'; // Adjust import path as needed
+import { useLoading } from '../context/LoadingContext';
 
 const FavoriteButton = ({ userId = null, id, ip }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const { refreshStarred } = useStore();
+	const { isLoading, startLoading, stopLoading } = useLoading();
 
   const toggleFavorite = async () => {
+		startLoading();
     try {
       if (isFavorite) {
         // Case for authenticated users
@@ -28,8 +31,10 @@ const FavoriteButton = ({ userId = null, id, ip }) => {
       }
       setIsFavorite(!isFavorite);
       refreshStarred(userId, ip);
+			stopLoading();
     } catch (error) {
       console.error('Error toggling favorite:', error);
+			stopLoading();
     } finally {
     }
   };
@@ -37,7 +42,7 @@ const FavoriteButton = ({ userId = null, id, ip }) => {
   useEffect(() => {
     const fetchFavoriteStatus = async () => {
       try {
-        let query = supabase.from('favorites').select('*').eq('page_id', id);
+        let query = supabase.from('favorites').select('user_id, page_id, ip').eq('page_id', id);
         // Adjust condition to check for userId existence
         if (userId) {
           query = query.eq('user_id', userId);
