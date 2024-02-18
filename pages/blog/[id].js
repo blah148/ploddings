@@ -14,6 +14,7 @@ import IpodMenuLink from '../../components/ParentBackLink';
 import ParentInfoLink from '../../components/ParentInfoLink';
 import Pagination from '../../components/Pagination';
 import Link from 'next/link';
+import TableOfContents from '../../components/TableOfContents';
 
 // Verify the user's session using the JWT token
 const verifyUserSession = (req) => {
@@ -41,6 +42,11 @@ export default function Blog({ threadData, blogData, ip, userId }) {
 	const { isLoading, startLoading, stopLoading } = useLoading();
   const router = useRouter();
 	const [isFavorite, setIsFavorite] = useState(false);
+  const [updatedHtmlContent, setUpdatedHtmlContent] = useState(blogData.body_text);
+
+  const handleContentUpdate = (newHtmlContent) => {
+    setUpdatedHtmlContent(newHtmlContent);
+  };
 
 	const logPageVisit = async () => {
 		try {
@@ -74,7 +80,8 @@ export default function Blog({ threadData, blogData, ip, userId }) {
 				<div>Date posted: {formatDate(blogData.published_date)}</div>
 				<div>{blogData.id}</div>
 				<img src={blogData.featured_img}/>
-				<div dangerouslySetInnerHTML={createMarkup(blogData.body_text)} />
+        <TableOfContents htmlContent={blogData.body_text} onUpdate={handleContentUpdate} />
+        <div dangerouslySetInnerHTML={{ __html: updatedHtmlContent }} />
 				<Pagination sibling_previous={blogData.sibling_previous} sibling_next={blogData.sibling_next} />
 			</div>
     </div>
