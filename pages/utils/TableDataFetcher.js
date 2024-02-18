@@ -9,7 +9,6 @@ const TableDataFetcher = ({ threadId }) => {
   useEffect(() => {
     const fetchData = async () => {
 			startLoading();
-			console.log('test');
       try {
         const { data, error } = await supabase
           .from('content')
@@ -30,7 +29,7 @@ const TableDataFetcher = ({ threadId }) => {
     if (threadId) {
       fetchData();
     }
-  }, [threadId]);
+  }, []);
 
   // Directly render the fetched data within the component
   return (
