@@ -39,6 +39,8 @@ async function fetchDataBySlug(tableName = 'content', slug) {
   }
 }
 
+
+
 async function fetchThreadData(slug) {
   try {
     const { data, error } = await supabase
@@ -59,6 +61,25 @@ async function fetchThreadData(slug) {
   }
 }
 
+async function fetchBlogData(slug) {
+  try {
+    const { data, error } = await supabase
+      .from('content')
+      .select('id, name, published_date, thread_id, body_text, sibling_previous, sibling_next')
+      .eq('slug', slug)
+      .single();
+    
+    if (error || !data) {
+      console.error('Error fetching threadData by slug:', error);
+      return null;
+    }
+    
+    return data;
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
 
 async function getParentObject(threadId) {
   try {
@@ -119,5 +140,6 @@ export {
   getParentObject,
   fetchChildrenByThreadId,
 	fetchThreadData,
+	fetchBlogData,
 };
 

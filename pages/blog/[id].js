@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import jwt from 'jsonwebtoken';
 import { supabase } from '../utils/supabase'; // Adjust the import path as needed
 import ChatWithGPT from '../../components/ChatWithGPT.js';
-import { fetchSlugsFromTable, fetchDataBySlug, getParentObject } from '../../db-utilities';
+import { fetchBlogData, getParentObject } from '../../db-utilities';
 import { useLoading } from '../../context/LoadingContext';
 import Loader from '../../components/Loader';
 import FavoriteButton from '../../components/songFavorite';
@@ -25,65 +25,34 @@ const verifyUserSession = (req) => {
   }
 };
 
-export default function Blog({ blogData, isAuthenticated, userId }) {
+export default function Blog({ blogData, ip, userId }) {
 
 	const { isLoading, startLoading, stopLoading } = useLoading();
   const router = useRouter();
 	const [isFavorite, setIsFavorite] = useState(false);
 
-	useEffect(() => {
-		if (!router.isFallback && blogData?.id) {
-			logPageVisit(isAuthenticated);
-		} else {
-			console.log('Did not log page visit:', router.isFallback, threadData?.thread_id);
-		}
-	}, []);
-		
-  // Function to log the page visit
-  const logPageVisit = async () => {
-    try {
-      await axios.post('/api/log-visit', {
-        page_type: 'blog',
-        page_id: blogData.id,
-				isAuthenticated,
-				userId,
-      });
-      // Optionally handle the response
-    } catch (error) {
-      console.error('Failed to log page visit:', error);
-    }
-  };
-	
-	// Function to toggle the favorite status
-	const toggleFavorite = async () => {
-		const action = isFavorite ? 'remove' : 'add';
+	const logPageVisit = async () => {
 		try {
-			const response = await axios.post('/api/favorites', {
+			await axios.post('/api/log-visit', {
+				page_id: threadData.id,
 				userId,
-				pageId: blogData.id,
-				pageType: 'blog',
-				action,
+				ip: !userId ? ip : null,
 			});
-
-			setIsFavorite(!isFavorite); // Toggle the local favorite state
-			console.log(response.data.message); // Optional: handle response
 		} catch (error) {
-			console.error('Error toggling favorite:', error);
+			console.error('Failed to log page visit:', error);
 		}
 	};
 
+	useEffect(() => {
+		logPageVisit();
+	}, [userId, ip]);
+		
   return (
     <div>
       <h1>{blogData.name}</h1>
+			<FavoriteButton userId={userId} id={blogData.id} ip={ip} />
 			<div>{blogData.id}</div>
 			<img src={blogData.featured_img}/>
-			<FavoriteButton page_type="blog" id={blogData.id} userId={userId} ip={ip} />
-
-      {isAuthenticated && (
-        <button onClick={toggleFavorite}>
-          {isFavorite ? 'Unfavorite' : 'Favorite'}
-         </button>
-      )}
     </div>
   );
 } 
@@ -92,7 +61,13 @@ export default function Blog({ blogData, isAuthenticated, userId }) {
 export async function getServerSideProps({ params, req }) {
   const userSession = verifyUserSession(req);
 
-  const blogData = await fetchDataBySlug('blog', params.id);
+	let ip;
+	// Check if `userSession` is not null before trying to access its properties
+	if (userSession === null || userSession.id === null) {
+		ip = req.connection.remoteAddress;
+	}
+
+  const blogData = await fetchBlogData(params.id);
   if (!blogData) {
     return { notFound: true };
   }
@@ -102,7 +77,7 @@ export async function getServerSideProps({ params, req }) {
   return {
     props: {
       blogData: { ...blogData, ...additionalData },
-      isAuthenticated: !!userSession,
+			ip,
       userId: userSession?.id || null,
     },
   };
