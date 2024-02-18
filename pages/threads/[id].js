@@ -53,7 +53,7 @@ export default function Thread({ userId, ip, threadData }) {
 				<FavoriteButton userId={userId} id={threadData.id} ip={ip} />
 				<ChatWithGPT initialPrompt={`who is ${threadData.name}`} />
 				<div>{threadData.id}</div>
-				<img src={threadData.link_3}/>
+				<img src={threadData.link_3 || 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_550px/default_550px.webp'} />
 				<TableDataFetcher threadId={threadData.id} />
 			</div>
     </div>

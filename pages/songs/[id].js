@@ -61,7 +61,6 @@ export default function Song({ userId, ip, threadData, songData }) {
 				)}
 				<h1>{songData.name}</h1>
 				<ParentInfoLink threadData={threadData} fallBack='/' />
-				<div>is this null{threadData.thumbnail_200x200}</div>
 				<div>{songData.id}</div>
 				<FavoriteButton userId={userId} id={songData.id} ip={ip} />
 				{songData.link_3 && (
