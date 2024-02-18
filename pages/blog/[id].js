@@ -9,7 +9,9 @@ import { fetchBlogData, getParentObject } from '../../db-utilities';
 import { useLoading } from '../../context/LoadingContext';
 import Loader from '../../components/Loader';
 import FavoriteButton from '../../components/songFavorite';
-
+import Sidebar from '../../components/Sidebar';
+import ParentLink from '../../components/ParentBackLink';
+import Link from 'next/link';
 
 // Verify the user's session using the JWT token
 const verifyUserSession = (req) => {
@@ -25,7 +27,7 @@ const verifyUserSession = (req) => {
   }
 };
 
-export default function Blog({ blogData, ip, userId }) {
+export default function Blog({ threadData, blogData, ip, userId }) {
 
 	const { isLoading, startLoading, stopLoading } = useLoading();
   const router = useRouter();
@@ -34,7 +36,7 @@ export default function Blog({ blogData, ip, userId }) {
 	const logPageVisit = async () => {
 		try {
 			await axios.post('/api/log-visit', {
-				page_id: threadData.id,
+				page_id: blogData.id,
 				userId,
 				ip: !userId ? ip : null,
 			});
@@ -48,11 +50,15 @@ export default function Blog({ blogData, ip, userId }) {
 	}, [userId, ip]);
 		
   return (
-    <div>
-      <h1>{blogData.name}</h1>
-			<FavoriteButton userId={userId} id={blogData.id} ip={ip} />
-			<div>{blogData.id}</div>
-			<img src={blogData.featured_img}/>
+    <div className="bodyA">
+			<Sidebar userId={userId} ip={ip} />
+			<div className="mainFeed">
+				<ParentLink page_type={threadData.page_type} parentLink={threadData.slug} />
+				<h1>{blogData.name}</h1>
+				<FavoriteButton userId={userId} id={blogData.id} ip={ip} />
+				<div>{blogData.id}</div>
+				<img src={blogData.featured_img}/>
+			</div>
     </div>
   );
 } 
@@ -72,11 +78,12 @@ export async function getServerSideProps({ params, req }) {
     return { notFound: true };
   }
 
-  const additionalData = await getParentObject(blogData.thread_id);
+  const threadData = await getParentObject(blogData.thread_id);
 
   return {
     props: {
-      blogData: { ...blogData, ...additionalData },
+      blogData,
+			threadData,
 			ip,
       userId: userSession?.id || null,
     },

@@ -84,8 +84,8 @@ async function fetchBlogData(slug) {
 async function getParentObject(threadId) {
   try {
     const { data, error } = await supabase
-      .from('threads')
-      .select('name, featured_img_alt_text, featured_img_200px, slug')
+      .from('content')
+      .select('name, page_type, featured_img_alt_text, thumbnail_200x200, slug')
       .eq('id', threadId)
       .single();
 
