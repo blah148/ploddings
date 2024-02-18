@@ -8,7 +8,8 @@ import FavoriteButton from '../../components/songFavorite';
 import { supabase } from '../utils/supabase'; // Adjust the import path as needed
 import ChatWithGPT from '../../components/ChatWithGPT.js';
 import jwt from 'jsonwebtoken';
-const { fetchDataBySlug, fetchThreadData } = require('../../db-utilities');
+const { fetchThreadData } = require('../../db-utilities');
+import { useLoading } from '../../context/LoadingContext';
 import Loader from '../../components/Loader';
 
 const verifyUserSession = (req) => {
@@ -25,6 +26,8 @@ const verifyUserSession = (req) => {
 };
 
 export default function Thread({ userId, ip, threadData }) {
+
+	const { isLoading, startLoading, stopLoading } = useLoading();
 
   const logPageVisit = async () => {
     try {
@@ -46,6 +49,7 @@ export default function Thread({ userId, ip, threadData }) {
     <div className="bodyA">
 			<Sidebar userId={userId} ip={ip} />
 			<div className="mainFeed">
+				<Loader isLoading={isLoading} />
 				<h1>{threadData.name}</h1>
 				<FavoriteButton userId={userId} id={threadData.id} ip={ip} />
 				<ChatWithGPT initialPrompt={`who is ${threadData.name}`} />

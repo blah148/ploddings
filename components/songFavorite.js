@@ -1,15 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import useStore from '../zustandStore'; // Adjust import path as needed
 import { supabase } from '../pages/utils/supabase'; // Adjust import path as needed
-import { useLoading } from '../context/LoadingContext'; // Adjust import path as needed
 
 const FavoriteButton = ({ userId = null, id, ip }) => {
   const [isFavorite, setIsFavorite] = useState(false);
-  const { startLoading, stopLoading } = useLoading();
   const { refreshStarred } = useStore();
 
   const toggleFavorite = async () => {
-    startLoading();
     try {
       if (isFavorite) {
         // Case for authenticated users
@@ -34,7 +31,6 @@ const FavoriteButton = ({ userId = null, id, ip }) => {
     } catch (error) {
       console.error('Error toggling favorite:', error);
     } finally {
-      stopLoading();
     }
   };
 
