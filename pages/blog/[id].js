@@ -56,6 +56,11 @@ export default function Blog({ threadData, blogData, ip, userId }) {
 	useEffect(() => {
 		logPageVisit();
 	}, [userId, ip]);
+
+	// Function to create markup
+	const createMarkup = (htmlString) => {
+		return { __html: htmlString };
+	};
 		
   return (
     <div className="bodyA">
@@ -68,6 +73,7 @@ export default function Blog({ threadData, blogData, ip, userId }) {
 				<div>Date posted: {formatDate(blogData.published_date)}</div>
 				<div>{blogData.id}</div>
 				<img src={blogData.featured_img}/>
+				<div dangerouslySetInnerHTML={createMarkup(blogData.body_text)} />
 			</div>
     </div>
   );
