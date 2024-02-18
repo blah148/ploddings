@@ -12,6 +12,7 @@ import FavoriteButton from '../../components/songFavorite';
 import Sidebar from '../../components/Sidebar';
 import IpodMenuLink from '../../components/ParentBackLink';
 import ParentInfoLink from '../../components/ParentInfoLink';
+import Pagination from '../../components/Pagination';
 import Link from 'next/link';
 
 // Verify the user's session using the JWT token
@@ -74,6 +75,7 @@ export default function Blog({ threadData, blogData, ip, userId }) {
 				<div>{blogData.id}</div>
 				<img src={blogData.featured_img}/>
 				<div dangerouslySetInnerHTML={createMarkup(blogData.body_text)} />
+				<Pagination sibling_previous={blogData.sibling_previous} sibling_next={blogData.sibling_next} />
 			</div>
     </div>
   );
