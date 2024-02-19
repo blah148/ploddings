@@ -16,6 +16,7 @@ import TabsComponent from '../../components/extraNotesTabs';
 import styles from '../../styles/bodyA.module.css';
 import ParentInfoLink from '../../components/ParentInfoLink';
 import RelatedContent from '../../components/RelatedGrid_Songs';
+import TuningDetails from '../../components/TuningButton';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -61,6 +62,7 @@ export default function Song({ userId, ip, threadData, songData }) {
 					</Link>
 				)}
 				<h1>{songData.name}</h1>
+				<TuningDetails tuning_id={songData.tuning} />
 				<RelatedContent id={songData.id} />
 				<ParentInfoLink threadData={threadData} fallBack='/' />
 				<div>{songData.id}</div>
