@@ -10,7 +10,7 @@ import { fetchSongData, getParentObject } from '../../db-utilities';
 import jwt from 'jsonwebtoken'; 
 import { useLoading } from '../../context/LoadingContext';
 import Loader from '../../components/Loader';
-import DivSwitcher from '../../components/slowDownerAndYoutubeVideo';
+import SlowDownerComponent from '../../components/slowDownerComponent';
 import TabsComponent from '../../components/extraNotesTabs';
 import styles from '../../styles/songs.module.css';
 import IpodMenuLink from '../../components/ParentBackLink';
@@ -73,9 +73,9 @@ export default function Song({ userId, ip, threadData, songData }) {
 						allow="autoplay; fullscreen">
 					</iframe>
 				)}
-				<DivSwitcher dropbox_mp3_link={songData.link_1} youtube_link={songData.link_2} />
+				<SlowDownerComponent dropbox_mp3_link={songData.link_1} />
 				{(songData.body_text || songData.lyrics || songData.tuning) && (
-					<TabsComponent extra_notes={songData.body_text} song_lyrics={songData.lyrics} tuning={songData.tuning} />
+					<TabsComponent extra_notes={songData.body_text} song_lyrics={songData.lyrics} youtube_link={songData.link_2} />
 				)}
         <RelatedContent id={songData.id} />
 			</div>
