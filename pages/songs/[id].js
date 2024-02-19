@@ -54,8 +54,8 @@ export default function Song({ userId, ip, threadData, songData }) {
   return (
     <div className="bodyA">
 			<Sidebar userId={userId} ip={ip} />
+			<Loader isLoading={isLoading} />
 			<div className="mainFeed">
-				<Loader isLoading={isLoading} />
 				<IpodMenuLink threadData={threadData} fallBack='/' />
 				<div className={styles.songNameContainer}>
 				  <h1>{songData.name}</h1>
@@ -73,7 +73,6 @@ export default function Song({ userId, ip, threadData, songData }) {
 						allow="autoplay; fullscreen">
 					</iframe>
 				)}
-				<div>{songData.link_2}</div>
 				<DivSwitcher dropbox_mp3_link={songData.link_1} youtube_link={songData.link_2} />
 				{(songData.body_text || songData.lyrics || songData.tuning) && (
 					<TabsComponent extra_notes={songData.body_text} song_lyrics={songData.lyrics} tuning={songData.tuning} />

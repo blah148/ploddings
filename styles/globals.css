@@ -2,7 +2,9 @@ body {
 	margin: 0;
 	font-family: 'Baloo2-Regular';
 }
-
+.loaderComponent {
+	width: 100px;
+}
 .mainFeed {
 	height: 95vh;
 	width: 100%;
