@@ -1,6 +1,7 @@
 import { supabase } from '../pages/utils/supabase';
 import { useEffect, useState } from 'react';
 import { useLoading } from '../context/LoadingContext';
+import styles from '../styles/songs.module.css';
 
 function RelatedContent({ id }) {
   const [relatedContent, setRelatedContent] = useState([]);

@@ -9,10 +9,20 @@ body {
 	overflow-y: auto;
 	padding: 12px 12px 0 12px;
 }
+a.upLevel {
+	display: block;
+	width: 50px;
+}
+div.previous-button svg {
+	height: 20px;
+	width: 20px;
+	padding: 10px;
+	border-radius: 100px;
+	background-color: grey;	
+}
 
 a {
 	text-decoration: none;
-	
 	font-family: 'Baloo2-Regular';
 }
 

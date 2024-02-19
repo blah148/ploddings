@@ -10,10 +10,10 @@ import { fetchSongData, getParentObject } from '../../db-utilities';
 import jwt from 'jsonwebtoken'; 
 import { useLoading } from '../../context/LoadingContext';
 import Loader from '../../components/Loader';
-import LazyLoadedDiv from '../../components/relatedContentGrid';
 import DivSwitcher from '../../components/slowDownerAndYoutubeVideo';
 import TabsComponent from '../../components/extraNotesTabs';
-import styles from '../../styles/bodyA.module.css';
+import styles from '../../styles/songs.module.css';
+import IpodMenuLink from '../../components/ParentBackLink';
 import ParentInfoLink from '../../components/ParentInfoLink';
 import RelatedContent from '../../components/RelatedGrid_Songs';
 import TuningDetails from '../../components/TuningButton';
@@ -56,16 +56,10 @@ export default function Song({ userId, ip, threadData, songData }) {
 			<Sidebar userId={userId} ip={ip} />
 			<div className="mainFeed">
 				<Loader isLoading={isLoading} />
-				{threadData && (
-					<Link href={`/threads/${threadData.slug}`}>
-						Go to parent thread
-					</Link>
-				)}
+				<IpodMenuLink threadData={threadData} fallBack='/' />
 				<h1>{songData.name}</h1>
-				<TuningDetails tuning_id={songData.tuning} />
-				<RelatedContent id={songData.id} />
 				<ParentInfoLink threadData={threadData} fallBack='/' />
-				<div>{songData.id}</div>
+				<TuningDetails tuning_id={songData.tuning} />
 				<FavoriteButton userId={userId} id={songData.id} ip={ip} />
 				{songData.link_3 && (
 					<iframe
@@ -77,11 +71,12 @@ export default function Song({ userId, ip, threadData, songData }) {
 						allow="autoplay; fullscreen">
 					</iframe>
 				)}
+				<div>{songData.link_2}</div>
 				<DivSwitcher dropbox_mp3_link={songData.link_1} youtube_link={songData.link_2} />
 				{(songData.body_text || songData.lyrics || songData.tuning) && (
 					<TabsComponent extra_notes={songData.body_text} song_lyrics={songData.lyrics} tuning={songData.tuning} />
 				)}
-				<LazyLoadedDiv page_type="songs" category_id={songData.category_id} currentSongId = {songData.id} />
+        <RelatedContent id={songData.id} />
 			</div>
     </div>
   );

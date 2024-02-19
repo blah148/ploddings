@@ -2,40 +2,35 @@ import React, { useEffect, useState } from 'react';
 import useStore from '../zustandStore'; // Adjust import path as needed
 import { supabase } from '../pages/utils/supabase'; // Adjust import path as needed
 import { useLoading } from '../context/LoadingContext';
+import styles from '../styles/songs.module.css';
 
 const FavoriteButton = ({ userId = null, id, ip }) => {
   const [isFavorite, setIsFavorite] = useState(false);
   const { refreshStarred } = useStore();
-	const { isLoading, startLoading, stopLoading } = useLoading();
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   const toggleFavorite = async () => {
-		startLoading();
+    startLoading();
     try {
       if (isFavorite) {
-        // Case for authenticated users
         if (userId) {
           await supabase.from('favorites').delete().match({ user_id: userId, page_id: id });
-        }
-        // Case for guests
-        else if (ip) {
+        } else if (ip) {
           await supabase.from('favorites').delete().match({ ip, page_id: id });
         }
       } else {
         if (userId) {
-          // Add favorite for authenticated users
           await supabase.from('favorites').insert([{ user_id: userId, page_id: id }]);
         } else if (ip) {
-          // Add favorite for guests based on IP
           await supabase.from('favorites').insert([{ ip, page_id: id }]);
         }
       }
       setIsFavorite(!isFavorite);
       refreshStarred(userId, ip);
-			stopLoading();
+      stopLoading();
     } catch (error) {
       console.error('Error toggling favorite:', error);
-			stopLoading();
-    } finally {
+      stopLoading();
     }
   };
 
@@ -43,7 +38,6 @@ const FavoriteButton = ({ userId = null, id, ip }) => {
     const fetchFavoriteStatus = async () => {
       try {
         let query = supabase.from('favorites').select('user_id, page_id, ip').eq('page_id', id);
-        // Adjust condition to check for userId existence
         if (userId) {
           query = query.eq('user_id', userId);
         } else {
@@ -60,12 +54,14 @@ const FavoriteButton = ({ userId = null, id, ip }) => {
     fetchFavoriteStatus();
   }, [userId, id, ip]);
 
+  // Define the fill color based on the isFavorite state
+  const fillColor = isFavorite ? 'yellow' : 'grey';
+
   return (
-    <button style={{ cursor: 'pointer' }} onClick={toggleFavorite}>
-      {isFavorite ? 'Unfavorite' : 'Favorite'}
-    </button>
+    <svg id="star-icon" viewBox="0 0 32 32" style={{ cursor: 'pointer' }} onClick={toggleFavorite}>
+      <path fill={fillColor} d="M16,2l-4.55,9.22L1.28,12.69l7.36,7.18L6.9,30,16,25.22,25.1,30,23.36,19.87l7.36-7.17L20.55,11.22Z"/>
+    </svg>
   );
 };
 
 export default FavoriteButton;
-

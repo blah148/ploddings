@@ -3,6 +3,7 @@ import Link from 'next/link'; // Assuming you're using Next.js for routing
 import Loader from './Loader';
 import { supabase } from '../pages/utils/supabase'; // Import Supabase client
 import { useLoading } from '../context/LoadingContext';
+import styles from '../styles/songs.module.css';
 
 const TuningDetails = ({ tuning_id }) => {
   const [tuningDetails, setTuningDetails] = useState(null);
@@ -42,9 +43,11 @@ const TuningDetails = ({ tuning_id }) => {
   }
 
   return (
-    <Link href={`${tuningDetails.anchored_musescore_link}`}>
-      <div>{tuningDetails.name}</div>
-    </Link>
+		<div className={styles.tuningButtonContainer}>
+      <Link className={styles.tuningButton} href={`${tuningDetails.anchored_musescore_link}`}>
+        <div>{tuningDetails.name}</div>
+      </Link>
+		</div>
   );
 };
 

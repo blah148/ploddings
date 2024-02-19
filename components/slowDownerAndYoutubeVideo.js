@@ -3,6 +3,7 @@ import dynamic from 'next/dynamic';
 import { supabase } from '../pages/utils/supabase';
 import YoutubeVideo from './youtubePlayerAPI';
 const SlowDowner = dynamic(() => import('./SlowDowner'), { ssr: false });
+import styles from '../styles/songs.module.css';
 
 export default function DivSwitcher ({ dropbox_mp3_link, youtube_link }) {
   // Define state variables for box order
@@ -35,7 +36,7 @@ export default function DivSwitcher ({ dropbox_mp3_link, youtube_link }) {
 
 return (
   <div>
-    {switcher && (
+    { (
       <div className="outerContainer" style={{ display: "flex", flexDirection: switcher }}>
         <div className="box 1" style={{ border: "1px solid grey", margin: "3px" }}>
           {youtube_link && (<button onClick={swapOrder}>{div1.text}</button>)}

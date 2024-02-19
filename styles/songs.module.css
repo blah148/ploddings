@@ -1,0 +1,32 @@
+div.bodyA {
+	display: flex;
+}
+
+.parentInfoLinkContainer {
+	display: flex;
+	align-items: center;
+}
+
+.parentInfoLinkContainer img {
+	height: 50px;
+	width: 50px;
+	border-radius: 100px;	
+	margin-right: 13px;
+}
+
+.tuningButton {
+	display: inline-block;
+	width: 18ch;
+	background-color: orange;
+	color: white;
+	margin: 18px 0;
+	border-radius: 20px;
+	font-size: 12px;
+}
+.tuningButton div {
+	width: 100%;
+	text-align: center;
+}
+
+
+

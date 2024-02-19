@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import TuningEmbed from './TuningEmbed';
+import styles from '../styles/songs.module.css';
 
 export default function TabsComponent ({ extra_notes = null, song_lyrics = null, tuning = null }) {
 
