@@ -15,6 +15,7 @@ import DivSwitcher from '../../components/slowDownerAndYoutubeVideo';
 import TabsComponent from '../../components/extraNotesTabs';
 import styles from '../../styles/bodyA.module.css';
 import ParentInfoLink from '../../components/ParentInfoLink';
+import RelatedContent from '../../components/RelatedGrid_Songs';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -36,7 +37,7 @@ export default function Song({ userId, ip, threadData, songData }) {
 	const logPageVisit = async () => {
 		try {
 			await axios.post('/api/log-visit', {
-				page_id: blogData.id,
+				page_id: songData.id,
 				userId,
 				ip: !userId ? ip : null,
 			});
@@ -60,6 +61,7 @@ export default function Song({ userId, ip, threadData, songData }) {
 					</Link>
 				)}
 				<h1>{songData.name}</h1>
+				<RelatedContent id={songData.id} />
 				<ParentInfoLink threadData={threadData} fallBack='/' />
 				<div>{songData.id}</div>
 				<FavoriteButton userId={userId} id={songData.id} ip={ip} />
