@@ -42,7 +42,7 @@ const TuningDetails = ({ tuning_id }) => {
   }
 
   return (
-    <Link href={`/${tuningDetails.anchored_musescore_link}`}>
+    <Link href={`${tuningDetails.anchored_musescore_link}`}>
       <div>{tuningDetails.name}</div>
     </Link>
   );

@@ -46,7 +46,7 @@ li.listElement {
 	display: flex;
 	background-color: #fff;
 	box-shadow: 0px 8px 25px hsla(255, 24%, 91%, 1);
-	padding: 8px 10px;
+	padding: 4px 13px 4px 6px;
 	margin: 10px 0;
 	border-radius: 6px;
 	font-size: 13px;
@@ -59,6 +59,7 @@ img.sidebarThumbnail {
 	height: 45px;
 	width: 45px;
 	margin-right: 8px;
+	border-radius: 4px;
 }
 div.sidebarName {
 margin: auto 0;

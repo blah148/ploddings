@@ -68,9 +68,12 @@ export default function Sidebar({ userId, ip }) {
 							{starred.map((star, index) => (
 								<li className={styles.listElement} key={star.content.id}>
 									<a className={styles.listLink} href={`/${star.content.page_type}/${star.content.slug}`}>
-										<div>
-											{star.content.name.length > 26 ? star.content.name.slice(0, 26) + '...' : star.content.name}
-										</div>
+										<img
+											className={styles.sidebarThumbnail}
+											src={star.content.thumbnail_200x200 ? star.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
+											alt={star.content.featured_img_alt_text}
+										/>
+										<div className={styles.sidebarName}>{star.content.name.length > 26 ? star.content.name.slice(0, 26) + '...' : star.content.name}</div>
 										<div className={`${styles.led} ${getLedClassName(star.content.page_type)}`}></div>
 									</a>
 								</li>
@@ -84,7 +87,11 @@ export default function Sidebar({ userId, ip }) {
 						{visitHistory.map((visit, index) => (
 							<li className={styles.listElement} key={visit.content.id}>
 								<a className={styles.listLink} href={`/${visit.content.page_type}/${visit.content.slug}`}>
-									<img className={styles.sidebarThumbnail} src={visit.content.thumbnail_200x200} alt={visit.content.featured_img_alt_text}></img>
+									<img
+										className={styles.sidebarThumbnail}
+										src={visit.content.thumbnail_200x200 ? visit.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
+										alt={visit.content.featured_img_alt_text}
+									/>
 									<div className={styles.sidebarName}>{visit.content.name.length > 26 ? visit.content.name.slice(0, 26) + '...' : visit.content.name}</div>
 									<div className={`${styles.led} ${getLedClassName(visit.content.page_type)}`}></div>
 								</a>
@@ -98,10 +105,12 @@ export default function Sidebar({ userId, ip }) {
 						{beingWatched.map((watch, index) => (
 							<li key={watch.content.id} className={styles.listElement}>
 								<a className={styles.listLink} href={`/${watch.content.page_type}/${watch.content.slug}`}>
-									<div>
-										<img src="watch.content.thumbnail_200x200"></img>
-										<div>{watch.content.name.length > 26 ? watch.content.name.slice(0, 26) + '...' : watch.content.name}</div>
-									</div>
+									<img
+										className={styles.sidebarThumbnail}
+										src={watch.content.thumbnail_200x200 ? watch.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
+										alt={watch.content.featured_img_alt_text}
+									/>
+									<div className={styles.sidebarName}>{watch.content.name.length > 26 ? watch.content.name.slice(0, 26) + '...' : watch.content.name}</div>
 									<div className={`${styles.led} ${getLedClassName(watch.content.page_type)}`}></div>
 								</a>
 							</li>
