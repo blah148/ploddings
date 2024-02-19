@@ -10,8 +10,10 @@ export default function ParentInfoLink({ threadData, fallBack }) {
 
   return (
     <Link href={href} className={styles.parentInfoLinkContainer} passHref>
+			<div className={styles.parentInfoLinkContents}>
         <img loading="lazy" alt={threadData?.featured_img_alt_text || `${threadData.name} guitar portrait`} src={threadData?.thumbnail_200x200 || 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'} />
         <div>{threadData?.name || 'Default Name'}</div>
+			</div>
     </Link>
   );
 }
