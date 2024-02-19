@@ -1,24 +1,30 @@
 import { supabase } from '../pages/utils/supabase';
 import { useEffect, useState } from 'react';
+import { useLoading } from '../context/LoadingContext';
 
 function RelatedContent({ id }) {
   const [relatedContent, setRelatedContent] = useState([]);
+	const { isLoading, startLoading, stopLoading } = useLoading();
 
   useEffect(() => {
     const fetchData = async () => {
+			startLoading();
       let query = supabase
         .from('junction_related_content')
         .select(`
           content_id2,
           content:content_id2 (id, slug, name, thumbnail_200x200)`)
-        .eq('content_id1', id);
+        .eq('content_id1', id)
+				.order('content_order', { ascending: true });
 
       const { data, error } = await query;
 
       if (error) {
         console.error('Error fetching related content:', error.message);
+				stopLoading();
       } else {
         setRelatedContent(data);
+				stopLoading();
       }
     };
 
@@ -28,17 +34,14 @@ function RelatedContent({ id }) {
   return (
     <div>
       <h2>Related Content</h2>
-      {relatedContent.length ? (
+      {relatedContent.length && (
         <ul>
           {relatedContent.map((item) => (
             <li key={item.content_id2}>
-              {item.content.name} {/* Example: Accessing the 'name' from the related content */}
-              {/* You can also access 'slug', 'id', and 'thumbnail_200x200' similarly */}
+              {item.content.name}
             </li>
           ))}
         </ul>
-      ) : (
-        <p>No related content found.</p>
       )}
     </div>
   );

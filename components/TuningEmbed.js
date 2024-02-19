@@ -41,8 +41,8 @@ const TuningEmbed = ({ tuningId }) => {
 			width="100%" 
 			height="300" 
 			src={embedUrl} 
-			frameborder="0" 
-			allowfullscreen 
+			frameBorder="0" 
+			allowFullScreen 
 			allow="autoplay; fullscreen">
 		</iframe>
 		</>

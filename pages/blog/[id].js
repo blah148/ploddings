@@ -15,6 +15,7 @@ import ParentInfoLink from '../../components/ParentInfoLink';
 import Pagination from '../../components/Pagination';
 import Link from 'next/link';
 import TableOfContents from '../../components/TableOfContents';
+import RelatedContent from '../../components/RelatedGrid_Songs';
 
 // Verify the user's session using the JWT token
 const verifyUserSession = (req) => {
@@ -73,10 +74,11 @@ export default function Blog({ threadData, blogData, ip, userId }) {
     <div className="bodyA">
 			<Sidebar userId={userId} ip={ip} />
 			<div className="mainFeed">
-				<IpodMenuLink threadData={threadData} />
+				<IpodMenuLink threadData={threadData} fallBack='blog' />
 				<h1>{blogData.name}</h1>
-				<ParentInfoLink threadData={threadData} />
+				<ParentInfoLink threadData={threadData} fallBack='blog' />
 				<FavoriteButton userId={userId} id={blogData.id} ip={ip} />
+				<RelatedContent id={blogData.id} />
 				<div>Date posted: {formatDate(blogData.published_date)}</div>
 				<div>{blogData.id}</div>
 				<img src={blogData.featured_img}/>
