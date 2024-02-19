@@ -17,6 +17,7 @@ import IpodMenuLink from '../../components/ParentBackLink';
 import ParentInfoLink from '../../components/ParentInfoLink';
 import RelatedContent from '../../components/RelatedGrid_Songs';
 import TuningDetails from '../../components/TuningButton';
+import Menu from '../../components/Menu';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -56,7 +57,10 @@ export default function Song({ userId, ip, threadData, songData }) {
 			<Sidebar userId={userId} ip={ip} />
 			<Loader isLoading={isLoading} />
 			<div className="mainFeed">
-				<IpodMenuLink threadData={threadData} fallBack='/' />
+				<div className="topRow">
+				  <IpodMenuLink threadData={threadData} fallBack='/' />
+					<Menu userId={userId} />	
+				</div>
 				<div className={styles.songNameContainer}>
 				  <h1>{songData.name}</h1>
 					<FavoriteButton userId={userId} id={songData.id} ip={ip} />

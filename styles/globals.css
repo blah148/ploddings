@@ -22,7 +22,25 @@ div.previous-button svg {
 	border-radius: 100px;
 	background-color: grey;	
 }
-
+div.topRow {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+}
+a.menuItem {
+	margin: 4px 0;
+	padding: 4px 6px;
+	height: 30px;
+	display: flex;
+	justify-content: start;
+	align-items: center;
+	font-size: 12px;
+}
+a.menuItem svg {
+	height: 16px;
+	margin-right: 9px;
+	width: 16px;
+}
 a {
 	text-decoration: none;
 	font-family: 'Baloo2-Regular';
