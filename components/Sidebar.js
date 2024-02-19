@@ -84,9 +84,8 @@ export default function Sidebar({ userId, ip }) {
 						{visitHistory.map((visit, index) => (
 							<li className={styles.listElement} key={visit.content.id}>
 								<a className={styles.listLink} href={`/${visit.content.page_type}/${visit.content.slug}`}>
-									<div>
-										{visit.content.name.length > 26 ? visit.content.name.slice(0, 26) + '...' : visit.content.name}
-									</div>
+									<img className={styles.sidebarThumbnail} src={visit.content.thumbnail_200x200} alt={visit.content.featured_img_alt_text}></img>
+									<div className={styles.sidebarName}>{visit.content.name.length > 26 ? visit.content.name.slice(0, 26) + '...' : visit.content.name}</div>
 									<div className={`${styles.led} ${getLedClassName(visit.content.page_type)}`}></div>
 								</a>
 							</li>
@@ -100,7 +99,8 @@ export default function Sidebar({ userId, ip }) {
 							<li key={watch.content.id} className={styles.listElement}>
 								<a className={styles.listLink} href={`/${watch.content.page_type}/${watch.content.slug}`}>
 									<div>
-										{watch.content.name.length > 26 ? watch.content.name.slice(0, 26) + '...' : watch.content.name}
+										<img src="watch.content.thumbnail_200x200"></img>
+										<div>{watch.content.name.length > 26 ? watch.content.name.slice(0, 26) + '...' : watch.content.name}</div>
 									</div>
 									<div className={`${styles.led} ${getLedClassName(watch.content.page_type)}`}></div>
 								</a>

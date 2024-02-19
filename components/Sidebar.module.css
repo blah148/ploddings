@@ -55,6 +55,14 @@ a.listLink {
 	display: flex;
 	width: 100%;
 }
+img.sidebarThumbnail {
+	height: 45px;
+	width: 45px;
+	margin-right: 8px;
+}
+div.sidebarName {
+margin: auto 0;
+}
 div.led {
   width: 13px;
   height: 13px;
