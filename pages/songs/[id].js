@@ -18,6 +18,7 @@ import ParentInfoLink from '../../components/ParentInfoLink';
 import RelatedContent from '../../components/RelatedGrid_Songs';
 import TuningDetails from '../../components/TuningButton';
 import Menu from '../../components/Menu';
+import Footer from '../../components/Footer';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -82,6 +83,7 @@ export default function Song({ userId, ip, threadData, songData }) {
 					<TabsComponent extra_notes={songData.body_text} song_lyrics={songData.lyrics} youtube_link={songData.link_2} />
 				)}
         <RelatedContent id={songData.id} />
+				
 			</div>
     </div>
   );
