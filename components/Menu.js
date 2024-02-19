@@ -1,6 +1,4 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { useAuth } from '../context/AuthContext';
-import { useRouter } from 'next/router';
 import Logout from './Logout';
 import Link from 'next/link';
 
