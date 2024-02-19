@@ -1,7 +1,14 @@
 div.bodyA {
 	display: flex;
 }
-
+.songNameContainer {
+	display: flex;
+	align-items: center;
+}
+.songNameContainer svg {
+	height: 20px;
+	margin: 0 0 2px 12px;
+}
 .parentInfoLinkContainer {
 	display: flex;
 	align-items: center;

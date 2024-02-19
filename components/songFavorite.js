@@ -55,7 +55,7 @@ const FavoriteButton = ({ userId = null, id, ip }) => {
   }, [userId, id, ip]);
 
   // Define the fill color based on the isFavorite state
-  const fillColor = isFavorite ? 'yellow' : 'grey';
+  const fillColor = isFavorite ? 'orange' : 'grey';
 
   return (
     <svg id="star-icon" viewBox="0 0 32 32" style={{ cursor: 'pointer' }} onClick={toggleFavorite}>

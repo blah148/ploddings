@@ -57,10 +57,12 @@ export default function Song({ userId, ip, threadData, songData }) {
 			<div className="mainFeed">
 				<Loader isLoading={isLoading} />
 				<IpodMenuLink threadData={threadData} fallBack='/' />
-				<h1>{songData.name}</h1>
+				<div className={styles.songNameContainer}>
+				  <h1>{songData.name}</h1>
+					<FavoriteButton userId={userId} id={songData.id} ip={ip} />
+				</div>
 				<ParentInfoLink threadData={threadData} fallBack='/' />
 				<TuningDetails tuning_id={songData.tuning} />
-				<FavoriteButton userId={userId} id={songData.id} ip={ip} />
 				{songData.link_3 && (
 					<iframe
 						width="100%"
