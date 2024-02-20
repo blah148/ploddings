@@ -71,20 +71,28 @@ return (
           </div>
           <ParentInfoLink threadData={threadData} fallBack='/' />
           <TuningDetails tuning_id={songData.tuning} />
-          {songData.link_3 && (
-            <iframe
-              width="100%"
-              height="480px"
-              src={songData.link_3}
-              frameBorder="0"
-              allowFullScreen
-              allow="autoplay; fullscreen">
-            </iframe>
-          )}
-          <SlowDownerComponent dropbox_mp3_link={songData.link_1} />
-          {(songData.body_text || songData.lyrics || songData.tuning) && (
-            <TabsComponent extra_notes={songData.body_text} song_lyrics={songData.lyrics} youtube_link={songData.link_2} />
-          )}
+          <div className={styles.bottomBorder}></div>
+          <div className={styles.componentsContainer}>
+            <div className={styles.primaryColumn}>
+              {songData.link_3 && (
+                <iframe
+                  width="100%"
+                  height="480px"
+                  src={songData.link_3}
+                  frameBorder="0"
+                  allowFullScreen
+                  allow="autoplay; fullscreen">
+                </iframe>
+              )}
+              <SlowDownerComponent dropbox_mp3_link={songData.link_1} />
+              {(songData.body_text || songData.lyrics || songData.tuning) && (
+                <TabsComponent extra_notes={songData.body_text} song_lyrics={songData.lyrics} youtube_link={songData.link_2} />
+              )}
+            </div>
+            <div className={styles.tocContainer}>
+              <div className={styles.tableOfContents}></div>
+            </div>
+          </div>
           <RelatedContent id={songData.id} />
         </div>
       </div>
