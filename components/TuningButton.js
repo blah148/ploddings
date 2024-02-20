@@ -32,11 +32,7 @@ const TuningDetails = ({ tuning_id }) => {
     };
 
     fetchTuningDetails();
-  }, [tuning_id, startLoading, stopLoading]);
-
-  if (isLoading) {
-    return <Loader />;
-  }
+  }, []);
 
   if (!tuningDetails) {
     return <div>No tuning details found.</div>;
