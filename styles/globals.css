@@ -2,13 +2,22 @@ body {
 	margin: 0;
 	font-family: 'Baloo2-Regular';
 }
+.bodyA {
+	display: flex;
+}
 .loaderComponent {
 	width: 100px;
 }
-.mainFeed {
-	height: 95vh;
-	width: 100%;
+.mainFeedAll {
+	display: block ;
 	overflow-y: auto;
+	height: 100vh;
+}
+.feedContainer {
+	display: flex;
+}
+.mainFeed {
+	width: 100%;
 	padding: 12px 12px 0 12px;
 }
 a.upLevel {
@@ -159,4 +168,178 @@ svg.menuIcon:hover path {
   color: #fafafa;
 }
 
+div.bodyVertical {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: #fff;
+}
+div.headerNav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(165deg, #26d6c4 0%, #10b1d3 100%);
+}
+a.logoText {
+  margin-left: 28px;
+  font-size: 24px;
+  font-weight: 500;
+  color: #fafafa;
+  text-decoration: none;
+}
+a.logoText:hover {
+  opacity: 0.85;
+}
+.bodyVertical svg.menuIcon path {
+  fill: #eee !important;
+}
+.bodyVertical svg.menuIcon:hover path {
+  opacity: 0.85;
+}
+div.subHeader {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+div.writtenBodyContent {
+  background-color: #fff;
+  max-width: 900px;
+  margin: auto;
+  padding: 30px 20px;
+}
+div.subHeader h1 {
+  text-align: center;
+  margin-bottom: 0;
+}
+div.subtitle {
+  font-size: 14px;
+  color: #464646;
+}
+div.writtenBodyContent .subtitle {
+  text-align: center;
+  margin-bottom: 48px;
+}
+div.footerContainer {
+  padding: 4vh 0 2vh 0;
+  background-color: gray;
+  color: white;
+}
+div.footer_higher-row {
+  display: flex;
+  padding: 0 0 22px 0;
+  justify-content: center;
+  width: auto;
+  border-bottom: 1px solid #a6a6a6;
+}
+div.footer_column {
+  display: flex;
+  flex-direction: column;
+  width: 14vw;
+}
+h2.footer_header {
+  font-size: 18px;
+  font-weight: 600;
+}
+div.footer_link-item {
+  cursor: pointer;
+}
+div.footer_link-item, a.footer_link-item {
+  font-size: 14.5px;
+  line-height: 32px;
+  text-decoration: none;
+  color: #fff;
+}
+div.footer_link-item:hover, a.footer_link-item:hover {
+  opacity: 0.8;
+}
+div.footer_lower-row {
+  display: flex;
+  height: 10vh;
+  padding: 22px 0 0 0;
+  display: flex;
+  justify-content: center;
+}
+a.footer_lower-item {
+  margin: 0 16px; 
+  font-size: 13.5px;
+  text-decoration: none;
+  color: white;
+  text-align: center;
+}
+a.footer_lower-item:hover {
+  opacity: 0.8;
+}
+@media only screen and (max-width: 768px) {
+  div.footerContainer {
+    padding: 1vh 0 2vh 0;
+  }
+  div.footer_higher-row {
+    flex-direction: column;
+    align-items: center;
+  }
+  div.footer_column {
+    width: 100%;
+    align-items: center;
+  }
+  div.footer_lower-row {
+    height: auto;
+  }
+}
+/*For the Register Page */
+form.registerForm {
+  width: 20vw;
+  margin: 8vh auto;
+  min-height: 33vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+form.registerForm label {
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  margin-bottom: 12px;
+}
+form.registerForm label input {
+  border: 1px solid #d9dddd;
+  background-color: #fff;
+  border-radius: 20px;
+  width: 24ch;
+  height: 2.5ch;
+  font-size: 12px;
+  color: #404242;
+  background-color: #fffcc8;
+  padding: 4px 8px;
+}
+form.registerForm button {
+  background: linear-gradient(165deg, #26d6c4 0%, #10b1d3 100%);
+  color: #fff;
+  border-radius: 5px;
+  text-align: center;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  box-shadow: 0 2px 15px rgba(28, 197, 203, 0.5);
+  margin: 12px 0 0 0;
+}
+form.registerForm button:hover {
+  filter: saturate(120%);
+}
+/* Alert when user updates account */
+.updateAlert {
+    position: fixed;
+    bottom: 10px;
+    left: 10px;
+    background-color: #1dc6ca;
+    color: white;
+    padding: 15px;
+    border-radius: 5px;
+    animation: fadeInOut 3s;
+}
+
+@keyframes fadeInOut {
+    0% { opacity: 0; transform: translateY(20px); }
+    10%, 90% { opacity: 1; transform: translateY(0); }
+    100% { opacity: 0; transform: translateY(20px); }
+}
 
