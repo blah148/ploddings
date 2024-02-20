@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {PitchShifter} from 'soundtouchjs';
 import messages from './language.json';
+import styles from './SlowDowner.module.css';
 // ATTENTION: CRASHES IF MP3 ISN'T FETCHED YET... NEED TO WAIT FOR DB QUERY of MP3
 
 var m = messages.us;
@@ -102,12 +103,12 @@ class SlowDowner extends Component {
     let hrBlue = {border: '1px dotted', color: 'blue'};
 
     return (
-      <div className="App">
+      <div className={styles.App}>
 
       {m.speed}: {playSpeed} &nbsp;&nbsp;
         <button name='reset' onClick={handleSpeedSlider} >{m.reset}</button>
         <br />
-        <span className='slider'> 
+        <span className={styles.slider}> 
          <center>
          025<input type='range' name='speedSlider' min='25' max='200'
          value = {playSpeed} onChange={handleSpeedSlider} />200 
@@ -117,7 +118,7 @@ class SlowDowner extends Component {
       {m.pitch}: {parseFloat(playPitch).toFixed(2)} &nbsp;&nbsp;
        <button name='reset' onClick={handlePitchSlider} >{m.reset}</button>
        <br />
-        <span className='slider'> 
+        <span className={styles.slider}> 
          <center>
          -12<input type='range' name='pitchSliderSemi' min='-12' max='12'
          value = {playPitchSemi} onChange={handlePitchSlider} />12<br />
@@ -129,7 +130,7 @@ class SlowDowner extends Component {
         </span>
       <hr />
         {m.time}: {playingAt.toFixed(2)} &nbsp; {m.timeNote}<br />
-        <span className='slider'> 
+        <span className={styles.slider}> 
         <center>
         0<input type='range' name='timeSlider'
         min='0' max={duration}
