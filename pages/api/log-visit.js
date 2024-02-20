@@ -11,26 +11,26 @@ export default async function handler(req, res) {
 
   try {
     // Prepare an object for the visit_history record
-    const visitRecord = { page_id };
+    const visitRecord = {
+      page_id,
+      ...(userId ? { user_id: userId } : { ip }),
+      visited_at: new Date() // Assuming you have a visited_at column to update with the current timestamp
+    };
 
-    // If the user is authenticated, add the user_id to the record
-    if (userId) {
-      visitRecord.user_id = userId;
-    } else {
-			visitRecord.ip = ip;
-		}
-
-    // Insert the page visit into the visit_history table
-    const { error: insertError } = await supabase
+    // Perform the upsert into the visit_history table
+    const { error: upsertError } = await supabase
       .from('visit_history')
-      .insert([visitRecord]);
+      .upsert([visitRecord], {
+        onConflict: userId ? 'user_id, page_id' : 'ip, page_id',
+        returning: 'minimal', // Optional: Don't return data for the upsert operation
+      });
 
-    if (insertError) {
-      throw insertError;
+    if (upsertError) {
+      throw upsertError;
     }
 
     // Respond with success if the visit is logged successfully
-    res.status(200).json({ message: userId ? 'Visit logged successfully' : 'Visit logged for non-authenticated user' });
+    res.status(200).json({ message: userId ? 'Visit logged or updated successfully' : 'Visit logged or updated for non-authenticated user' });
   } catch (error) {
     console.error('Error logging visit:', error);
     res.status(500).json({ error: 'Error logging visit' });
