@@ -56,6 +56,7 @@ class SlowDowner extends Component {
     this.handlePlay = this.handlePlay.bind(this);
     this.handleLoop = this.handleLoop.bind(this);
     this.playAB = this.playAB.bind(this);
+		this.handleToggleLoop = this.handleToggleLoop.bind(this);
     
   } // end constructor
 
@@ -78,6 +79,17 @@ class SlowDowner extends Component {
   componentWillUnmount () { // before closing app
     window.removeEventListener('beforeClosing', this.handleWindowClose)
   }
+	
+	handleToggleLoop = () => {
+  const newLoopStatus = !this.params.loop;
+  this.params.loop = newLoopStatus;
+
+  // Optionally update the state to reflect the loop status in the UI
+  this.setState({ loopEnabled: newLoopStatus });
+	this.state.loopButtonStr = this.params.loop ? m.stopLoop : m.loopAB;
+
+  // Additional logic here if needed, e.g., to stop the loop
+}
 
   render() {
     const {handleSpeedSlider, handlePitchSlider, 
@@ -166,6 +178,9 @@ class SlowDowner extends Component {
         {loopButtonStr}
 				 <LoopIcon />
 				</button>
+				<button onClick={this.handleToggleLoop}>
+  {this.state.loopEnabled ? 'Disable Loop' : 'Enable Loop'}
+</button>
         <hr />
       </span>
       </div>
@@ -330,34 +345,31 @@ async loadFile() {
     if (event.target.name === 'LoopAB'){
       if (!this.params.audioBuffer) return;
 
-  if (this.state.loopButtonStr === m.loopAB) {
-    this.params.loop = true;
-    // Directly start the loop without checking if it's already playing,
-    // to allow resuming from the paused position if applicable.
+		if (this.state.loopButtonStr === m.loopAB) {
+			this.params.loop = true;
 
-    // If we're within the loop points, resume from the current position; otherwise, start from timeA.
-    let startTime = this.state.playingAt >= this.state.timeA && this.state.playingAt <= this.state.timeB
-                    ? this.state.playingAt
-                    : this.state.timeA;
+			let startTime = this.state.playingAt >= this.state.timeA && this.state.playingAt <= this.state.timeB
+											? this.state.playingAt
+											: this.state.timeA;
 
-    this.playAB(startTime, this.state.timeB);
-    this.setState({ loopButtonStr: m.stopLoop, startButtonStr: m.playOnce });
+			this.playAB(startTime, this.state.timeB);
+			this.setState({ loopButtonStr: m.stopLoop, startButtonStr: m.playOnce });
 
-  } else if (this.state.loopButtonStr === m.stopLoop) {
-    if (!this.params.isPlaying) return;
+		} else if (this.state.loopButtonStr === m.stopLoop) {
+			if (!this.params.isPlaying) return;
 
-    if (shifter) {
-      shifter.disconnect(); shifter.off(); shifter = null;
-      gainNode.disconnect();
-    }
+			if (shifter) {
+				shifter.disconnect(); shifter.off(); shifter = null;
+				gainNode.disconnect();
+			}
 
-    this.params.isPlaying = false;
-    this.params.loop = false;
-    this.setState({playingAtSlider: this.state.playingAt, loopButtonStr: m.loopAB});
-  }
+			this.params.isPlaying = false;
+			this.params.loop = false;
+			this.setState({playingAtSlider: this.state.playingAt, loopButtonStr: m.loopAB});
+		}
 
-  return;
-}
+		return;
+	}
 // reset AB
     if (event.target.name === 'resetAB') {
       if (this.params.audioBuffer === null) return;
