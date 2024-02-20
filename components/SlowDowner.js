@@ -4,6 +4,7 @@ import messages from './language.json';
 import styles from './SlowDowner.module.css';
 import PlayIcon from './PlayIcon';
 import PauseIcon from './PauseIcon';
+import RewindIcon from './RewindIcon';
 // ATTENTION: CRASHES IF MP3 ISN'T FETCHED YET... NEED TO WAIT FOR DB QUERY of MP3
 
 var m = messages.us;
@@ -151,12 +152,13 @@ class SlowDowner extends Component {
         <hr />
 
       <span>
-        2A) <button name='startPause' 
-               onClick={handlePlay}> 
-        {startButtonStr === m.playOnce ? <PlayIcon /> : <PauseIcon />}
+        2A) 
+				<button name='Rewind' onClick={handleLoop}>
+					<RewindIcon />
         </button>
-        <button name='Rewind' onClick={handleLoop}>
-        {m.rewind}</button>
+				<button name='startPause' onClick={handlePlay}> 
+          {startButtonStr === m.playOnce ? <PlayIcon /> : <PauseIcon />}
+        </button>
         <hr style={hrBlue}/>
         2B) <button name='LoopAB' 
               onClick={handleLoop}>
