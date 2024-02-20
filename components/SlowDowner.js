@@ -170,7 +170,7 @@ class SlowDowner extends Component {
 					<RewindIcon />
         </button>
 				<button name='startPause' onClick={handlePlay}> 
-          {startButtonStr === m.playOnce ? <PlayIcon /> : <PauseIcon />}
+          {!this.params.isPlaying ? <PlayIcon /> : <PauseIcon />}
         </button>
         <hr style={hrBlue}/>
         2B) 
@@ -286,8 +286,7 @@ async loadFile() {
      let timeA, timeB; 
 
 // Pause
-     if (this.state.startButtonStr === m.pause){
-       if (!this.params.isPlaying) return;
+     if (this.params.isPlaying) {
        if (shifter === null) return
 
        shifter.disconnect(); shifter.off(); shifter = null;
@@ -301,9 +300,7 @@ async loadFile() {
 
 // PlayOnce
 
-     if (event.target.name === 'startPause' 
-       && this.state.startButtonStr === m.playOnce) {
-       if (this.params.isPlaying) return;
+     if (!this.params.isPlaying) {
 
        timeA = this.state.playingAt;
        timeB = audioBuffer.duration;
@@ -318,34 +315,43 @@ async loadFile() {
   } // end handlePlay()
 
   handleLoop(event) {
-
-    if (event.target.name === 'Rewind') {
-      if (this.params.isPlaying) return;
-
+    if (event.currentTarget.name == 'Rewind') {
+			if(this.params.isPlaying) {
+				shifter.disconnect(); shifter.off(); shifter = null;
+				gainNode.disconnect();
+				this.params.isPlaying = false;
+				this.setState({playingAtSlider: this.state.playingAt});
+			}
       this.setState ({playingAt: 0});
       this.setState ({playingAtSlider: 0});
 
       return;
     }
 
-    if (event.target.name === 'setA') {
-      this.setState ({timeA: this.state.playingAt});
-      this.setState ({playingAtSlider: this.state.playingAt});
-      return;
-    }
+if (event.target.name === 'setA') {
+  this.setState({ timeA: this.state.playingAt });
+  return;
+}
 
-    if (event.target.name === 'setB'){
-      if (this.state.playingAt >=  this.state.timeA)
-        this.setState ({timeB: parseFloat(this.state.playingAt)});
-      else
-        this.setState ({timeB: parseFloat(this.state.timeA) + parseFloat(10)});
-      return;
+if (event.target.name === 'setB') {
+  const newTimeB = this.state.playingAt >= this.state.timeA
+    ? parseFloat(this.state.playingAt)
+    : parseFloat(this.state.timeA) + 10;
+
+  this.setState({ timeB: newTimeB }, () => {
+    if (this.params.isPlaying) {
+      // The playAB function is now called with the updated state values
+      this.playAB(this.state.timeA, this.state.timeB);
     }
+		this.setState({ loopButtonStr: m.stopLoop, startButtonStr: m.playOnce });
+		this.params.loop = true;
+  });
+}
 
     if (event.target.name === 'LoopAB'){
       if (!this.params.audioBuffer) return;
 
-		if (this.state.loopButtonStr === m.loopAB) {
+		if (!this.params.loop) {
 			this.params.loop = true;
 
 			let startTime = this.state.playingAt >= this.state.timeA && this.state.playingAt <= this.state.timeB
@@ -355,7 +361,7 @@ async loadFile() {
 			this.playAB(startTime, this.state.timeB);
 			this.setState({ loopButtonStr: m.stopLoop, startButtonStr: m.playOnce });
 
-		} else if (this.state.loopButtonStr === m.stopLoop) {
+		} else {
 			if (!this.params.isPlaying) return;
 
 			if (shifter) {
