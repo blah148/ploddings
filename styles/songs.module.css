@@ -9,10 +9,8 @@ div.bodyA {
 	height: 20px;
 	margin: 0 0 2px 12px;
 }
-
 .parentInfoLinkContainer {
 	display: inline-block;
-	align-items: center;
 }
 .parentInfoLinkContents {
 	display: flex;
