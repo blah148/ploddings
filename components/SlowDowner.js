@@ -150,14 +150,14 @@ class SlowDowner extends Component {
 
       <span>
         2A) <button name='startPause' 
-               onClick={handlePlay} style={startBStyle}> 
-        {startButtonStr}
-        </button> &nbsp;&nbsp;
+               onClick={handlePlay}> 
+        {startButtonStr}{startButtonStr === m.playOnce ? <PlayIcon /> : <PauseIcon />}
+        </button>
         <button name='Rewind' onClick={handleLoop}>
         {m.rewind}</button>
         <hr style={hrBlue}/>
         2B) <button name='LoopAB' 
-              onClick={handleLoop} style={loopBStyle}>
+              onClick={handleLoop}>
         {loopButtonStr}</button>
         <hr />
       </span>
@@ -439,5 +439,42 @@ async loadFile() {
 
  
 } // end class
+
+// PlayIcon component definition
+const PlayIcon = () => (
+  <svg
+    id="icon"
+    width="32"
+		className={styles.svgIcon}
+    height="32"
+    viewBox="0 0 32 32"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs>
+      <style>{`.cls-1 { fill: none; }`}</style>
+    </defs>
+    <path d="M7,28a1,1,0,0,1-1-1V5a1,1,0,0,1,1.4819-.8763l20,11a1,1,0,0,1,0,1.7525l-20,11A1.0005,1.0005,0,0,1,7,28Z" />
+    <rect id="_Transparent_Rectangle_" data-name="<Transparent Rectangle>" className="cls-1" width="32" height="32" />
+  </svg>
+);
+
+// PauseIcon component definition
+const PauseIcon = () => (
+  <svg
+    id="icon"
+    width="32"
+		className={styles.svgIcon}
+    height="32"
+    viewBox="0 0 32 32"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <defs>
+      <style>{`.cls-1 { fill: none; }`}</style>
+    </defs>
+    <path d="M7,28a1,1,0,0,1-1-1V5a1,1,0,0,1,1.4819-.8763l20,11a1,1,0,0,1,0,1.7525l-20,11A1.0005,1.0005,0,0,1,7,28Z" />
+    <rect id="_Transparent_Rectangle_" data-name="<Transparent Rectangle>" className="cls-1" width="32" height="32" />
+  </svg>
+);
+
 
 export default SlowDowner;

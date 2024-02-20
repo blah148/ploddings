@@ -12,7 +12,7 @@
    "volume" : "Volume(%)",
    "volumeNote" : "(May change during export)",
    "loadFile": "selectFile!",
-   "playOnce": "PlayOnce",
+   "playOnce": "Play",
    "pause": "Pause",
    "rewind": "Rewind",
    "loopAB": "loopAB",
