@@ -5,6 +5,7 @@ import styles from './SlowDowner.module.css';
 import PlayIcon from './PlayIcon';
 import PauseIcon from './PauseIcon';
 import RewindIcon from './RewindIcon';
+import LoopIcon from './LoopIcon';
 // ATTENTION: CRASHES IF MP3 ISN'T FETCHED YET... NEED TO WAIT FOR DB QUERY of MP3
 
 var m = messages.us;
@@ -160,9 +161,11 @@ class SlowDowner extends Component {
           {startButtonStr === m.playOnce ? <PlayIcon /> : <PauseIcon />}
         </button>
         <hr style={hrBlue}/>
-        2B) <button name='LoopAB' 
-              onClick={handleLoop}>
-        {loopButtonStr}</button>
+        2B) 
+				<button name='LoopAB' onClick={handleLoop}>
+        {loopButtonStr}
+				 <LoopIcon />
+				</button>
         <hr />
       </span>
       </div>
@@ -327,27 +330,34 @@ async loadFile() {
     if (event.target.name === 'LoopAB'){
       if (!this.params.audioBuffer) return;
 
-      if (this.state.loopButtonStr === m.loopAB){ 
-        if (this.params.isPlaying) return;
-        this.params.loop = true;
-        this.playAB(this.state.timeA, this.state.timeB);
-        this.setState ({loopButtonStr: m.stopLoop});
-        this.setState ({startButtonStr: m.playOnce});
-      } else if (this.state.loopButtonStr === m.stopLoop){ 
+  if (this.state.loopButtonStr === m.loopAB) {
+    this.params.loop = true;
+    // Directly start the loop without checking if it's already playing,
+    // to allow resuming from the paused position if applicable.
 
-        if (!this.params.isPlaying) return;
+    // If we're within the loop points, resume from the current position; otherwise, start from timeA.
+    let startTime = this.state.playingAt >= this.state.timeA && this.state.playingAt <= this.state.timeB
+                    ? this.state.playingAt
+                    : this.state.timeA;
 
-        if(shifter){ shifter.disconnect(); shifter.off(); shifter = null;
-          gainNode.disconnect()}
+    this.playAB(startTime, this.state.timeB);
+    this.setState({ loopButtonStr: m.stopLoop, startButtonStr: m.playOnce });
 
-        this.params.isPlaying = false;
-        this.params.loop = false;
-        this.setState ({loopButtonStr: m.loopAB});
-      }
+  } else if (this.state.loopButtonStr === m.stopLoop) {
+    if (!this.params.isPlaying) return;
 
-      return;
+    if (shifter) {
+      shifter.disconnect(); shifter.off(); shifter = null;
+      gainNode.disconnect();
     }
 
+    this.params.isPlaying = false;
+    this.params.loop = false;
+    this.setState({playingAtSlider: this.state.playingAt, loopButtonStr: m.loopAB});
+  }
+
+  return;
+}
 // reset AB
     if (event.target.name === 'resetAB') {
       if (this.params.audioBuffer === null) return;
