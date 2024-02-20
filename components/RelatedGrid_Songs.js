@@ -34,7 +34,6 @@ function RelatedContent({ id }) {
 
   return (
     <div>
-      <h2>Related Content</h2>
       {relatedContent.length && (
         <ul>
           {relatedContent.map((item) => (

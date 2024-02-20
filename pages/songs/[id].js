@@ -74,6 +74,7 @@ return (
           <div className={styles.bottomBorder}></div>
           <div className={styles.componentsContainer}>
             <div className={styles.primaryColumn}>
+							<h2 id="i">i) Sheet music</h2>
               {songData.link_3 && (
                 <iframe
                   width="100%"
@@ -84,16 +85,25 @@ return (
                   allow="autoplay; fullscreen">
                 </iframe>
               )}
+							<h2 id="ii">ii) Slow-downer</h2>
               <SlowDownerComponent dropbox_mp3_link={songData.link_1} />
+							<h2 id="iii">iii) More info</h2>
               {(songData.body_text || songData.lyrics || songData.tuning) && (
                 <TabsComponent extra_notes={songData.body_text} song_lyrics={songData.lyrics} youtube_link={songData.link_2} />
               )}
+							<h2 id="iv">iv) Related content</h2>
+							<RelatedContent id={songData.id} />
             </div>
             <div className={styles.tocContainer}>
-              <div className={styles.tableOfContents}></div>
+              <div className={styles.tableOfContents}>
+								<h3>Jump to:</h3>
+								<a href="#i" className={styles.songTocItem}>i) Sheet music</a>
+								<a href="#ii" className={styles.songTocItem}>ii) Slow-downer</a>
+								<a href="#iii" className={styles.songTocItem}>iii) More info</a>
+								<a href="#iv" className={styles.songTocItem}>iv) Related content</a>	
+							</div>
             </div>
           </div>
-          <RelatedContent id={songData.id} />
         </div>
       </div>
       <Footer userId={userId} />
