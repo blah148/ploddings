@@ -96,7 +96,7 @@ return (
             </div>
             <div className={styles.tocContainer}>
               <div className={styles.tableOfContents}>
-								<h3>Jump to:</h3>
+								<h3>Table of contents:</h3>
 								<a href="#i" className={styles.songTocItem}>i) Sheet music</a>
 								<a href="#ii" className={styles.songTocItem}>ii) Slow-downer</a>
 								<a href="#iii" className={styles.songTocItem}>iii) More info</a>
