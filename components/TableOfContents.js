@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import styles from '../styles/songs.module.css';
 
 const TableOfContents = ({ htmlContent, onUpdate }) => {
   const [toc, setToc] = useState([]);
@@ -32,15 +33,11 @@ const TableOfContents = ({ htmlContent, onUpdate }) => {
   if (toc.length === 0) return null;
 
   return (
-    <div>
+    <div className={styles.tableOfContents}>
       <h2>Table of Contents</h2>
-      <ul>
         {toc.map((item) => (
-          <li key={item.id}>
-            <a href={`#${item.id}`}>{item.title}</a>
-          </li>
+          <a href={`#${item.id}`} className={styles.songTocItem}>{item.title}</a>
         ))}
-      </ul>
     </div>
   );
 };

@@ -78,7 +78,7 @@ return (
               {songData.link_3 && (
                 <iframe
                   width="100%"
-                  height="480px"
+                  height="600px"
                   src={songData.link_3}
                   frameBorder="0"
                   allowFullScreen
@@ -96,7 +96,7 @@ return (
             </div>
             <div className={styles.tocContainer}>
               <div className={styles.tableOfContents}>
-								<h3>Table of contents:</h3>
+								<h2>Table of contents:</h2>
 								<a href="#i" className={styles.songTocItem}>i) Sheet music</a>
 								<a href="#ii" className={styles.songTocItem}>ii) Slow-downer</a>
 								<a href="#iii" className={styles.songTocItem}>iii) More info</a>

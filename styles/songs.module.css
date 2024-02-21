@@ -37,9 +37,25 @@ div.bodyA {
 	width: 100%;
 	text-align: center;
 }
+.tuningButton:hover {
+	opacity: 0.8;
+}
+.chevronChapters {
+	fill: black;
+}
+.dropdownButton svg {
+	width: 16px;
+	margin-left: 4px;
+	align-self: center;
+}
+.dropdownButton {
+	display: flex;
+	font-size: 12px;
+	align-content: center;
+}
 .bottomBorder {
 	border-bottom: 1px solid #d2d2d2;
-	margin: 16px 8px 24px 8px;
+	margin: 16px 8px 12px 8px;
 }
 .componentsContainer {
 	display: flex;
@@ -48,9 +64,10 @@ div.bodyA {
 .primaryColumn {
 	margin-top: 4px;
 	min-width: 650px;
+	width: 100%;
 }
 .tocContainer {
-	width: 35vw;
+	max-width: 40vw;
 	padding: 0 12px 0 22px;
 	border-left: 1px solid #d2d2d2;
 	margin: 0 0 18px 26px;

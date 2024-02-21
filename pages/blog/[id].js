@@ -16,6 +16,10 @@ import Pagination from '../../components/Pagination';
 import Link from 'next/link';
 import TableOfContents from '../../components/TableOfContents';
 import RelatedContent from '../../components/RelatedGrid_Songs';
+import Dropdown from '../../components/Dropdown';
+import Footer from '../../components/Footer';
+import Menu from '../../components/Menu';
+import styles from '../../styles/songs.module.css';
 
 // Verify the user's session using the JWT token
 const verifyUserSession = (req) => {
@@ -73,18 +77,34 @@ export default function Blog({ threadData, blogData, ip, userId }) {
   return (
     <div className="bodyA">
 			<Sidebar userId={userId} ip={ip} />
-			<div className="mainFeed">
-				<IpodMenuLink threadData={threadData} fallBack='blog' />
-				<h1>{blogData.name}</h1>
-				<ParentInfoLink threadData={threadData} fallBack='blog' />
-				<FavoriteButton userId={userId} id={blogData.id} ip={ip} />
-				<RelatedContent id={blogData.id} />
-				<div>Date posted: {formatDate(blogData.published_date)}</div>
-				<div>{blogData.id}</div>
-				<img src={blogData.featured_img}/>
-        <TableOfContents htmlContent={blogData.body_text} onUpdate={handleContentUpdate} />
-        <div dangerouslySetInnerHTML={{ __html: updatedHtmlContent }} />
-				<Pagination sibling_previous={blogData.sibling_previous} sibling_next={blogData.sibling_next} />
+			<div className="mainFeedAll">
+				<div className="feedContainer">
+					<Loader isLoading={isLoading} />
+					<div className="mainFeed">
+						<div className="topRow">
+						  <IpodMenuLink threadData={threadData} fallBack='blog' />
+							<Menu userId={userId} />
+						</div>
+						<div className={styles.songNameContainer}>
+						  <h1>{blogData.name}</h1>
+						  <FavoriteButton userId={userId} id={blogData.id} ip={ip} />
+						</div>	
+						<ParentInfoLink threadData={threadData} fallBack='blog' />
+						<Dropdown id={blogData.id} />
+						<div>Date posted: {formatDate(blogData.published_date)}</div>
+						<div className={styles.bottomBorder}></div>
+						<div className={styles.componentsContainer}>
+							<div className={styles.primaryColumn}>
+						    <div dangerouslySetInnerHTML={{ __html: updatedHtmlContent }} />
+						    <Pagination sibling_previous={blogData.sibling_previous} sibling_next={blogData.sibling_next} />
+							</div>
+							<div className={styles.tocContainer}>
+								<TableOfContents htmlContent={blogData.body_text} onUpdate={handleContentUpdate} />
+							</div>
+						</div>
+					</div>
+				</div>
+				<Footer userId={userId} />
 			</div>
     </div>
   );
