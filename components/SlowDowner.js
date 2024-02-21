@@ -85,7 +85,13 @@ class SlowDowner extends Component {
   this.params.loop = newLoopStatus;
 	
 	if (!this.params.loop) {
-	  this.setState({timeB: this.params.audioBuffer.duration});	
+	  const newTimeB = this.params.audioBuffer.duration;	
+		this.setState({ timeB: newTimeB }, () => {
+			if (this.params.isPlaying) {
+					this.playAB(this.state.playingAt, this.state.timeB);
+				}
+			});
+
 	}
 
   // Additional logic here if needed, e.g., to stop the loop
