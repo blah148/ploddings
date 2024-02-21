@@ -57,6 +57,8 @@ class SlowDowner extends Component {
     this.handleLoop = this.handleLoop.bind(this);
     this.playAB = this.playAB.bind(this);
 		this.handleToggleLoop = this.handleToggleLoop.bind(this);
+	this.handleTimeASliderChange = this.handleTimeASliderChange.bind(this);
+	this.handleTimeBSliderChange = this.handleTimeBSliderChange.bind(this);
     
   } // end constructor
 
@@ -126,32 +128,53 @@ class SlowDowner extends Component {
 
     return (
       <div className={styles.App}>
-
-      {m.speed}: {playSpeed} &nbsp;&nbsp;
-        <button name='reset' onClick={handleSpeedSlider} >{m.reset}</button>
-        <br />
-        <span className={styles.slider}> 
-         <center>
-         025<input type='range' name='speedSlider' min='25' max='200'
-         value = {playSpeed} onChange={handleSpeedSlider} />200 
-         </center>
-        </span>
-      <hr />
-      {m.pitch}: {parseFloat(playPitch).toFixed(2)} &nbsp;&nbsp;
-       <button name='reset' onClick={handlePitchSlider} >{m.reset}</button>
-       <br />
-        <span className={styles.slider}> 
-         <center>
-         -12<input type='range' name='pitchSliderSemi' min='-12' max='12'
-         value = {playPitchSemi} onChange={handlePitchSlider} />12<br />
-         <hr style={hrBlue}/>
-         -100<input type='range' name='pitchSliderCents' min='-100' max='100'
-         value = {playPitchCents} onChange={handlePitchSlider} />100<br />
-         </center>
-
-        </span>
-      <hr />
-        {m.time}: {playingAt.toFixed(2)} &nbsp; {m.timeNote}<br />
+			 	<div className={styles.slowDownerRow}>
+          <h3>Speed</h3>
+			    <center>
+            <input type='range' name='speedSlider' min='25' max='200' value = {playSpeed} onChange={handleSpeedSlider} />
+			 	  </center>
+					<label>{playSpeed}%</label>
+				</div>
+				<div className={styles.slowDownerRow}>
+			  	<h3>Pitch</h3>
+          <center>
+            <input type='range' name='pitchSliderCents' min='-100' max='100' value = {playPitchCents} onChange={handlePitchSlider} />
+					</center>
+				  <label>{parseFloat(playPitch).toFixed(2)}</label>
+        </div>
+				<div className={styles.slowDownerRow}>
+					<h3>Start</h3>
+					<center>
+						<input
+							type="range"
+							id="timeASlider"
+							name="timeASlider"
+							min="0"
+							max={this.params.audioBuffer ? this.params.audioBuffer.duration : 100} // Assuming 100 as a fallback max
+							value={this.state.timeA}
+							onChange={this.handleTimeASliderChange} 
+						/>
+					</center>
+					<label>{timeA.toFixed(2)}</label>
+					<button name='setA' onClick={handleLoop} >{m.setA}</button>
+				</div>
+ 				<div className={styles.slowDownerRow}>
+					<h3>End</h3>
+					<center>
+						<input
+							type="range"
+							id="timeBSlider"
+							name="timeBSlider"
+							min="0"
+							max={this.params.audioBuffer ? this.params.audioBuffer.duration : 100} // Assuming 100 as a fallback max
+							value={this.state.timeB}
+							onChange={this.handleTimeBSliderChange} 
+						/>
+					</center>
+					<label>{timeB.toFixed(2)}</label>
+					<button name='setB' onClick={handleLoop} >{m.setB}</button>
+				</div>
+       {m.time}: {playingAt.toFixed(2)} &nbsp; {m.timeNote}<br />
         <span className={styles.slider}> 
         <center>
         0<input type='range' name='timeSlider'
@@ -169,7 +192,6 @@ class SlowDowner extends Component {
         </button>
         </span>
         <hr />
-
       <span>
         2A) 
 				<button name='Rewind' onClick={handleLoop}>
@@ -235,6 +257,20 @@ async loadFile() {
      }
 
   }
+	handleTimeASliderChange = (event) => {
+  const newTimeA = parseFloat(event.target.value);
+  this.params.timeA = newTimeA; // Update the parameter
+  
+  // Optionally, update the state if you want to trigger a re-render or have the UI reflect this change
+  this.setState({ timeA: newTimeA });
+};
+handleTimeBSliderChange = (event) => {
+  const newTimeB = parseFloat(event.target.value);
+  this.params.timeB = newTimeB; // Update the parameter
+  
+  // Optionally, update the state to reflect the change in the UI and potentially re-render
+  this.setState({ timeB: newTimeB });
+};
 
   handlePitchSlider(event) { 
 

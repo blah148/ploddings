@@ -5,7 +5,30 @@
   padding: 30px;
   cursor: pointer;
 }
+.slowDownerRow {
+	display: flex;
+	align-items: center;
+	width: 100%;
+}
+.slowDownerRow h3 {
+	margin: 8px 0;
+}
+.slowDownerRow center {
+	width: 80%;
+	align-self: center;
+}
+.slowDownerRow center input {
+	width: 95%;
+	display: block;	
 
+}
+.slowDownerRow label {
+	align-self: center;
+}
+.titleRow {
+	display: flex;
+	justify-content: space-between;
+}
 .selectFile input {
   background: #C94D46;
   color: #fff;
