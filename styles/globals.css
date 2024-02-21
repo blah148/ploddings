@@ -69,6 +69,57 @@ div.bodyA {
 	background-color: #f6f9f9;
 }
 
+/* Content cards */
+ul.contentFeed {
+	list-style: none;
+	padding: 0;
+}
+ul.contentFeed li {
+	display: flex;
+	background-color: #fff;
+	box-shadow: 0px 8px 25px hsla(255, 24%, 91%, 1);
+	padding: 4px 13px 4px 6px;
+	margin: 10px 0;
+	border-radius: 6px;
+	font-size: 13px;
+	max-width: 400px;
+}
+a.listLink {
+	display: flex;
+	width: 100%;
+}
+img.sidebarThumbnail {
+	height: 45px;
+	width: 45px;
+	margin-right: 8px;
+	border-radius: 4px;
+}
+div.sidebarName {
+margin: auto 0;
+}
+div.led {
+  width: 13px;
+  height: 13px;
+  background-color: #2ac64f;
+  border-radius: 100px;
+  margin: auto 0 auto auto;
+  display: block;
+  box-shadow: 0 0 6px 1px rgba(38,175,52,.88);
+}
+div.threadsLed {
+	background-color: #f08e25;
+	box-shadow: 0 0 6px 1px #f08e25;
+}
+div.songsLed {
+ box-shadow: 0 0 6px 1px rgba(38,175,52,.88);
+ background-color: #2ac64f;
+}
+div.blogLed {
+ background-color: #4d6dc8;
+ box-shadow: 0 0 6px 1px #385cc6;
+}
+
+
 /* styles/fonts.css */
 
 @font-face {

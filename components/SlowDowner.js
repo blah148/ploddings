@@ -140,15 +140,16 @@ class SlowDowner extends Component {
 			    <center>
             <input type='range' name='speedSlider' min='25' max='200' value = {playSpeed} onChange={handleSpeedSlider} />
 			 	  </center>
-					<label>{playSpeed}%</label>
+					<label className={styles.numberLabel}>{playSpeed}%</label>
 				</div>
 				<div className={styles.slowDownerRow}>
 			  	<h3>Pitch</h3>
           <center>
             <input type='range' name='pitchSliderCents' min='-100' max='100' value = {playPitchCents} onChange={handlePitchSlider} />
 					</center>
-				  <label>{parseFloat(playPitch).toFixed(2)}</label>
+				  <label className={styles.numberLabel}>{parseFloat(playPitch).toFixed(2)}</label>
         </div>
+				<hr className={styles.slowDownerSeparator}  />
 				<div className={styles.slowDownerRow}>
 					<h3>Start</h3>
 					<center>
@@ -162,7 +163,7 @@ class SlowDowner extends Component {
 							onChange={this.handleTimeASliderChange} 
 						/>
 					</center>
-					<label>{this.formatTime(timeA)}</label>
+					<label className={styles.numberLabel}>{this.formatTime(timeA)}</label>
 					<button name='setA' onClick={handleLoop} >{m.setA}</button>
 				</div>
  				<div className={styles.slowDownerRow}>
@@ -178,9 +179,10 @@ class SlowDowner extends Component {
 							onChange={this.handleTimeBSliderChange} 
 						/>
 					</center>
-					<label>{this.formatTime(timeB)}</label>
+					<label className={styles.numberLabel}>{this.formatTime(timeB)}</label>
 					<button name='setB' onClick={handleLoop} >{m.setB}</button>
 				</div>
+				<hr className={styles.slowDownerSeparator} />
 				<div className={styles.slowDownerRow}>
 				<label className={styles.mainPlaybackLabel}>
 				  {this.formatTime(playingAt)}
@@ -198,14 +200,14 @@ class SlowDowner extends Component {
 					{this.formatTime(timeB)}
 				</label>
 			</div>
-      <span>
-				<button name='Rewind' onClick={handleLoop}>
+      <div className={styles.buttonControlsRow}>
+				<button className={styles.buttonRewind} name='Rewind' onClick={handleLoop}>
 					<RewindIcon />
         </button>
-				<button name='startPause' disabled={!this.params.audioBuffer} onClick={handlePlay}> 
+				<button name='startPause' className={styles.buttonPlay} disabled={!this.params.audioBuffer} onClick={handlePlay}> 
           {!this.params.isPlaying ? <PlayIcon /> : <PauseIcon />}
         </button>
-      </span>
+      </div>
       </div>
     ) // end return
 

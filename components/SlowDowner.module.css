@@ -1,9 +1,11 @@
 .App {
   text-align: left;
   max-width: 375px;
-  margin: 0 auto;
-  padding: 30px;
-  cursor: pointer;
+	padding: 18px 24px;
+	border-radius: 8px;
+	width: 100%;
+	background-color: #fff;
+	box-shadow: 0px 8px 25px hsla(255, 24%, 91%, 1);
 }
 .slowDownerRow {
 	display: flex;
@@ -12,6 +14,7 @@
 }
 .slowDownerRow h3 {
 	margin: 8px 0;
+	font-weight: 400;
 }
 .slowDownerRow center {
 	width: 80%;
@@ -20,14 +23,56 @@
 .slowDownerRow center input {
 	width: 95%;
 	display: block;	
+	cursor: pointer;
+}
+.numberLabel {
+	align-self: center;
+	font-weight: 400;
+	font-size: 14px;
+}
+.slowDownerRow h3 {
+	font-size: 14px;
+}
+.slowDownerRow button {
+	margin-left: 6px;
+	cursor: pointer;
+	background: linear-gradient(165deg,#ec9373,#e95420);
+  color: white;
+  border: none;
+  border-radius: 5px;
+	box-shadow: 0 2px 6px #cb761c80;
+  padding: 2px 4px;
+}
+.slowDownerRow button:hover {
+	filter: saturate(120%);
 
 }
-.slowDownerRow label {
-	align-self: center;
+.slowDownerSeparator {
+	color: #f7f7f7;
 }
-.titleRow {
+input.mainPlaybackLabel {
+	font-size: 22px;
+  font-weight: 600;
+}
+.buttonControlsRow {
+	margin: 16px 0 12px 0;
 	display: flex;
-	justify-content: space-between;
+	justify-content: space-around;
+}
+.buttonControlsRow button {
+	cursor: pointer;
+	background-color: linear-gradient(165deg,#26d6c4,#10b1d3);
+	
+}
+.buttonRewind {
+	width: 35%;
+}
+.buttonPlay {
+	margin-left: 8px;
+	width: 60%;
+}
+.buttonControlsRow svg {
+	width: 25px;
 }
 .selectFile input {
   background: #C94D46;

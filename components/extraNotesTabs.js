@@ -29,17 +29,40 @@ export default function TabsComponent ({ extra_notes = null, song_lyrics = null,
 
   return (
     <div>
-      <div className="tabs">
-        {extra_notes && (<button className={selectedTab === 1 ? 'active' : ''} onClick={() => handleTabClick(1)}>Notes</button>)}
-        {song_lyrics && (<button className={selectedTab === 2 ? 'active' : ''} onClick={() => handleTabClick(2)}>Lyrics</button>)}
-				{youtube_link && (<button className={selectedTab === 3 ? 'active' : ''} onClick={() => handleTabClick(3)}>Video</button>)}
-      </div>
-      <div className="tab-content">
-        {extra_notes && (<div dangerouslySetInnerHTML={{ __html: extra_notes }} style={{ display: selectedTab === 1 ? 'block' : 'none' }} className={selectedTab === 1 ? 'tab-pane active' : 'tab-pane'}></div>)}
-        {song_lyrics && (<div dangerouslySetInnerHTML={{ __html: song_lyrics }} style={{ display: selectedTab === 2 ? 'block' : 'none' }} className={selectedTab === 2 ? 'tab-pane active' : 'tab-pane'}></div>)}
-				{youtube_link && (<div style={{ display: selectedTab === 3 ? 'block' : 'none' }} className={selectedTab === 3 ? 'tab-pane active' : 'tab-pane'}>
-					<YoutubeVideo videoId={youtube_link} />
-				</div>)}
+			<div className={styles.tabs}>
+				{extra_notes && (
+					<button className={`${styles.tabButton} ${selectedTab === 1 ? styles.active : ''}`} onClick={() => handleTabClick(1)}>Notes</button>
+				)}
+				{song_lyrics && (
+					<button className={`${styles.tabButton} ${selectedTab === 2 ? styles.active : ''}`} onClick={() => handleTabClick(2)}>Lyrics</button>
+				)}
+				{youtube_link && (
+					<button className={`${styles.tabButton} ${selectedTab === 3 ? styles.active : ''}`} onClick={() => handleTabClick(3)}>Video</button>
+				)}
+			</div>
+			<div className={styles.tabContent}>
+				{extra_notes && (
+					<div 
+						dangerouslySetInnerHTML={{ __html: extra_notes }} 
+						style={{ display: selectedTab === 1 ? 'block' : 'none' }} 
+						className={`${styles.tabPane} ${selectedTab === 1 ? styles.active : ''}`}
+						></div>
+					)}
+				{song_lyrics && (
+					<div 
+						dangerouslySetInnerHTML={{ __html: song_lyrics }} 
+						style={{ display: selectedTab === 2 ? 'block' : 'none' }} 
+						className={`${styles.tabPane} ${selectedTab === 2 ? styles.active : ''}`}
+					></div>
+				)}
+				{youtube_link && (
+					<div 
+						style={{ display: selectedTab === 3 ? 'block' : 'none' }} 
+						className={`${styles.tabPane} ${selectedTab === 3 ? styles.active : ''}`}
+					>
+						<YoutubeVideo videoId={youtube_link} />
+					</div>
+				)}
       </div>
     </div>
   );
