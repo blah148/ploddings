@@ -203,7 +203,7 @@ class SlowDowner extends Component {
 				<button name='Rewind' onClick={handleLoop}>
 					<RewindIcon />
         </button>
-				<button name='startPause' onClick={handlePlay}> 
+				<button name='startPause' disabled={!this.params.audioBuffer} onClick={handlePlay}> 
           {!this.params.isPlaying ? <PlayIcon /> : <PauseIcon />}
         </button>
         <hr style={hrBlue}/>
