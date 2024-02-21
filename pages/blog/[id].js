@@ -74,40 +74,40 @@ export default function Blog({ threadData, blogData, ip, userId }) {
 		return { __html: htmlString };
 	};
 		
-  return (
-    <div className="bodyA">
-			<Sidebar userId={userId} ip={ip} />
-			<div className="mainFeedAll">
-				<div className="feedContainer">
-					<Loader isLoading={isLoading} />
-					<div className="mainFeed">
-						<div className="topRow">
-						  <IpodMenuLink threadData={threadData} fallBack='blog' />
-							<Menu userId={userId} />
+return (
+  <div className="bodyA">
+    <Sidebar userId={userId} ip={ip} />
+    <div className="mainFeedAll">
+      <div className="feedContainer">
+        <Loader isLoading={isLoading} />
+        <div className="mainFeed">
+          <div className="topRow">
+            <IpodMenuLink threadData={threadData} fallBack='blog' />
+            <Menu userId={userId} />
+          </div>
+          <div className={styles.songNameContainer}>
+            <h1>{blogData.name}</h1>
+            <FavoriteButton userId={userId} id={blogData.id} ip={ip} />
+          </div>
+          <ParentInfoLink threadData={threadData} fallBack='blog' />
+          <Dropdown id={blogData.id} />
+          <div>Date posted: {formatDate(blogData.published_date)}</div>
+          <div className={styles.bottomBorder}></div>
+          <div className={styles.componentsContainer}>
+            <div className={styles.primaryColumn}>
+              <div dangerouslySetInnerHTML={{ __html: updatedHtmlContent }} />
+              {blogData.sibling_previous || blogData.sibling_next && (<Pagination sibling_previous={blogData.sibling_previous} sibling_next={blogData.sibling_next} />)}
+            </div>
+						<div className={styles.tocContainer}>
+              <TableOfContents htmlContent={blogData.body_text} onUpdate={handleContentUpdate} />
 						</div>
-						<div className={styles.songNameContainer}>
-						  <h1>{blogData.name}</h1>
-						  <FavoriteButton userId={userId} id={blogData.id} ip={ip} />
-						</div>	
-						<ParentInfoLink threadData={threadData} fallBack='blog' />
-						<Dropdown id={blogData.id} />
-						<div>Date posted: {formatDate(blogData.published_date)}</div>
-						<div className={styles.bottomBorder}></div>
-						<div className={styles.componentsContainer}>
-							<div className={styles.primaryColumn}>
-						    <div dangerouslySetInnerHTML={{ __html: updatedHtmlContent }} />
-						    <Pagination sibling_previous={blogData.sibling_previous} sibling_next={blogData.sibling_next} />
-							</div>
-							<div className={styles.tocContainer}>
-								<TableOfContents htmlContent={blogData.body_text} onUpdate={handleContentUpdate} />
-							</div>
-						</div>
-					</div>
-				</div>
-				<Footer userId={userId} />
-			</div>
+          </div>
+        </div>
+      </div>
+			<Footer userId={userId} />
     </div>
-  );
+  </div>
+);
 } 
 
 // Export the function for use in other modules
