@@ -83,10 +83,10 @@ class SlowDowner extends Component {
 	handleToggleLoop = () => {
   const newLoopStatus = !this.params.loop;
   this.params.loop = newLoopStatus;
-
-  // Optionally update the state to reflect the loop status in the UI
-  this.setState({ loopEnabled: newLoopStatus });
-	this.state.loopButtonStr = this.params.loop ? m.stopLoop : m.loopAB;
+	
+	if (!this.params.loop) {
+	  this.setState({timeB: this.params.audioBuffer.duration});	
+	}
 
   // Additional logic here if needed, e.g., to stop the loop
 }
@@ -174,13 +174,9 @@ class SlowDowner extends Component {
         </button>
         <hr style={hrBlue}/>
         2B) 
-				<button name='LoopAB' onClick={handleLoop}>
-        {loopButtonStr}
-				 <LoopIcon />
+				<button name='LoopAB' onClick={this.handleToggleLoop}>
+				 <LoopIcon strokeColor={this.params.loop ? '#17bdce' : 'black'} />
 				</button>
-				<button onClick={this.handleToggleLoop}>
-  {this.state.loopEnabled ? 'Disable Loop' : 'Enable Loop'}
-</button>
         <hr />
       </span>
       </div>
@@ -378,8 +374,7 @@ async loadFile() {
 // reset AB
     if (event.target.name === 'resetAB') {
       if (this.params.audioBuffer === null) return;
-      this.setState ({timeA: 0,
-                      timeB: this.params.audioBuffer.duration});
+      this.setState ({timeA: 0, timeB: this.params.audioBuffer.duration});
 
     return;
    } // end resetAB
