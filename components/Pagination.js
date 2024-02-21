@@ -2,6 +2,9 @@ import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { supabase } from '../pages/utils/supabase'; // Adjust this import path as needed
 import { useLoading } from '../context/LoadingContext';
+import LeftChevron from './LeftChevron';
+import RightChevron from './RightChevron';
+import styles from '../styles/songs.module.css';
 
 export default function Pagination({ sibling_previous, sibling_next }) {
   const [previousPage, setPreviousPage] = useState(null);
@@ -44,18 +47,20 @@ export default function Pagination({ sibling_previous, sibling_next }) {
   }, [sibling_previous, sibling_next]); // Fetch data again if these props change
 
   return (
-    <div className="pagination-next-previous parent">
+    <div className={styles.paginationContainer}>
       {previousPage && (
-        <div className="pagination-blog previous">
+        <div className={`${styles.paginationBlog} ${styles.previous}`}>
           <Link href={`/${previousPage.page_type}/${previousPage.slug}`} passHref>
-            <div className="text-block-115">{previousPage.pagination_title}</div>
+						<LeftChevron />
+            <div>{previousPage.pagination_title}</div>
           </Link>
         </div>
       )}
       {nextPage && (
-        <div className="pagination-blog next">
+        <div className={`${styles.paginationBlog} ${styles.next}`}>
           <Link href={`/${nextPage.page_type}/${nextPage.slug}`} passHref>
-            <div className="text-block-115">{nextPage.pagination_title}</div>
+            <div>{nextPage.pagination_title}</div>
+						<RightChevron />
           </Link>
         </div>
       )}

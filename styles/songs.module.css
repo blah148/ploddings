@@ -78,7 +78,7 @@ div.bodyA {
 	flex-direction: column;
 	top: 4vh;
 }
-.tableOfContents h3 {
+.tableOfContents h2 {
 	font-weight: 600;
 	font-size: 18px;
 	margin-bottom: 10px;
@@ -106,5 +106,27 @@ div.bodyA {
 	font-size: 14px;
 	font-weight: 400;
 }
-
+.paginationContainer {
+	display: flex;
+	justify-content: space-between;
+	margin: 18px 0 24px 0;
+}
+.paginationBlog a {
+	display: flex;
+	align-items: center;
+}
+.paginationBlog.previous {
+	margin-right: auto;
+}
+.paginationBlog.next {
+	margin-left: auto;
+}
+.paginationBlog svg {
+	height: 16px;
+	margin-left: 8px;
+}
+.paginationBlog.previous svg {
+	height: 12px;
+	margin-right: 8px;
+}
 
