@@ -302,10 +302,9 @@ async loadFile() {
 
      if (!this.params.isPlaying) {
 
-       timeA = this.state.playingAt;
-       timeB = audioBuffer.duration;
+			let startTime = (this.state.playingAt >= this.state.timeA && this.state.playingAt <= this.state.timeB) ? this.state.playingAt : this.state.timeA;
 
-       this.playAB(timeA, timeB); // timeA, timeB
+       this.playAB(startTime, this.state.timeB); // timeA, timeB
        return;
      }
 
@@ -322,31 +321,31 @@ async loadFile() {
 				this.params.isPlaying = false;
 				this.setState({playingAtSlider: this.state.playingAt});
 			}
-      this.setState ({playingAt: 0});
-      this.setState ({playingAtSlider: 0});
+      this.setState ({playingAt: this.state.timeA});
+      this.setState ({playingAtSlider: this.state.timeA});
 
       return;
     }
 
-if (event.target.name === 'setA') {
-  this.setState({ timeA: this.state.playingAt });
-  return;
-}
+		if (event.target.name === 'setA') {
+			this.setState({ timeA: this.state.playingAt });
+			return;
+		}
 
-if (event.target.name === 'setB') {
-  const newTimeB = this.state.playingAt >= this.state.timeA
-    ? parseFloat(this.state.playingAt)
-    : parseFloat(this.state.timeA) + 10;
+		if (event.target.name === 'setB') {
+			const newTimeB = this.state.playingAt >= this.state.timeA
+				? parseFloat(this.state.playingAt)
+				: parseFloat(this.state.timeA) + 10;
 
-  this.setState({ timeB: newTimeB }, () => {
-    if (this.params.isPlaying) {
-      // The playAB function is now called with the updated state values
-      this.playAB(this.state.timeA, this.state.timeB);
-    }
-		this.setState({ loopButtonStr: m.stopLoop, startButtonStr: m.playOnce });
-		this.params.loop = true;
-  });
-}
+			this.setState({ timeB: newTimeB }, () => {
+				if (this.params.isPlaying) {
+					// The playAB function is now called with the updated state values
+					this.playAB(this.state.timeA, this.state.timeB);
+				}
+				this.setState({ loopButtonStr: m.stopLoop, startButtonStr: m.playOnce });
+				this.params.loop = true;
+			});
+		}
 
     if (event.target.name === 'LoopAB'){
       if (!this.params.audioBuffer) return;
@@ -380,8 +379,7 @@ if (event.target.name === 'setB') {
     if (event.target.name === 'resetAB') {
       if (this.params.audioBuffer === null) return;
       this.setState ({timeA: 0,
-                      timeB: this.params.audioBuffer.duration,
-                      playingAtSlider: 0});
+                      timeB: this.params.audioBuffer.duration});
 
     return;
    } // end resetAB
