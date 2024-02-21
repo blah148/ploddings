@@ -322,6 +322,7 @@ async loadFile() {
 				gainNode.disconnect();
 				this.params.isPlaying = false;
 				this.setState({playingAtSlider: this.state.playingAt});
+				this.playAB(this.state.timeA, this.state.timeB);
 			}
       this.setState ({playingAt: this.state.timeA});
       this.setState ({playingAtSlider: this.state.timeA});
