@@ -199,19 +199,12 @@ class SlowDowner extends Component {
 				</label>
 			</div>
       <span>
-        2A) 
 				<button name='Rewind' onClick={handleLoop}>
 					<RewindIcon />
         </button>
 				<button name='startPause' disabled={!this.params.audioBuffer} onClick={handlePlay}> 
           {!this.params.isPlaying ? <PlayIcon /> : <PauseIcon />}
         </button>
-        <hr style={hrBlue}/>
-        2B) 
-				<button name='LoopAB' onClick={this.handleToggleLoop}>
-				 <LoopIcon strokeColor={this.params.loop ? '#17bdce' : 'black'} />
-				</button>
-        <hr />
       </span>
       </div>
     ) // end return
@@ -225,6 +218,7 @@ async loadFile() {
 
   this.setState({ totalTime: 0, startButtonStr: m.playOnce });
   this.params.filename = '/test.mp3';
+	this.params.loop = true;
 
   try {
     const response = await fetch(this.props.mp3); // Path to the file in the public directory
