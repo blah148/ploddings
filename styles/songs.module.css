@@ -70,6 +70,9 @@ div.bodyA {
 .dropdownContainer a:hover {
 	background-color: #ddd;
 }
+.dropdownContainer .boldLink {
+	font-weight: 600;
+}
 .bottomBorder {
 	border-bottom: 1px solid #d2d2d2;
 	margin: 16px 8px 12px 8px;

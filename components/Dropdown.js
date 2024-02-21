@@ -3,11 +3,13 @@ import { supabase } from '../pages/utils/supabase'; // Adjust the import path as
 import styles from '../styles/songs.module.css';
 import DownChevron from './DownChevron';
 import Link from 'next/link'; // Make sure to import the Link component
+import { useRouter } from 'next/router'; // Import useRouter
 
 function Dropdown({ id }) {
   const [isVisible, setIsVisible] = useState(false);
   const [relatedContents, setRelatedContents] = useState([]);
   const dropdownRef = useRef(null);
+  const router = useRouter(); // Use useRouter to access the current route
 
   useEffect(() => {
     const fetchRelatedContents = async () => {
@@ -57,11 +59,21 @@ function Dropdown({ id }) {
       {isVisible && (
         <div className={styles.dropdownContainer}>
           {relatedContents.length > 0 ? (
-            relatedContents.map((content, index) => (
-              <Link href={`/${content.page_type}/${content.slug}`} key={content.id} passHref>
-                <a className={styles.linkStyle}>{content.pagination_title}</a> {/* Use a styled <a> tag within Link */}
-              </Link>
-            ))
+            relatedContents.map((content, index) => {
+              // Construct the page's path
+              const path = `/${content.page_type}/${content.slug}`;
+              // Check if the current path matches the link's href
+              const isCurrentPage = router.asPath == path;
+
+              return (
+                <Link href={path} key={content.id} passHref>
+                  {/* Apply bold style conditionally */}
+                  <div className={`${styles.linkStyle} ${isCurrentPage ? styles.boldLink : ''}`}>
+										{content.pagination_title}
+									</div>
+                </Link>
+              );
+            })
           ) : (
             <p>No related content found.</p>
           )}
