@@ -61,6 +61,13 @@ class SlowDowner extends Component {
 	this.handleTimeBSliderChange = this.handleTimeBSliderChange.bind(this);
     
   } // end constructor
+  formatTime(seconds) {
+    let minutes = Math.floor(seconds / 60);
+    let remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  }
+
+
 
   handleWindowClose(event) { 
     if (shifter) { shifter.disconnect(); shifter.off(); shifter = null; 
@@ -155,7 +162,7 @@ class SlowDowner extends Component {
 							onChange={this.handleTimeASliderChange} 
 						/>
 					</center>
-					<label>{timeA.toFixed(2)}</label>
+					<label>{this.formatTime(timeA)}</label>
 					<button name='setA' onClick={handleLoop} >{m.setA}</button>
 				</div>
  				<div className={styles.slowDownerRow}>
@@ -171,27 +178,26 @@ class SlowDowner extends Component {
 							onChange={this.handleTimeBSliderChange} 
 						/>
 					</center>
-					<label>{timeB.toFixed(2)}</label>
+					<label>{this.formatTime(timeB)}</label>
 					<button name='setB' onClick={handleLoop} >{m.setB}</button>
 				</div>
-       {m.time}: {playingAt.toFixed(2)} &nbsp; {m.timeNote}<br />
-        <span className={styles.slider}> 
-        <center>
-        0<input type='range' name='timeSlider'
-        min='0' max={duration}
-        value = {playingAtSlider} step='1'
-        onChange={handleTimeSlider} />
-        {Math.round(duration)}<br />
-        </center>
-        <button name='setA' onClick={handleLoop} >{m.setA}</button>
-        : {timeA.toFixed(2)} &nbsp;&nbsp;
-        <button name='setB' onClick={handleLoop} >{m.setB}</button>
-        : {timeB.toFixed(2)} &nbsp;&nbsp;
-        <button name='resetAB' onClick={handleLoop}> 
-        {m.resetAB}
-        </button>
-        </span>
-        <hr />
+				<div className={styles.slowDownerRow}>
+				<label className={styles.mainPlaybackLabel}>
+				  {this.formatTime(playingAt)}
+				</label>
+				<center>
+          <input 
+						type='range' 
+						name='timeSlider'
+            min='0' max={duration}
+            value = {playingAtSlider} step='1'
+            onChange={handleTimeSlider} 
+				/>
+				</center>
+				<label className={styles.mainPlaybackLabel}>
+					{this.formatTime(timeB)}
+				</label>
+			</div>
       <span>
         2A) 
 				<button name='Rewind' onClick={handleLoop}>
