@@ -189,10 +189,10 @@ class SlowDowner extends Component {
           <input 
 						type='range' 
 						name='timeSlider'
-            min='0' max={duration}
+            min={this.state.timeA} max={this.state.timeB}
             value = {playingAtSlider} step='1'
             onChange={handleTimeSlider} 
-				/>
+				  />
 				</center>
 				<label className={styles.mainPlaybackLabel}>
 					{this.formatTime(timeB)}
