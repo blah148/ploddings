@@ -187,3 +187,27 @@ div.bodyA {
 .endingStory p {
 	margin-bottom: 12px;
 }
+.threadFeed {
+	margin-bottom: 28px;
+}
+.threadFeed ul {
+	padding: 0;
+	margin: 0;
+}
+.contentFeedItem {
+	list-style: none;
+}
+.contentFeedItem a {
+	display: flex;
+	align-items: center;
+	padding-right: 16px;
+	border-bottom: 1px solid #ddd;
+}
+.contentFeedItem img {
+	width: 50px;
+	height: 60px;
+}
+.contentFeedItem .feedItemTitle {
+	margin: auto 0 auto 13px;
+}
+
