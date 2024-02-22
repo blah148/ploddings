@@ -167,14 +167,23 @@ div.bodyA {
 	justify-content: space-between;
 }
 .rightColumn h1 {
-	margin: 0 0 12px 0;
+	margin: 0;
 }
 .lifeAndDeath {
 	margin-bottom: auto;
 	font-weight: 300;
 }
 .headerContainer svg {
-	width: 30px;
-	padding: 18px;
-	border-radius: 50px;
+	width: 26px;
+	padding: 12px;
+}
+.storyText p {
+	font-size: 12px;
+	margin: 0;
+}
+.endingStory {
+	margin-bottom: 32px;
+}
+.endingStory p {
+	margin-bottom: 12px;
 }

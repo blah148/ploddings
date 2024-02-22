@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../utils/supabase';
 import { useLoading } from '../../context/LoadingContext';
+import styles from '../../styles/songs.module.css';
 
 const TableDataFetcher = ({ threadId }) => {
   const [childData, setChildData] = useState([]);
@@ -13,7 +14,7 @@ const TableDataFetcher = ({ threadId }) => {
         const { data, error } = await supabase
           .from('content')
           .select('id, slug, name, thumbnail_200x200, featured_img_alt_text')
-					.eq('id', threadId);
+					.eq('thread_id', threadId);
 
         if (error) {
           throw error;
@@ -37,8 +38,10 @@ const TableDataFetcher = ({ threadId }) => {
       {childData.length > 0 ? (
         <ul>
           {childData.map((item, index) => (
-            <li key={item.id}>
-              {item.name} - {item.slug}
+            <li key={item.id} className={styles.contentFeedItem}>
+              <img src={item.thumbnail_200x200} alt={item.featured_img_alt_text}/>
+							<div>{item.name}</div>
+							<div className="led"></div>
             </li>
           ))}
         </ul>

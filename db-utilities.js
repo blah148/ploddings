@@ -45,7 +45,7 @@ async function fetchThreadData(slug) {
   try {
     const { data, error } = await supabase
       .from('content')
-      .select('id, name, page_type, child_type, link_1, link_2, link_3, body_text')
+      .select('id, lyrics, name, page_type, child_type, link_1, link_2, link_3, body_text')
       .eq('slug', slug)
       .single();
 

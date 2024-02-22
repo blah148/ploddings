@@ -2,7 +2,7 @@ import React from 'react';
 import Link from 'next/link'; // Import Link from Next.js for navigation
 import styles from '../styles/songs.module.css';
 
-export default function ParentInfoLink({ threadData, fallBack }) {
+export default function ParentInfoLink({ threadData = null, fallBack }) {
   // Check if threadData exists and has the necessary properties, otherwise use fallBack
   const href = threadData && threadData.page_type && threadData.slug
                ? `/${threadData.page_type}/${threadData.slug}`

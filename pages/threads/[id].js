@@ -33,6 +33,7 @@ const verifyUserSession = (req) => {
 export default function Thread({ userId, ip, threadData }) {
 
 	const { isLoading, startLoading, stopLoading } = useLoading();
+	const [parsedContent, setParsedContent] = useState({ firstPTag: '', remainingPTags: '' });
 
   const logPageVisit = async () => {
     try {
@@ -49,7 +50,35 @@ export default function Thread({ userId, ip, threadData }) {
 	useEffect(() => {
 	  logPageVisit();
 	}, [userId, ip]);
-	
+
+	function parseBodyText(htmlContent) {
+	  const parser = new DOMParser();
+	  const doc = parser.parseFromString(htmlContent, 'text/html');
+	  const pTags = doc.querySelectorAll('p');
+	  let firstPTag = '';
+	  let remainingPTags = '';
+
+	  if (pTags.length > 0) {
+	    const firstPTagElement = pTags[0].cloneNode(true);
+	    firstPTagElement.innerHTML += '...';
+	    firstPTag = firstPTagElement.outerHTML;
+
+	    if (pTags.length > 1) {
+	      const firstOfRemainingPTagsElement = pTags[1].cloneNode(true);
+	      firstOfRemainingPTagsElement.innerHTML = '...' + firstOfRemainingPTagsElement.innerHTML;
+	      remainingPTags = [firstOfRemainingPTagsElement.outerHTML, ...Array.from(pTags).slice(2).map(el => el.outerHTML)].join('');
+	    }
+	  }
+
+	  return { firstPTag, remainingPTags };
+	}
+
+	useEffect(() => {
+	  if (threadData.body_text) {
+	    const { firstPTag, remainingPTags } = parseBodyText(threadData.body_text);
+	    setParsedContent({ firstPTag, remainingPTags });
+	  }
+	}, [threadData.body_text]);	
   return (
     <div className="bodyA">
 			<Sidebar userId={userId} ip={ip} />
@@ -68,15 +97,17 @@ export default function Thread({ userId, ip, threadData }) {
 									<h1>{threadData.name}</h1>
 									<FavoriteButton userId={userId} id={threadData.id} ip={ip} />
 								</div>
-								{threadData.body_text && (<div className={styles.lifeAndDeath}>{threadData.body_text}</div>)}
+								{threadData.lyrics && (<div className={styles.lifeAndDeath}>{threadData.lyrics}</div>)}
 								<div className={styles.iconContainer}>
 									{threadData.link_1 && (<WikipediaIcon link={threadData.link_1} />)}
 									{threadData.link_2 && (<VictrolaIcon link={threadData.link_2} />)}
 								</div>
-								<ChatWithGPT initialPrompt={`who is ${threadData.name}`} />
+								<div dangerouslySetInnerHTML={{ __html: parsedContent.firstPTag}} className={styles.storyText}/>
 							</div>
 						</div>
+						<h2>MuseScore tabs</h2>
 						<TableDataFetcher threadId={threadData.id} />
+						<div dangerouslySetInnerHTML={{ __html: parsedContent.remainingPTags }} className={`${styles.storyText} ${styles.endingStory}`}/>
 					</div>
 				</div>
 				<Footer userId={userId} />
