@@ -22,6 +22,7 @@ div.bodyA {
 	width: 50px;
 	border-radius: 100px;	
 	margin-right: 13px;
+  box-shadow: 0 0 6px 1px rgba(217, 217, 217, 0.88);
 }
 
 .tuningButton {
@@ -66,6 +67,7 @@ div.bodyA {
 .dropdownContainer a {
 	padding: 4px 8px;
 	border-radius: 5px;
+	font-size: 16px;
 }
 .dropdownContainer a:hover {
 	background-color: #ddd;
@@ -150,3 +152,29 @@ div.bodyA {
 	margin-right: 8px;
 }
 
+/*THREADS */
+.headerContainer {
+	display: flex;
+}
+.headerContainer img {
+	max-height: 240px;
+	border-radius: 8px;
+	margin-right: 16px;
+}
+.headerContainer .rightColumn {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+.rightColumn h1 {
+	margin: 0 0 12px 0;
+}
+.lifeAndDeath {
+	margin-bottom: auto;
+	font-weight: 300;
+}
+.headerContainer svg {
+	width: 30px;
+	padding: 18px;
+	border-radius: 50px;
+}
