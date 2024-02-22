@@ -4,6 +4,9 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from './utils/supabase';
 import Loader from '../components/Loader';
 import { useLoading } from '../context/LoadingContext';
+import Menu from '../components/Menu';
+import Footer from '../components/Footer';
+import Sidebar from '../components/Sidebar';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -19,7 +22,7 @@ const verifyUserSession = (req) => {
 };
 
 
-export default function Home({ isAuthenticated, userId, ip  }) {
+export default function Home({ userId, ip  }) {
 
   const [categories, setCategories] = useState([]);
   const [threads, setThreads] = useState([]);
@@ -64,57 +67,53 @@ export default function Home({ isAuthenticated, userId, ip  }) {
     fetchDataForTab(activeTab);
   }, [activeTab, loadedTabs]);
 
-  const fetchCategoriesAndChildren = async () => {
-		
+	const fetchCategoriesAndChildren = async () => {
 		startLoading();
-    const loadingStarted = Date.now();
+		const loadingStarted = Date.now();
 
-    const { data: categoriesData, error: categoriesError } = await supabase
-      .from('categories')
-      .select('id, category_name');
+		const { data: categoriesData, error: categoriesError } = await supabase
+			.from('categories')
+			.select('id, name');
 
-    if (categoriesError) {
-      console.error('Error fetching categories:', categoriesError);
-      return;
-    }
+		if (categoriesError) {
+			console.error('Error fetching categories:', categoriesError);
+			return;
+		}
 
-    const categoriesWithChildren = await Promise.all(categoriesData.map(async (category) => {
+		const categoriesWithChildren = await Promise.all(categoriesData.map(async (category) => {
+			const { data: contentItems = [] } = await supabase
+				.from('content')
+				.select(`
+					id,
+					name,
+					slug,
+					page_type,
+					tuning,
+					thumbnail_200x200,
+					featured_img_alt_text
+				`)
+				.eq('category_id', category.id);
 
-      const { data: songs=[] } = await supabase
-        .from('songs')
-        .select('id, name, slug, page_views, pdf_embed, tuning')
-        .eq('category_id', category.id);
+			return { ...category, contentItems };
+		}));
 
-      const { data: threads=[] } = await supabase
-        .from('threads')
-        .select('id, name, slug, page_views, thumbnail_200x200, blurb')
-        .eq('category_id', category.id);
+		setCategories(categoriesWithChildren);
 
-      const { data: blogs=[] } = await supabase
-        .from('blog')
-        .select('id, name, slug, page_views, featured_img, featured_img_alt_text')
-        .eq('category_id', category.id);
-
-      return { ...category, songs, threads, blogs };
-    }));
-
-    setCategories(categoriesWithChildren);
-
-    const loadingDuration = Date.now() - loadingStarted;
+		const loadingDuration = Date.now() - loadingStarted;
 		if (loadingDuration < minLoadingTime) {
-		  setTimeout(() => stopLoading(), minLoadingTime - loadingDuration);
+			setTimeout(() => stopLoading(), minLoadingTime - loadingDuration);
 		} else {
 			stopLoading();
 		}
-  };
+	};
 
   const fetchAllThreads = async () => {
 		startLoading();
 		const loadingStarted = Date.now();
 
     const { data: threadsData, error: threadsError } = await supabase
-      .from('threads')
-      .select('id, name, slug, page_views, thumbnail_200x200, blurb');
+      .from('content')
+      .select('id, name, slug, thumbnail_200x200, featured_img_alt_text');
 
     if (threadsError) {
       console.error('Error fetching threads:', threadsError);
@@ -137,8 +136,8 @@ export default function Home({ isAuthenticated, userId, ip  }) {
 		const loadingStarted = Date.now();	
 
     const { data: songsData, error: songsError } = await supabase
-      .from('songs')
-      .select('id, name, slug, page_views, pdf_embed, tuning');
+      .from('content')
+      .select('id, name, slug, tuning, featured_img_alt_text, thumbnail_200x200');
 
     if (songsError) {
       console.error('Error fetching songs:', songsError);
@@ -167,43 +166,18 @@ export default function Home({ isAuthenticated, userId, ip  }) {
 
   return (
 
-    <div>
-			<Loader isLoading={isLoading} />
-			<Logout />
-      <div>
-        <button onClick={() => changeTab('categories')}>Categories</button>
-        <button onClick={() => changeTab('threads')}>Threads</button>
-        <button onClick={() => changeTab('songs')}>Songs</button>
-      </div>
-      
+    <div className="bodyA">
+			<Sidebar userId={userId} ip={ip} />
+			<div className="mainFeedAll">
+			  <Loader isLoading={isLoading} />
+				<div>
+					<button onClick={() => changeTab('categories')}>Categories</button>
+					<button onClick={() => changeTab('threads')}>Threads</button>
+					<button onClick={() => changeTab('songs')}>Songs</button>
+				</div>
+     </div> 
       {activeTab === 'categories' && (
 				 <div>
-					{categories.map((category) => (
-						<div key={category.id}>
-							<h2>{category.category_name}</h2>
-							<div>
-								<ul>
-									{category.songs.map((song) => (
-										<li key={song.id}>{song.name}</li>
-									))}
-								</ul>
-							</div>
-							<div>
-								<ul>
-									{category.threads && (category.threads.map((thread) => (
-										<li key={thread.id}>{thread.name}</li>
-									)))}
-								</ul>
-							</div>
-							<div>
-								<ul>
-									{category.blogs.map((blog) => (
-										<li key={blog.id}>{blog.name}</li>
-									))}
-								</ul>
-							</div>
-						</div>
-					))}
 				</div>
       )}
       
@@ -211,12 +185,6 @@ export default function Home({ isAuthenticated, userId, ip  }) {
         <div>
           <h2>Threads Feed</h2>
           <ul>
-            {threads.map((thread) => (
-              <li key={thread.id}>
-                <h3>{thread.name}</h3>
-                <p>{thread.slug}</p>
-              </li>
-            ))}
           </ul>
         </div>
       )}
@@ -225,12 +193,6 @@ export default function Home({ isAuthenticated, userId, ip  }) {
         <div>
           <h2>Songs Feed</h2>
           <ul>
-            {songs.map((song) => (
-              <li key={song.id}>
-                <h3>{song.name}</h3>
-                <p>{song.slug}</p>
-              </li>
-            ))}
           </ul>
         </div>
       )}
@@ -246,7 +208,6 @@ export async function getServerSideProps({ params, req }) {
   return {
     props: {
       ip,
-      isAuthenticated: !!userSession,
       userId: userSession?.id || null,
     },
   };
