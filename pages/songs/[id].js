@@ -36,6 +36,7 @@ const verifyUserSession = (req) => {
 export default function Song({ userId, ip, threadData, songData }) {
 
 	const { isLoading, startLoading, stopLoading } = useLoading();
+	const [relatedContentLength, setRelatedContentLength] = useState(null);
 
 	const logPageVisit = async () => {
 		try {
@@ -91,8 +92,8 @@ return (
               {(songData.body_text || songData.lyrics || songData.tuning) && (
                 <TabsComponent extra_notes={songData.body_text} song_lyrics={songData.lyrics} youtube_link={songData.link_2} />
               )}
-							<h2 id="iv">iv) Related content</h2>
-							<RelatedContent id={songData.id} />
+							{relatedContentLength && (<h2 id="iv">iv) Related content</h2>)}
+							<RelatedContent id={songData.id} setRelatedContentLength={setRelatedContentLength} />
             </div>
             <div className={styles.tocContainer}>
               <div className={styles.tableOfContents}>
@@ -100,7 +101,7 @@ return (
 								<a href="#i" className={styles.songTocItem}>i) Sheet music</a>
 								<a href="#ii" className={styles.songTocItem}>ii) Slow-downer</a>
 								<a href="#iii" className={styles.songTocItem}>iii) More info</a>
-								<a href="#iv" className={styles.songTocItem}>iv) Related content</a>	
+								{relatedContentLength && (<a href="#iv" className={styles.songTocItem}>iv) Related content</a>)}	
 							</div>
             </div>
           </div>

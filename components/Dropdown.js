@@ -49,7 +49,8 @@ function Dropdown({ id }) {
   }, [dropdownRef]);
 
   return (
-    <div ref={dropdownRef}>
+		<>
+    {relatedContents.length>0 && (<div ref={dropdownRef}>
       <button 
         onClick={toggleDropdown} 
         className={styles.dropdownButton}>
@@ -79,7 +80,8 @@ function Dropdown({ id }) {
           )}
         </div>
       )}
-    </div>
+    </div>)}
+	</>
   );
 }
 

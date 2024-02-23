@@ -59,6 +59,8 @@ export default function Home({ userId, ip  }) {
 				setThreads(tempThreads);
 				const tempSongs = await fetchContentByPageType('songs');
 				setSongs(tempSongs);
+				const tempBlogs = await fetchContentByPageType('blog');
+				setBlogs(tempBlogs);
       }
       stopLoading();
       setLoadedTabs(prev => ({ ...prev, [tab]: true }));
@@ -148,8 +150,23 @@ export default function Home({ userId, ip  }) {
 						</div>
 						<div className="categoriesContainer">
 							{activeTab === 'all' && (
-								 <div>
-									 <h2>Threads</h2>
+							<>
+								<div className="categoryGroup">
+								 <h2>All songs</h2>
+									 <ul>
+									 {songs.map(song => (
+										 <li key={song.id}>
+										   <Link href={`/${song.page_type}/${song.slug}`} passHref>
+											   <img src={song.thumbnail_200x200} alt={song.featured_img_alt_text}/>
+											   <div>{song.name}</div>
+											   <div className="led"></div>
+										   </Link>
+										 </li>
+									 ))}
+									 </ul>
+								</div>
+							 <div className="categoryGroup">
+									 <h2>All threads</h2>
 									 <ul>
 									 {threads.map(thread => (
 										 <li key={thread.id}>
@@ -161,13 +178,20 @@ export default function Home({ userId, ip  }) {
 										 </li>
 									 ))}
 									 </ul>
-									 <h2>Songs</h2>
-									 {songs.map(song => (
-										 <div key={song.id}>
-											 <p>{song.name}</p>
-										 </div>
+									 <h2>All blogs</h2>
+									 <ul>
+									 {blogs.map(blog => (
+										 <li key={blog.id}>
+										   <Link href={`/${blog.page_type}/${blog.slug}`} passHref>
+											   <img src={blog.thumbnail_200x200} alt={blog.featured_img_alt_text}/>
+											   <div>{blog.name}</div>
+											   <div className="led"></div>
+										   </Link>
+										 </li>
 									 ))}
+									 </ul>
 								</div>
+							</>
 							)}
 						</div>
 					</div>

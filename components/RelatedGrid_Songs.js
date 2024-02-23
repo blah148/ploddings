@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { useLoading } from '../context/LoadingContext';
 import styles from '../styles/songs.module.css';
 
-function RelatedContent({ id }) {
+function RelatedContent({ id, setRelatedContentLength }) {
   const [relatedContent, setRelatedContent] = useState([]);
 	const { isLoading, startLoading, stopLoading } = useLoading();
 
@@ -22,9 +22,11 @@ function RelatedContent({ id }) {
 
       if (error) {
         console.error('Error fetching related content:', error.message);
+				relatedContentLength = null;
 				stopLoading();
       } else {
         setRelatedContent(data);
+				setRelatedContentLength(data.length);
 				stopLoading();
       }
     };
@@ -44,7 +46,8 @@ function RelatedContent({ id }) {
 	
 	return (
 		<div>
-			{relatedContent.length && (
+			{relatedContent.length>0 && (
+				<>
 				<ul className="contentFeed">
 					{relatedContent.map((item) => (
 						<li key={item.content.id}>
@@ -60,6 +63,7 @@ function RelatedContent({ id }) {
 						</li>
 					))}
 				</ul>
+			</>
 			)}
 		</div>
 	);
