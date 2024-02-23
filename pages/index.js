@@ -4,6 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from './utils/supabase';
 import Loader from '../components/Loader';
 import { useLoading } from '../context/LoadingContext';
+import jwt from 'jsonwebtoken';
 import Menu from '../components/Menu';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
@@ -21,14 +22,15 @@ const verifyUserSession = (req) => {
   }
 };
 
-
 export default function Home({ userId, ip  }) {
 
   const [categories, setCategories] = useState([]);
-  const [threads, setThreads] = useState([]);
-  const [songs, setSongs] = useState([]);
+	const [threads, setThreads] = useState([]);
+	const [songs, setSongs] = useState([]);
+	const [blogs, setBlogs] = useState([]);
+
   const [activeTab, setActiveTab] = useState('categories');
-	const [loadedTabs, setLoadedTabs] = useState({ categories: false, threads: false, songs: false });
+	const [loadedTabs, setLoadedTabs] = useState({ categories: false, all: false });
 	const { isLoading, startLoading, stopLoading } = useLoading();
   const minLoadingTime = 400;
 
@@ -49,111 +51,59 @@ export default function Home({ userId, ip  }) {
         // If the data for this tab is already loaded, do nothing
         return;
       }
-
       startLoading();
-
       if (tab === 'categories') {
-        await fetchCategoriesAndChildren();
-      } else if (tab === 'threads') {
-        await fetchAllThreads();
-      } else if (tab === 'songs') {
-        await fetchAllSongs();
+				await FetchContentByCategory();
+      } else if (tab === 'all') {
+				const tempThreads = await fetchContentByPageType('threads');
+				setThreads(tempThreads);
+				const tempSongs = await fetchContentByPageType('songs');
+				setSongs(tempSongs);
+				console.log('trying here');
       }
-
       stopLoading();
       setLoadedTabs(prev => ({ ...prev, [tab]: true }));
     };
-
     fetchDataForTab(activeTab);
-  }, [activeTab, loadedTabs]);
+  }, []);
 
-	const fetchCategoriesAndChildren = async () => {
-		startLoading();
-		const loadingStarted = Date.now();
+	async function FetchContentByCategory() {
+		try {
+			// Perform a query that joins 'categories' and 'content' tables on the 'id' and 'category_id' fields, respectively.
+			const { data, error } = await supabase
+				.from('categories')
+				.select('id, name, content!inner(category_id, id, name)')
+				.order('name', { foreignTable: 'content', ascending: true });
 
-		const { data: categoriesData, error: categoriesError } = await supabase
-			.from('categories')
-			.select('id, name');
+			if (error) throw error;
 
-		if (categoriesError) {
-			console.error('Error fetching categories:', categoriesError);
-			return;
+			// The result will be an array of categories, each with a 'content' array containing the content items belonging to that category.
+			setCategories(data);
+			return data;
+		} catch (error) {
+			console.error('Error fetching content by category:', error.message);
+			return [];
 		}
+	}
 
-		const categoriesWithChildren = await Promise.all(categoriesData.map(async (category) => {
-			const { data: contentItems = [] } = await supabase
+	async function fetchContentByPageType(pageType) {
+		try {
+			const { data, error } = await supabase
 				.from('content')
-				.select(`
-					id,
-					name,
-					slug,
-					page_type,
-					tuning,
-					thumbnail_200x200,
-					featured_img_alt_text
-				`)
-				.eq('category_id', category.id);
+				.select('id, name, thumbnail_200x200, featured_img_alt_text, slug') // Select all fields, adjust as needed
+				.eq('page_type', pageType); // Filter rows where page_type matches the pageType argument
 
-			return { ...category, contentItems };
-		}));
+			if (error) {
+				throw error;
+			}
+			console.log('should be the songs', songs);
 
-		setCategories(categoriesWithChildren);
-
-		const loadingDuration = Date.now() - loadingStarted;
-		if (loadingDuration < minLoadingTime) {
-			setTimeout(() => stopLoading(), minLoadingTime - loadingDuration);
-		} else {
-			stopLoading();
+			return data;
+		} catch (error) {
+			console.error('Error fetching content by page type:', error.message);
+			return []; // Return an empty array in case of error
 		}
-	};
-
-  const fetchAllThreads = async () => {
-		startLoading();
-		const loadingStarted = Date.now();
-
-    const { data: threadsData, error: threadsError } = await supabase
-      .from('content')
-      .select('id, name, slug, thumbnail_200x200, featured_img_alt_text');
-
-    if (threadsError) {
-      console.error('Error fetching threads:', threadsError);
-    } else {
-      setThreads(threadsData); // Set the fetched threads data to state
-    }
-		const loadingDuration = Date.now() - loadingStarted;
-		if (loadingDuration < minLoadingTime) {
-			// If the loading duration is less than the minimum, delay the loading state change
-			setTimeout(() => stopLoading(), minLoadingTime - loadingDuration);
-		} else {
-			// If it's already been longer than the minimum, set loading to false immediately
-			stopLoading();
-		}
-  };
-
-  // Function to fetch all songs
-  const fetchAllSongs = async () => {
-		startLoading();
-		const loadingStarted = Date.now();	
-
-    const { data: songsData, error: songsError } = await supabase
-      .from('content')
-      .select('id, name, slug, tuning, featured_img_alt_text, thumbnail_200x200');
-
-    if (songsError) {
-      console.error('Error fetching songs:', songsError);
-    } else {
-      setSongs(songsData); // Set the fetched songs data to state
-    }
-		const loadingDuration = Date.now() - loadingStarted;
-		if (loadingDuration < minLoadingTime) {
-			// If the loading duration is less than the minimum, delay the loading state change
-			setTimeout(() => stopLoading(), minLoadingTime - loadingDuration);
-		} else {
-			// If it's already been longer than the minimum, set loading to false immediately
-			stopLoading();
-		}
-
-  };
+	}
 
   // Change active tab and clear the previous tab's data to release memory
   const changeTab = (newTab) => {
@@ -172,30 +122,37 @@ export default function Home({ userId, ip  }) {
 			  <Loader isLoading={isLoading} />
 				<div>
 					<button onClick={() => changeTab('categories')}>Categories</button>
-					<button onClick={() => changeTab('threads')}>Threads</button>
-					<button onClick={() => changeTab('songs')}>Songs</button>
+					<button onClick={() => changeTab('all')}>All</button>
 				</div>
      </div> 
-      {activeTab === 'categories' && (
-				 <div>
-				</div>
-      )}
-      
-      {activeTab === 'threads' && (
-        <div>
-          <h2>Threads Feed</h2>
-          <ul>
-          </ul>
-        </div>
-      )}
-      
-      {activeTab === 'songs' && (
-        <div>
-          <h2>Songs Feed</h2>
-          <ul>
-          </ul>
-        </div>
-      )}
+        {activeTab === 'categories' && categories.map(category => (
+          <div key={category.id}>
+            <h2>{category.name}</h2>
+            {category.content && category.content.map(content => (
+              <div key={content.id}>
+                <p>{content.name}</p>
+              </div>
+            ))}
+          </div>
+        ))}
+				{activeTab === 'all' && (
+					<div>
+						<h2>Threads</h2>
+						{threads.map(thread => (
+							<div key={thread.id}>
+								<p>{thread.name}</p>
+							</div>
+						))}
+						<h2>Songs</h2>
+						{songs.map(song => (
+							<div key={song.id}>
+								<p>{song.name}</p> {/* Assuming 'title' is a field in your thread objects */}
+								{/* Add more thread details here */}
+							</div>
+						))}
+						{/* You can similarly map over songs and blogs if needed */}
+					</div>
+				)}
     </div>
   );
 }
