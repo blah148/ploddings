@@ -15,7 +15,8 @@ async function fetchStarred(userId, limit = null, ip) {
       .select(`
         page_id,
         content:page_id (id, slug, page_type, name, thumbnail_200x200)
-      `, { count: 'exact' });
+      `, { count: 'exact' })
+			.order('created_at', { ascending: false });
 
     if (userId) {
       query = query.eq('user_id', userId);

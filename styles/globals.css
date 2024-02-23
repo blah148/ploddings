@@ -39,6 +39,7 @@ div.topRow {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
+	margin-bottom: 18px;
 }
 a.menuItem {
 	margin: 4px 0;
