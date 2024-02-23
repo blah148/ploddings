@@ -145,6 +145,7 @@ div.categoryGroup a {
 }
 div.categoryGroup img {
 	height: 50px;
+	border-radius: 4px;
 	width: 50px;
 	margin-right: 10px;
 }

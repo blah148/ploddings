@@ -16,10 +16,12 @@ div.bodyA {
 	display: flex;
 	align-items: center;
 }
-
+.parentInfoLinkContents div {
+	font-size: 18px;
+}
 .parentInfoLinkContainer img {
-	height: 50px;
-	width: 50px;
+	height: 60px;
+	width: 60px;
 	border-radius: 100px;	
 	margin-right: 13px;
   box-shadow: 0 0 6px 1px rgba(217, 217, 217, 0.88);
@@ -32,7 +34,7 @@ div.bodyA {
 	color: white;
 	margin: 18px 0;
 	border-radius: 20px;
-	font-size: 12px;
+	font-size: 14px;
 }
 .tuningButton div {
 	width: 100%;
@@ -116,12 +118,12 @@ div.bodyA {
 }
 .tableOfContents h2 {
 	font-weight: 600;
-	font-size: 16px;
+	font-size: 20px;
 	margin-bottom: 10px;
 }
 .tableOfContents a {
 	font-weight: 300;
-	font-size: 13px;
+	font-size: 17px;
 	margin: 0 0 5px 0;
 }
 .tabButton {
@@ -139,7 +141,6 @@ div.bodyA {
 .tabPane {
 	padding: 8px 0px;
 	margin: 8px 0;
-	font-size: 14px;
 	font-weight: 400;
 }
 .paginationContainer {

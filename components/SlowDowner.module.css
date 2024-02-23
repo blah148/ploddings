@@ -1,6 +1,6 @@
 .App {
   text-align: left;
-  max-width: 375px;
+  max-width: 400px;
 	padding: 18px 24px;
 	border-radius: 8px;
 	width: 100%;
@@ -15,6 +15,7 @@
 .slowDownerRow h3 {
 	margin: 8px 0;
 	font-weight: 400;
+	font-size: 17px;
 }
 .slowDownerRow center {
 	width: 80%;
@@ -28,10 +29,8 @@
 .numberLabel {
 	align-self: center;
 	font-weight: 400;
-	font-size: 14px;
-}
-.slowDownerRow h3 {
-	font-size: 14px;
+	font-size: 16px;
+	
 }
 .slowDownerRow button {
 	margin-left: 6px;
@@ -50,9 +49,9 @@
 .slowDownerSeparator {
 	color: #f7f7f7;
 }
-input.mainPlaybackLabel {
-	font-size: 22px;
-  font-weight: 600;
+.mainPlaybackLabel {
+	font-size: 19px;
+  font-weight: 500;
 }
 .buttonControlsRow {
 	margin: 16px 0 12px 0;

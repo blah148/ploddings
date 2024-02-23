@@ -6,7 +6,7 @@ import fetchBeingWatched from './components/fetchBeingWatched.js';
 const useStore = create((set, get) => ({
   maximumObjects: 15,
   objectLimit: 15,
-  groupMax: 5,
+  groupMax: 4,
 
   starredCount: 0,
   visitHistoryCount: 0,

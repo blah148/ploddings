@@ -1,6 +1,6 @@
 div.sidebarContainer {
-  width: 340px;
-	min-width: 300px;
+  width: 350px;
+	min-width: 330px;
 	height: 100vh;
   box-shadow: 0px 7px 18px hsla(242, 16%, 42%, 0.38), 2px 3px 6px hsla(0, 0%, 64%, 0.08);
   background-image: linear-gradient(165deg, #26d6c4 0%, #10b1d3 100%);
@@ -19,7 +19,7 @@ a.returnHome {
 	color: white;
 	font-family: 'Baloo2-Bold';
 	letter-spacing: 0.8px;
-	padding: 12px 16px;
+	padding: 7px 16px;
 }
 a.upLevel {
 	display: block;
@@ -36,7 +36,7 @@ svg.home-active-icon {
 	color: #fff;
 }
 div.sidebarItems {
-	padding: 4px 14px;
+	padding: 4px 8px;
 }
 .sidebarContainer h2 {
 	color: white;
@@ -50,20 +50,21 @@ li.listElement {
 	display: flex;
 	background-color: #fff;
 	box-shadow: 0px 8px 25px hsla(255, 24%, 91%, 1);
-	padding: 4px 13px 4px 6px;
-	margin: 10px 0;
-	border-radius: 6px;
-	font-size: 13px;
+	padding: 4px 13px 4px 4px;
+	margin: 8px 0;
+	border-radius: 100px;
+	font-size: 16.5px;
 }
 a.listLink {
 	display: flex;
 	width: 100%;
 }
 img.sidebarThumbnail {
-	height: 45px;
-	width: 45px;
+	height: 43px;
+	width: 43px;
 	margin-right: 8px;
-	border-radius: 4px;
+	border-radius: 100px;
+	border: 1px solid #ddd;
 }
 div.sidebarName {
 margin: auto 0;
