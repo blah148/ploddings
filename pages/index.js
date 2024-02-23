@@ -146,15 +146,21 @@ export default function Home({ userId, ip  }) {
 									</div>
 								))}
 						</div>
-						<div className="allContainer">
+						<div className="categoriesContainer">
 							{activeTab === 'all' && (
 								 <div>
 									 <h2>Threads</h2>
+									 <ul>
 									 {threads.map(thread => (
-										 <div key={thread.id}>
-											 <p>{thread.name}</p>
-										 </div>
+										 <li key={thread.id}>
+											 <Link href={`/${thread.page_type}/${thread.slug}`} passHref>
+												 <img src={thread.thumbnail_200x200} alt={thread.featured_img_alt_text}/>
+											   <div>{thread.name}</div>
+												 <div className="led"></div>
+											 </Link>
+										 </li>
 									 ))}
+									 </ul>
 									 <h2>Songs</h2>
 									 {songs.map(song => (
 										 <div key={song.id}>
