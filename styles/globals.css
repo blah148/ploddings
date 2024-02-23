@@ -121,7 +121,29 @@ div.blogLed {
  box-shadow: 0 0 6px 1px #385cc6;
 }
 
-
+/* Homepage */
+div.categoryGroup {
+	display: flex;
+	flex-direction: column;
+}
+div.categoryGroup ul {
+	list-style: none;
+	padding: 0;
+	max-height: 260px;
+	overflow-y: auto;
+	padding: 0 8px 0 0;
+}
+div.categoryGroup a {
+	display: flex;
+	align-items: center;
+	border-bottom: 1px solid #ddd;
+	padding: 0 16px 0 0 ;
+}
+div.categoryGroup img {
+	height: 50px;
+	width: 50px;
+	margin-right: 10px;
+}
 /* styles/fonts.css */
 
 @font-face {

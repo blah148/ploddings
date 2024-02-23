@@ -59,20 +59,19 @@ export default function Home({ userId, ip  }) {
 				setThreads(tempThreads);
 				const tempSongs = await fetchContentByPageType('songs');
 				setSongs(tempSongs);
-				console.log('trying here');
       }
       stopLoading();
       setLoadedTabs(prev => ({ ...prev, [tab]: true }));
     };
     fetchDataForTab(activeTab);
-  }, []);
+  }, [activeTab]);
 
 	async function FetchContentByCategory() {
 		try {
 			// Perform a query that joins 'categories' and 'content' tables on the 'id' and 'category_id' fields, respectively.
 			const { data, error } = await supabase
 				.from('categories')
-				.select('id, name, content!inner(category_id, id, name)')
+				.select('id, name, content!inner(category_id, id, name, page_type, thumbnail_200x200, featured_img_alt_text, slug)')
 				.order('name', { foreignTable: 'content', ascending: true });
 
 			if (error) throw error;
@@ -90,13 +89,12 @@ export default function Home({ userId, ip  }) {
 		try {
 			const { data, error } = await supabase
 				.from('content')
-				.select('id, name, thumbnail_200x200, featured_img_alt_text, slug') // Select all fields, adjust as needed
+				.select('id, page_type, name, thumbnail_200x200, featured_img_alt_text, slug') // Select all fields, adjust as needed
 				.eq('page_type', pageType); // Filter rows where page_type matches the pageType argument
 
 			if (error) {
 				throw error;
 			}
-			console.log('should be the songs', songs);
 
 			return data;
 		} catch (error) {
@@ -117,42 +115,59 @@ export default function Home({ userId, ip  }) {
   return (
 
     <div className="bodyA">
-			<Sidebar userId={userId} ip={ip} />
-			<div className="mainFeedAll">
-			  <Loader isLoading={isLoading} />
-				<div>
-					<button onClick={() => changeTab('categories')}>Categories</button>
-					<button onClick={() => changeTab('all')}>All</button>
-				</div>
-     </div> 
-        {activeTab === 'categories' && categories.map(category => (
-          <div key={category.id}>
-            <h2>{category.name}</h2>
-            {category.content && category.content.map(content => (
-              <div key={content.id}>
-                <p>{content.name}</p>
-              </div>
-            ))}
-          </div>
-        ))}
-				{activeTab === 'all' && (
-					<div>
-						<h2>Threads</h2>
-						{threads.map(thread => (
-							<div key={thread.id}>
-								<p>{thread.name}</p>
-							</div>
-						))}
-						<h2>Songs</h2>
-						{songs.map(song => (
-							<div key={song.id}>
-								<p>{song.name}</p> {/* Assuming 'title' is a field in your thread objects */}
-								{/* Add more thread details here */}
-							</div>
-						))}
-						{/* You can similarly map over songs and blogs if needed */}
+			 <Sidebar userId={userId} ip={ip} />
+			 <div className="mainFeedAll">
+				 <div className="feedContainer">
+					 <Loader isLoading={isLoading} />
+					 <div className="mainFeed">
+						 <div className="topRow">
+						   <div></div>
+					     <Menu userId={userId} />
+						 </div>
+						 <div>
+							<button onClick={() => changeTab('categories')}>Categories</button>
+							<button onClick={() => changeTab('all')}>All</button>
+						</div>
+						<div className="categoriesContainer">
+							 {activeTab === 'categories' && categories.map(category => (
+									<div key={category.id} className="categoryGroup">
+										<h2>{category.name}</h2>
+										<ul>
+										{category.content && category.content.map(content => (
+											<li key={content.id}>
+												<Link href={`/${content.page_type}/${content.slug}`} passHref>
+													<img src={content.thumbnail_200x200} alt={content.featured_img_alt_text}/>
+													<div>{content.name}</div>
+													<div className="led"></div>
+												</Link>
+											</li>
+										))}
+										</ul>
+									</div>
+								))}
+						</div>
+						<div className="allContainer">
+							{activeTab === 'all' && (
+								 <div>
+									 <h2>Threads</h2>
+									 {threads.map(thread => (
+										 <div key={thread.id}>
+											 <p>{thread.name}</p>
+										 </div>
+									 ))}
+									 <h2>Songs</h2>
+									 {songs.map(song => (
+										 <div key={song.id}>
+											 <p>{song.name}</p>
+										 </div>
+									 ))}
+								</div>
+							)}
+						</div>
 					</div>
-				)}
+				</div>
+				<Footer userId={userId} />
+			</div>
     </div>
   );
 }
