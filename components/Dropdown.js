@@ -15,8 +15,9 @@ function Dropdown({ id }) {
     const fetchRelatedContents = async () => {
       let { data, error } = await supabase
         .from('junction_related_content')
-        .select('content_id2, content:content_id2 (id, page_type, slug, pagination_title)')
-        .eq('content_id1', id);
+        .select('content_id2, content:content_id2 (id, capo_position, name, page_type, slug, pagination_title)')
+        .eq('content_id1', id)
+				.order('capo_position', { foreignTable: 'content', ascending: false });
 
       if (error) {
         console.error('Error fetching related content:', error.message);
@@ -70,7 +71,7 @@ function Dropdown({ id }) {
                 <Link href={path} key={content.id} passHref>
                   {/* Apply bold style conditionally */}
                   <div className={`${styles.linkStyle} ${isCurrentPage ? styles.boldLink : ''}`}>
-										{content.pagination_title}
+										{content.pagination_title ? content.pagination_title : content.name}
 									</div>
                 </Link>
               );

@@ -90,6 +90,9 @@ a.listLink {
 	display: flex;
 	width: 100%;
 }
+img {
+	font-size: 7px;
+}
 img.sidebarThumbnail {
 	height: 45px;
 	width: 45px;

@@ -14,8 +14,9 @@ const TableDataFetcher = ({ threadId }) => {
       try {
         const { data, error } = await supabase
           .from('content')
-          .select('id, page_type, slug, name, thumbnail_200x200, featured_img_alt_text')
-					.eq('thread_id', threadId);
+          .select('id, page_type, capo_position, slug, name, thumbnail_200x200, featured_img_alt_text')
+					.eq('thread_id', threadId)
+					.order('capo_position');
 
         if (error) {
           throw error;

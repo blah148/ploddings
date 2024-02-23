@@ -95,7 +95,7 @@ return (
           <div className={styles.bottomBorder}></div>
           <div className={styles.componentsContainer}>
             <div className={styles.primaryColumn}>
-              <div dangerouslySetInnerHTML={{ __html: updatedHtmlContent }} />
+              <div className={styles.blogBodyText} dangerouslySetInnerHTML={{ __html: updatedHtmlContent }} />
               {blogData.sibling_previous || blogData.sibling_next && (<Pagination sibling_previous={blogData.sibling_previous} sibling_next={blogData.sibling_next} />)}
             </div>
 						<div className={styles.tocContainer}>

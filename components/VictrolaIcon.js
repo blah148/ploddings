@@ -1,10 +1,11 @@
 import React from 'react';
 import Link from 'next/link';
+import styles from '../styles/songs.module.css';
 
 const VictrolaIcon = ({ link  }) => {
   return (
 		<a href={link} target="_blank">
-			<svg fill="currentColor" viewBox="0 0 60.734 60.734">
+			<svg className={styles.victrola} fill="currentColor" viewBox="0 0 60.734 60.734">
 				<path d="M53.282,46.101c0,0,0.001-0.008,0.001-0.01c-0.716,1.615-1.997,2.85-3.53,3.541V55.5
 					c0,1.752-1.421,3.173-3.173,3.173h-0.372v1.061c0,0.552-0.447,1-1,1s-1-0.448-1-1v-1.061H16.525v1.061c0,0.552-0.447,1-1,1
 					c-0.553,0-1-0.448-1-1v-1.061h-0.371c-1.752,0-3.173-1.421-3.173-3.173V45.007c0-1.752,1.421-3.173,3.173-3.173H46.58

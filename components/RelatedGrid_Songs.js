@@ -26,7 +26,7 @@ function RelatedContent({ id, setRelatedContentLength }) {
 				stopLoading();
       } else {
         setRelatedContent(data);
-				setRelatedContentLength(data.length);
+				if(data.length) setRelatedContentLength(true);
 				stopLoading();
       }
     };

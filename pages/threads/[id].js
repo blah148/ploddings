@@ -91,7 +91,7 @@ export default function Thread({ userId, ip, threadData }) {
 							<Menu userId={userId} />
 						</div>
 					  <div className={styles.headerContainer}>		
-							<img src={threadData.link_3 || 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_550px/default_550px.webp'} />
+							<img alt={threadData.featured_img_alt_text ? threadData.featured_img_alt_text : `${threadData.name} guitar portrait`} src={threadData.link_3 || 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_550px/default_550px.webp'} />
 							<div className={styles.rightColumn}>
 								<div className={styles.songNameContainer}>
 									<h1>{threadData.name}</h1>

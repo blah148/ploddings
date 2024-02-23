@@ -27,7 +27,7 @@ div.bodyA {
 
 .tuningButton {
 	display: inline-block;
-	width: 18ch;
+	width: 24ch;
 	background-color: orange;
 	color: white;
 	margin: 18px 0;
@@ -87,6 +87,20 @@ div.bodyA {
 	margin-top: 4px;
 	min-width: 650px;
 	width: 100%;
+}
+.blogBodyText figure {
+	margin: 12px 0;
+}
+.blogBodyText img {
+	max-height: 310px;
+	max-width: 100%;
+	border-radius: 7px;
+	box-shadow: 0px 8px 25px hsla(255, 24%, 91%, 1);
+}
+.blogBodyText figcaption {
+	text-align: center;
+	font-size: 13px;
+	opacity: 0.9;
 }
 .tocContainer {
 	max-width: 40vw;
@@ -176,6 +190,9 @@ div.bodyA {
 .headerContainer svg {
 	width: 26px;
 	padding: 12px;
+}
+svg.victrola {
+	width: 20px;
 }
 .storyText p {
 	font-size: 15px;
