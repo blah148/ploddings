@@ -1,6 +1,9 @@
 div.bodyA {
 	display: flex;
 }
+.upLevel:hover {
+	filter: saturate(1.3);
+}
 .songNameContainer {
 	display: flex;
 	align-items: center;
@@ -84,6 +87,19 @@ div.bodyA {
 .componentsContainer {
 	display: flex;
 	margin-bottom: 22px;
+}
+@media screen and (min-width: 600px) and (max-width: 1200px) {
+
+	.componentsContainer {
+		flex-direction: column;
+	}
+	.tocContainer {
+		order: 0;
+	}
+	.primaryColumn {
+		order: 1;
+	}
+
 }
 .primaryColumn {
 	margin-top: 4px;

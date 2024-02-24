@@ -68,7 +68,7 @@ export default function Account({ ip, userId }) {
 												<h2>Starred</h2>
 													<ul>
 														{starred.map((star, index) => (
-														 <li key={star.id}>
+														 <li key={star.content.id}>
 															 <Link href={`/${star.content.page_type}/${star.content.slug}`} passHref>
 																 <img src={star.content.thumbnail_200x200} alt={star.content.featured_img_alt_text}/>
 																 <div>{star.content.name}</div>
@@ -82,7 +82,7 @@ export default function Account({ ip, userId }) {
 												<h2>Visit History</h2>
 												<ul>
 													{visitHistory.map((visit, index) => (
-														 <li key={visit.id}>
+														 <li key={visit.content.id}>
 															 <Link href={`/${visit.content.page_type}/${visit.content.slug}`} passHref>
 																 <img src={visit.content.thumbnail_200x200} alt={visit.content.featured_img_alt_text}/>
 																 <div>{visit.content.name}</div>
