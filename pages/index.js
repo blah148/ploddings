@@ -91,8 +91,9 @@ export default function Home({ userId, ip  }) {
 		try {
 			const { data, error } = await supabase
 				.from('content')
-				.select('id, page_type, name, thumbnail_200x200, featured_img_alt_text, slug') // Select all fields, adjust as needed
-				.eq('page_type', pageType); // Filter rows where page_type matches the pageType argument
+				.select('id, page_type, name, thumbnail_200x200, featured_img_alt_text, slug')
+				.eq('page_type', pageType)
+				.order('name', { ascending: true});
 
 			if (error) {
 				throw error;
@@ -126,9 +127,19 @@ export default function Home({ userId, ip  }) {
 						   <div></div>
 					     <Menu userId={userId} />
 						 </div>
-						 <div>
-							<button onClick={() => changeTab('categories')}>Categories</button>
-							<button onClick={() => changeTab('all')}>All</button>
+						 <div className="homeTabs">
+							<button 
+								onClick={() => changeTab('categories')}
+								className={activeTab === 'categories' ? 'activeTab' : 'nonActiveTab'}
+							>
+									Categories
+							</button>
+							<button 
+								onClick={() => changeTab('all')}
+								className={activeTab === 'all' ? 'activeTab' : 'nonActiveTab'}
+							>
+									All
+								</button>
 						</div>
 						<div className="categoriesContainer">
 							 {activeTab === 'categories' && categories.map(category => (

@@ -54,10 +54,16 @@ li.listElement {
 	margin: 8px 0;
 	border-radius: 100px;
 	font-size: 16.5px;
+	transition: transform .1s;
 }
 a.listLink {
 	display: flex;
 	width: 100%;
+}
+li.listElement:hover {
+	filter: saturate(1.2);
+	transform: scale(1.015);
+	opacity: 0.95;
 }
 img.sidebarThumbnail {
 	height: 43px;
