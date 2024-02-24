@@ -127,43 +127,44 @@ export default function Home({ userId, ip  }) {
 						   <div></div>
 					     <Menu userId={userId} />
 						 </div>
-						 <div className="homeTabs">
-							<button 
-								onClick={() => changeTab('categories')}
-								className={activeTab === 'categories' ? 'activeTab' : 'nonActiveTab'}
-							>
+						<div className="narrowedFeedBody">
+						<div className="homeTabs">
+							 <button 
+							  	onClick={() => changeTab('categories')}
+								  className={activeTab === 'categories' ? 'activeTab' : 'nonActiveTab'}
+							 >
 									Categories
-							</button>
-							<button 
-								onClick={() => changeTab('all')}
-								className={activeTab === 'all' ? 'activeTab' : 'nonActiveTab'}
-							>
+							 </button>
+							 <button 
+								 onClick={() => changeTab('all')}
+								 className={activeTab === 'all' ? 'activeTab' : 'nonActiveTab'}
+							 >
 									All
-								</button>
-						</div>
-						<div className="categoriesContainer">
-							 {activeTab === 'categories' && categories.map(category => (
-									<div key={category.id} className="categoryGroup">
-										<h2>{category.name}</h2>
-										<ul>
-										{category.content && category.content.map(content => (
-											<li key={content.id}>
-												<Link href={`/${content.page_type}/${content.slug}`} passHref>
-													<img src={content.thumbnail_200x200} alt={content.featured_img_alt_text}/>
-													<div>{content.name}</div>
-													<div className="led"></div>
-												</Link>
-											</li>
-										))}
-										</ul>
-									</div>
-								))}
-						</div>
-						<div className="categoriesContainer">
-							{activeTab === 'all' && (
-							<>
-								<div className="categoryGroup">
-								 <h2>All songs</h2>
+							 </button>
+						 </div>
+						 <div className="categoriesContainer">
+							  {activeTab === 'categories' && categories.map(category => (
+									 <div key={category.id} className="categoryGroup">
+										 <h2>{category.name}</h2>
+										 <ul>
+										 {category.content && category.content.map(content => (
+											 <li key={content.id}>
+												 <Link href={`/${content.page_type}/${content.slug}`} passHref>
+													 <img src={content.thumbnail_200x200} alt={content.featured_img_alt_text}/>
+													 <div>{content.name}</div>
+													 <div className="led"></div>
+												 </Link>
+											 </li>
+										 ))}
+										 </ul>
+									 </div>
+								 ))}
+						 </div>
+						 <div className="categoriesContainer">
+							 {activeTab === 'all' && (
+							 <>
+								 <div className="categoryGroup">
+								   <h2>All songs</h2>
 									 <ul>
 									 {songs.map(song => (
 										 <li key={song.id}>
@@ -176,7 +177,7 @@ export default function Home({ userId, ip  }) {
 									 ))}
 									 </ul>
 								</div>
-							 <div className="categoryGroup">
+							  <div className="categoryGroup">
 									 <h2>All threads</h2>
 									 <ul>
 									 {threads.map(thread => (
@@ -201,9 +202,10 @@ export default function Home({ userId, ip  }) {
 										 </li>
 									 ))}
 									 </ul>
-								</div>
-							</>
+								 </div>
+							 </>
 							)}
+						</div>
 						</div>
 					</div>
 				</div>

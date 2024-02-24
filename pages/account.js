@@ -1,8 +1,12 @@
 import Link from 'next/link';
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from './utils/supabase';
-import ThemeSelector from '../components/ThemeSelector';
 import EmailUpdater from '../components/ChangeEmail';
+import jwt from 'jsonwebtoken';
+import IpodMenuLink from '../components/ParentBackLink';
+import Menu from '../components/Menu';
+import Footer from '../components/Footer';
+import Sidebar from '../components/Sidebar';
 import useStore from '../zustandStore';
 import useGuestStore from '../zustandStore_guest';
 import CreateAccountForm from '../components/createAccount';
@@ -22,7 +26,7 @@ const verifyUserSession = (req) => {
   }
 };
 
-export default function Account({ ip, isAuthenticated, userId }) {
+export default function Account({ ip, userId }) {
 	
 	const { isLoading, startLoading, stopLoading } = useLoading();
   const [email, setEmail] = useState('');
@@ -34,60 +38,56 @@ export default function Account({ ip, isAuthenticated, userId }) {
 		fetchAndSetStarred, 
 		fetchAndSetVisitHistory,
 	} = useStore();
-	const guestStore = useGuestStore();
-	const {
-		starredCount
-	} = useGuestStore();
-		
 
 	useEffect(() => {
 		// Initialize guest data loading
-		if (!isAuthenticated) {
-			guestStore.initialize();
-		} else {
-			// For authenticated users, fetch from the server or database
-			fetchAndSetStarred(userId);
-		}
-		// Execute for both authenticated and unauthenticated users if objectLimit > 0
+		fetchAndSetStarred(userId);
 		fetchAndSetVisitHistory(userId, null, ip);
 
-	}, [userId, isAuthenticated]);
-
-	// Determine which data to display based on authentication state
-	const displayVisitHistory = visitHistory;
-	const displayStarred = !userId && !isAuthenticated ? guestStore.starred : starred;
-
-  if (isLoading) {
-    return <Loader isLoading={isLoading} />;
-  }
+	}, [userId]);
 
   return (
-    <div>
-			{!isAuthenticated && <CreateAccountForm />}
-			<EmailUpdater userId={userId} />
-      {message && <p>{message}</p>}
-		  <div>
-        <h2>Visit History</h2>
-        <ul>
-          {displayVisitHistory.map((visit, index) => (
-            <li key={index}>
-              {visit.page_type} - {visit.page_id} - {new Date(visit.visited_at).toLocaleString()}
-            </li>
-          ))}
-        </ul>
-      </div>
-			<div>
-				<h2>Starred</h2>
-					<ul>
-						{displayStarred.map((star, index) => (
-							<li key={index}>
-								{star.page_type} - {star.page_id} - {new Date(star.created_at).toLocaleString()}
-							</li>
-						))}
-					</ul>
+		<div className="bodyA">
+				<Sidebar userId={userId} ip={ip} />
+				<div className="mainFeedAll">
+						<div className="feedContainer">
+								<Loader isLoading={isLoading} />
+								<div className="mainFeed">
+										<div className="topRow">
+												<IpodMenuLink fallBack='/' />
+												<Menu userId={userId} />
+										</div>
+										<div className="narrowedFeedBody">
+											{!userId && <CreateAccountForm />}
+											{userId && (<EmailUpdater userId={userId} />)}
+											{message && <p>{message}</p>}
+											<div>
+												<h2>Visit History</h2>
+												<ul>
+													{visitHistory.map((visit, index) => (
+														<li key={index}>
+															{visit.page_type} - {visit.page_id} - {new Date(visit.visited_at).toLocaleString()}
+														</li>
+													))}
+												</ul>
+											</div>
+											<div>
+												<h2>Starred</h2>
+													<ul>
+														{starred.map((star, index) => (
+															<li key={index}>
+																{star.page_type} - {star.page_id} - {new Date(star.created_at).toLocaleString()}
+															</li>
+														))}
+													</ul>
+												</div>
+										</div>
+								</div> 
+						</div> 
+						<Footer userId={userId} />
 				</div>
-				<ThemeSelector />
-			</div>
+		</div>
+
   );
 }
 
@@ -99,7 +99,6 @@ export async function getServerSideProps({ params, req }) {
   return {
     props: {
       ip,
-      isAuthenticated: !!userSession,
       userId: userSession?.id || null,
     },
   };
