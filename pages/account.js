@@ -4,6 +4,7 @@ import { supabase } from './utils/supabase';
 import EmailUpdater from '../components/ChangeEmail';
 import jwt from 'jsonwebtoken';
 import IpodMenuLink from '../components/ParentBackLink';
+import ThemeSelector from '../components/ThemeSelector';
 import Menu from '../components/Menu';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
@@ -58,29 +59,40 @@ export default function Account({ ip, userId }) {
 												<Menu userId={userId} />
 										</div>
 										<div className="narrowedFeedBody">
+											<h1>My profile</h1>
+											<h2>Save settings</h2>
 											{!userId && <CreateAccountForm />}
 											{userId && (<EmailUpdater userId={userId} />)}
 											{message && <p>{message}</p>}
-											<div>
-												<h2>Visit History</h2>
-												<ul>
-													{visitHistory.map((visit, index) => (
-														<li key={index}>
-															{visit.page_type} - {visit.page_id} - {new Date(visit.visited_at).toLocaleString()}
-														</li>
-													))}
-												</ul>
-											</div>
-											<div>
+											<div className="categoryGroup">
 												<h2>Starred</h2>
 													<ul>
 														{starred.map((star, index) => (
-															<li key={index}>
-																{star.page_type} - {star.page_id} - {new Date(star.created_at).toLocaleString()}
-															</li>
+														 <li key={star.id}>
+															 <Link href={`/${star.content.page_type}/${star.content.slug}`} passHref>
+																 <img src={star.content.thumbnail_200x200} alt={star.content.featured_img_alt_text}/>
+																 <div>{star.content.name}</div>
+																 <div className="led"></div>
+															 </Link>
+														 </li>
 														))}
 													</ul>
-												</div>
+											</div>
+											<div className="categoryGroup">
+												<h2>Visit History</h2>
+												<ul>
+													{visitHistory.map((visit, index) => (
+														 <li key={visit.id}>
+															 <Link href={`/${visit.content.page_type}/${visit.content.slug}`} passHref>
+																 <img src={visit.content.thumbnail_200x200} alt={visit.content.featured_img_alt_text}/>
+																 <div>{visit.content.name}</div>
+																 <div className="led"></div>
+															 </Link>
+														 </li>
+													))}
+												</ul>
+												<ThemeSelector />
+											</div>
 										</div>
 								</div> 
 						</div> 

@@ -34,14 +34,16 @@ export default function CreateAccountForm() {
 
   return (
     <div>
-      <h1>Create Account</h1>
-      <input
-        type="email"
-        placeholder="Enter your email"
-        value={email}
-        onChange={(e) => setEmail(e.target.value)}
-      />
-      <button onClick={handleCreateAccount}>Create Account</button>
+			<form>
+				<input
+					type="email"
+					className="inputLabel"
+					placeholder="Enter your email"
+					value={email}
+					onChange={(e) => setEmail(e.target.value)}
+				/>
+				<button onClick={handleCreateAccount}>Create Account</button>
+			</form>
     </div>
   );
 }

@@ -54,7 +54,6 @@ const EmailUpdater = ({ userId }) => {
   return (
     <div>
       <form onSubmit={handleSubmit}>
-        <div>
           <label htmlFor="email">Email:</label>
           <input
             id="email"
@@ -63,7 +62,6 @@ const EmailUpdater = ({ userId }) => {
             onChange={(e) => setEmail(e.target.value)}
             disabled={loading}
           />
-        </div>
         <button type="submit" disabled={loading}>
           {loading ? 'Updating...' : 'Update Email'}
         </button>

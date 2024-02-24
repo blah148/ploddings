@@ -7,7 +7,7 @@ const ThemeSelector = () => {
 
   return (
     <div>
-      <h2>Select Theme Mode</h2>
+      <h2>Select Theme</h2>
       <label>
         <input
           type="radio"
