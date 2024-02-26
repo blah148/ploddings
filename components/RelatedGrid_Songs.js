@@ -57,7 +57,7 @@ function RelatedContent({ id, setRelatedContentLength }) {
 									src={item.content.thumbnail_200x200 ? item.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
 									alt={item.content.featured_img_alt_text}
 								/>
-								<div className="sidebarName">{item.content.name.length > 50 ? item.content.name.slice(0, 26) + '...' : item.content.name}</div>
+								<div className="sidebarName">{item.content.name.length > 39 ? item.content.name.slice(0, 39) + '...' : item.content.name}</div>
 								<div className={`led ${getLedClassName(item.content.page_type)}`}></div>
 							</a>
 						</li>

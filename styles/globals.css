@@ -21,15 +21,28 @@ body {
 	.feedContainer {
 		flex-direction: column;
 	}
+	
+	div.mainFeed {
+		padding: 12px;
+	}
 }
 .mainFeed {
 	width: 100%;
 	padding: 12px 12px 0 12px;
 }
-.narrowedFeedBody {
-	min-height: 70vh;
-	width: 85%;
+
+@media screen and (max-width: 1024px) {
+	.narrowedFeedBody {
+		width: 95%;
+	}
 }
+
+@media screen and (min-width: 1025px) {
+	.narrowedFeedBody {
+		width: 80%;
+	}
+}
+
 form {
 	display: flex;
 	flex-direction: column;
@@ -149,7 +162,8 @@ img.sidebarThumbnail {
 	border-radius: 4px;
 }
 div.sidebarName {
-margin: auto 0;
+  margin: auto 0;
+  font-size: 14px;
 }
 div.led {
   width: 13px;
@@ -383,14 +397,13 @@ div.footerContainer {
 div.footer_higher-row {
   display: flex;
   padding: 0 0 22px 0;
-  justify-content: center;
+  justify-content: space-around;
   width: auto;
   border-bottom: 1px solid #a6a6a6;
 }
 div.footer_column {
   display: flex;
   flex-direction: column;
-  width: 14vw;
 }
 h2.footer_header {
   font-size: 18px;
