@@ -65,7 +65,7 @@ export default function Account({ ip, userId }) {
 											{userId && (<EmailUpdater userId={userId} />)}
 											{message && <p>{message}</p>}
 											<div className="categoryGroup">
-												<h2>Starred</h2>
+												<h2 id="starred">Starred</h2>
 													<ul>
 														{starred.map((star, index) => (
 														 <li key={star.content.id}>
@@ -79,7 +79,7 @@ export default function Account({ ip, userId }) {
 													</ul>
 											</div>
 											<div className="categoryGroup">
-												<h2>Visit History</h2>
+												<h2 id="visit-history">Visit History</h2>
 												<ul>
 													{visitHistory.map((visit, index) => (
 														 <li key={visit.content.id}>
