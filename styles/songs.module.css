@@ -12,8 +12,14 @@ div.bodyA {
 	height: 20px;
 	margin: 0 0 2px 12px;
 }
+.songNameContainer svg:hover path {
+	fill: orange;
+}
 .parentInfoLinkContainer {
 	display: inline-block;
+}
+.parentInfoLinkContainer:hover {
+	opacity: 0.7;
 }
 .parentInfoLinkContents {
 	display: flex;
@@ -44,7 +50,7 @@ div.bodyA {
 	text-align: center;
 }
 .tuningButton:hover {
-	opacity: 0.8;
+	opacity: 0.7;
 }
 .chevronChapters {
 	fill: black;
@@ -203,6 +209,9 @@ div.bodyA {
 .headerContainer svg {
 	width: 26px;
 	padding: 12px;
+}
+.headerContainer svg:hover {
+	opacity: 0.75;
 }
 svg.victrola {
 	width: 20px;

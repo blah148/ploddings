@@ -2,6 +2,7 @@ import { supabase } from '../pages/utils/supabase';
 import { useEffect, useState } from 'react';
 import { useLoading } from '../context/LoadingContext';
 import styles from '../styles/songs.module.css';
+import Link from 'next/link';
 
 function RelatedContent({ id, setRelatedContentLength }) {
   const [relatedContent, setRelatedContent] = useState([]);
@@ -45,13 +46,12 @@ function RelatedContent({ id, setRelatedContentLength }) {
 	}
 	
 	return (
-		<div>
+		<div className="categoryGroup">
 			{relatedContent.length>0 && (
-				<>
-				<ul className="contentFeed">
+				<ul>
 					{relatedContent.map((item) => (
 						<li key={item.content.id}>
-							<a className="listLink" href={`/${item.content.page_type}/${item.content.slug}`}>
+							<Link className="listLink" href={`/${item.content.page_type}/${item.content.slug}`} passHref>
 								<img
 									className="sidebarThumbnail"
 									src={item.content.thumbnail_200x200 ? item.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
@@ -59,11 +59,10 @@ function RelatedContent({ id, setRelatedContentLength }) {
 								/>
 								<div className="sidebarName">{item.content.name.length > 39 ? item.content.name.slice(0, 39) + '...' : item.content.name}</div>
 								<div className={`led ${getLedClassName(item.content.page_type)}`}></div>
-							</a>
+							</Link>
 						</li>
 					))}
 				</ul>
-			</>
 			)}
 		</div>
 	);

@@ -36,7 +36,7 @@ const TableDataFetcher = ({ threadId }) => {
 
   // Directly render the fetched data within the component
   return (
-    <div className={styles.threadFeed}>
+    <div className="categoryGroup">
       {childData.length > 0 ? (
         <ul>
           {childData.map((item, index) => (

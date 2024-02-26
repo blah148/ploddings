@@ -1,8 +1,8 @@
 /* Styles for viewports below 1024 pixels */
 @media (max-width: 1024px) {
   .loaderContainer {
-    height: 14px; /* Adjusted to your specific needs */
-    margin: auto 0 auto 12px;
+    height: 7px; /* Adjusted to your specific needs */
+    margin: auto 0 12px 0;
   }
   
   .ldsEllipsis {

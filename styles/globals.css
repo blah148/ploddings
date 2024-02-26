@@ -8,22 +8,24 @@ body {
 .loaderComponent {
 	width: 100px;
 }
+/*************
+**** MainFeed *****
+*************/
+
 .mainFeedAll {
 	display: block ;
 	overflow-y: auto;
 	height: 100vh;
 	width: 100%;
 }
-.feedContainer {
-	display: flex;
-}
 @media screen and (max-width: 1024px) {
 	.feedContainer {
 		flex-direction: column;
+		padding: 0 12px;
 	}
 	
 	div.mainFeed {
-		padding: 12px;
+		padding: 0;
 	}
 }
 .mainFeed {
@@ -116,7 +118,16 @@ div.topRow {
 	display: flex;
 	justify-content: space-between;
 	align-items: center;
-	margin-bottom: 18px;
+}
+@media (min-width: 1025px) {
+	div.topRow {
+		margin-bottom: 18px;
+	}
+}
+@media (max-width: 1024px) {
+	div.topRow {
+		margin-bottom: 0px;
+	}
 }
 @media screen and (min-width: 1025px) {
 	.narrowedFeedBody {
@@ -254,6 +265,7 @@ div.categoryGroup {
 div.categoryGroup ul {
 	list-style: none;
 	padding: 0;
+	margin: 0 0 16px 0;
 	max-height: 260px;
 	overflow-x: hidden;
 	overflow-y: auto;
@@ -318,6 +330,10 @@ div.categoryGroup img {
   font-style: normal;
 }
 
+/******************
+***** Menu Button ***
+******************/
+
 svg.menuIcon {
   width: 24px;
   height: 24px;
@@ -325,7 +341,18 @@ svg.menuIcon {
   padding: 18px;
 	display: block;
   margin-left: auto;
-  margin-right: 28px;
+}
+
+@media (min-width 1025px) {
+	svg.menuIcon {
+		margin-right: 28px;
+	}
+}
+
+@media (max-width 1024px) {
+	svg.menuIcon {
+		margin-right: 0px
+	}
 }
 
 svg.menuIcon:hover path {
