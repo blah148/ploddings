@@ -15,6 +15,7 @@
     "axios": "^1.6.7",
     "cookie": "^0.6.0",
     "dotenv": "^16.4.1",
+    "fluent-ffmpeg": "^2.1.2",
     "jsonwebtoken": "^9.0.2",
     "next": "14.1.0",
     "openai": "^4.26.0",
@@ -27,6 +28,8 @@
     "react-youtube": "^10.1.0",
     "soundtouchjs": "^0.1.30",
     "typed.js": "^2.1.0",
+    "youtube-dl-exec": "^2.5.7",
+    "ytdl-core": "^4.11.5",
     "zustand": "^4.5.0"
   },
   "devDependencies": {

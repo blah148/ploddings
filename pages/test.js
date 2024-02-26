@@ -1,9 +1,10 @@
-// pages/index.js or any other component file
 import React, { useState } from 'react';
+import SlowDownerComponent from '../components/slowDownerComponent';
 
 export default function YoutubeDl() {
-
   const [url, setUrl] = useState('');
+  // Add a new state variable to store the converted MP3 link
+  const [mp3Link, setMp3Link] = useState('');
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -17,9 +18,10 @@ export default function YoutubeDl() {
       });
 
       if (response.ok) {
-        // Handle response data, possibly the link to download the MP3
         const data = await response.json();
-        console.log(data);
+        console.log('testing the response to the front-end', data);
+        // Update the state with the converted MP3 link
+        setMp3Link(data.url);
         alert('Conversion successful! Check the console for details.');
       } else {
         alert('Failed to convert the video.');
@@ -43,6 +45,8 @@ export default function YoutubeDl() {
         />
         <button type="submit">Convert</button>
       </form>
+      {/* Conditionally render SlowDownerComponent only if mp3Link is not empty */}
+      {mp3Link && <SlowDownerComponent dropbox_mp3_link={mp3Link} />}
     </div>
   );
 }
