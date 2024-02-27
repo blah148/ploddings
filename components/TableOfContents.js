@@ -36,7 +36,7 @@ const TableOfContents = ({ htmlContent, onUpdate }) => {
     <div className={styles.tableOfContents}>
       <h2>Table of Contents</h2>
         {toc.map((item) => (
-          <a href={`#${item.id}`} className={styles.songTocItem}>{item.title}</a>
+          <a href={`#${item.id}`} key={item.id} className={styles.songTocItem}>{item.title}</a>
         ))}
     </div>
   );

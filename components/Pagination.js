@@ -13,9 +13,9 @@ export default function Pagination({ sibling_previous, sibling_next }) {
 
   useEffect(() => {
     const fetchSiblingPages = async () => {
-			startLoading();
       // Fetch previous page
       if (sibling_previous) {
+				startLoading();
         const { data: previousData, error: previousError } = await supabase
           .from('content')
           .select('pagination_title, slug, page_type')
@@ -24,11 +24,13 @@ export default function Pagination({ sibling_previous, sibling_next }) {
 
         if (!previousError && previousData) {
           setPreviousPage(previousData);
+					stopLoading();
         }
       }
 
       // Fetch next page
       if (sibling_next) {
+				startLoading();
         const { data: nextData, error: nextError } = await supabase
           .from('content')
           .select('pagination_title, slug, page_type')
@@ -37,9 +39,9 @@ export default function Pagination({ sibling_previous, sibling_next }) {
 
         if (!nextError && nextData) {
           setNextPage(nextData);
+					stopLoading();
         }
 				
-				stopLoading();
       }
     };
 

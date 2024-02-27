@@ -103,6 +103,7 @@ div.bodyA {
 		order: 0;
 		padding: 0;
 		border-left: none;
+		margin: 0;
 	}
 	.primaryColumn {
 		order: 1;
@@ -124,9 +125,17 @@ div.bodyA {
 	box-shadow: 0px 8px 25px hsla(255, 24%, 91%, 1);
 }
 .blogBodyText figcaption {
-	text-align: center;
+	text-align: left;
 	font-size: 13px;
 	opacity: 0.9;
+}
+.blogBodyText figure {
+	padding: 0 !important;
+}
+.blogBodyText iframe {
+	width: 100%;
+	min-height: 300px;
+	
 }
 .tocContainer {
 	max-width: 40vw;
@@ -150,6 +159,9 @@ div.bodyA {
 	font-size: 17px;
 	margin: 0 0 5px 0;
 }
+.tableOfContents a:hover {
+	opacity: 0.7;
+}
 .tabButton {
 	margin-right: 12px;
 }
@@ -161,10 +173,15 @@ div.bodyA {
 	margin: 8px 0;
 	font-weight: 400;
 }
+.paginationBlock {
+	display: flex;
+	justify-content: space-between;
+}
 .paginationContainer {
 	display: flex;
 	justify-content: space-between;
 	margin: 18px 0 24px 0;
+	width: 100%;
 }
 .paginationBlog a {
 	display: flex;

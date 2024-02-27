@@ -18,6 +18,13 @@ body {
 	height: 100vh;
 	width: 100%;
 }
+@media (min-width: 1025px) {
+	.feedContainer {
+		display: flex;
+		flex-direction: row;
+		min-height: 70vh;
+	}
+}
 @media screen and (max-width: 1024px) {
 	.feedContainer {
 		flex-direction: column;
@@ -41,7 +48,7 @@ body {
 
 @media screen and (min-width: 1025px) {
 	.narrowedFeedBody {
-		width: 80%;
+		width: 90%;
 	}
 }
 /* /slow-downer */
@@ -129,12 +136,6 @@ div.topRow {
 		margin-bottom: 0px;
 	}
 }
-@media screen and (min-width: 1025px) {
-	.narrowedFeedBody {
-		width: 80%;
-	}
-}
-
 /*******************
 *****  MENU ********
 ********************
@@ -273,6 +274,10 @@ div.categoryGroup ul {
 	box-shadow: 0px 8px 25px hsl(250.9, 24.4%, 91.2%);
   border: 2px solid #f0f0f0de;
   border-radius: 10px;
+}
+div.categoryGroup.threads ul {
+	overflow-y: visible;
+	max-height: none;
 }
 .categoryGroup li {
 	transition: transform .1s;

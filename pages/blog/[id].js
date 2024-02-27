@@ -82,21 +82,24 @@ return (
         <Loader isLoading={isLoading} />
         <div className="mainFeed">
           <div className="topRow">
-            <IpodMenuLink threadData={threadData} fallBack='blog' />
+            <IpodMenuLink threadData={threadData} fallBack='#blog' />
             <Menu userId={userId} />
           </div>
           <div className={styles.songNameContainer}>
             <h1>{blogData.name}</h1>
             <FavoriteButton userId={userId} id={blogData.id} ip={ip} />
           </div>
-          <ParentInfoLink threadData={threadData} fallBack='blog' />
+          <ParentInfoLink threadData={threadData} fallBack='#blog' />
           <Dropdown id={blogData.id} />
           <div>Date posted: {formatDate(blogData.published_date)}</div>
           <div className={styles.bottomBorder}></div>
           <div className={styles.componentsContainer}>
             <div className={styles.primaryColumn}>
               <div className={styles.blogBodyText} dangerouslySetInnerHTML={{ __html: updatedHtmlContent }} />
-              {blogData.sibling_previous || blogData.sibling_next && (<Pagination sibling_previous={blogData.sibling_previous} sibling_next={blogData.sibling_next} />)}
+							<div className={styles.paginationBlock}>
+                {blogData.sibling_previous && (<Pagination sibling_previous={blogData.sibling_previous} />)}
+                {blogData.sibling_next && (<Pagination sibling_next={blogData.sibling_next} />)}
+							</div>
             </div>
 						<div className={styles.tocContainer}>
               <TableOfContents htmlContent={blogData.body_text} onUpdate={handleContentUpdate} />
