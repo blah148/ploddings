@@ -26,6 +26,9 @@ a.returnHome {
 	letter-spacing: 0.8px;
 	padding: 7px 16px;
 }
+a.returnHome:hover {
+	opacity: 0.8;
+}
 a.upLevel {
 	display: block;
 	width: 50px;
