@@ -94,7 +94,6 @@ async function FetchContentByCategory() {
         
         // Update the component state with the transformed data
         setCategories(categoriesArray);
-        console.log('here\'s the mammoth data', categoriesArray);
     } catch (error) {
         console.error('Error fetching content by category:', error.message);
     } finally {
@@ -102,7 +101,7 @@ async function FetchContentByCategory() {
     }
 }
 
-  return (
+return (
 
     <div className="bodyA">
 			 <Sidebar userId={userId} ip={ip} />
@@ -120,17 +119,30 @@ async function FetchContentByCategory() {
 					     <Menu userId={userId} />
 						 </div>
 						<div className="narrowedFeedBody">
-							<div className="categoriesContainer">
-								{categories.map(category => ( // Iterate over categories
-									<div key={category.id} className="categoryGroup">
-										<h2>{category.name}</h2>
-										<ul>
+							 <div className="categoriesContainer">
+								 {categories.map(category => ( // Iterate over categories
+									  <div key={category.id} className="categoryGroup">
+										  <h2>{category.name}</h2>
+										  <ul>
 											{category.content && category.content.map(content => (
 												<li key={content.id}>
-													<Link href={`/${content.page_type}/${content.slug}`} passHref>
-														<img src={content.thumbnail_200x200} alt={content.featured_img_alt_text}/>
-														<div>{content.name}</div>
-													</Link>
+													{content.matched_content_name ? (
+														<>
+															<Link href={`/${content.page_type}/${content.slug}`} passHref>
+																<img src={content.thumbnail_200x200} alt={content.featured_img_alt_text} />
+																<div>{content.name}</div>
+															</Link>
+															<Link href={`/${content.matched_page_type}/${content.matched_slug}`} passHref>
+																<img src={content.matched_thumbnail_200x200} alt={content.matched_featured_img_alt_text} />
+																<div>{content.matched_content_name}</div>
+															</Link>
+														</>
+													) : (
+														<Link href={`/${content.page_type}/${content.slug}`} passHref>
+															<img src={content.thumbnail_200x200} alt={content.featured_img_alt_text} />
+															<div>{content.name}</div>
+														</Link>
+													)}
 												</li>
 											))}
 										</ul>
