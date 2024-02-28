@@ -51,34 +51,6 @@ export default function Thread({ userId, ip, threadData }) {
 	  logPageVisit();
 	}, [userId, ip]);
 
-	function parseBodyText(htmlContent) {
-	  const parser = new DOMParser();
-	  const doc = parser.parseFromString(htmlContent, 'text/html');
-	  const pTags = doc.querySelectorAll('p');
-	  let firstPTag = '';
-	  let remainingPTags = '';
-
-	  if (pTags.length > 0) {
-	    const firstPTagElement = pTags[0].cloneNode(true);
-	    firstPTagElement.innerHTML += '...';
-	    firstPTag = firstPTagElement.outerHTML;
-
-	    if (pTags.length > 1) {
-	      const firstOfRemainingPTagsElement = pTags[1].cloneNode(true);
-	      firstOfRemainingPTagsElement.innerHTML = '...' + firstOfRemainingPTagsElement.innerHTML;
-	      remainingPTags = [firstOfRemainingPTagsElement.outerHTML, ...Array.from(pTags).slice(2).map(el => el.outerHTML)].join('');
-	    }
-	  }
-
-	  return { firstPTag, remainingPTags };
-	}
-
-	useEffect(() => {
-	  if (threadData.body_text) {
-	    const { firstPTag, remainingPTags } = parseBodyText(threadData.body_text);
-	    setParsedContent({ firstPTag, remainingPTags });
-	  }
-	}, [threadData.body_text]);	
   return (
     <div className="bodyA">
 			<Sidebar userId={userId} ip={ip} />
@@ -90,24 +62,25 @@ export default function Thread({ userId, ip, threadData }) {
 							<IpodMenuLink fallBack='/' />
 							<Menu userId={userId} />
 						</div>
-					  <div className={styles.headerContainer}>		
-							<img alt={threadData.featured_img_alt_text ? threadData.featured_img_alt_text : `${threadData.name} guitar portrait`} src={threadData.link_3 || 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_550px/default_550px.webp'} />
-							<div className={styles.rightColumn}>
-								<div className={styles.songNameContainer}>
-									<h1>{threadData.name}</h1>
-									<FavoriteButton userId={userId} id={threadData.id} ip={ip} />
+						<div className="narrowedFeedBody">
+							<div className={styles.headerContainer}>		
+								<img alt={threadData.featured_img_alt_text ? threadData.featured_img_alt_text : `${threadData.name} guitar portrait`} src={threadData.link_3 || 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_550px/default_550px.webp'} />
+								<div className={styles.rightColumn}>
+									<div className={styles.songNameContainer}>
+										<h1>{threadData.name}</h1>
+										<FavoriteButton userId={userId} id={threadData.id} ip={ip} />
+									</div>
+									{threadData.lyrics && (<div className={styles.lifeAndDeath}>{threadData.lyrics}</div>)}
+									<div className={styles.iconContainer}>
+										{threadData.link_1 && (<WikipediaIcon link={threadData.link_1} />)}
+										{threadData.link_2 && (<VictrolaIcon link={threadData.link_2} />)}
+									</div>
+									<div className={styles.storyText}>{threadData.body_text}</div>
 								</div>
-								{threadData.lyrics && (<div className={styles.lifeAndDeath}>{threadData.lyrics}</div>)}
-								<div className={styles.iconContainer}>
-									{threadData.link_1 && (<WikipediaIcon link={threadData.link_1} />)}
-									{threadData.link_2 && (<VictrolaIcon link={threadData.link_2} />)}
-								</div>
-								<div dangerouslySetInnerHTML={{ __html: parsedContent.firstPTag}} className={styles.storyText}/>
 							</div>
+							<h2>MuseScore tabs</h2>
+							<TableDataFetcher threadId={threadData.id} />
 						</div>
-						<h2>MuseScore tabs</h2>
-						<TableDataFetcher threadId={threadData.id} />
-						<div dangerouslySetInnerHTML={{ __html: parsedContent.remainingPTags }} className={`${styles.storyText} ${styles.endingStory}`}/>
 					</div>
 				</div>
 				<Footer userId={userId} />

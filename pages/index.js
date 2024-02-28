@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import Logout from '../components/Logout';
 import React, { useEffect, useState } from 'react';
 import { supabase } from './utils/supabase';
 import Loader from '../components/Loader';
@@ -22,50 +21,19 @@ const verifyUserSession = (req) => {
   }
 };
 
-export default function Home({ userId, ip  }) {
+export default function Home({ userId, ip }) {
 
   const [categories, setCategories] = useState([]);
-	const [threads, setThreads] = useState([]);
-	const [songs, setSongs] = useState([]);
-	const [blogs, setBlogs] = useState([]);
-
-  const [activeTab, setActiveTab] = useState('categories');
-	const [loadedTabs, setLoadedTabs] = useState({ categories: false, all: false });
 	const { isLoading, startLoading, stopLoading } = useLoading();
 
-  // Effect hook to manage activeTab state with localStorage
-  useEffect(() => {
-    const savedTab = localStorage.getItem('activeTab');
-    if (savedTab && savedTab !== activeTab) {
-      setActiveTab(savedTab);
-    } else {
-      // Potentially set a default tab and load its data
-      setActiveTab('categories');
-    }
-  }, []);
-
-  useEffect(() => {
-    const fetchDataForTab = async (tab) => {
-      if (loadedTabs[tab]) {
-        // If the data for this tab is already loaded, do nothing
-        return;
-      }
-      startLoading();
-      if (tab === 'categories') {
-				await FetchContentByCategory();
-      } else if (tab === 'all') {
-				const tempThreads = await fetchContentByPageType('threads');
-				setThreads(tempThreads);
-				const tempSongs = await fetchContentByPageType('songs');
-				setSongs(tempSongs);
-				const tempBlogs = await fetchContentByPageType('blog');
-				setBlogs(tempBlogs);
-      }
-      stopLoading();
-      setLoadedTabs(prev => ({ ...prev, [tab]: true }));
-    };
-    fetchDataForTab(activeTab);
-  }, [activeTab]);
+useEffect(() => {
+  const fetchDataForTab = async () => { // Added function name
+    startLoading();
+    await FetchContentByCategory();
+    stopLoading();
+  };
+  fetchDataForTab();
+}, []);
 
 	async function FetchContentByCategory() {
 		try {
@@ -86,34 +54,6 @@ export default function Home({ userId, ip  }) {
 		}
 	}
 
-	async function fetchContentByPageType(pageType) {
-		try {
-			const { data, error } = await supabase
-				.from('content')
-				.select('id, page_type, name, thumbnail_200x200, featured_img_alt_text, slug')
-				.eq('page_type', pageType)
-				.order('name', { ascending: true});
-
-			if (error) {
-				throw error;
-			}
-
-			return data;
-		} catch (error) {
-			console.error('Error fetching content by page type:', error.message);
-			return []; // Return an empty array in case of error
-		}
-	}
-
-  // Change active tab and clear the previous tab's data to release memory
-  const changeTab = (newTab) => {
-    setActiveTab(newTab);
-		localStorage.setItem('activeTab', newTab);
-//    if (newTab !== 'categories') setCategories([]);
-//    if (newTab !== 'threads') setThreads([]);
-//    if (newTab !== 'songs') setSongs([]);
-  };
-
   return (
 
     <div className="bodyA">
@@ -132,24 +72,23 @@ export default function Home({ userId, ip  }) {
 					     <Menu userId={userId} />
 						 </div>
 						<div className="narrowedFeedBody">
-						<div className="categoriesContainer">
-						  {activeTab === 'categories' && categories.map(category => (
-								 <div key={category.id} className="categoryGroup">
-									 <h2>{category.name}</h2>
-									 <ul>
-									   {category.content && category.content.map(content => (
-											 <li key={content.id}>
-												 <Link href={`/${content.page_type}/${content.slug}`} passHref>
-													 <img src={content.thumbnail_200x200} alt={content.featured_img_alt_text}/>
-													 <div>{content.name}</div>
-													 <div className="led"></div>
-												 </Link>
-											 </li>
-										 ))}
-										 </ul>
-									 </div>
-								 ))}
-						 </div>
+							<div className="categoriesContainer">
+								{categories.map(category => ( // Iterate over categories
+									<div key={category.id} className="categoryGroup">
+										<h2>{category.name}</h2>
+										<ul>
+											{category.content && category.content.map(content => (
+												<li key={content.id}>
+													<Link href={`/${content.page_type}/${content.slug}`} passHref>
+														<img src={content.thumbnail_200x200} alt={content.featured_img_alt_text}/>
+														<div>{content.name}</div>
+													</Link>
+												</li>
+											))}
+										</ul>
+									</div>
+								))}
+							</div>
 						</div>
 					</div>
 				</div>
