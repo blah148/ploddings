@@ -35,24 +35,55 @@ useEffect(() => {
   fetchDataForTab();
 }, []);
 
-	async function FetchContentByCategory() {
-		try {
-			// Perform a query that joins 'categories' and 'content' tables on the 'id' and 'category_id' fields, respectively.
-			const { data, error } = await supabase
-				.from('categories')
-				.select('id, name, content!inner(category_id, id, name, page_type, thumbnail_200x200, featured_img_alt_text, slug)')
-				.order('name', { foreignTable: 'content', ascending: true });
+async function FetchContentByCategory() {
+    startLoading(); // Signal that loading has started
 
-			if (error) throw error;
+    try {
+        // Call the PostgreSQL function
+        const { data, error } = await supabase.rpc('fetch_categories_with_content');
 
-			// The result will be an array of categories, each with a 'content' array containing the content items belonging to that category.
-			setCategories(data);
-			return data;
-		} catch (error) {
-			console.error('Error fetching content by category:', error.message);
-			return [];
-		}
-	}
+        if (error) {
+            throw error;
+        }
+
+        // Transform the data into the desired structure 
+        const categoriesMap = data.reduce((acc, item) => {
+            // If the category hasn't been added to the accumulator, add it
+            if (!acc[item.category_id]) {
+                acc[item.category_id] = {
+                    id: item.category_id,
+                    name: item.category_name,
+                    content: [],
+                };
+            }
+
+            // Add the content item to the appropriate category
+            acc[item.category_id].content.push({
+                id: item.content_id,
+                name: item.content_name,
+                page_type: item.content_type,
+                matched_name: item.matched_content_name, // New variable for matched content name
+                thumbnail_200x200: item.thumbnail_200x200, // New variable for thumbnail URL
+                featured_img_alt_text: item.featured_img_alt_text, // Include the alt text for the featured image
+                slug: item.slug, // Include the slug for content routing
+                // Add other content fields as necessary
+            });
+            
+            return acc;
+        }, {});
+        
+        // Convert the categoriesMap object back into an array
+        const categoriesArray = Object.values(categoriesMap);
+        
+        // Update the component state with the transformed data
+        setCategories(categoriesArray);
+        console.log('here\'s the mammoth data', categoriesArray);
+    } catch (error) {
+        console.error('Error fetching content by category:', error.message);
+    } finally {
+        stopLoading(); // Signal that loading has completed
+    }
+}
 
   return (
 
