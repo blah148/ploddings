@@ -204,6 +204,26 @@ ul.contentFeed li {
 	font-size: 13px;
 	max-width: 400px;
 }
+@media (min-width: 1025px) {
+	li.doubleRow {
+		display: grid;
+		align-content: center;
+		width: 100%;
+		grid-template-columns: 1.95fr 1.4fr 0.5fr;
+	}
+}
+li.doubleRow .artistImage {
+	border-radius: 100px;
+}
+@media (max-width: 1024px) {
+	.artistName {
+		display: none;
+	}
+	li.doubleRow {
+		display: grid;
+		grid-template-columns: 2.2fr 1.2fr 0.5fr;
+	}
+} 
 a.listLink {
 	display: flex;
 	width: 100%;

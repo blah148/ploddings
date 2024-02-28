@@ -125,22 +125,24 @@ return (
 										  <h2>{category.name}</h2>
 										  <ul>
 											{category.content && category.content.map(content => (
-												<li key={content.id}>
+												<li key={content.id} className={content.matched_content_name ? "doubleRow" : "singleRow"}>
 													{content.matched_content_name ? (
 														<>
 															<Link href={`/${content.page_type}/${content.slug}`} passHref>
-																<img src={content.thumbnail_200x200} alt={content.featured_img_alt_text} />
+																<img src={content.thumbnail_200x200} className="thumbnailImage" alt={content.featured_img_alt_text} />
 																<div>{content.name}</div>
 															</Link>
 															<Link href={`/${content.matched_page_type}/${content.matched_slug}`} passHref>
-																<img src={content.matched_thumbnail_200x200} alt={content.matched_featured_img_alt_text} />
-																<div>{content.matched_content_name}</div>
+																<img src={content.matched_thumbnail_200x200} className="artistImage" alt={content.matched_featured_img_alt_text} />
+																<div className="artistName">{content.matched_content_name}</div>
 															</Link>
+															<Link href={`/${content.page_type}/${content.slug}`} passHref><div className="led"></div></Link>
 														</>
 													) : (
 														<Link href={`/${content.page_type}/${content.slug}`} passHref>
-															<img src={content.thumbnail_200x200} alt={content.featured_img_alt_text} />
+															<img src={content.thumbnail_200x200} className="thumbnailImage" alt={content.featured_img_alt_text} />
 															<div>{content.name}</div>
+															<div className="led"></div>
 														</Link>
 													)}
 												</li>
