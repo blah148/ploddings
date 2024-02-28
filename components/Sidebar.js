@@ -41,16 +41,6 @@ export default function Sidebar({ userId, ip }) {
     fetchAndSetStarred(userId, groupMax, ip);
   }, [userId, fetchAndSetStarred, groupMax, ip]);
 
-  // Function to determine class name based on page type
-  function getLedClassName(pageType) {
-    switch (pageType.toLowerCase()) {
-      case 'songs': return styles.songsLed;
-      case 'threads': return styles.threadsLed;
-      case 'blog': return styles.blogLed;
-      default: return '';
-    }
-  }	
-
 	return (
 		<div className={styles.sidebarContainer}>
 			<div className={styles.sidebarHeader}>
@@ -74,7 +64,7 @@ export default function Sidebar({ userId, ip }) {
 											alt={star.content.featured_img_alt_text}
 										/>
 										<div className={styles.sidebarName}>{star.content.name.length > 26 ? star.content.name.slice(0, 26) + '...' : star.content.name}</div>
-										<div className={`${styles.led} ${getLedClassName(star.content.page_type)}`}></div>
+										<div className="led"></div>
 									</a>
 								</li>
 							))}
@@ -93,7 +83,7 @@ export default function Sidebar({ userId, ip }) {
 										alt={visit.content.featured_img_alt_text}
 									/>
 									<div className={styles.sidebarName}>{visit.content.name.length > 26 ? visit.content.name.slice(0, 26) + '...' : visit.content.name}</div>
-									<div className={`${styles.led} ${getLedClassName(visit.content.page_type)}`}></div>
+									<div className="led"></div>
 								</a>
 							</li>
 						))}
@@ -111,7 +101,7 @@ export default function Sidebar({ userId, ip }) {
 										alt={watch.content.featured_img_alt_text}
 									/>
 									<div className={styles.sidebarName}>{watch.content.name.length > 26 ? watch.content.name.slice(0, 26) + '...' : watch.content.name}</div>
-									<div className={`${styles.led} ${getLedClassName(watch.content.page_type)}`}></div>
+									<div className="led"></div>
 								</a>
 							</li>
 						))}
