@@ -56,18 +56,35 @@ async function FetchContentByCategory() {
                     content: [],
                 };
             }
-
+            
             // Add the content item to the appropriate category
-            acc[item.category_id].content.push({
-                id: item.content_id,
-                name: item.content_name,
-                page_type: item.content_type,
-                matched_name: item.matched_content_name, // New variable for matched content name
-                thumbnail_200x200: item.thumbnail_200x200, // New variable for thumbnail URL
-                featured_img_alt_text: item.featured_img_alt_text, // Include the alt text for the featured image
-                slug: item.slug, // Include the slug for content routing
-                // Add other content fields as necessary
-            });
+            // Check if it's a song to include matched details
+            if (item.content_type === 'songs' && item.matched_content_name) {
+                acc[item.category_id].content.push({
+                    id: item.content_id,
+                    name: item.content_name,
+                    page_type: item.content_type,
+                    thumbnail_200x200: item.thumbnail_200x200,
+                    featured_img_alt_text: item.featured_img_alt_text,
+                    slug: item.slug,
+                    matched_content_name: item.matched_content_name,
+                    matched_thumbnail_200x200: item.matched_thumbnail_200x200, // Assuming this comes from your updated SQL function
+                    matched_slug: item.matched_slug,
+                    matched_page_type: item.matched_page_type,
+                    matched_featured_img_alt_text: item.matched_featured_img_alt_text,
+                });
+            } else {
+                // For other content types, add without matched details
+                acc[item.category_id].content.push({
+                    id: item.content_id,
+                    name: item.content_name,
+                    page_type: item.content_type,
+                    thumbnail_200x200: item.thumbnail_200x200,
+                    featured_img_alt_text: item.featured_img_alt_text,
+                    slug: item.slug,
+                    // Other matched fields could be null or simply not added
+                });
+            }
             
             return acc;
         }, {});
