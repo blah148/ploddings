@@ -42,7 +42,7 @@ export default function Account({ ip, userId }) {
 
 	useEffect(() => {
 		// Initialize guest data loading
-		fetchAndSetStarred(userId);
+		fetchAndSetStarred(userId, null, ip);
 		fetchAndSetVisitHistory(userId, null, ip);
 
 	}, [userId]);
@@ -61,7 +61,12 @@ export default function Account({ ip, userId }) {
 										<div className="narrowedFeedBody">
 											<h1>My profile</h1>
 											<h2>Save settings</h2>
-											{!userId && <CreateAccountForm />}
+											{!userId &&
+												<> 
+												  <div className="alertNotice">Preserve favorites and viewing history across devices with an account</div>
+											  	<CreateAccountForm />
+												</>
+											}
 											{userId && (<EmailUpdater userId={userId} />)}
 											{message && <p>{message}</p>}
 											<div className="categoryGroup">

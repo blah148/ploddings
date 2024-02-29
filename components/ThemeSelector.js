@@ -6,10 +6,11 @@ const ThemeSelector = () => {
   const { theme, toggleTheme } = useTheme();
 
   return (
-    <div>
+    <div className="themeSelector">
       <h2>Select Theme</h2>
       <label>
         <input
+					className="radioButton"
           type="radio"
           name="theme"
           value="light"
@@ -20,6 +21,7 @@ const ThemeSelector = () => {
       </label>
       <label>
         <input
+					className="radioButton"
           type="radio"
           name="theme"
           value="dark"

@@ -615,7 +615,34 @@ form.registerForm button:hover {
     border-radius: 5px;
     animation: fadeInOut 3s;
 }
-
+.alertNotice {
+  padding: 8px 24px;
+  margin: 12px 0;
+  background-color: #e96d6d82;
+  border-radius: 10px;
+  font-style: italic;
+  text-align: center;
+  border: 2px solid #cf8888;
+  opacity: 0.85;
+  display: inline-flex;
+}
+.themeSelector {
+	display: flex;
+  flex-direction: column;
+	opacity: 0.5;
+}
+.radioButton {
+	background-color: #fffcc8;
+  border: 1px solid #d9dddd;
+  border-radius: 20px;
+  color: #404242;
+  font-size: 13px;
+	width: auto;
+  height: 2.5ch;
+  padding: 4px 8px;
+  font-size: 12px;
+  margin: 4px 7px 4px 0;
+}
 @keyframes fadeInOut {
     0% { opacity: 0; transform: translateY(20px); }
     10%, 90% { opacity: 1; transform: translateY(0); }
