@@ -66,7 +66,7 @@ export default function Custom404 () {
 					<div className="mainFeed">
 						<div className="topRow">
 							<IpodMenuLink fallBack="/" />
-							<Menu userId={userId} />
+							<Menu />
 						</div>
 						<div className="narrowedFeedBody">
 							<h1>404 error</h1>
@@ -85,7 +85,7 @@ export default function Custom404 () {
 						</div>
 					</div>
 				</div>
-				<Footer userId={userId} />
+				<Footer />
 			</div>
 		</div>
 	);
