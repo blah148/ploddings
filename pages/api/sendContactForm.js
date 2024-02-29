@@ -25,7 +25,6 @@ export default async function handler(req, res) {
     };
 
     // Send the email
-		console.log('heres the msg', msg);
     await sgMail.send(msg);
     res.status(200).json({ message: 'Contact form submission sent successfully.' });
   } catch (error) {
