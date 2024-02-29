@@ -45,11 +45,12 @@ export default function YoutubeDl({ userId, ip }) {
         // Update the state with the converted MP3 link and a unique key
         setMp3Link(data.url);
         setMp3Key(Date.now().toString()); // Use the current timestamp as a unique key
+        console.log('here\'s the url on the other side', data.url);
 				stopLoading();
         alert('Conversion successful! Check the console for details.');
       } else {
-				stopLoading();
-        alert('Failed to convert the video.');
+        stopLoading();
+				alert('Failed to convert the video.');
       }
     } catch (error) {
       console.error('Error submitting form:', error);
