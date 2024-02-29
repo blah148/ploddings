@@ -24,13 +24,13 @@ export default function ContactForm ({ userId, ip  }) {
 
   const { isLoading, startLoading, stopLoading } = useLoading();
   const [formData, setFormData] = useState({
-    fname: '',
+    fullname: '',
     email: '',
     subject: '',
     message: '',
   });
 
-  const { fname, email, subject, message } = formData;
+  const { fullname, email, subject, message } = formData;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -56,7 +56,7 @@ export default function ContactForm ({ userId, ip  }) {
 
       if (response.ok) {
         setFormData({
-          fname: '',
+          fullname: '',
           email: '',
           subject: '',
           message: '',
@@ -93,6 +93,7 @@ export default function ContactForm ({ userId, ip  }) {
 									type="text"
 									id="fullname"
 									name="fullname"
+									value={formData.fullname}
 									onChange={handleChange}
 								/><br />
 								

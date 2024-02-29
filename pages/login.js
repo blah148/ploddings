@@ -37,7 +37,7 @@ export default function Login({ userId, ip }) {
 
       if (response.status === 200) {
         // Display a message to check their email for the verification code
-        console.log('Check your email for the verification code.');
+				alert('Check your email for the verification code');
       }
     } catch (error) {
       console.error('Error sending verification code:', error);
