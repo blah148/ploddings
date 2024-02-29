@@ -1,11 +1,7 @@
 import sgMail from '@sendgrid/mail';
-import { createClient } from '@supabase/supabase-js';
 require('dotenv').config({ path: '../../.env' });
 
 sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-
-// Initialize Supabase client (not directly used in this handler, but might be useful for other parts of your application)
-const supabase = createClient(process.env.SUPABASE_URL, process.env.SUPABASE_ANON_KEY);
 
 export default async function handler(req, res) {
   if (req.method !== 'POST') {
