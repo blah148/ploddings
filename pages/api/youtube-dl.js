@@ -46,7 +46,7 @@ export default async (req, res) => {
     const info = await ytdl.getInfo(videoID);
     const title = info.videoDetails.title.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_');
     const outputPath = join(process.cwd(), 'public', 'tmp', `${title}.mp3`);
-		let fileUrl = `http://${req.headers.host}/tmp/${title}.mp3`;
+		let fileUrl = `https://${req.headers.host}/tmp/${title}.mp3`;
 
     // Check if the file already exists
     if (existsSync(outputPath)) {
