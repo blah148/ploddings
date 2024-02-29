@@ -17,7 +17,7 @@ export default async function handler(req, res) {
   try {
     // Prepare the email message
     const msg = {
-      to: 'mpark@148@gmail.com', // Recipient email address
+      to: 'mpark148@gmail.com', // Recipient email address
       from: 'info@ploddings.com', // Your verified sender
       subject: `Contact Form Submission: ${subject}`, // Subject line
       text: `You have received a new contact form submission.\n\nFrom: ${fullname || 'N/A'} (${email})\nSubject: ${subject}\nMessage: ${message}`,
