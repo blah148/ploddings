@@ -15,6 +15,7 @@ export default function Custom404 () {
   });
 
   const { fname, email, subject, message } = formData;
+  const { isLoading, startLoading, stopLoading } = useLoading();
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
