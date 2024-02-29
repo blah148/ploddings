@@ -20,9 +20,10 @@ const verifyUserSession = (req) => {
   }
 };
 
-export default function ContactForm ({ userId, ip  }) {
+export default function Custom404 ({ userId, ip  }) {
 
-  const { isLoading, startLoading, stopLoading } = useLoading();
+	const { isLoading, startLoading, stopLoading } = useLoading();
+
   const [formData, setFormData] = useState({
     fname: '',
     email: '',
@@ -43,7 +44,6 @@ export default function ContactForm ({ userId, ip  }) {
       return;
     }
 		
-		startLoading();
 
     try {
       const response = await fetch('/api/sendContactForm', {
@@ -53,12 +53,12 @@ export default function ContactForm ({ userId, ip  }) {
         },
         body: JSON.stringify(formData),
       });
+			
+			startLoading();
 
       if (response.ok) {
         setFormData({
-          fname: '',
-          email: '',
-          subject: '',
+          subject: '404 error',
           message: '',
         });
         alert('Form submitted successfully!');
@@ -86,42 +86,9 @@ export default function ContactForm ({ userId, ip  }) {
 							<Menu userId={userId} />
 						</div>
 						<div className="narrowedFeedBody">
-							<h1>Contact</h1>
-							<form onSubmit={handleSubmit}>
-								<label htmlFor="name">Name: (optional)</label><br />
-								<input
-									type="text"
-									id="fullname"
-									name="fullname"
-									onChange={handleChange}
-								/><br />
-								
-								<label htmlFor="email">Email <span style={{ color: 'red' }}>*</span>:</label><br />
-								<input
-									type="email"
-									id="email"
-									name="email"
-									value={email}
-									required
-									onChange={handleChange}
-								/><br />
-								
-								<label htmlFor="subject">Subject <span style={{ color: 'red' }}>*</span>:</label><br />
-								<select
-									id="subject"
-									name="subject"
-									value={subject}
-									required
-									onChange={handleChange}
-								>
-									<option value="">Please select an option</option>
-									<option value="General Question">General question/message</option>
-									<option value="Content Suggestion">Content suggestion/request</option>
-									<option value="Bug Report">Report a bug</option>
-									<option value="Account Info">Account & login information</option>
-								</select><br />
-								
-								<label htmlFor="message">Message <span style={{ color: 'red' }}>*</span>:</label><br />
+							<h1>404 error</h1>
+							<form>
+								<label htmlFor="message">Report a missing page: <span style={{ color: 'red' }}>*</span>:</label><br />
 								<textarea
 									id="message"
 									name="message"
@@ -129,7 +96,6 @@ export default function ContactForm ({ userId, ip  }) {
 									value={message}
 									onChange={handleChange}
 								></textarea><br /><br />
-								
 								<button type="submit" value="Submit">Submit</button>
 							</form>
 						</div>
@@ -154,4 +120,5 @@ export async function getServerSideProps({ params, req }) {
     },
   };
 }
+
 
