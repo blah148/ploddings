@@ -9,7 +9,7 @@ export default async function handler(req, res) {
   }
 
   // Extract data from the request body
-  const { fullname, email, subject, message } = req.body;
+  const { fname, email, subject, message } = req.body;
   if (!email || !subject || !message) {
     return res.status(400).json({ error: 'Email, Subject, and Message are required' });
   }
@@ -20,10 +20,11 @@ export default async function handler(req, res) {
       to: 'mpark148@gmail.com', // Recipient email address
       from: 'info@ploddings.com', // Your verified sender
       subject: `Contact Form Submission: ${subject}`, // Subject line
-      text: `You have received a new contact form submission.\n\nFrom: ${fullname || 'N/A'} (${email})\nSubject: ${subject}\nMessage: ${message}`,
-      html: `<h4>You have received a new contact form submission.</h4><p><strong>From:</strong> ${fullname || 'N/A'} (${email})<br><strong>Subject:</strong> ${subject}<br><strong>Message:</strong> ${message}</p>`,
+      text: `You have received a new contact form submission.\n\nFrom: ${fname || 'N/A'} (${email})\nSubject: ${subject}\nMessage: ${message}`,
+      html: `<h4>You have received a new contact form submission.</h4><p><strong>From:</strong> ${fname || 'N/A'} (${email})<br><strong>Subject:</strong> ${subject}<br><strong>Message:</strong> ${message}</p>`,
     };
-
+		console.log('heres the data', data);
+		console.log('heres the fname', fname);
     // Send the email
     await sgMail.send(msg);
     res.status(200).json({ message: 'Contact form submission sent successfully.' });

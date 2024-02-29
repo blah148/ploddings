@@ -24,13 +24,13 @@ export default function ContactForm ({ userId, ip  }) {
 
   const { isLoading, startLoading, stopLoading } = useLoading();
   const [formData, setFormData] = useState({
-    fullname: '',
+    fname: '',
     email: '',
     subject: '',
     message: '',
   });
 
-  const { fullname, email, subject, message } = formData;
+  const { fname, email, subject, message } = formData;
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -91,9 +91,9 @@ export default function ContactForm ({ userId, ip  }) {
 								<label htmlFor="name">Name: (optional)</label><br />
 								<input
 									type="text"
-									id="fullname"
-									name="fullname"
-									value={formData.fullname}
+									id="fname"
+									name="fname"
+									value={formData.fname}
 									onChange={handleChange}
 								/><br />
 								
