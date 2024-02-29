@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import Loader from './Loader';
-import { supabase } from '../pages/utils/supabase'; // Import Supabase client
+import { supabase } from '../utils/supabase'; // Import Supabase client
 import { useLoading } from '../context/LoadingContext';
 
 const LazyLoadedDiv = ({ page_type, category_id, currentSongId = null }) => {

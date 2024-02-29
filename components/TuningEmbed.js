@@ -1,7 +1,7 @@
 // components/TuningEmbed.js
 
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../pages/utils/supabase'; // Adjust the import path as needed
+import { supabase } from '../utils/supabase'; // Adjust the import path as needed
 
 const TuningEmbed = ({ tuningId }) => {
   const [embedUrl, setEmbedUrl] = useState('');

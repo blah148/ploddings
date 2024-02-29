@@ -1,4 +1,4 @@
-import { supabase } from '../pages/utils/supabase';
+import { supabase } from '../utils/supabase';
 import { useEffect, useState } from 'react';
 import { useLoading } from '../context/LoadingContext';
 import styles from '../styles/songs.module.css';

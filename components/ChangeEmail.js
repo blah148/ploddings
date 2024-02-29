@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../pages/utils/supabase';
+import { supabase } from '../utils/supabase';
 
 const EmailUpdater = ({ userId }) => {
   const [email, setEmail] = useState('');

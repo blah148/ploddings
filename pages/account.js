@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { supabase } from './utils/supabase';
+import { supabase } from '../utils/supabase';
 import EmailUpdater from '../components/ChangeEmail';
 import jwt from 'jsonwebtoken';
 import IpodMenuLink from '../components/ParentBackLink';

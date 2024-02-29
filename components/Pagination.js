@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
-import { supabase } from '../pages/utils/supabase'; // Adjust this import path as needed
+import { supabase } from '../utils/supabase'; // Adjust this import path as needed
 import { useLoading } from '../context/LoadingContext';
 import LeftChevron from './LeftChevron';
 import RightChevron from './RightChevron';

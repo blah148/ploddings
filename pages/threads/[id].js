@@ -1,10 +1,10 @@
 // pages/threads/[id]
 import axios from 'axios';
 import React, { useEffect, useState, createContext, useContext } from 'react';
-import TableDataFetcher from '../utils/TableDataFetcher';
+import TableDataFetcher from '../../utils/TableDataFetcher';
 import Sidebar from '../../components/Sidebar';
 import FavoriteButton from '../../components/songFavorite';
-import { supabase } from '../utils/supabase'; // Adjust the import path as needed
+import { supabase } from '../../utils/supabase'; // Adjust the import path as needed
 import ChatWithGPT from '../../components/ChatWithGPT.js';
 import jwt from 'jsonwebtoken';
 const { fetchThreadData } = require('../../db-utilities');

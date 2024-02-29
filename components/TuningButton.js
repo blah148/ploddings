@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link'; // Assuming you're using Next.js for routing
 import Loader from './Loader';
-import { supabase } from '../pages/utils/supabase'; // Import Supabase client
+import { supabase } from '../utils/supabase'; // Import Supabase client
 import { useLoading } from '../context/LoadingContext';
 import styles from '../styles/songs.module.css';
 

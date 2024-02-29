@@ -1,5 +1,5 @@
 // pages/api/chat.js
-import { getOpenAIResponse } from '../utils/openai-utils';
+import { getOpenAIResponse } from '../../utils/openai-utils';
 
 export default async function handler(req, res) {
     if (req.method === 'POST') {

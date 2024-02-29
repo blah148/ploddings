@@ -1,4 +1,4 @@
-import { supabase } from '../pages/utils/supabase';
+import { supabase } from '../utils/supabase';
 
 /**
  * Fetches what's being watched by other users in a more efficient manner by leveraging relationships.

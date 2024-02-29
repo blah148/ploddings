@@ -1,4 +1,4 @@
-import { supabase } from '../pages/utils/supabase';
+import { supabase } from '../utils/supabase';
 
 /**
  * Fetches content organized by categories.

@@ -1,4 +1,4 @@
-import { supabase } from '../pages/utils/supabase';
+import { supabase } from '../utils/supabase';
 
 async function fetchStarred(userId, limit = null, ip) {
   if (!userId && !ip) {

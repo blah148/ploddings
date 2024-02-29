@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import React, { useEffect, useState } from 'react';
-import { supabase } from './utils/supabase';
+import { supabase } from '../utils/supabase';
 import Loader from '../components/Loader';
 import { useLoading } from '../context/LoadingContext';
 import jwt from 'jsonwebtoken';

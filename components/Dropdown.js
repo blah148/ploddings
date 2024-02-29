@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { supabase } from '../pages/utils/supabase'; // Adjust the import path as necessary
+import { supabase } from '../utils/supabase'; // Adjust the import path as necessary
 import styles from '../styles/songs.module.css';
 import DownChevron from './DownChevron';
 import Link from 'next/link'; // Make sure to import the Link component

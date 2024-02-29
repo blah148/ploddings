@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import { supabase } from '../pages/utils/supabase';
+import { supabase } from '../utils/supabase';
 import YoutubeVideo from './youtubePlayerAPI';
 const SlowDowner = dynamic(() => import('./SlowDowner'), { ssr: false });
 import styles from '../styles/songs.module.css';

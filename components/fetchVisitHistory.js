@@ -1,4 +1,4 @@
-import { supabase } from '../pages/utils/supabase';
+import { supabase } from '../utils/supabase';
 
 /**
  * Fetches the visit history for a specific user or IP and batches the detailed data retrieval.

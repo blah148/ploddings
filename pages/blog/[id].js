@@ -3,7 +3,7 @@ import { useRouter } from 'next/router';
 import axios from 'axios';
 import React, { useEffect, useState } from 'react';
 import jwt from 'jsonwebtoken';
-import { supabase } from '../utils/supabase'; // Adjust the import path as needed
+import { supabase } from '../../utils/supabase'; // Adjust the import path as needed
 import ChatWithGPT from '../../components/ChatWithGPT.js';
 import { fetchBlogData, getParentObject } from '../../db-utilities';
 import { useLoading } from '../../context/LoadingContext';

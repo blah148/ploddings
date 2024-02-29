@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { supabase } from '../utils/supabase';
-import { useLoading } from '../../context/LoadingContext';
-import styles from '../../styles/songs.module.css';
+import { supabase } from './supabase';
+import { useLoading } from '../context/LoadingContext';
+import styles from '../styles/songs.module.css';
 import Link from 'next/link';
 
 const TableDataFetcher = ({ threadId }) => {

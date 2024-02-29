@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import useStore from '../zustandStore'; // Adjust import path as needed
-import { supabase } from '../pages/utils/supabase'; // Adjust import path as needed
+import { supabase } from '../utils/supabase'; // Adjust import path as needed
 import { useLoading } from '../context/LoadingContext';
 import styles from '../styles/songs.module.css';
 

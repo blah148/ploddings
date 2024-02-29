@@ -1,4 +1,4 @@
-import { supabase } from '../pages/utils/supabase';
+import { supabase } from '../utils/supabase';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import useStore from '../zustandStore';

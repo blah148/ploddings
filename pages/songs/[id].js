@@ -5,7 +5,7 @@ import React, { useEffect, useState } from 'react';
 import useStore from '../../zustandStore';
 import Sidebar from '../../components/Sidebar';
 import FavoriteButton from '../../components/songFavorite';
-import { supabase } from '../utils/supabase'; // Adjust the import path as needed
+import { supabase } from '../../utils/supabase'; // Adjust the import path as needed
 import { fetchSongData, getParentObject } from '../../db-utilities';
 import jwt from 'jsonwebtoken'; 
 import { useLoading } from '../../context/LoadingContext';
