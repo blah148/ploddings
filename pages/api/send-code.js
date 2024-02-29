@@ -51,6 +51,7 @@ export default async function handler(req, res) {
     };
     
     // Send the email
+		console.log('heres the sendcode msg', msg);
     await sgMail.send(msg);
     res.status(200).json({ message: 'Verification code sent' });
   } catch (error) {
