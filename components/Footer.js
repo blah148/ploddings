@@ -31,6 +31,7 @@ export default function Footer ({ userId = null  }) {
 							<a onClick={handleLogout} className="footer_link-item">Logout</a>
 						</>
 					)}
+					<Link href="/contact" className="footer_link-item" passHref>Contact</Link>
 				</div>
 				<div className="footer_column">
 					<h2 className="footer_header">Github</h2> 

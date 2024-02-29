@@ -1,8 +1,26 @@
 import { useState } from 'react';
-import { useLoading } from '../context/LoadingContext';
 import Loader from '../components/Loader';
+import Sidebar from '../components/Sidebar';
+import Footer from '../components/Footer';
+import Menu from '../components/Menu';
+import IpodMenuLink from '../components/ParentBackLink';
+import jwt from 'jsonwebtoken';
+import { useLoading } from '../context/LoadingContext';
 
-const ContactForm = () => {
+const verifyUserSession = (req) => {
+  const token = req.cookies['auth_token'];
+  if (!token) {
+    return null; // No session
+  }
+  try {
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    return decoded; // Session valid
+  } catch (error) {
+    return null; // Session invalid
+  }
+};
+
+export default function ContactForm ({ userId, ip  }) {
 
 	const { isLoading, setIsLoading } = useLoading();
 
@@ -54,14 +72,24 @@ const ContactForm = () => {
   };
 
   return (
-    // Use Next.js's built-in CSS support for styling if needed.
+    <div className="bodyA">
+			<Sidebar userId={userId} ip={ip} />
+			<div className="mainFeedAll">
+				<div className="feedContainer">
+					<Loader isLoading={isLoading} />
+					<div className="mainFeed">
+						<div className="topRow">
+							<IpodMenuLink fallBack='/' />
+						  <Menu userId={userId} />
+						</div>
+						<div className="narrowedFeedBody">
+						  <h1>Contact</h1>
     <form onSubmit={handleSubmit}>
-      <label htmlFor="fname">First Name:</label><br />
+      <label htmlFor="name">Name: (optional)</label><br />
       <input
         type="text"
-        id="fname"
-        name="fname"
-        value={fname}
+        id="fullname"
+        name="fullname"
         onChange={handleChange}
       /><br />
       
@@ -99,10 +127,29 @@ const ContactForm = () => {
         onChange={handleChange}
       ></textarea><br /><br />
       
-      <input type="submit" value="Submit" />
+      <button type="submit" value="Submit">Submit</button>
     </form>
+
+						</div>
+					</div>
+				</div>
+				<Footer userId={userId} />
+			</div>
+    </div>
+
   );
 };
 
-export default ContactForm;
+export async function getServerSideProps({ params, req }) {
+
+  const userSession = verifyUserSession(req);
+  const ip = req.connection.remoteAddress;
+  
+  return {
+    props: {
+      ip,
+      userId: userSession?.id || null,
+    },
+  };
+}
 

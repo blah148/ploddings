@@ -85,6 +85,18 @@ input {
 	font-size: 14px;
 	margin: 4px 0 4px 0;
 }
+textarea {
+  background-color: #fffcc8;
+  border: 1px solid #d9dddd;
+  border-radius: 8px;
+  color: #404242;
+  font-size: 13px;
+  height: 12ch;
+  padding: 4px 8px;
+  width: 30ch;
+	font-size: 14px;
+	margin: 4px 0 4px 0;
+}
 .marginTop {
 	margin-top: 16px;
 }
@@ -214,6 +226,8 @@ ul.contentFeed li {
 }
 li.doubleRow .artistImage {
 	border-radius: 100px;
+	width: 38px;
+	height: 38px;
 }
 @media (max-width: 1024px) {
 	.artistName {
