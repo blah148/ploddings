@@ -17,7 +17,7 @@ export default async (req, res) => {
     const videoID = ytdl.getURLVideoID(videoUrl);
     const info = await ytdl.getInfo(videoID);
     const title = info.videoDetails.title.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_');
-    const outputPath = `tmp/${title}.mp3`;
+    const outputPath = `${title}.mp3`;
 
     // Using a PassThrough stream as an intermediate step
     const passThrough = new PassThrough();
@@ -52,7 +52,7 @@ export default async (req, res) => {
             }
 
             // Construct the URL to the uploaded file
-            const fileUrl = `${process.env.SUPABASE_URL}/storage/v1/object/public/${data.Key}`;
+            const fileUrl = `${process.env.SUPABASE_URL}/storage/v1/object/public/youtube-dl/${title}.mp3`;
             console.log(`File uploaded: ${fileUrl}`);
             res.status(200).json({ message: 'Conversion and upload successful', url: fileUrl });
         });
