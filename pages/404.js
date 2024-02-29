@@ -87,6 +87,7 @@ export default function Custom404 ({ userId, ip  }) {
 						</div>
 						<div className="narrowedFeedBody">
 							<h1>404 error</h1>
+							<div className="alertNotice">Ploddings has dropped many old pages, now focused solely on higher-quality, playable-MIDI tablature, scrapping old pages with PDF tablature and some outdated blogs. If there are specific pages you wish to see, please send a request.</div>
 							<form>
 								<label htmlFor="message">Report a missing page: <span style={{ color: 'red' }}>*</span>:</label><br />
 								<textarea
