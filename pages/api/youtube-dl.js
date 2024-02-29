@@ -72,7 +72,7 @@ export default async (req, res) => {
     }
 
     // Construct the URL to access the saved MP3 file
-    fileUrl = `http://${req.headers.host}/tmp/${title}.mp3`;
+    fileUrl = `https://${req.headers.host}/tmp/${title}.mp3`;
     res.status(200).json({ message: 'Conversion successful', url: fileUrl });
 
   } catch (error) {
