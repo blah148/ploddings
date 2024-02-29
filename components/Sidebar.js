@@ -38,7 +38,7 @@ export default function Sidebar({ userId, ip }) {
 
   // Separate effect for fetching starred data to allow updates within the page session
   useEffect(() => {
-    fetchAndSetStarred(userId, groupMax, ip);
+    fetchAndSetStarred(userId, 3, ip);
   }, [userId, fetchAndSetStarred, groupMax, ip]);
 
 	return (

@@ -47,7 +47,7 @@ export default async function handler(req, res) {
 
     const msg = {
       to: email,
-      from: 'info@2dooz.today', // Change to your verified sender
+      from: 'info@ploddings.com', // Change to your verified sender
       subject: 'Your Verification Code',
       text: `Your verification code is: ${verificationCode}`,
       html: `<strong>Your verification code is:</strong> ${verificationCode}`,
