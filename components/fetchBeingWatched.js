@@ -14,7 +14,7 @@ async function fetchBeingWatched(userId, userIp, limit = null) {
         .from('visit_history')
         .select(`
             page_id,
-            content:page_id (id, slug, name, thumbnail_200x200)`, { count: 'exact' }) // Assumes a foreign-key relationship named 'content' on 'page_id'
+            content:page_id (id, slug, page_type, name, thumbnail_200x200)`, { count: 'exact' }) // Assumes a foreign-key relationship named 'content' on 'page_id'
         .order('visited_at', { ascending: false });
 
     if (userId) {
