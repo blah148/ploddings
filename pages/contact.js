@@ -56,7 +56,7 @@ export default function ContactForm ({ userId, ip  }) {
 
       if (response.ok) {
         setFormData({
-          fullname: '',
+          fname: '',
           email: '',
           subject: '',
           message: '',

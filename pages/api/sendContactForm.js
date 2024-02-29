@@ -23,7 +23,7 @@ export default async function handler(req, res) {
       text: `You have received a new contact form submission.\n\nFrom: ${fname || 'N/A'} (${email})\nSubject: ${subject}\nMessage: ${message}`,
       html: `<h4>You have received a new contact form submission.</h4><p><strong>From:</strong> ${fname || 'N/A'} (${email})<br><strong>Subject:</strong> ${subject}<br><strong>Message:</strong> ${message}</p>`,
     };
-		console.log('heres the data', data);
+		console.log('heres the data', msg);
 		console.log('heres the fname', fname);
     // Send the email
     await sgMail.send(msg);
