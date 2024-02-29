@@ -1,26 +1,40 @@
 {
   "name": "ploddings",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "0.1.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/blah148/ploddings.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/blah148/ploddings/issues"
-  },
-  "homepage": "https://github.com/blah148/ploddings#readme",
   "dependencies": {
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
+    "@babel/plugin-transform-modules-commonjs": "^7.23.3",
+    "@sendgrid/mail": "^8.1.0",
+    "@supabase/supabase-js": "^2.39.3",
+    "axios": "^1.6.7",
+    "cookie": "^0.6.0",
+    "dotenv": "^16.4.1",
+    "fluent-ffmpeg": "^2.1.2",
+    "jsonwebtoken": "^9.0.2",
+    "next": "14.1.0",
+    "openai": "^4.26.0",
     "pg": "^8.11.3",
-    "pg-promise": "^11.5.4"
+    "react": "^18",
+    "react-dom": "^18",
+    "react-draggable": "^4.4.6",
+    "react-resizable": "^3.0.5",
+    "react-split-pane": "^0.1.92",
+    "react-youtube": "^10.1.0",
+    "soundtouchjs": "^0.1.30",
+    "typed.js": "^2.1.0",
+    "youtube-dl-exec": "^2.5.7",
+    "ytdl-core": "^4.11.5",
+    "zustand": "^4.5.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.23.9",
+    "@babel/preset-env": "^7.23.9",
+    "supabase": "^1.136.3"
   }
 }

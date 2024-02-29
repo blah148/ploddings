@@ -1,0 +1,28 @@
+{"us": {
+   "title": "KG's variable speed/pitch player",
+   "input": "Select audio file (local/cloud storage)",
+   "speed": "Speed(%)",
+   "reset": "Reset",
+   "pitch": "Pitch(semitone.cents)",
+   "time": "Time(sec)",
+   "timeNote": "(Start pos., A, B set)",
+   "setA": "setA",
+   "setB": "setB",
+   "resetAB": "ResetAB",
+   "volume" : "Volume(%)",
+   "volumeNote" : "(May change during export)",
+   "loadFile": "selectFile!",
+   "playOnce": "Play",
+   "pause": "Pause",
+   "rewind": "Rewind",
+   "loopAB": "loopAB",
+   "stopLoop": "StopLoop",
+   "interval": "interval(sec)",
+   "exportWav": "ExportAfterPlayback",
+   "abortExport": "AbortExport",
+   "resetAudio": "iOSAudioReset",
+   "version": "Version",
+   "guide": "guide/update",
+   "homepage": "https://goto920.github.io/demos/variableplayer/"
+  }
+}

@@ -1,0 +1,137 @@
+.App {
+  text-align: left;
+  max-width: 400px;
+	padding: 18px 24px;
+	border-radius: 8px;
+	width: 100%;
+	background-color: #fff;
+	box-shadow: 0px 8px 25px hsla(255, 24%, 91%, 1);
+}
+.slowDownerRow {
+	display: flex;
+	align-items: center;
+	width: 100%;
+}
+.slowDownerRow h3 {
+	margin: 8px 0;
+	font-weight: 400;
+	font-size: 17px;
+}
+.slowDownerRow center {
+	width: 80%;
+	align-self: center;
+}
+.slowDownerRow center input {
+	width: 95%;
+	display: block;	
+	cursor: pointer;
+}
+.numberLabel {
+	align-self: center;
+	font-weight: 400;
+	font-size: 16px;
+	
+}
+.slowDownerRow button {
+	margin-left: 6px;
+	cursor: pointer;
+	background: linear-gradient(165deg,#ec9373,#e95420);
+  color: white;
+  border: none;
+  border-radius: 5px;
+	box-shadow: 0 2px 6px #cb761c80;
+  padding: 2px 4px;
+}
+.slowDownerRow button:hover {
+	filter: saturate(120%);
+
+}
+.slowDownerSeparator {
+	color: #f7f7f7;
+}
+.mainPlaybackLabel {
+	font-size: 19px;
+  font-weight: 500;
+}
+.buttonControlsRow {
+	margin: 16px 0 12px 0;
+	display: flex;
+	justify-content: space-around;
+}
+.buttonControlsRow button {
+	cursor: pointer;
+	background-color: linear-gradient(165deg,#26d6c4,#10b1d3);
+	
+}
+.buttonRewind {
+	width: 35%;
+}
+.buttonPlay {
+	margin-left: 8px;
+	width: 60%;
+}
+.buttonControlsRow svg {
+	width: 25px;
+}
+.selectFile input {
+  background: #C94D46;
+  color: #fff;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.slider input {
+    width: 80%;
+/*  width: 60%; */
+  margin: auto;
+  cursor: pointer;
+}
+.shortSlider input {
+  width: 60%;
+  margin: auto;
+  cursor: pointer;
+}
+
+.addClicks button {
+  background: #C94D46;
+  padding: 8px;
+  border: 1px solid #832420;
+  border-radius: 2px;
+  width: 80px;
+/*  width: 60px; */
+  color: #fff;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.tinyButton button {
+  cursor: pointer;
+  height: 25px;
+  width: 25px;
+  margin: 0 auto;
+  text-align: center;
+  line-height: 10px;
+  border-radius: 5px;
+  font-size: 20px;
+  background: #00ffff;
+  padding: 5px 5px;
+  color: #000000;
+}
+
+.small-button button {
+  background: #0000ff;
+  padding: 8px;
+  border: 1px solid #832420;
+  border-radius: 2px;
+  width: 60px;
+  color: #fff;
+  font-size: 10px;
+  cursor: pointer;
+}
+.svgIcon {
+	pointer-events:none;
+}
+
+.selector select {
+  cursor: pointer;
+}

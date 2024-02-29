@@ -1,0 +1,269 @@
+div.bodyA {
+	display: flex;
+}
+.upLevel:hover {
+	filter: saturate(1.3);
+}
+.songNameContainer {
+	display: flex;
+	align-items: center;
+}
+.songNameContainer svg {
+	height: 20px;
+	margin: 0 0 2px 12px;
+}
+.songNameContainer svg:hover path {
+	fill: orange;
+}
+.parentInfoLinkContainer {
+	display: inline-block;
+}
+.parentInfoLinkContainer:hover {
+	opacity: 0.7;
+}
+.parentInfoLinkContents {
+	display: flex;
+	align-items: center;
+}
+.parentInfoLinkContents div {
+	font-size: 18px;
+}
+.parentInfoLinkContainer img {
+	height: 60px;
+	width: 60px;
+	border-radius: 100px;	
+	margin-right: 13px;
+  box-shadow: 0 0 6px 1px rgba(217, 217, 217, 0.88);
+}
+
+.tuningButton {
+	display: inline-block;
+	width: 24ch;
+	background-color: orange;
+	color: white;
+	margin: 18px 0;
+	border-radius: 20px;
+	font-size: 14px;
+}
+.tuningButton div {
+	width: 100%;
+	text-align: center;
+}
+.tuningButton:hover {
+	opacity: 0.7;
+}
+.chevronChapters {
+	fill: black;
+}
+.dropdownButton svg {
+	width: 16px;
+	margin-left: 4px;
+	align-self: center;
+}
+.dropdownButton {
+	display: flex;
+	font-size: 12px;
+	align-content: center;
+	margin: 12px 0 18px 0;
+}
+.dropdownContainer {
+	display: flex;
+	flex-direction: column;
+	position: absolute;
+	background-color: #fff;
+	padding: 6px 4px;
+	border-radius: 8px;
+  box-shadow: 0px 8px 25px hsla(255, 24%, 91%, 1);
+}
+.dropdownContainer a {
+	padding: 4px 8px;
+	border-radius: 5px;
+	font-size: 16px;
+}
+.dropdownContainer a:hover {
+	background-color: #ddd;
+}
+.dropdownContainer .boldLink {
+	font-weight: 600;
+}
+.bottomBorder {
+	border-bottom: 1px solid #d2d2d2;
+	margin: 16px 8px 12px 8px;
+}
+.componentsContainer {
+	display: flex;
+	margin-bottom: 22px;
+}
+@media screen and (max-width: 1200px) {
+
+	.componentsContainer {
+		flex-direction: column;
+	}
+	div.tocContainer {
+		order: 0;
+		padding: 0;
+		border-left: none;
+		margin: 0;
+	}
+	.primaryColumn {
+		order: 1;
+	}
+
+}
+.primaryColumn {
+	margin-top: 4px;
+	min-width: 650px;
+	width: 100%;
+}
+.blogBodyText figure {
+	margin: 12px 0;
+}
+.blogBodyText img {
+	max-height: 310px;
+	max-width: 100%;
+	border-radius: 7px;
+	box-shadow: 0px 8px 25px hsla(255, 24%, 91%, 1);
+}
+.blogBodyText figcaption {
+	text-align: left;
+	font-size: 13px;
+	opacity: 0.9;
+}
+.blogBodyText figure {
+	padding: 0 !important;
+}
+.blogBodyText iframe {
+	width: 100%;
+	min-height: 300px;
+	
+}
+.tocContainer {
+	max-width: 40vw;
+	padding: 0 12px 0 22px;
+	border-left: 1px solid #d2d2d2;
+	margin: 0 14px 18px 18px;
+}
+.tableOfContents {
+	position: sticky;
+	display: flex;
+	flex-direction: column;
+	top: 8px;
+}
+.tableOfContents h2 {
+	font-weight: 600;
+	font-size: 20px;
+	margin-bottom: 10px;
+}
+.tableOfContents a {
+	font-weight: 300;
+	font-size: 17px;
+	margin: 0 0 5px 0;
+}
+.tableOfContents a:hover {
+	opacity: 0.7;
+}
+.tabButton {
+	margin-right: 12px;
+}
+.tabButton.active {
+	font-weight: 500;
+}
+.tabPane {
+	padding: 8px 0px;
+	margin: 8px 0;
+	font-weight: 400;
+}
+.paginationBlock {
+	display: flex;
+	justify-content: space-between;
+}
+.paginationContainer {
+	display: flex;
+	justify-content: space-between;
+	margin: 18px 0 24px 0;
+	width: 100%;
+}
+.paginationBlog a {
+	display: flex;
+	align-items: center;
+}
+.paginationBlog.previous {
+	margin-right: auto;
+}
+.paginationBlog.next {
+	margin-left: auto;
+}
+.paginationBlog svg {
+	height: 16px;
+	margin-left: 8px;
+}
+.paginationBlog.previous svg {
+	height: 12px;
+	margin-right: 8px;
+}
+
+/*THREADS */
+.headerContainer {
+	display: flex;
+}
+.headerContainer img {
+	max-height: 240px;
+	border-radius: 8px;
+	margin-right: 16px;
+}
+.headerContainer .rightColumn {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+}
+.rightColumn h1 {
+	margin: 0;
+}
+.lifeAndDeath {
+	margin-bottom: auto;
+	font-weight: 300;
+}
+.headerContainer svg {
+	width: 26px;
+	padding: 12px;
+}
+.headerContainer svg:hover {
+	opacity: 0.75;
+}
+svg.victrola {
+	width: 20px;
+}
+.storyText p {
+	font-size: 15px;
+	margin: 0;
+}
+.endingStory {
+	margin-bottom: 32px;
+}
+.endingStory p {
+	margin-bottom: 12px;
+}
+.threadFeed {
+	margin-bottom: 28px;
+}
+.threadFeed ul {
+	padding: 0;
+	margin: 0;
+}
+.contentFeedItem {
+	list-style: none;
+}
+.contentFeedItem a {
+	display: flex;
+	align-items: center;
+	padding-right: 16px;
+	border-bottom: 1px solid #ddd;
+}
+.contentFeedItem img {
+	width: 50px;
+	height: 60px;
+}
+.contentFeedItem .feedItemTitle {
+	margin: auto 0 auto 13px;
+}
+
