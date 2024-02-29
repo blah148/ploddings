@@ -1,28 +1,11 @@
 import { useState } from 'react';
 import Loader from '../components/Loader';
-import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import Menu from '../components/Menu';
 import IpodMenuLink from '../components/ParentBackLink';
-import jwt from 'jsonwebtoken';
 import { useLoading } from '../context/LoadingContext';
 
-const verifyUserSession = (req) => {
-  const token = req.cookies['auth_token'];
-  if (!token) {
-    return null; // No session
-  }
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return decoded; // Session valid
-  } catch (error) {
-    return null; // Session invalid
-  }
-};
-
-export default function Custom404 ({ userId, ip  }) {
-
-	const { isLoading, startLoading, stopLoading } = useLoading();
+export default function Custom404 () {
 
   const [formData, setFormData] = useState({
     fname: '',
@@ -76,7 +59,6 @@ export default function Custom404 ({ userId, ip  }) {
 
 	return (
 		<div className="bodyA">
-			<Sidebar userId={userId} ip={ip} />
 			<div className="mainFeedAll">
 				<div className="feedContainer">
 					<Loader isLoading={isLoading} />
@@ -108,18 +90,5 @@ export default function Custom404 ({ userId, ip  }) {
 	);
 
 };
-
-export async function getServerSideProps({ params, req }) {
-
-  const userSession = verifyUserSession(req);
-  const ip = req.connection.remoteAddress;
-  
-  return {
-    props: {
-      ip,
-      userId: userSession?.id || null,
-    },
-  };
-}
 
 
