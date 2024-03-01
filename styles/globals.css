@@ -626,6 +626,17 @@ form.registerForm button:hover {
   opacity: 0.85;
   display: inline-flex;
 }
+.messageNotice {
+  padding: 8px 24px;
+  margin: 12px 0;
+  background-color: #96e28b82;
+  border-radius: 10px;
+  font-style: italic;
+  text-align: center;
+  border: 2px solid #95b487;
+  opacity: 0.85;
+  display: inline-flex;
+}
 .themeSelector {
 	display: flex;
   flex-direction: column;

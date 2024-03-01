@@ -63,6 +63,9 @@ export default function YoutubeDl({ userId, ip }) {
 							<Menu userId={userId} />
 						</div>
 						<h1>Slow-Downer & Pitch-Shifter</h1>
+						<div style={{display: 'block'}}>
+							<div className="messageNotice">Accepts mp3/wav/aac/m4a/opus file-types with a maximum size of 5MB</div>
+						</div>
 						<input type="file" accept="audio/*,.wav,.mp3,.aac,.m4a,.opus" onChange={handleFileChange} />
 						<button onClick={uploadFile} disabled={isLoading}>
 							{isLoading ? 'Uploading...' : 'Upload'}
