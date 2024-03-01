@@ -30,16 +30,15 @@ const formatDate = (dateString) => {
 };
 
 export default function Blog({ userId, ip }) {
-  const { isLoading, setIsLoading } = useLoading();
   const [posts, setPosts] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
   const [offset, setOffset] = useState(0); // Track the offset directly
   const [initialFetchCompleted, setInitialFetchCompleted] = useState(false);
+	const { isLoading, startLoading, stopLoading } = useLoading();
 
   const fetchPosts = async () => {
-    if (loading) return; // Prevent duplicate fetches
-    setLoading(true);
+    if (isLoading) return; // Prevent duplicate fetches
+		startLoading();
 
     const { data, error } = await supabase
       .from('content')
@@ -58,7 +57,7 @@ export default function Blog({ userId, ip }) {
       setHasMore(data.length === 5);
       setOffset(prevOffset => prevOffset + data.length);
     }
-    setLoading(false);
+    stopLoading();
   };
 
   useEffect(() => {
@@ -100,7 +99,7 @@ export default function Blog({ userId, ip }) {
 ))}
 
                 {hasMore && (
-                  <button className="blogLoadMore" onClick={fetchPosts} disabled={loading}>
+                  <button className="blogLoadMore" onClick={fetchPosts} disabled={isLoading}>
                     Load More
                   </button>
                 )}

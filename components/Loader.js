@@ -3,6 +3,7 @@ import styles from './Loader.module.css';
 
 function Loader({ isLoading }) {
   return (
+		<div className={styles.positionSticky}>
     <div className={styles.loaderContainer}>
       {isLoading && (
         <div className={styles.ldsEllipsis}>
@@ -13,7 +14,9 @@ function Loader({ isLoading }) {
         </div>
       )}
     </div>
+	</div>
   );
+	
 }
 
 export default Loader;
