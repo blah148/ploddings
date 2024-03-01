@@ -90,7 +90,7 @@ const handleFileChange = (e) => {
 					<Loader isLoading={isLoading} />
 					<div className="mainFeed">
 						<div className="topRow">
-							<IpodMenuLink fallBack='/' />
+							<IpodMenuLink fallBack='' />
 							<Menu userId={userId} />
 						</div>
 						<h1>Slow-Downer & Pitch-Shifter</h1>

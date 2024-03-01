@@ -71,7 +71,7 @@ export default function Custom404 () {
 					<Loader isLoading={isLoading} />
 					<div className="mainFeed">
 						<div className="topRow">
-							<IpodMenuLink fallBack="/" />
+							<IpodMenuLink fallBack="" />
 							<Menu />
 						</div>
 						<div className="narrowedFeedBody">
