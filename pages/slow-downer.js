@@ -36,6 +36,7 @@ export default function YoutubeDl({ userId, ip }) {
 
   const uploadFile = async () => {
 		startLoading();
+		setMp3Key(null);
     if (!file) return;
 
     const { publicURL, error } = await uploadSong(file);

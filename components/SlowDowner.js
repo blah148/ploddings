@@ -465,7 +465,7 @@ handleTimeBSliderChange = (event) => {
      tmp = null; 
 
 // create PitchShifter and Play
-     let bufferSize = 16384;
+     let bufferSize = 256;
      if (shifter) { shifter.disconnect(); shifter.off(); shifter= null;}
      shifter = new PitchShifter(audioCtx, partialAudioBuffer, bufferSize)
      partialAudioBuffer = null
