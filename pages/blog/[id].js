@@ -98,7 +98,7 @@ return (
             <h1>{blogData.name}</h1>
             <FavoriteButton userId={userId} id={blogData.id} ip={ip} />
           </div>
-          <ParentInfoLink threadData={threadData} fallBack='blog' />
+          <ParentInfoLink threadData={threadData} fallBack='blog' fallBackTitle='Guitar blog' />
           <Dropdown id={blogData.id} />
           <div>Date posted: {formatDate(blogData.published_date)}</div>
           <div className={styles.bottomBorder}></div>
