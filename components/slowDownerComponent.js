@@ -6,7 +6,6 @@ import styles from '../styles/songs.module.css';
 
 export default function SlowDownerComponent ({ dropbox_mp3_link }) {
 
-
 	return (
 		<>
 		<SlowDowner mp3={dropbox_mp3_link} />

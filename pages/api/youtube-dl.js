@@ -1,73 +1,57 @@
-import ytdl from 'ytdl-core';
-import ffmpeg from 'fluent-ffmpeg';
-import { PassThrough } from 'stream';
-import { supabase, supabaseUrl } from '../../utils/supabase'; // Make sure this is correctly pointing to your Supabase client initialization
+import { exec } from 'child_process';
+import fs from 'fs/promises'; // Use the fs module with Promise support for async operations
+import { v4 as uuidv4 } from 'uuid'; // Ensure you have uuid installed for generating unique filenames
+import { supabase, supabaseUrl } from '../../utils/supabase'; // Correctly point to your Supabase client initialization
 
 export default async (req, res) => {
-    if (req.method !== 'POST') {
-        res.setHeader('Allow', ['POST']);
-        return res.status(405).end('Method Not Allowed');
+  if (req.method !== 'POST') {
+    res.setHeader('Allow', ['POST']);
+    return res.status(405).end('Method Not Allowed');
+  }
+
+  const { videoUrl } = req.body;
+  if (!videoUrl) {
+    return res.status(400).json({ error: 'Invalid or missing YouTube video URL.' });
+  }
+
+  // Use a unique identifier to avoid filename conflicts
+  const uniqueFilename = `${uuidv4()}.mp3`;
+  const command = `youtube-dl --verbose --extract-audio --audio-format mp3 --output "${uniqueFilename}" "${videoUrl}"`;
+
+  try {
+    await new Promise((resolve, reject) => {
+      exec(command, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`exec error: ${error}`);
+          reject(error);
+          return;
+        }
+        resolve(stdout); // No need to parse stdout if we know the filename
+      });
+    });
+
+    // Now read the file into a buffer
+    const buffer = await fs.readFile(uniqueFilename);
+
+    // Upload the buffer to Supabase Storage
+    const { data, error: uploadError } = await supabase.storage
+      .from('youtube-dl')
+      .upload(uniqueFilename, buffer, {
+        contentType: 'audio/mpeg',
+        upsert: true,
+      });
+
+    if (uploadError) {
+      console.error('Upload error:', uploadError);
+      throw uploadError;
     }
-		console.log('making it here');
 
-    const { videoUrl } = req.body;
-		console.log('videoUrl', videoUrl);
-    if (!videoUrl || !ytdl.validateURL(videoUrl)) {
-        return res.status(400).json({ error: 'Invalid or missing YouTube video URL.' });
-    }
-		console.log('now here bro');
-    const videoID = ytdl.getURLVideoID(videoUrl);
-		console.log('what about here yo', videoID);
-    const title = 'testing';
-    const outputPath = `${title}.mp3`;
-		console.log('outputPath', outputPath);
-
-    // Using a PassThrough stream as an intermediate step
-    const passThrough = new PassThrough();
-		console.log('now herrrre', passThrough);
-    const chunks = [];
-		console.log('chunks', chunks);
-
-    try {
-				console.log('supabase stuff', supabase, supabaseUrl);
-        // Set up ffmpeg to convert the stream
-        const videoStream = ytdl(videoUrl, { quality: 'highestaudio' });
-        ffmpeg(videoStream)
-            .audioCodec('libmp3lame')
-            .format('mp3')
-            .pipe(passThrough, { end: true });
-
-        // Collect chunks of data from the stream
-        passThrough.on('data', chunk => chunks.push(chunk));
-
-        // Wait for the stream to finish
-        passThrough.on('end', async () => {
-            // Combine all chunks into a single Buffer
-            const buffer = Buffer.concat(chunks);
-
-            // Upload the buffer to Supabase Storage
-            const { data, error } = await supabase.storage
-                .from('youtube-dl')
-                .upload(outputPath, buffer, {
-                    contentType: 'audio/mpeg',
-                    upsert: true,
-                });
-
-            if (error) {
-                throw error;
-            }
-
-						console.log('the supabaseUrl', supabaseUrl);
-
-            // Construct the URL to the uploaded file
-            const fileUrl = `${supabaseUrl}/storage/v1/object/public/youtube-dl/${title}.mp3`;
-            console.log(`File uploaded: ${fileUrl}`);
-            res.status(200).json({ message: 'Conversion and upload successful', url: fileUrl });
-        });
-
-    } catch (error) {
-        console.error('Conversion or upload failed:', error);
-        res.status(500).json({ error: 'Internal server error', details: error.message });
-    }
+    // Construct the URL to the uploaded file
+    const fileUrl = `${supabaseUrl}/storage/v1/object/public/youtube-dl/${uniqueFilename}`;
+    res.status(200).json({ message: 'Conversion and upload successful', url: fileUrl });
+  } catch (error) {
+    console.error('Conversion or upload failed:', error);
+    res.status(500).json({ error: 'Internal server error', details: error.toString() });
+  }
 };
 
