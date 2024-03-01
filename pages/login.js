@@ -9,6 +9,7 @@ import Menu from '../components/Menu';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 import SEO from '../components/SEO';
+import Link from 'next/link';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -108,6 +109,9 @@ export default function Login({ userId, ip }) {
 								/>
 								<button type="submit">Verify Code & Login</button>
 							</form>
+							<div className="accountNotice">
+								<div>Don't have an account? <Link href="/create-account" passHref>Create an account</Link></div>
+							</div>
 						</div>
 					</div>
 				</div>

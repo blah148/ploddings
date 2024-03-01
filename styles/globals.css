@@ -401,6 +401,12 @@ div.categoryGroup img {
 	width: 50px;
 	margin-right: 10px;
 }
+/* Login */
+.accountNotice {
+	margin: 18px 0 0 0;
+	font-size: 14px;
+}
+
 /* styles/fonts.css */
 
 @font-face {
