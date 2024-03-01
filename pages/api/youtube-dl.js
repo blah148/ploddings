@@ -18,6 +18,7 @@ export default async (req, res) => {
     const info = await ytdl.getInfo(videoID);
     const title = info.videoDetails.title.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_');
     const outputPath = `${title}.mp3`;
+		console.log('metadata', videoID, info, title, outputPath);
 
     // Using a PassThrough stream as an intermediate step
     const passThrough = new PassThrough();
