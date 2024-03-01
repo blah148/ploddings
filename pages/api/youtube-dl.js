@@ -19,13 +19,17 @@ export default async (req, res) => {
     const videoID = ytdl.getURLVideoID(videoUrl);
 		console.log('what about here yo', videoID);
     const info = await ytdl.getInfo(videoID);
+		console.log('2what about here', info);
     const title = info.videoDetails.title.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_');
+		console.log('3what about here', title);
     const outputPath = `${title}.mp3`;
-		console.log('metadata', videoID, info, title, outputPath);
+		console.log('outputPath', outputPath);
 
     // Using a PassThrough stream as an intermediate step
     const passThrough = new PassThrough();
+		console.log('now herrrre', passThrough);
     const chunks = [];
+		console.log('chunks', chunks);
 
     try {
 				console.log('supabase stuff', supabase, supabaseUrl);
