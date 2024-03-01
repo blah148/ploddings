@@ -51,6 +51,8 @@ export default async (req, res) => {
                 throw error;
             }
 
+						console.log('the supabaseUrl', supabaseUrl);
+
             // Construct the URL to the uploaded file
             const fileUrl = `${supabaseUrl}/storage/v1/object/public/youtube-dl/${title}.mp3`;
             console.log(`File uploaded: ${fileUrl}`);
