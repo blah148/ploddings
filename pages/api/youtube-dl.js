@@ -11,11 +11,13 @@ export default async (req, res) => {
 		console.log('making it here');
 
     const { videoUrl } = req.body;
+		console.log('videoUrl', videoUrl);
     if (!videoUrl || !ytdl.validateURL(videoUrl)) {
         return res.status(400).json({ error: 'Invalid or missing YouTube video URL.' });
     }
-
+		console.log('now here bro');
     const videoID = ytdl.getURLVideoID(videoUrl);
+		console.log('what about here yo', videoID);
     const info = await ytdl.getInfo(videoID);
     const title = info.videoDetails.title.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_');
     const outputPath = `${title}.mp3`;
