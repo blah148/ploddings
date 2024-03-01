@@ -66,7 +66,7 @@ export default function Menu({ userId = null }) {
         </>
         ) : (
         <>
-           <Link className="menuItem" href="/register" passHref>
+           <Link className="menuItem" href="/create-account" passHref>
 						 <svg id="icon" viewBox="0 0 32 32">
 							 <polygon points="32 14 28 14 28 10 26 10 26 14 22 14 22 16 26 16 26 20 28 20 28 16 32 16 32 14"/>
 							 <path d="M12,4A5,5,0,1,1,7,9a5,5,0,0,1,5-5m0-2a7,7,0,1,0,7,7A7,7,0,0,0,12,2Z" transform="translate(0 0)"/>
