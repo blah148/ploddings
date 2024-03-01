@@ -1,7 +1,7 @@
 import ytdl from 'ytdl-core';
 import ffmpeg from 'fluent-ffmpeg';
 import { PassThrough } from 'stream';
-import { supabase } from '../../utils/supabase'; // Make sure this is correctly pointing to your Supabase client initialization
+import { supabase, supabaseUrl } from '../../utils/supabase'; // Make sure this is correctly pointing to your Supabase client initialization
 
 export default async (req, res) => {
     if (req.method !== 'POST') {
@@ -52,7 +52,7 @@ export default async (req, res) => {
             }
 
             // Construct the URL to the uploaded file
-            const fileUrl = `${process.env.SUPABASE_URL}/storage/v1/object/public/youtube-dl/${title}.mp3`;
+            const fileUrl = `${supabaseUrl}/storage/v1/object/public/youtube-dl/${title}.mp3`;
             console.log(`File uploaded: ${fileUrl}`);
             res.status(200).json({ message: 'Conversion and upload successful', url: fileUrl });
         });
