@@ -24,6 +24,7 @@ export default async (req, res) => {
     const chunks = [];
 
     try {
+				console.log('supabase stuff', supabase, supabaseUrl);
         // Set up ffmpeg to convert the stream
         const videoStream = ytdl(videoUrl, { quality: 'highestaudio' });
         ffmpeg(videoStream)
