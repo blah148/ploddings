@@ -277,6 +277,63 @@ div.blogLed {
  box-shadow: 0 0 6px 1px #385cc6;
 }
 
+/* /blog */
+.blogCardContainer .blogHover {
+  transition: transform .1s;	
+	display: flex;
+	align-items: center;
+}
+.blogCardContainer .blogHover:hover {
+  transform: scale(1.015);	
+}
+.blogCard {
+	border-radius: 25px;
+	border: 2px solid #23d1c6;
+	margin: 0 0 22px 0;
+	display: flex;
+	padding: 4px 8px;
+}
+.ornamentContainer {
+	margin: 12px 12px 0 12px;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+}
+.circleOrnament {
+	height: 18px;
+	width: 18px;
+	background-color: #23d1c6;
+	border-radius: 100px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+}
+.dotOrnament {
+	height: 4px;
+	width: 4px;
+	background-color: white;
+	border-radius: 5px;
+}
+.lineOrnament {
+	margin: 6px 0 0 0;
+	height: 30px;
+	width: 2px;
+	background-color: #23d1c6;
+}
+.blogCard.date {
+	font-size: 13px;
+	width: 12ch;
+	align-items: center;
+	display: flex;
+	justify-content: center;
+}
+.blogCard.name {
+	padding: 5px 16px;
+}
+.blogLoadMore {
+	margin-left: 12ch;
+}
 /* Homepage */
 .homeTabs button {
 	margin: 0 12px;
