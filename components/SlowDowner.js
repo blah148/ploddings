@@ -86,6 +86,19 @@ class SlowDowner extends Component {
   }
 
   componentWillUnmount () { // before closing app
+  if (shifter) {
+    shifter.disconnect();
+    shifter.off(); // Assuming this method stops the playback and removes event listeners
+    shifter = null;
+  }
+  if (gainNode) {
+    gainNode.disconnect();
+  }
+  if (audioCtx) {
+    audioCtx.close().then(() => {
+      console.log("Audio context closed");
+    });
+  }
     window.removeEventListener('beforeClosing', this.handleWindowClose)
   }
 	
