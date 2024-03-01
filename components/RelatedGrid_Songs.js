@@ -35,16 +35,6 @@ function RelatedContent({ id, setRelatedContentLength }) {
     fetchData();
   }, [id]);
 
-	// Function to determine class name based on page type
-	function getLedClassName(pageType) {
-		switch (pageType.toLowerCase()) {
-			case 'songs': return "songsLed";
-			case 'threads': return "threadsLed";
-			case 'blog': return "blogLed";
-			default: return '';
-		}
-	}
-	
 	return (
 		<div className="categoryGroup">
 			{relatedContent.length>0 && (
@@ -58,7 +48,7 @@ function RelatedContent({ id, setRelatedContentLength }) {
 									alt={item.content.featured_img_alt_text}
 								/>
 								<div className="sidebarName">{item.content.name.length > 39 ? item.content.name.slice(0, 39) + '...' : item.content.name}</div>
-								<div className={`led ${getLedClassName(item.content.page_type)}`}></div>
+								<div className="led"></div>
 							</Link>
 						</li>
 					))}

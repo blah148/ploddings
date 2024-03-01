@@ -63,7 +63,7 @@ export default function Sidebar({ userId, ip }) {
 											src={star.content.thumbnail_200x200 ? star.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
 											alt={star.content.featured_img_alt_text}
 										/>
-										<div className={styles.sidebarName}>{star.content.name.length > 26 ? star.content.name.slice(0, 26) + '...' : star.content.name}</div>
+										<div className={styles.sidebarName}>{star.content.name.length > 22 ? star.content.name.slice(0, 22) + '...' : star.content.name}</div>
 										<div className="led"></div>
 									</a>
 								</li>
@@ -82,7 +82,7 @@ export default function Sidebar({ userId, ip }) {
 										src={visit.content.thumbnail_200x200 ? visit.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
 										alt={visit.content.featured_img_alt_text}
 									/>
-									<div className={styles.sidebarName}>{visit.content.name.length > 26 ? visit.content.name.slice(0, 26) + '...' : visit.content.name}</div>
+									<div className={styles.sidebarName}>{visit.content.name.length > 22 ? visit.content.name.slice(0, 22) + '...' : visit.content.name}</div>
 									<div className="led"></div>
 								</a>
 							</li>
@@ -100,7 +100,7 @@ export default function Sidebar({ userId, ip }) {
 										src={watch.content.thumbnail_200x200 ? watch.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
 										alt={watch.content.featured_img_alt_text}
 									/>
-									<div className={styles.sidebarName}>{watch.content.name.length > 26 ? watch.content.name.slice(0, 26) + '...' : watch.content.name}</div>
+									<div className={styles.sidebarName}>{watch.content.name.length > 22 ? watch.content.name.slice(0, 22) + '...' : watch.content.name}</div>
 									<div className="led"></div>
 								</a>
 							</li>
