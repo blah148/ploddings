@@ -9,7 +9,6 @@ import Menu from '../components/Menu';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 import useStore from '../zustandStore';
-import useGuestStore from '../zustandStore_guest';
 import CreateAccountForm from '../components/createAccount';
 import { useLoading } from '../context/LoadingContext';
 import Loader from '../components/Loader';
