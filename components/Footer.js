@@ -16,6 +16,7 @@ export default function Footer ({ userId = null  }) {
 					<h2 className="footer_header">Content</h2> 
 					<Link href="/" className="footer_link-item" passHref>Home</Link>
 					<Link href="/slow-downer" className="footer_link-item" passHref>Slow-downer</Link>
+		  		<Link href="/blog" className="footer_link-item" passHref>Blog</Link>
 				</div>
 				<div className="footer_column">
 					<h2>Usage</h2>
