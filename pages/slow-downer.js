@@ -9,6 +9,7 @@ import Sidebar from '../components/Sidebar';
 import IpodMenuLink from '../components/ParentBackLink';
 import { uploadSong } from '../utils/uploadSong';
 
+
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
   if (!token) {
@@ -23,86 +24,95 @@ const verifyUserSession = (req) => {
 };
 
 export default function YoutubeDl({ userId, ip }) {
-  const { isLoading, startLoading, stopLoading } = useLoading();
+	const { isLoading, startLoading, stopLoading } = useLoading();
   const [mp3Link, setMp3Link] = useState('');
+  // Use a state variable to hold a unique key for each conversion
   const [mp3Key, setMp3Key] = useState('');
-  const [file, setFile] = useState(null);
+	const [file, setFile] = useState(null);
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (!file) {
-      return;
-    }
-    setFile(file);
+const handleFileChange = (e) => {
+  const file = e.target.files[0];
+  if (!file) {
+    return;
+  }
+
+  const validTypes = ['audio/mp3', 'audio/mpeg', 'audio/x-wav', 'audio/ogg', 'audio/mp4', 'audio/wav', 'audio/aac', 'audio/m4a', 'audio/opus'];
+  const errorHandler = (message) => {
+    alert(message); // Display the error message to the user
+    e.target.value = ''; // Reset the file input
+    // Any additional error handling logic here
   };
+  console.log('file-type', file.type);
+  // Check for file type validity
+  if (!validTypes.includes(file.type)) {
+    errorHandler('Invalid file type.');
+    return; // Should exit the function, preventing further execution
+  }
+
+  // Check for file size limit
+  if (file.size > 5 * 1024 * 1024) {
+    errorHandler('File is too large.');
+    return; // Should exit the function, preventing further execution
+  }
+
+  // This line is reached only if all validations pass
+  setFile(file);
+};
+
 
   const uploadFile = async () => {
-    startLoading();
-    setMp3Key(null);
-    if (!file) {
-      alert("No file selected.");
+		startLoading();
+		setMp3Key(null);
+    if (!file) return;
+
+    const { publicURL, error } = await uploadSong(file);
+
+    if (error) {
+      alert('Upload failed: ', error);
       stopLoading();
       return;
     }
-
-    const formData = new FormData();
-    formData.append('file', file);
-
-    try {
-      const response = await fetch('/api/upload-song', {
-        method: 'POST',
-        body: formData,
-      });
-
-      if (!response.ok) {
-        const error = await response.json();
-        throw new Error(error.error || 'Failed to upload file.');
-      }
-
-      const { publicURL } = await response.json();
-      setMp3Link(publicURL);
-      setMp3Key('ready');
-    } catch (error) {
-      alert(`Upload failed: ${error.message}`);
-    } finally {
-      stopLoading();
-    }
+		stopLoading();
+    setMp3Link(publicURL);
+		setMp3Key('ready');
   };
 
   return (
     <div className="bodyA">
-      <Sidebar userId={userId} ip={ip} />
-      <div className="mainFeedAll">
-        <div className="feedContainer">
-          <Loader isLoading={isLoading} />
-          <div className="mainFeed">
-            <div className="topRow">
-              <IpodMenuLink fallBack='/' />
-              <Menu userId={userId} />
-            </div>
-            <h1>Slow-Downer & Pitch-Shifter</h1>
-            <div style={{ display: 'block' }}>
-              <div className="messageNotice">Accepts mp3/wav/aac/m4a/opus file-types with a maximum size of 5MB</div>
-            </div>
-            <input type="file" accept="audio/*,.wav,.mp3,.aac,.m4a,.opus" onChange={handleFileChange} />
-            <button onClick={uploadFile} disabled={isLoading}>
-              {isLoading ? 'Uploading...' : 'Upload'}
-            </button>
-            <div style={{ opacity: mp3Link ? 1 : 0.5 }}>
-              {<SlowDownerComponent key={mp3Key} dropbox_mp3_link={mp3Link} />}
-            </div>
-          </div>
-        </div>
-        <Footer userId={userId} />
-      </div>
+			<Sidebar userId={userId} ip={ip} />
+			<div className="mainFeedAll">
+				<div className="feedContainer">
+					<Loader isLoading={isLoading} />
+					<div className="mainFeed">
+						<div className="topRow">
+							<IpodMenuLink fallBack='/' />
+							<Menu userId={userId} />
+						</div>
+						<h1>Slow-Downer & Pitch-Shifter</h1>
+						<div style={{display: 'block'}}>
+							<div className="messageNotice">Accepts mp3/wav/aac/m4a/opus file-types with a maximum size of 5MB</div>
+						</div>
+						<input type="file" accept="audio/*,.wav,.mp3,.aac,.m4a,.opus" onChange={handleFileChange} />
+						<button onClick={uploadFile} disabled={isLoading}>
+							{isLoading ? 'Uploading...' : 'Upload'}
+						</button>
+						<div style={{ opacity: mp3Link ? 1 : 0.5 }}>
+							{/* Assign the unique key to SlowDownerComponent */}
+							{<SlowDownerComponent key={mp3Key} dropbox_mp3_link={mp3Link} />}
+						</div>
+					</div>
+				</div>
+				<Footer userId={userId} />
+			</div>
     </div>
   );
 }
 
 export async function getServerSideProps({ params, req }) {
+
   const userSession = verifyUserSession(req);
   const ip = req.connection.remoteAddress;
-
+  
   return {
     props: {
       ip,
@@ -110,4 +120,5 @@ export async function getServerSideProps({ params, req }) {
     },
   };
 }
+
 
