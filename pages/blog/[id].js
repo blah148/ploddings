@@ -82,14 +82,14 @@ return (
         <Loader isLoading={isLoading} />
         <div className="mainFeed">
           <div className="topRow">
-            <IpodMenuLink threadData={threadData} fallBack='#blog' />
+            <IpodMenuLink threadData={threadData} fallBack='/blog' />
             <Menu userId={userId} />
           </div>
           <div className={styles.songNameContainer}>
             <h1>{blogData.name}</h1>
             <FavoriteButton userId={userId} id={blogData.id} ip={ip} />
           </div>
-          <ParentInfoLink threadData={threadData} fallBack='#blog' />
+          <ParentInfoLink threadData={threadData} fallBack='/blog' />
           <Dropdown id={blogData.id} />
           <div>Date posted: {formatDate(blogData.published_date)}</div>
           <div className={styles.bottomBorder}></div>
