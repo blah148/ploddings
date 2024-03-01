@@ -63,7 +63,7 @@ export default function YoutubeDl({ userId, ip }) {
 							<Menu userId={userId} />
 						</div>
 						<h1>Slow-Downer & Pitch-Shifter</h1>
-						<input type="file" accept=".mp3" onChange={handleFileChange} />
+						<input type="file" accept="audio/*,.wav,.mp3,.aac,.m4a,.opus" onChange={handleFileChange} />
 						<button onClick={uploadFile} disabled={isLoading}>
 							{isLoading ? 'Uploading...' : 'Upload'}
 						</button>
