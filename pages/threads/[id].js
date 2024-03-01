@@ -67,7 +67,7 @@ export default function Thread({ userId, ip, threadData }) {
 					<Loader isLoading={isLoading} />
 			    <div className="mainFeed">
 						<div className="topRow">
-							<IpodMenuLink fallBack='/' />
+							<IpodMenuLink fallBack='' />
 							<Menu userId={userId} />
 						</div>
 						<div className="narrowedFeedBody">
