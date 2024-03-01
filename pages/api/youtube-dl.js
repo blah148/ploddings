@@ -8,6 +8,7 @@ export default async (req, res) => {
         res.setHeader('Allow', ['POST']);
         return res.status(405).end('Method Not Allowed');
     }
+		console.log('making it here');
 
     const { videoUrl } = req.body;
     if (!videoUrl || !ytdl.validateURL(videoUrl)) {
