@@ -43,10 +43,8 @@ export default function Sidebar({ userId, ip }) {
 	return (
 		<div className={styles.sidebarContainer}>
 			<div className={styles.sidebarHeader}>
-				<Link href="/" legacyBehavior>
-					<a className={styles.returnHome}>
+				<Link href="/" className={styles.returnHome} legacyBehavior>
 						PLODDINGS
-					</a>
 				</Link>
 			</div>
 			<div className={styles.sidebarItems}>

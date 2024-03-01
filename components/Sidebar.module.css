@@ -18,7 +18,7 @@ div.sidebarContainer {
 	display: flex;
 	justify-content: center;
 }
-a.returnHome {
+.sidebarHeader a {
   display: flex;
 	align-items: center;
 	color: white;
@@ -26,7 +26,7 @@ a.returnHome {
 	letter-spacing: 0.8px;
 	padding: 7px 16px;
 }
-a.returnHome:hover {
+.sidebarHeader a:hover {
 	opacity: 0.8;
 }
 a.upLevel {
