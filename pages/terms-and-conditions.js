@@ -6,6 +6,7 @@ import IpodMenuLink from '../components/ParentBackLink';
 import jwt from 'jsonwebtoken';
 import Loader from '../components/Loader';
 import { useLoading } from '../context/LoadingContext';
+import SEO from '../components/SEO';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -25,7 +26,12 @@ export default function TermsAndConditions({ userId, ip }) {
 	const { isLoading, setIsLoading } = useLoading();
 
   return (
-		<div className="bodyA">
+		 <div className="bodyA">
+        <SEO
+				  title="Terms and Conditions"
+          description="Staying in-the-know with the terms-and-conditions of Ploddings is not so hard.. the project is all open-source and the guitar-learning tools are all public"
+          slug="/terms-and-conditions"
+        />
 				<Sidebar userId={userId} ip={ip} />
 				<div className="mainFeedAll">
 						<div className="feedContainer">

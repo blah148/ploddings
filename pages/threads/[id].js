@@ -16,6 +16,7 @@ import Menu from '../../components/Menu';
 import IpodMenuLink from '../../components/ParentBackLink';
 import VictrolaIcon from '../../components/VictrolaIcon';
 import WikipediaIcon from '../../components/WikipediaIcon';
+import SEO from '../../components/SEO';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -53,6 +54,13 @@ export default function Thread({ userId, ip, threadData }) {
 
   return (
     <div className="bodyA">
+       <SEO
+				 title={threadData.name}
+				 image={threadData.link_3}
+				 page_type="threads"
+				 slug={threadData.slug}
+         description={threadData.meta_description}
+       />
 			<Sidebar userId={userId} ip={ip} />
 			<div className="mainFeedAll">
 				<div className="feedContainer">

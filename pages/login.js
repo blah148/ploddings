@@ -8,6 +8,7 @@ import IpodMenuLink from '../components/ParentBackLink';
 import Menu from '../components/Menu';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
+import SEO from '../components/SEO';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -24,23 +25,26 @@ const verifyUserSession = (req) => {
 
 export default function Login({ userId, ip }) {
 
-	const { isLoading, setIsLoading } = useLoading();
   const [email, setEmail] = useState('');
   const [code, setCode] = useState('');
+	const { isLoading, startLoading, stopLoading } = useLoading();
 
   const handleEmailSubmit = async (e) => {
     e.preventDefault();
 
     try {
+			startLoading();
       // Send an email with a verification code to the provided email address
       const response = await axios.post('/api/send-code', { email });
 
       if (response.status === 200) {
         // Display a message to check their email for the verification code
 				alert('Check your email for the verification code');
+				stopLoading();
       }
     } catch (error) {
       console.error('Error sending verification code:', error);
+			stopLoading();
     }
   };
 
@@ -48,21 +52,28 @@ export default function Login({ userId, ip }) {
     e.preventDefault();
 
     try {
+			startLoading();
       // Verify the provided code
       const response = await axios.post('/api/verify-code', { email, code });
 
       if (response.status === 200) {
+				stopLoading();
         // Code is valid, log the user in and redirect to a protected page
-        console.log('Successfully logged in.');
 				window.location.href = '/';
       }
     } catch (error) {
+			stopLoading();
       console.error('Error verifying code:', error);
     }
   };
 
   return (
     <div className="bodyA">
+       <SEO
+				 title="Login"
+         description="To revisit your: (i) visit history, (ii) starred tablature, and (iii) use the pitch-shifter/slow-downer, login to your Ploddings account with an email address"
+         slug="/login"
+       />
 			<Sidebar userId={userId} ip={ip} />
 			<div className="mainFeedAll">
 				<div className="feedContainer">

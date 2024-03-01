@@ -20,6 +20,7 @@ import Dropdown from '../../components/Dropdown';
 import Footer from '../../components/Footer';
 import Menu from '../../components/Menu';
 import styles from '../../styles/songs.module.css';
+import SEO from '../../components/SEO';
 
 // Verify the user's session using the JWT token
 const verifyUserSession = (req) => {
@@ -76,6 +77,14 @@ export default function Blog({ threadData, blogData, ip, userId }) {
 		
 return (
   <div className="bodyA">
+		<SEO
+			title={blogData.name}
+			image={blogData.thumbnail_200x200}
+			page_type="blog"
+			published_date={blogData.published_date}
+			slug={blogData.slug}
+			author="blah148"
+		/>
     <Sidebar userId={userId} ip={ip} />
     <div className="mainFeedAll">
       <div className="feedContainer">

@@ -6,6 +6,7 @@ import Menu from '../components/Menu';
 import IpodMenuLink from '../components/ParentBackLink';
 import jwt from 'jsonwebtoken';
 import { useLoading } from '../context/LoadingContext';
+import SEO from '../components/SEO';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -76,6 +77,11 @@ export default function ContactForm ({ userId, ip  }) {
 
 	return (
 		<div className="bodyA">
+       <SEO
+				 title="Contact"
+         description="For anything Ploddings-related where you need a hand from the other-side, from suggesting songs to help with your account, one can reach out by contacting"
+         slug="/contact"
+       />
 			<Sidebar userId={userId} ip={ip} />
 			<div className="mainFeedAll">
 				<div className="feedContainer">

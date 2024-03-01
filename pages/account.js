@@ -13,6 +13,7 @@ import useGuestStore from '../zustandStore_guest';
 import CreateAccountForm from '../components/createAccount';
 import { useLoading } from '../context/LoadingContext';
 import Loader from '../components/Loader';
+import SEO from '../components/SEO';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -49,6 +50,11 @@ export default function Account({ ip, userId }) {
 
   return (
 		<div className="bodyA">
+       <SEO
+				 title="Account"
+         description="Manage your Ploddings guitar account, toggling between light-and-dark mode, and checking back into your: (i) visit-history and (ii) starred guitar tablature"
+         slug="/account"
+       />
 				<Sidebar userId={userId} ip={ip} />
 				<div className="mainFeedAll">
 						<div className="feedContainer">

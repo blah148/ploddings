@@ -7,6 +7,7 @@ import jwt from 'jsonwebtoken';
 import Menu from '../components/Menu';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
+import SEO from '../components/SEO';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -104,6 +105,10 @@ async function FetchContentByCategory() {
 return (
 
     <div className="bodyA">
+      <SEO
+        description="For fingerstyle blues, jazz, folk, and classical guitar, the Ploddings \u0022seed-vault\u0022-like site contains MIDI-tabs, pitch-shifters, and slow-downers for practice time."
+        slug="/"
+      />
 			 <Sidebar userId={userId} ip={ip} />
 			 <div className="mainFeedAll">
 				 <div className="feedContainer">

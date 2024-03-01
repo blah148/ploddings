@@ -8,6 +8,7 @@ import Menu from '../components/Menu';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 import Link from 'next/link';
+import SEO from '../components/SEO';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -69,6 +70,11 @@ export default function Blog({ userId, ip }) {
 
   return (
     <div className="bodyA">
+       <SEO
+				 title="Guitar Blog"
+         description="Lots of guitar-content fills the crannies of ..The Ploddings Blog.. including histories of American blues music, origins of the guitar, and stuff to get started"
+         slug="/blog"
+       />
       <Sidebar userId={userId} ip={ip} />
       <div className="mainFeedAll">
         <div className="feedContainer">
@@ -81,23 +87,22 @@ export default function Blog({ userId, ip }) {
             <div className="narrowedFeedBody">
               <h1>Blog</h1>
               <div className="blogCardContainer">
-{posts.map((post) => (
-  <Link href={`/${post.page_type}/${post.slug}`} key={post.id} passHref>
-    <div className="blogHover">
-        <div className="blogCard date">{post.formatted_date}</div>
-        <div className="ornamentContainer">
-          <div className="circleOrnament">
-            <div className="dotOrnament"></div>
-          </div>
-					<div className="lineOrnament"></div>
-        </div>
-        <div>
-          <div className="blogCard name">{post.name}</div>
-        </div>
-    </div>
-  </Link>
-))}
-
+								{posts.map((post) => (
+									<Link href={`/${post.page_type}/${post.slug}`} key={post.id} passHref>
+										<div className="blogHover">
+												<div className="blogCard date">{post.formatted_date}</div>
+												<div className="ornamentContainer">
+													<div className="circleOrnament">
+														<div className="dotOrnament"></div>
+													</div>
+													<div className="lineOrnament"></div>
+												</div>
+												<div>
+													<div className="blogCard name">{post.name}</div>
+												</div>
+										</div>
+									</Link>
+								))}
                 {hasMore && (
                   <button className="blogLoadMore" onClick={fetchPosts} disabled={isLoading}>
                     Load More

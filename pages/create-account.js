@@ -8,6 +8,7 @@ import Footer from '../components/Footer';
 import Menu from '../components/Menu';
 import jwt from 'jsonwebtoken';
 import IpodMenuLink from '../components/ParentBackLink';
+import SEO from '../components/SEO';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -57,6 +58,11 @@ export default function CreateAccount({ userId, ip }) {
 
   return (
     <div className="bodyA">
+       <SEO
+				 title="Create Account"
+         description="To persist your: (i) visit history, (ii) starred guitar tablature, and (iii) access the pitch-shifter and slow-downer, create an account on Ploddings with an email"
+         slug="/create-account"
+       />
 			<Sidebar userId={userId} ip={ip} />
 			<div className="mainFeedAll">
 				<div className="feedContainer">

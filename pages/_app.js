@@ -2,6 +2,7 @@
 import "@/styles/globals.css";
 import { LoadingProvider } from '../context/LoadingContext';
 import { ThemeProvider, useTheme } from '../context/ThemeContext';
+import Head from 'next/head';
 
 // This is a new component that consumes the useTheme hook
 const ThemedAppContent = ({ Component, pageProps }) => {
@@ -18,7 +19,9 @@ export default function App({ Component, pageProps }) {
   return (
     <LoadingProvider>
       <ThemeProvider>
-        {/* Use the ThemedAppContent component to wrap your page content */}
+      <Head>
+        <link rel="icon" href="/favicon.png" />
+      </Head>
         <ThemedAppContent Component={Component} pageProps={pageProps} />
       </ThemeProvider>
     </LoadingProvider>

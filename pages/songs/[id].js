@@ -19,6 +19,7 @@ import RelatedContent from '../../components/RelatedGrid_Songs';
 import TuningDetails from '../../components/TuningButton';
 import Menu from '../../components/Menu';
 import Footer from '../../components/Footer';
+import SEO from '../../components/SEO';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -57,6 +58,13 @@ export default function Song({ userId, ip, threadData, songData }) {
 
 return (
   <div className="bodyA">
+		<SEO
+			 title={songData.name}
+			 image={threadData.link_3}
+			 page_type="songs"
+			 slug={songData.slug}
+			 description={songData.meta_description}
+		 />
     <Sidebar userId={userId} ip={ip} />
     <div className="mainFeedAll">
       <div className="feedContainer">

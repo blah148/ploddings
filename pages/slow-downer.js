@@ -8,7 +8,7 @@ import Loader from '../components/Loader';
 import Sidebar from '../components/Sidebar';
 import IpodMenuLink from '../components/ParentBackLink';
 import { uploadSong } from '../utils/uploadSong';
-
+import SEO from '../components/SEO';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -79,6 +79,11 @@ const handleFileChange = (e) => {
 
   return (
     <div className="bodyA">
+       <SEO
+				 title="Slow-Downer and Pitch-Shifter"
+         description="Upload mp3 files and: (i) pitch-shift and/or (ii) slow-down songs so that transcribing them is easy-as-blueberry-pie.. almost as-easy, at least"
+         slug="/slow-downer"
+       />
 			<Sidebar userId={userId} ip={ip} />
 			<div className="mainFeedAll">
 				<div className="feedContainer">

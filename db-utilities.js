@@ -45,7 +45,7 @@ async function fetchThreadData(slug) {
   try {
     const { data, error } = await supabase
       .from('content')
-      .select('id, lyrics, name, page_type, child_type, link_1, link_2, link_3, body_text')
+      .select('id, meta_description, lyrics, name, page_type, child_type, link_1, link_2, link_3, body_text')
       .eq('slug', slug)
       .single();
 
@@ -65,7 +65,7 @@ async function fetchSongData(slug) {
   try {
     const { data, error } = await supabase
       .from('content')
-      .select('id, name, featured_img_alt_text, capo_position, tuning, link_1, link_2, link_3, thread_id, body_text') 
+      .select('id, meta_description, name, featured_img_alt_text, capo_position, tuning, link_1, link_2, link_3, thread_id, body_text') 
       .eq('slug', slug)
       .single();
     
@@ -85,7 +85,7 @@ async function fetchBlogData(slug) {
   try {
     const { data, error } = await supabase
       .from('content')
-      .select('id, name, published_date, thread_id, body_text, sibling_previous, sibling_next')
+      .select('id, meta_description, name, published_date, thread_id, body_text, sibling_previous, sibling_next')
       .eq('slug', slug)
       .single();
     
@@ -105,7 +105,7 @@ async function getParentObject(threadId) {
   try {
     const { data, error } = await supabase
       .from('content')
-      .select('name, page_type, featured_img_alt_text, thumbnail_200x200, slug')
+      .select('name, page_type, link_3, featured_img_alt_text, thumbnail_200x200, slug')
       .eq('id', threadId)
       .single();
 

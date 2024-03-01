@@ -4,6 +4,7 @@ import Footer from '../components/Footer';
 import Menu from '../components/Menu';
 import IpodMenuLink from '../components/ParentBackLink';
 import { useLoading } from '../context/LoadingContext';
+import SEO from '../components/SEO';
 
 export default function Custom404 () {
 
@@ -60,6 +61,11 @@ export default function Custom404 () {
 
 	return (
 		<div className="bodyA">
+       <SEO
+				 title="404 Dead-End"
+         description="Lots of Ploddings pages have reshuffled (then shuffled some more) since being est. in 2018.. this is the 404 page, sorry if you made it here!"
+         slug="/404"
+       />
 			<div className="mainFeedAll">
 				<div className="feedContainer">
 					<Loader isLoading={isLoading} />

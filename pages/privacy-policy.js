@@ -6,6 +6,7 @@ import IpodMenuLink from '../components/ParentBackLink';
 import jwt from 'jsonwebtoken';
 import Loader from '../components/Loader';
 import { useLoading } from '../context/LoadingContext';
+import SEO from '../components/SEO';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -26,6 +27,11 @@ export default function PrivacyPolicy({ userId, ip }) {
 
   return (
 		<div className="bodyA">
+        <SEO
+					title="Privacy Policy"
+          description="Keep in-tune with the privacy-policies of Ploddings. No 3rd-party tracking software from Google gets used, and all account information is deletable on request"
+          slug="/privacy-policy"
+        />
 				<Sidebar userId={userId} ip={ip} />
 				<div className="mainFeedAll">
 						<div className="feedContainer">
