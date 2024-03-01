@@ -278,9 +278,12 @@ div.blogLed {
 }
 
 /* /blog */
+.blogCardContainer .blockifyBlock {
+	display: block;
+}
 .blogCardContainer .blogHover {
   transition: transform .1s;	
-	display: flex;
+	display: inline-flex;
 	align-items: center;
 }
 .blogCardContainer .blogHover:hover {
@@ -328,8 +331,17 @@ div.blogLed {
 	display: flex;
 	justify-content: center;
 }
+.blogFeedImage {
+	width: 40px;
+	height: 40px;
+	border-radius: 50px;
+	border: 1px solid #ddd;
+	margin-right: 10px;
+}
 .blogCard.name {
-	padding: 5px 16px;
+	padding: 5px 16px 5px 4px;
+	display: flex;
+	align-items: center;
 }
 .blogLoadMore {
 	margin-left: 12ch;

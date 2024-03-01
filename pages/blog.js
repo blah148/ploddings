@@ -43,7 +43,7 @@ export default function Blog({ userId, ip }) {
 
     const { data, error } = await supabase
       .from('content')
-      .select('id, slug, name, page_type, published_date')
+      .select('id, thumbnail_200x200, featured_img_alt_text, slug, name, page_type, published_date')
       .eq('page_type', 'blog')
       .is('thread_id', null)
       .order('published_date', { ascending: false })
@@ -88,20 +88,23 @@ export default function Blog({ userId, ip }) {
               <h1>Blog</h1>
               <div className="blogCardContainer">
 								{posts.map((post) => (
-									<Link href={`/${post.page_type}/${post.slug}`} key={post.id} passHref>
-										<div className="blogHover">
-												<div className="blogCard date">{post.formatted_date}</div>
-												<div className="ornamentContainer">
-													<div className="circleOrnament">
-														<div className="dotOrnament"></div>
+									<div className="blockifyBlock">
+										<Link href={`/${post.page_type}/${post.slug}`} key={post.id} passHref>
+											<div className="blogHover">
+													<div className="blogCard date">{post.formatted_date}</div>
+													<div className="ornamentContainer">
+														<div className="circleOrnament">
+															<div className="dotOrnament"></div>
+														</div>
+														<div className="lineOrnament"></div>
 													</div>
-													<div className="lineOrnament"></div>
-												</div>
-												<div>
-													<div className="blogCard name">{post.name}</div>
-												</div>
-										</div>
-									</Link>
+													<div className="blogCard name">
+														<img src={post.thumbnail_200x200} alt={post.featured_img_alt_text} className="blogFeedImage" />
+														<div>{post.name}</div>
+													</div>
+											</div>
+										</Link>
+									</div>
 								))}
                 {hasMore && (
                   <button className="blogLoadMore" onClick={fetchPosts} disabled={isLoading}>
