@@ -18,10 +18,7 @@ export default async (req, res) => {
 		console.log('now here bro');
     const videoID = ytdl.getURLVideoID(videoUrl);
 		console.log('what about here yo', videoID);
-    const info = await ytdl.getInfo(videoID);
-		console.log('2what about here', info);
-    const title = info.videoDetails.title.replace(/[^\w\s]/gi, '').replace(/\s+/g, '_');
-		console.log('3what about here', title);
+    const title = 'testing';
     const outputPath = `${title}.mp3`;
 		console.log('outputPath', outputPath);
 
