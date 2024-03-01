@@ -2,7 +2,6 @@ import { supabase } from '../utils/supabase';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import useStore from '../zustandStore';
-import useGuestStore from '../zustandStore_guest';
 import { useLoading } from '../context/LoadingContext';
 import styles from './Sidebar.module.css';
 
