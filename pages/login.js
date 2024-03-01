@@ -75,7 +75,7 @@ export default function Login({ userId, ip }) {
 						<div className="narrowedFeedBody">
 						  <h1>Login</h1>
 							<form onSubmit={handleEmailSubmit}>
-								<label>Step 1: Receive code </label>
+								<label>Step 1: Receive code via email</label>
 								<input
 									type="email"
 									placeholder="Enter your email"

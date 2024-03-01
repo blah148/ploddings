@@ -63,7 +63,7 @@ export default function Account({ ip, userId }) {
 											<h2>Save settings</h2>
 											{!userId &&
 												<> 
-												  <div className="alertNotice">Preserve favorites and viewing history across devices with an account</div>
+												  <div className="alertNotice">Persist favorites and viewing history across devices</div>
 											  	<CreateAccountForm />
 												</>
 											}
