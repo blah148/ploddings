@@ -6,7 +6,7 @@ export default function IpodMenuLink({ threadData, fallBack }) {
   // Determine the href dynamically: use threadData if available, otherwise fallBack
   const href = threadData && threadData.page_type && threadData.slug
                ? `/${threadData.page_type}/${threadData.slug}`
-               : `${fallBack}`;
+               : `/${fallBack}`;
 
   return (
     <Link href={href} className={styles.upLevel} passHref>
