@@ -1,7 +1,11 @@
-Ploddings provides a "workstation for blues (guitar) and other musings" with:
+# the Ploddings site
+
+Ploddings provides a 'workstation for blues guitar and other musings' with..
 - Note-for-note guitar tablature,
 - Instructional videos,
 - As well as slow-downer & pitch-shifter tools built-in.
+
+Visit the live version at: [Ploddings](https://ploddings.com)
 
 It's made with NextJS, at the moment using server-side rendering mainly for user authentication and fetching of initial important props, while using client-side rendering for the bulk of content fetching. The custom database is built with PostgreSQL Supabase, alongside files stored with 3rd-party tools such as MuseScore, Youtube, Dropbox, and B2 Cloud Storage.
 
