@@ -101,12 +101,8 @@ export async function getServerSideProps({ params, req }) {
   const userSession = verifyUserSession(req);
   const threadData = await fetchThreadData(params.id);
   
-  let ip;
-  // Check if `userSession` is not null before trying to access its properties
-  if (userSession === null || userSession.id === null) {
-  	const forwardedFor = req.headers['x-forwarded-for'];
-  	const ip = forwardedFor ? forwardedFor.split(',')[0] : req.connection.remoteAddress;
-  }
+	const forwardedFor = req.headers['x-forwarded-for'];
+ 	const ip = forwardedFor ? forwardedFor.split(',')[0] : req.connection.remoteAddress;
 
   const props = {
     threadData, 

@@ -81,7 +81,6 @@ class SlowDowner extends Component {
     audioCtx = new window.AudioContext()
     gainNode = audioCtx.createGain()
     window.addEventListener('beforeClosing', this.handleWindowClose)
-		console.log(this.props.mp3);
 		this.loadFile();
   }
 
