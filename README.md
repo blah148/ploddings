@@ -1,6 +1,6 @@
 # the Ploddings site
 
-Ploddings provides a 'workstation for blues guitar and other musings' with..
+Ploddings provides a 'workstation for blues guitar and other musings' with:
 - Note-for-note guitar tablature,
 - Instructional videos,
 - As well as slow-downer & pitch-shifter tools built-in.
