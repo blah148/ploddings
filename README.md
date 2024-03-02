@@ -9,7 +9,7 @@ Visit the live version at: [Ploddings](https://ploddings.com)
 
 It's made with NextJS, at the moment using server-side rendering mainly for user authentication and fetching of initial important props, while using client-side rendering for the bulk of content fetching. The custom database is built with PostgreSQL Supabase, alongside files stored with 3rd-party tools such as MuseScore, Youtube, Dropbox, and B2 Cloud Storage.
 
-The "vision" of Ploddings is to make the learning of, particularly, blues, jazz, folk, and classical guitar easier to accomplish online.. easier financially, since it's free to use, technically, since the content is custom-curated, and accessibility-wise, with good web usability in mind.
+The "vision" of Ploddings is to make the learning of, particularly, blues, jazz, folk, and classical guitar, easier to accomplish online.. easier financially, since it's free to use, technically, since the content is custom-curated, and accessibility-wise, with good web usability in mind.
 
 ## Getting Started
 
@@ -18,7 +18,7 @@ To try out the structure the repo, unzip the contents, open the root in Bash, th
 ```bash
 yarn dev
 ```
-As it's built not, the development environment is setup with [http://localhost:3000](http://localhost:3000), launchable with your browser.
+As it's currently built, the development environment is [http://localhost:3000](http://localhost:3000), launchable with your browser.
 
 ### i) Root
 
