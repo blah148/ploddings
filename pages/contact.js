@@ -152,7 +152,8 @@ export default function ContactForm ({ userId, ip  }) {
 export async function getServerSideProps({ params, req }) {
 
   const userSession = verifyUserSession(req);
-  const ip = req.connection.remoteAddress;
+  const forwardedFor = req.headers['x-forwarded-for'];
+  const ip = forwardedFor ? forwardedFor.split(',')[0] : req.connection.remoteAddress;
   
   return {
     props: {

@@ -127,8 +127,9 @@ export async function getServerSideProps({ params, req }) {
 	const userSession = verifyUserSession(req);
   const songData = await fetchSongData(params.id);
 	const threadData = await getParentObject(songData.thread_id);
-	const ip = req.connection.remoteAddress;
-
+  const forwardedFor = req.headers['x-forwarded-for'];
+  const ip = forwardedFor ? forwardedFor.split(',')[0] : req.connection.remoteAddress;
+  
   return {
     props: {
       songData,

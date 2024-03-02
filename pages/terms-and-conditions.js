@@ -64,3 +64,19 @@ export default function TermsAndConditions({ userId, ip }) {
   );
 }
 
+export async function getServerSideProps({ params, req }) {
+
+  const userSession = verifyUserSession(req);
+  const forwardedFor = req.headers['x-forwarded-for'];
+  const ip = forwardedFor ? forwardedFor.split(',')[0] : req.connection.remoteAddress;
+  
+  return {
+    props: {
+      ip,
+      userId: userSession?.id || null,
+    },
+  };
+}
+
+
+

@@ -129,7 +129,8 @@ export async function getServerSideProps({ params, req }) {
 	let ip;
 	// Check if `userSession` is not null before trying to access its properties
 	if (userSession === null || userSession.id === null) {
-		ip = req.connection.remoteAddress;
+	  const forwardedFor = req.headers['x-forwarded-for'];
+  	const ip = forwardedFor ? forwardedFor.split(',')[0] : req.connection.remoteAddress;
 	}
 
   const blogData = await fetchBlogData(params.id);
