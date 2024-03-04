@@ -6,6 +6,8 @@
 	width: 100%;
 	background-color: #fff;
 	box-shadow: 0px 8px 25px hsla(255, 24%, 91%, 1);
+	margin: 12px 0 0 0;
+	border: 1px solid #ddd;
 }
 .slowDownerRow {
 	display: flex;
@@ -13,7 +15,7 @@
 	width: 100%;
 }
 .slowDownerRow h3 {
-	margin: 8px 0;
+	margin: 8px 4px 8px 0;
 	font-weight: 400;
 	font-size: 17px;
 }
@@ -30,10 +32,10 @@
 	align-self: center;
 	font-weight: 400;
 	font-size: 16px;
-	
+  margin: 0 0 0 8px;	
 }
 .slowDownerRow button {
-	margin-left: 6px;
+	margin: 0 2px;	
 	cursor: pointer;
 	background: linear-gradient(165deg,#ec9373,#e95420);
   color: white;
@@ -52,6 +54,7 @@
 .mainPlaybackLabel {
 	font-size: 19px;
   font-weight: 500;
+	margin: 0 0 0 7px;
 }
 .buttonControlsRow {
 	margin: 16px 0 12px 0;
@@ -131,7 +134,24 @@
 .svgIcon {
 	pointer-events:none;
 }
-
+.incrementButton {
+  margin: 0 6px;	
+	width: 20px;
+	height: 20px;
+}
+.incrementButton.right svg {
+	width: 12px;
+	height: 12px;
+	margin: 0 0 -1px 0;
+}
+.incrementButton.left {
+	width: 25px;
+}
+.incrementButton.left svg {
+	width: 8px;
+	height: 8px;
+	margin: 0 0 3px 0;
+}
 .selector select {
   cursor: pointer;
 }

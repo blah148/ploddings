@@ -6,6 +6,8 @@ import PlayIcon from './PlayIcon';
 import PauseIcon from './PauseIcon';
 import RewindIcon from './RewindIcon';
 import LoopIcon from './LoopIcon';
+import LeftChevron from './LeftChevron';
+import RightChevron from './RightChevron';
 // ATTENTION: CRASHES IF MP3 ISN'T FETCHED YET... NEED TO WAIT FOR DB QUERY of MP3
 
 var m = messages.us;
@@ -57,17 +59,23 @@ class SlowDowner extends Component {
     this.handleLoop = this.handleLoop.bind(this);
     this.playAB = this.playAB.bind(this);
 		this.handleToggleLoop = this.handleToggleLoop.bind(this);
-	this.handleTimeASliderChange = this.handleTimeASliderChange.bind(this);
-	this.handleTimeBSliderChange = this.handleTimeBSliderChange.bind(this);
+		this.handleTimeASliderChange = this.handleTimeASliderChange.bind(this);
+		this.handleTimeBSliderChange = this.handleTimeBSliderChange.bind(this);
+		this.handleIncrementTimeA = this.handleIncrementTimeA.bind(this);
+		this.handleDecrementTimeA = this.handleDecrementTimeA.bind(this);
+		this.handleIncrementTimeB = this.handleIncrementTimeB.bind(this);
+		this.handleDecrementTimeB = this.handleDecrementTimeB.bind(this);
     
   } // end constructor
-  formatTime(seconds) {
-    let minutes = Math.floor(seconds / 60);
-    let remainingSeconds = Math.floor(seconds % 60);
-    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
-  }
 
-
+formatTime(seconds) {
+  let minutes = Math.floor(seconds / 60);
+  let remainingSeconds = Math.floor(seconds % 60);
+  // Extract the first significant digit of milliseconds by dividing by 100 and rounding
+  let milliseconds = Math.floor((seconds - Math.floor(seconds)) * 10); // Changed from multiplying by 1000 to 10
+  // Return the formatted time string in mm:ss.ms format
+  return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}.${milliseconds}`;
+}
 
   handleWindowClose(event) { 
     if (shifter) { shifter.disconnect(); shifter.off(); shifter = null; 
@@ -167,6 +175,7 @@ class SlowDowner extends Component {
 					<center>
 						<input
 							type="range"
+							step='0.5'
 							id="timeASlider"
 							name="timeASlider"
 							min="0"
@@ -176,7 +185,13 @@ class SlowDowner extends Component {
 						/>
 					</center>
 					<label className={styles.numberLabel}>{this.formatTime(timeA)}</label>
+					<button onClick={this.handleDecrementTimeA} aria-label="Decrease" className={`${styles.incrementButton} ${styles.left}`}>
+						<LeftChevron />
+					</button>
 					<button name='setA' onClick={handleLoop} >{m.setA}</button>
+					<button className={`${styles.incrementButton} ${styles.right}`} onClick={this.handleIncrementTimeA} aria-label="Increase">
+						<RightChevron />
+					</button>
 				</div>
  				<div className={styles.slowDownerRow}>
 					<h3>End</h3>
@@ -185,6 +200,7 @@ class SlowDowner extends Component {
 							type="range"
 							id="timeBSlider"
 							name="timeBSlider"
+							step='0.5'
 							min="0"
 							max={this.params.audioBuffer ? this.params.audioBuffer.duration : 100} // Assuming 100 as a fallback max
 							value={this.state.timeB}
@@ -192,24 +208,30 @@ class SlowDowner extends Component {
 						/>
 					</center>
 					<label className={styles.numberLabel}>{this.formatTime(timeB)}</label>
+					<button className={`${styles.incrementButton} ${styles.left}`} onClick={this.handleDecrementTimeB} aria-label="Decrease">
+						<LeftChevron />
+					</button>
 					<button name='setB' onClick={handleLoop} >{m.setB}</button>
+					<button className={`${styles.incrementButton} ${styles.right}`} onClick={this.handleIncrementTimeB} aria-label="Increase">
+						<RightChevron />
+					</button>
 				</div>
 				<hr className={styles.slowDownerSeparator} />
 				<div className={styles.slowDownerRow}>
 				<label className={styles.mainPlaybackLabel}>
-				  {this.formatTime(playingAt)}
+				  {this.formatTime(playingAt-timeA)}
 				</label>
 				<center>
           <input 
 						type='range' 
 						name='timeSlider'
             min={this.state.timeA} max={this.state.timeB}
-            value = {playingAtSlider} step='1'
+            value = {playingAtSlider} step='0.1'
             onChange={handleTimeSlider} 
 				  />
 				</center>
 				<label className={styles.mainPlaybackLabel}>
-					{this.formatTime(timeB)}
+					{this.formatTime(timeB-timeA)}
 				</label>
 			</div>
       <div className={styles.buttonControlsRow}>
@@ -276,6 +298,8 @@ async loadFile() {
   this.params.timeA = newTimeA; // Update the parameter
   
   // Optionally, update the state if you want to trigger a re-render or have the UI reflect this change
+  this.setState({ playingAt: newTimeA }); // change start-time label for Main Time Slider when the setA slider is modified
+	this.setState({playingAtSlider: newTimeA}); // change the position of the Main Time Slider knob when the setA slider is modded
   this.setState({ timeA: newTimeA });
 };
 handleTimeBSliderChange = (event) => {
@@ -285,6 +309,38 @@ handleTimeBSliderChange = (event) => {
   // Optionally, update the state to reflect the change in the UI and potentially re-render
   this.setState({ timeB: newTimeB });
 };
+
+
+	// Handler to decrement the slider value
+	handleDecrementTimeA = () => {
+		const newTimeA = Math.max(parseFloat(this.state.timeA) - 0.5, 0);
+    const event = { target: { value: newTimeA.toString() } };
+    this.handleTimeASliderChange(event);
+	}
+
+	// Handler to increment the slider value
+	handleIncrementTimeA = () => {
+		const newTimeA = Math.min(parseFloat(this.state.timeA) + 0.5, this.params.audioBuffer ? this.params.audioBuffer.duration : 100);
+		const event = { target: { value: newTimeA.toString() } };
+		this.handleTimeASliderChange(event);
+	}
+
+
+	// Handler to decrement the slider value
+	handleDecrementTimeB = () => {
+		const newTimeB = Math.max(parseFloat(this.state.timeB) - 0.5, 0);
+    const event = { target: { value: newTimeB.toString() } };
+    this.handleTimeBSliderChange(event);
+	}
+
+	// Handler to increment the slider value
+	handleIncrementTimeB = () => {
+		const newTimeB = Math.min(parseFloat(this.state.timeB) + 0.5, this.params.audioBuffer ? this.params.audioBuffer.duration : 100);
+		const event = { target: { value: newTimeB.toString() } };
+		this.handleTimeBSliderChange(event);
+	}
+
+
 
   handlePitchSlider(event) { 
 
