@@ -175,6 +175,7 @@ formatTime(seconds) {
 					<center>
 						<input
 							type="range"
+							className={styles.sliderRoom}
 							step='0.5'
 							id="timeASlider"
 							name="timeASlider"
@@ -197,6 +198,7 @@ formatTime(seconds) {
 					<h3>End</h3>
 					<center>
 						<input
+							className={styles.sliderRoom}
 							type="range"
 							id="timeBSlider"
 							name="timeBSlider"

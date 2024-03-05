@@ -33,9 +33,14 @@
 	align-self: center;
 }
 .slowDownerRow center input {
-	width: 95%;
+	width: 92%;
 	display: block;	
 	cursor: pointer;
+}
+@media (max-width: 768px) {
+  .slowDownerRow .sliderRoom {
+	  width: 90%;
+  }
 }
 .numberLabel {
 	align-self: center;

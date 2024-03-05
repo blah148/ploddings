@@ -9,6 +9,7 @@ import Sidebar from '../components/Sidebar';
 import IpodMenuLink from '../components/ParentBackLink';
 import { uploadSong } from '../utils/uploadSong';
 import SEO from '../components/SEO';
+import UnlockAudioButton from '../components/UnlockAudioButton';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
