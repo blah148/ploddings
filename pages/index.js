@@ -135,7 +135,7 @@ return (
 													{content.matched_content_name ? (
 														<>
 															<Link href={`/${content.page_type}/${content.slug}`} passHref>
-																<Image width={40} height={40} src={content.thumbnail_200x200} className="thumbnailImage" alt={content.featured_img_alt_text} />
+																<Image width={40} height={40} src={content.thumbnail_200x200} className="thumbnailImage" alt={content.featured_img_alt_text || 'robert johnson guitar at crossroads'} />
 																<div>
 																	{window.innerWidth <= 768 && content.name.length > 15
 																		? content.name.slice(0, 15) + '...'
@@ -143,14 +143,14 @@ return (
 																</div>
 															</Link>
 															<Link href={`/${content.matched_page_type}/${content.matched_slug}`} passHref>
-																<Image width={30} height={30} src={content.matched_thumbnail_200x200} className="artistImage" alt={content.matched_featured_img_alt_text} />
+																<Image width={30} height={30} src={content.matched_thumbnail_200x200} className="artistImage" alt={content.matched_featured_img_alt_text || 'robert johnson guitar at crossroads'} />
 																<div className="artistName">{content.matched_content_name}</div>
 															</Link>
 															<Link href={`/${content.page_type}/${content.slug}`} passHref><div className="led"></div></Link>
 														</>
 													) : (
 														<Link href={`/${content.page_type}/${content.slug}`} passHref>
-															<Image width={40} height={40} src={content.thumbnail_200x200} className="thumbnailImage" alt={content.featured_img_alt_text} />
+															<Image width={40} height={40} src={content.thumbnail_200x200} className="thumbnailImage" alt={content.featured_img_alt_text || 'robert johnson guitar at crossroads'} />
 															<div>
 																{window.innerWidth <= 768 && content.name.length > 27
 																	? content.name.slice(0, 27) + '...'
