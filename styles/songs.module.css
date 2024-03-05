@@ -8,6 +8,20 @@ div.bodyA {
 	display: flex;
 	align-items: center;
 }
+@media (max-width: 768px) {
+	.songNameContainer {
+		margin: 0 0 18px 0;
+		flex-direction: column;
+		align-items: flex-start;
+	}
+	.songNameContainer h1 {
+		margin: 12px 0 6px 0;
+		line-height: 40px;
+	}
+	.songNameContainer svg {
+		margin: 0 !important;
+	}
+}
 .songNameContainer svg {
 	height: 20px;
 	margin: 0 0 2px 12px;
