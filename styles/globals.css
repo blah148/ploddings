@@ -128,6 +128,10 @@ a.upLevel {
 	display: block;
 	width: 50px;
 }
+div.previousButton {
+	display: flex;
+	align-content: center;
+}
 div.previousButton svg {
 	height: 16px;
 	width: 16px;
