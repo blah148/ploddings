@@ -17,15 +17,23 @@ div.bodyA {
 	.songNameContainer h1 {
 		margin: 12px 0 6px 0;
 		line-height: 40px;
+		
 	}
 	.songNameContainer svg {
-		margin: 0 !important;
+		margin: 0;
+	  height: 22px;	
 	}
 }
-.songNameContainer svg {
-	height: 20px;
-	margin: 0 0 2px 12px;
+@media (min-width: 769px) {
+	.songNameContainer svg {
+		height: 18px;
+		margin: 0 0 2px 12px;
+	}
+	.headerContainer .songNameContainer svg {
+		margin: 0 0 0 10px;
+	}
 }
+
 .songNameContainer svg:hover path {
 	fill: orange;
 }
@@ -249,16 +257,13 @@ div.bodyA {
 	flex-direction: column;
 	justify-content: space-between;
 }
-.rightColumn h1 {
-	margin: 0;
-}
 .lifeAndDeath {
-	margin-bottom: auto;
+	margin: 0 0 16px 0;
 	font-weight: 300;
 }
 .headerContainer svg {
 	width: 26px;
-	padding: 12px;
+	margin: 0 22px 0 0;
 }
 .headerContainer svg:hover {
 	opacity: 0.75;
@@ -266,9 +271,9 @@ div.bodyA {
 svg.victrola {
 	width: 20px;
 }
-.storyText p {
+.storyText {
 	font-size: 15px;
-	margin: 0;
+	margin: 12px 0 0 0;
 }
 .endingStory {
 	margin-bottom: 32px;

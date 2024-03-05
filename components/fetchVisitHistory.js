@@ -13,7 +13,7 @@ async function fetchVisitHistory(userId, limit = null, ip) {
     .from('visit_history')
     .select(`
       page_id,
-      content:page_id (id, slug, page_type, name, thumbnail_200x200)
+      content:page_id (id, slug, page_type, name, thumbnail_200x200, featured_img_alt_text)
     `) // Assume there's a foreign-key relationship set up in Supabase
     .order('visited_at', { ascending: false });
 

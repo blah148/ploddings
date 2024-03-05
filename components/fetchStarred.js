@@ -14,7 +14,7 @@ async function fetchStarred(userId, limit = null, ip) {
       .from('favorites')
       .select(`
         page_id,
-        content:page_id (id, slug, page_type, name, thumbnail_200x200)
+        content:page_id (id, slug, page_type, name, thumbnail_200x200, featured_img_alt_text)
       `, { count: 'exact' })
 			.order('created_at', { ascending: false });
 
