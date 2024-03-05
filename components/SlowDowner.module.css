@@ -1,7 +1,7 @@
 .App {
   text-align: left;
   max-width: 400px;
-	padding: 18px 24px;
+	padding: 14px 18px;
 	border-radius: 8px;
 	background-color: #fff;
 	box-shadow: 0px 8px 25px hsla(255, 24%, 91%, 1);
@@ -15,7 +15,7 @@
 }
 @media (max-width: 758px) {
 	.App {
-		width: 85%;
+		width: 87%;
 	}
 }
 .slowDownerRow {

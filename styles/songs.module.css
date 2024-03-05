@@ -177,6 +177,7 @@ div.bodyA {
 	padding: 8px 0px;
 	margin: 8px 0;
 	font-weight: 400;
+	overflow: hidden;
 }
 .paginationBlock {
 	display: flex;
