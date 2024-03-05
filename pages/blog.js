@@ -7,6 +7,7 @@ import IpodMenuLink from '../components/ParentBackLink';
 import Menu from '../components/Menu';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
+import Image from 'next/image';
 import Link from 'next/link';
 import SEO from '../components/SEO';
 
@@ -99,7 +100,7 @@ export default function Blog({ userId, ip }) {
 														<div className="lineOrnament"></div>
 													</div>
 													<div className="blogCard name">
-														<img src={post.thumbnail_200x200} alt={post.featured_img_alt_text} className="blogFeedImage" />
+														<Image width={50} height={50} src={post.thumbnail_200x200} alt={post.featured_img_alt_text} className="blogFeedImage" />
 														<div>{post.name}</div>
 													</div>
 											</div>

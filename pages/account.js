@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { supabase } from '../utils/supabase';
 import EmailUpdater from '../components/ChangeEmail';
@@ -76,33 +77,43 @@ export default function Account({ ip, userId }) {
 											{message && <p>{message}</p>}
 											<div className="categoryGroup">
 												<h2 id="starred">Starred</h2>
+												{starred.length === 0 ? (<div>No starred items</div>) : (
 													<ul>
 														{starred.map((star, index) => (
-														 <li key={star.content.id}>
-															 <Link href={`/${star.content.page_type}/${star.content.slug}`} passHref>
-																 <img src={star.content.thumbnail_200x200} alt={star.content.featured_img_alt_text}/>
-																 <div>{star.content.name}</div>
-																 <div className="led"></div>
-															 </Link>
-														 </li>
+															<li key={star.content.id}>
+																<Link href={`/${star.content.page_type}/${star.content.slug}`} passHref>
+																	<Image width={40} height={40} src={star.content.thumbnail_200x200} alt={star.content.featured_img_alt_text}/>
+																	{window.innerWidth <= 768 && star.content.name.length > 27
+																		? star.content.name.slice(0, 27) + '...'
+																		: star.content.name}
+																	<div className="led"></div>
+																</Link>
+															</li>
 														))}
 													</ul>
+												)}
 											</div>
 											<div className="categoryGroup">
 												<h2 id="visit-history">Visit History</h2>
-												<ul>
-													{visitHistory.map((visit, index) => (
-														 <li key={visit.content.id}>
-															 <Link href={`/${visit.content.page_type}/${visit.content.slug}`} passHref>
-																 <img src={visit.content.thumbnail_200x200} alt={visit.content.featured_img_alt_text}/>
-																 <div>{visit.content.name}</div>
-																 <div className="led"></div>
-															 </Link>
-														 </li>
-													))}
-												</ul>
-												<ThemeSelector />
+												{visitHistory.length === 0 ? (
+													<div>No visit history</div>
+												) : (
+													<ul>
+														{visitHistory.map((visit, index) => (
+															<li key={visit.content.id}>
+																<Link href={`/${visit.content.page_type}/${visit.content.slug}`} passHref>
+																	<Image width={40} height={40} src={visit.content.thumbnail_200x200} alt={visit.content.featured_img_alt_text}/>
+																	{window.innerWidth <= 768 && visit.content.name.length > 27
+																		? visit.content.name.slice(0, 27) + '...'
+																		: visit.content.name}
+																	<div className="led"></div>
+																</Link>
+															</li>
+														))}
+													</ul>
+												)}
 											</div>
+											<ThemeSelector />
 										</div>
 								</div> 
 						</div> 

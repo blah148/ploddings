@@ -1,6 +1,7 @@
 body {
 	margin: 0;
 	font-family: 'Baloo2-Regular';
+	background-color: #f6f9f9;
 }
 .bodyA {
 	display: flex;
@@ -43,13 +44,21 @@ body {
 
 @media screen and (max-width: 1024px) {
 	.narrowedFeedBody {
-		width: 95%;
+		width: 100%;
 	}
 }
 
 @media screen and (min-width: 1025px) {
 	.narrowedFeedBody {
 		width: 90%;
+	}
+}
+/* homepage */
+@media (max-width: 758px) {
+	.thumbnailImage {
+		width: 400px;
+		height: 40px;
+		
 	}
 }
 /* /slow-downer */
@@ -118,10 +127,6 @@ button:hover {
 a.upLevel {
 	display: block;
 	width: 50px;
-}
-div.previousButton {
-	margin: 0;
-	padding: 0;
 }
 div.previousButton svg {
 	height: 16px;
@@ -240,7 +245,7 @@ li.doubleRow .artistImage {
 	}
 	li.doubleRow {
 		display: grid;
-		grid-template-columns: 2.2fr 1.2fr 0.5fr;
+		grid-template-columns: 2.6fr 1.2fr 0.3fr;
 	}
 } 
 a.listLink {

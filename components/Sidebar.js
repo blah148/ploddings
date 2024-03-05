@@ -1,4 +1,5 @@
 import { supabase } from '../utils/supabase';
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import useStore from '../zustandStore';
@@ -55,7 +56,7 @@ export default function Sidebar({ userId, ip }) {
 							{starred.map((star, index) => (
 								<li className={styles.listElement} key={star.content.id}>
 									<Link className={styles.listLink} href={`/${star.content.page_type}/${star.content.slug}`} passHref>
-										<img
+										<Image width={40} height={40} 
 											className={styles.sidebarThumbnail}
 											src={star.content.thumbnail_200x200 ? star.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
 											alt={star.content.featured_img_alt_text}
@@ -74,7 +75,7 @@ export default function Sidebar({ userId, ip }) {
 						{visitHistory.map((visit, index) => (
 							<li className={styles.listElement} key={visit.content.id}>
 								<Link className={styles.listLink} href={`/${visit.content.page_type}/${visit.content.slug}`} passHref>
-									<img
+									<Image width={40} height={40} 
 										className={styles.sidebarThumbnail}
 										src={visit.content.thumbnail_200x200 ? visit.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
 										alt={visit.content.featured_img_alt_text}
@@ -92,7 +93,7 @@ export default function Sidebar({ userId, ip }) {
 						{beingWatched.map((watch, index) => (
 							<li key={watch.content.id} className={styles.listElement}>
 								<Link className={styles.listLink} href={`/${watch.content.page_type}/${watch.content.slug}`} passHref>
-									<img
+									<Image width={40} height={40} 
 										className={styles.sidebarThumbnail}
 										src={watch.content.thumbnail_200x200 ? watch.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
 										alt={watch.content.featured_img_alt_text}

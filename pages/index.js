@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabase';
 import Loader from '../components/Loader';
@@ -134,19 +135,27 @@ return (
 													{content.matched_content_name ? (
 														<>
 															<Link href={`/${content.page_type}/${content.slug}`} passHref>
-																<img src={content.thumbnail_200x200} className="thumbnailImage" alt={content.featured_img_alt_text} />
-																<div>{content.name}</div>
+																<Image width={40} height={40} src={content.thumbnail_200x200} className="thumbnailImage" alt={content.featured_img_alt_text} />
+																<div>
+																	{window.innerWidth <= 768 && content.name.length > 15
+																		? content.name.slice(0, 15) + '...'
+																		: content.name}
+																</div>
 															</Link>
 															<Link href={`/${content.matched_page_type}/${content.matched_slug}`} passHref>
-																<img src={content.matched_thumbnail_200x200} className="artistImage" alt={content.matched_featured_img_alt_text} />
+																<Image width={30} height={30} src={content.matched_thumbnail_200x200} className="artistImage" alt={content.matched_featured_img_alt_text} />
 																<div className="artistName">{content.matched_content_name}</div>
 															</Link>
 															<Link href={`/${content.page_type}/${content.slug}`} passHref><div className="led"></div></Link>
 														</>
 													) : (
 														<Link href={`/${content.page_type}/${content.slug}`} passHref>
-															<img src={content.thumbnail_200x200} className="thumbnailImage" alt={content.featured_img_alt_text} />
-															<div>{content.name}</div>
+															<Image width={40} height={40} src={content.thumbnail_200x200} className="thumbnailImage" alt={content.featured_img_alt_text} />
+															<div>
+																{window.innerWidth <= 768 && content.name.length > 27
+																	? content.name.slice(0, 27) + '...'
+																	: content.name}
+															</div>
 															<div className="led"></div>
 														</Link>
 													)}

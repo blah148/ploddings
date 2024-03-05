@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Image from 'next/image'
 import { supabase } from './supabase';
 import { useLoading } from '../context/LoadingContext';
 import styles from '../styles/songs.module.css';
@@ -42,8 +43,12 @@ const TableDataFetcher = ({ threadId }) => {
           {childData.map((item, index) => (
             <li key={item.id} className={styles.contentFeedItem}>
 							<Link href={`/${item.page_type}/${item.slug}`} passHref>
-                <img src={item.thumbnail_200x200} alt={item.featured_img_alt_text}/>
-							  <div className={styles.feedItemTitle}>{item.name}</div>
+                <Image width={40} height={40} src={item.thumbnail_200x200} alt={item.featured_img_alt_text}/>
+								<div className={styles.feedItemTitle}>
+									{window.innerWidth <= 768 && item.name.length > 27
+									? item.name.slice(0, 27) + '...'
+									: item.name}
+								</div>
 							  <div className="led"></div>
 							</Link>
             </li>
