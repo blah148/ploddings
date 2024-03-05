@@ -28,6 +28,7 @@ body {
 @media screen and (max-width: 1024px) {
 	.feedContainer {
 		flex-direction: column;
+		min-height: 60vh;
 		padding: 0 12px;
 	}
 	
@@ -118,7 +119,11 @@ a.upLevel {
 	display: block;
 	width: 50px;
 }
-div.previous-button svg {
+div.previousButton {
+	margin: 0;
+	padding: 0;
+}
+div.previousButton svg {
 	height: 16px;
 	width: 16px;
 	padding: 8px;
@@ -126,11 +131,11 @@ div.previous-button svg {
 	background-color: #4bb2ae;	
 	transition: transform 0.1s
 }
-div.previous-button:hover svg {
+div.previousButton:hover svg {
 	filter: saturate(1.3);
 	transform: scale(1.075);
 }
-div.previous-button svg path {
+div.previousButton svg path {
 	fill: white;
 }
 div.topRow {

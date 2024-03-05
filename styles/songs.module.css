@@ -1,6 +1,10 @@
 div.bodyA {
 	display: flex;
 }
+.upLevel {
+	padding: 0;
+	margin: 0;
+}
 .upLevel:hover {
 	filter: saturate(1.3);
 }
@@ -110,9 +114,14 @@ div.bodyA {
 	}
 
 }
+
+@media (min-width: 1201px) {
+	.primaryColumn {
+		min-width: 650px;
+	}
+}
 .primaryColumn {
 	margin-top: 4px;
-	min-width: 650px;
 	width: 100%;
 }
 .blogBodyText figure {
@@ -206,10 +215,22 @@ div.bodyA {
 .headerContainer {
 	display: flex;
 }
-.headerContainer img {
-	max-height: 240px;
-	border-radius: 8px;
-	margin-right: 16px;
+@media (max-width: 1200px) {
+	.headerContainer {
+		flex-direction: column;
+	}
+	.headerContainer img {
+		border-radius: 8px;		
+		height: 300px;
+		width: 300px;
+	}
+}
+@media (min-width: 1201px) {
+	.headerContainer img {
+	  max-height: 240px;
+	  border-radius: 8px;
+	  margin-right: 16px;	
+	}
 }
 .headerContainer .rightColumn {
 	display: flex;
