@@ -42,7 +42,7 @@ export default function CreateAccountForm() {
 					value={email}
 					onChange={(e) => setEmail(e.target.value)}
 				/>
-				<button onClick={handleCreateAccount}>Create Account</button>
+				<button onClick={handleCreateAccount}>Save Settings / Create Account</button>
 			</form>
     </div>
   );
