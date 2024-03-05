@@ -14,6 +14,7 @@ import IpodMenuLink from '../../components/ParentBackLink';
 import ParentInfoLink from '../../components/ParentInfoLink';
 import Pagination from '../../components/Pagination';
 import Link from 'next/link';
+import Image from 'next/image';
 import TableOfContents from '../../components/TableOfContents';
 import RelatedContent from '../../components/RelatedGrid_Songs';
 import Dropdown from '../../components/Dropdown';
