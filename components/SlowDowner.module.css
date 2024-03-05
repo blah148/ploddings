@@ -9,6 +9,16 @@
 	margin: 12px 0 0 0;
 	border: 1px solid #ddd;
 }
+@media (min-width: 759px) {
+	.App {
+		width: 100%
+	}
+}
+@media (max-width: 758px) {
+	.App {
+		width: 390px;
+	}
+}
 .slowDownerRow {
 	display: flex;
 	align-items: center;
