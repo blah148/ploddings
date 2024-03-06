@@ -70,6 +70,7 @@ export default function CreateAccount({ userId, ip }) {
         description="To persist your: (i) visit history, (ii) starred guitar tablature, and (iii) access the pitch-shifter and slow-downer, create an account on Ploddings with an email"
         slug="/create-account"
       />
+			<Sidebar userId={userId} ip={ip} />
       <div className="mainFeedAll">
         <div className="feedContainer">
           <Loader isLoading={isLoading} />
