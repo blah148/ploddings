@@ -1,13 +1,16 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
+
 
 export default function Footer ({ userId = null  }) {
 
-	const handleLogout = async () => {
-		logout();
-    router.push('/');
-  };
+  const router = useRouter();
 
+	const handleLogout = async () => {
+		await fetch('/api/logout', { method: 'POST' });
+		router.push('/');
+	};
 
 	return (
 		<div className="footerContainer">
@@ -29,7 +32,7 @@ export default function Footer ({ userId = null  }) {
 					{userId && (
 						<>
 							<Link href="/account" className="footer_link-item" passHref>My account</Link>
-							<a onClick={handleLogout} className="footer_link-item">Logout</a>
+							<a onClick={handleLogout} className="footer_link-item" style={{cursor: 'pointer'}}>Logout</a>
 						</>
 					)}
 					<Link href="/contact" className="footer_link-item" passHref>Contact</Link>

@@ -1,10 +1,12 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Logout from './Logout';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 
 export default function Menu({ userId = null }) {
 
   const [showMenu, setShowMenu] = useState(false);
+	const router = useRouter();
   const menuRef = useRef(); // Create a ref for the menu
   
   const toggleMenu = () => {
@@ -31,10 +33,9 @@ export default function Menu({ userId = null }) {
   }, [showMenu]); // Only re-run if showMenu changes
 
 	const handleLogout = async () => {
-		logout();
-    router.push('/');
-  };
-
+		await fetch('/api/logout', { method: 'POST' });
+		router.push('/');
+	};
 
   return (
     <>
@@ -52,9 +53,9 @@ export default function Menu({ userId = null }) {
             <path d="M12,4A5,5,0,1,1,7,9a5,5,0,0,1,5-5m0-2a7,7,0,1,0,7,7A7,7,0,0,0,12,2Z"/>
             <rect fill="none" id="_Transparent_Rectangle_" data-name="&lt;Transparent Rectangle&gt;" className="cls-1" width="32" height="32"/>
           </svg>
-          <p className="menuLabel">My account</p>
+          <p className="menuLabel">Account</p>
         </Link>
-        <a onClick={handleLogout} className="menuItem">
+        <a onClick={handleLogout} className="menuItem" style={{cursor: 'pointer'}}>
           <svg id="icon" viewBox="0 0 32 32">
             <path d="M26,30H14a2,2,0,0,1-2-2V25h2v3H26V4H14V7H12V4a2,2,0,0,1,2-2H26a2,2,0,0,1,2,2V28A2,2,0,0,1,26,30Z"/>
             <polygon points="14.59 20.59 18.17 17 4 17 4 15 18.17 15 14.59 11.41 16 10 22 16 16 22 14.59 20.59"/>
