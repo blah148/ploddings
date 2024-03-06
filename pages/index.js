@@ -42,7 +42,7 @@ async function FetchContentByCategory() {
 
     try {
         // Call the PostgreSQL function
-        const { data, error } = await supabase.rpc('fetch_categories_with_content');
+        const { data, error } = await supabase.rpc('fetch_categories_with_content2');
 
         if (error) {
             throw error;
@@ -55,12 +55,12 @@ async function FetchContentByCategory() {
                 acc[item.category_id] = {
                     id: item.category_id,
                     name: item.category_name,
+                    column_order: item.column_order, // Including column_order here
                     content: [],
                 };
             }
             
             // Add the content item to the appropriate category
-            // Check if it's a song to include matched details
             if (item.content_type === 'songs' && item.matched_content_name) {
                 acc[item.category_id].content.push({
                     id: item.content_id,
@@ -70,7 +70,7 @@ async function FetchContentByCategory() {
                     featured_img_alt_text: item.featured_img_alt_text,
                     slug: item.slug,
                     matched_content_name: item.matched_content_name,
-                    matched_thumbnail_200x200: item.matched_thumbnail_200x200, // Assuming this comes from your updated SQL function
+                    matched_thumbnail_200x200: item.matched_thumbnail_200x200,
                     matched_slug: item.matched_slug,
                     matched_page_type: item.matched_page_type,
                     matched_featured_img_alt_text: item.matched_featured_img_alt_text,
@@ -84,17 +84,18 @@ async function FetchContentByCategory() {
                     thumbnail_200x200: item.thumbnail_200x200,
                     featured_img_alt_text: item.featured_img_alt_text,
                     slug: item.slug,
-                    // Other matched fields could be null or simply not added
                 });
             }
             
             return acc;
         }, {});
         
-        // Convert the categoriesMap object back into an array
-        const categoriesArray = Object.values(categoriesMap);
+        // Convert the categoriesMap object back into an array and sort by column_order
+        const categoriesArray = Object.values(categoriesMap).sort((a, b) => a.column_order - b.column_order);
         
-        // Update the component state with the transformed data
+        console.log('Sorted categories:', categoriesArray); // Optional: Log the sorted array for debugging
+        
+        // Update the component state with the transformed and sorted data
         setCategories(categoriesArray);
     } catch (error) {
         console.error('Error fetching content by category:', error.message);
