@@ -26,7 +26,7 @@ export default function CreateAccountForm() {
 
       // Store the JWT token as a secure cookie on the client side
       document.cookie = `auth_token=${token}; Max-Age=604800; Path=/; SameSite=Lax; ${process.env.NODE_ENV === 'production' ? 'Secure;' : ''}`;
-
+			alert('Account successfully created. You are now logged-in');
       // Redirect to the login or dashboard page
       router.push('/'); // Adjust the route as needed
     } catch (error) {
