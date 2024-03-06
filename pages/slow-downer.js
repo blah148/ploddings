@@ -98,8 +98,8 @@ const handleFileChange = (e) => {
 						<div style={{display: 'block'}}>
 							<div className="messageNotice">Accepts mp3/wav/aac/m4a/opus file-types with a maximum size of 5MB</div>
 						</div>
-						<input type="file" accept="audio/*,.wav,.mp3,.aac,.m4a,.opus" onChange={handleFileChange} />
-						<button onClick={uploadFile} disabled={isLoading} style={{display: 'block'}}>
+						<input type="file" style={{marginRight: '7px', width: '27ch'}} accept="audio/*,.wav,.mp3,.aac,.m4a,.opus" onChange={handleFileChange} />
+						<button onClick={uploadFile} disabled={isLoading} >
 							{isLoading ? 'Uploading...' : 'Upload'}
 						</button>
 						<div style={{ opacity: mp3Link ? 1 : 0.5 }}>
