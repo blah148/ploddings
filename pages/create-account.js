@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { setCookie } from 'cookie';
 import { useLoading } from '../context/LoadingContext';
@@ -24,75 +24,81 @@ const verifyUserSession = (req) => {
 };
 
 export default function CreateAccount({ userId, ip }) {
-
-	const { isLoading, setIsLoading } = useLoading();
-
+  const { isLoading, setIsLoading } = useLoading();
   const router = useRouter();
   const [email, setEmail] = useState('');
 
-	const handleCreateAccount = async () => {
-		try {
-			const response = await fetch('/api/create-account', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({ email }),
-			});
+  useEffect(() => {
+    console.log('this is the email', email);
+  }, [email]);
 
-			if (!response.ok) {
-				throw new Error('Failed to create account');
-			}
+  const handleCreateAccount = async (e) => {
+    e.preventDefault(); // Prevent the form's default submission behavior
+    console.log('About to try POST - client side');
 
-			const { token } = await response.json();
+    try {
+      console.log('Entered function - client side');
+      const response = await fetch('/api/create-account', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+      console.log('After the POST request - client side');
 
-			// Store the JWT token as a secure cookie on the client side
-			document.cookie = `auth_token=${token}; Max-Age=604800; Path=/; SameSite=Lax; ${process.env.NODE_ENV === 'production' ? 'Secure;' : ''}`;
+      if (!response.ok) {
+        const errorText = await response.text(); // Attempt to read response text for more detail
+        throw new Error(`Failed to create account: ${errorText}`);
+      }
 
-			// Redirect to the login or dashboard page
-			router.push('/'); // Change to the appropriate route
-		} catch (error) {
-			console.error('Error:', error);
-		}
-	};
+      const { token } = await response.json();
+
+      // Assuming 'setCookie' is available to set cookies
+      document.cookie = `auth_token=${token}; Max-Age=604800; Path=/; SameSite=Lax; ${process.env.NODE_ENV === 'production' ? 'Secure;' : ''}`;
+      alert('Account successfully created. You are now logged-in');
+      router.push('/'); // Change to the appropriate route
+    } catch (error) {
+      console.error('Error during account creation:', error.message);
+    }
+  };
 
   return (
     <div className="bodyA">
-       <SEO
-				 title="Create Account"
-         description="To persist your: (i) visit history, (ii) starred guitar tablature, and (iii) access the pitch-shifter and slow-downer, create an account on Ploddings with an email"
-         slug="/create-account"
-       />
-			<Sidebar userId={userId} ip={ip} />
-			<div className="mainFeedAll">
-				<div className="feedContainer">
-					<Loader isLoading={isLoading} />
-					<div className="mainFeed">
-						<div className="topRow">
-							<IpodMenuLink fallBack='' />
-						  <Menu userId={userId} />
-						</div>
-						<div className="narrowedFeedBody">
-						  <h1>Create Account</h1>
-							<form>
-								<input
-									type="email"
-									placeholder="Enter your email"
-									className="inputLabel"
-									value={email}
-									onChange={(e) => setEmail(e.target.value)}
-								/>
-								<button className="formButton" onClick={handleCreateAccount}>Create Account</button>
-							</form>
-						</div>
-					</div>
-				</div>
-				<Footer userId={userId} />
-			</div>
+      <SEO
+        title="Create Account"
+        description="To persist your: (i) visit history, (ii) starred guitar tablature, and (iii) access the pitch-shifter and slow-downer, create an account on Ploddings with an email"
+        slug="/create-account"
+      />
+      <div className="mainFeedAll">
+        <div className="feedContainer">
+          <Loader isLoading={isLoading} />
+          <div className="mainFeed">
+            <div className="topRow">
+              <IpodMenuLink fallBack='' />
+              <Menu userId={userId} />
+            </div>
+            <div className="narrowedFeedBody">
+              <h1>Create Account</h1>
+              <form onSubmit={handleCreateAccount}>
+                <input
+                  type="email"
+                  placeholder="Enter your email"
+                  className="inputLabel"
+                  value={email}
+                  required
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+                <button type="submit" className="formButton">Create Account</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <Footer userId={userId} />
+      </div>
     </div>
   );
 }
-
 export async function getServerSideProps({ params, req }) {
 
   const userSession = verifyUserSession(req);
