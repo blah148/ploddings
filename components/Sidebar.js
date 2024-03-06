@@ -26,7 +26,7 @@ export default function Sidebar({ userId, ip }) {
     (async () => {
       try {
         await fetchAndSetVisitHistory(userId, groupMax, ip);
-        await fetchAndSetBeingWatched(userId, ip, groupMax);
+        await fetchAndSetBeingWatched(userId, ip, 4);
       } catch (error) {
         console.error("An error occurred during data fetching:", error);
       } finally {
