@@ -81,6 +81,7 @@ form.submitYoutube {
 form {
 	display: flex;
 	flex-direction: column;
+	justify-content: flex-start;
 	width: 30ch;
 }
 input {
@@ -93,7 +94,10 @@ input {
   padding: 4px 8px;
   width: 30ch;
 	font-size: 14px;
-	margin: 4px 0 4px 0;
+}
+.formRow
+{
+	margin: 2px 0 12px 0;
 }
 textarea {
   background-color: #fffcc8;

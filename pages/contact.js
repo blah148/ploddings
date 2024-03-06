@@ -94,27 +94,28 @@ export default function ContactForm ({ userId, ip  }) {
 						<div className="narrowedFeedBody">
 							<h1>Contact</h1>
 							<form onSubmit={handleSubmit}>
-								<label htmlFor="name">Name: (optional)</label><br />
+								<label htmlFor="name">Name: (optional)</label>
 								<input
+									className="formRow"
 									type="text"
 									id="fname"
 									name="fname"
 									value={formData.fname}
 									onChange={handleChange}
-								/><br />
-								
-								<label htmlFor="email">Email <span style={{ color: 'red' }}>*</span>:</label><br />
+								/>								
+								<label htmlFor="email">Email <span style={{ color: 'red' }}>*</span>:</label>
 								<input
+									className="formRow"
 									type="email"
 									id="email"
 									name="email"
 									value={email}
 									required
 									onChange={handleChange}
-								/><br />
-								
-								<label htmlFor="subject">Subject <span style={{ color: 'red' }}>*</span>:</label><br />
+								/>
+								<label htmlFor="subject">Subject <span style={{ color: 'red' }}>*</span>:</label>
 								<select
+									className="formRow"
 									id="subject"
 									name="subject"
 									value={subject}
@@ -126,17 +127,16 @@ export default function ContactForm ({ userId, ip  }) {
 									<option value="Content Suggestion">Content suggestion/request</option>
 									<option value="Bug Report">Report a bug</option>
 									<option value="Account Info">Account & login information</option>
-								</select><br />
-								
-								<label htmlFor="message">Message <span style={{ color: 'red' }}>*</span>:</label><br />
+								</select>
+								<label htmlFor="message">Message <span style={{ color: 'red' }}>*</span>:</label>
 								<textarea
+									className="formRow"
 									id="message"
 									name="message"
 									required
 									value={message}
 									onChange={handleChange}
-								></textarea><br /><br />
-								
+								></textarea>
 								<button type="submit" value="Submit">Submit</button>
 							</form>
 						</div>
