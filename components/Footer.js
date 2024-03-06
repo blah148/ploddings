@@ -31,7 +31,7 @@ export default function Footer ({ userId = null  }) {
 					)}
 					{userId && (
 						<>
-							<Link href="/account" className="footer_link-item" passHref>My account</Link>
+							<Link href="/account" className="footer_link-item" passHref>Account</Link>
 							<a onClick={handleLogout} className="footer_link-item" style={{cursor: 'pointer'}}>Logout</a>
 						</>
 					)}
