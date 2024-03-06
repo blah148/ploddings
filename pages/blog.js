@@ -101,7 +101,9 @@ export default function Blog({ userId, ip }) {
 													</div>
 													<div className="blogCard name">
 														<Image width={50} height={50} src={post.thumbnail_200x200} alt={post.featured_img_alt_text} className="blogFeedImage" />
-														<div>{post.name}</div>
+															{window.innerWidth <= 768 && post.name.length > 22
+															? post.name.slice(0, 22) + '...'
+															: post.name}
 													</div>
 											</div>
 										</Link>
