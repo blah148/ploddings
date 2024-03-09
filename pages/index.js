@@ -93,8 +93,6 @@ async function FetchContentByCategory() {
         // Convert the categoriesMap object back into an array and sort by column_order
         const categoriesArray = Object.values(categoriesMap).sort((a, b) => a.column_order - b.column_order);
         
-        console.log('Sorted categories:', categoriesArray); // Optional: Log the sorted array for debugging
-        
         // Update the component state with the transformed and sorted data
         setCategories(categoriesArray);
     } catch (error) {
