@@ -4,6 +4,7 @@ import { supabase } from './supabase';
 import { useLoading } from '../context/LoadingContext';
 import styles from '../styles/songs.module.css';
 import Link from 'next/link';
+import LoadingLink from '../components/LoadingLink';
 
 const TableDataFetcher = ({ threadId }) => {
   const [childData, setChildData] = useState([]);
@@ -42,15 +43,17 @@ const TableDataFetcher = ({ threadId }) => {
         <ul>
           {childData.map((item, index) => (
             <li key={item.id} className={styles.contentFeedItem}>
-							<Link href={`/${item.page_type}/${item.slug}`} passHref>
-                <Image width={40} height={40} src={item.thumbnail_200x200} alt={item.featured_img_alt_text}/>
-								<div className={styles.feedItemTitle}>
-									{window.innerWidth <= 768 && item.name.length > 27
-									? item.name.slice(0, 27) + '...'
-									: item.name}
+							<LoadingLink href={`/${item.page_type}/${item.slug}`}>
+								<div className={styles.LoadingLinkContainer}>
+									<Image width={40} height={40} src={item.thumbnail_200x200} alt={item.featured_img_alt_text}/>
+									<div className={styles.feedItemTitle}>
+										{window.innerWidth <= 768 && item.name.length > 27
+										? item.name.slice(0, 27) + '...'
+										: item.name}
+									</div>
+									<div className="led"></div>
 								</div>
-							  <div className="led"></div>
-							</Link>
+							</LoadingLink>
             </li>
           ))}
         </ul>

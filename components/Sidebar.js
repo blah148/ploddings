@@ -5,6 +5,7 @@ import Link from 'next/link';
 import useStore from '../zustandStore';
 import { useLoading } from '../context/LoadingContext';
 import styles from './Sidebar.module.css';
+import LoadingLink from '../components/LoadingLink';
 
 export default function Sidebar({ userId, ip }) {
   const { startLoading, stopLoading } = useLoading();
@@ -55,7 +56,7 @@ export default function Sidebar({ userId, ip }) {
 						<ul>
 							{starred.map((star, index) => (
 								<li className={styles.listElement} key={star.content.id}>
-									<Link className={styles.listLink} href={`/${star.content.page_type}/${star.content.slug}`} passHref>
+									<LoadingLink className={styles.listLink} href={`/${star.content.page_type}/${star.content.slug}`} passHref>
 										<Image width={40} height={40} 
 											className={styles.sidebarThumbnail}
 											src={star.content.thumbnail_200x200 ? star.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
@@ -63,7 +64,7 @@ export default function Sidebar({ userId, ip }) {
 										/>
 										<div className={styles.sidebarName}>{star.content.name.length > 22 ? star.content.name.slice(0, 22) + '...' : star.content.name}</div>
 										<div className="led"></div>
-									</Link>
+									</LoadingLink>
 								</li>
 							))}
 						</ul>
@@ -74,7 +75,7 @@ export default function Sidebar({ userId, ip }) {
 					<ul>
 						{visitHistory.map((visit, index) => (
 							<li className={styles.listElement} key={visit.content.id}>
-								<Link className={styles.listLink} href={`/${visit.content.page_type}/${visit.content.slug}`} passHref>
+								<LoadingLink className={styles.listLink} href={`/${visit.content.page_type}/${visit.content.slug}`} passHref>
 									<Image width={40} height={40} 
 										className={styles.sidebarThumbnail}
 										src={visit.content.thumbnail_200x200 ? visit.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
@@ -82,7 +83,7 @@ export default function Sidebar({ userId, ip }) {
 									/>
 									<div className={styles.sidebarName}>{visit.content.name.length > 22 ? visit.content.name.slice(0, 22) + '...' : visit.content.name}</div>
 									<div className="led"></div>
-								</Link>
+								</LoadingLink>
 							</li>
 						))}
 					</ul>
@@ -92,7 +93,7 @@ export default function Sidebar({ userId, ip }) {
 					<ul>
 						{beingWatched.map((watch, index) => (
 							<li key={watch.content.id} className={styles.listElement}>
-								<Link className={styles.listLink} href={`/${watch.content.page_type}/${watch.content.slug}`} passHref>
+								<LoadingLink className={styles.listLink} href={`/${watch.content.page_type}/${watch.content.slug}`} passHref>
 									<Image width={40} height={40} 
 										className={styles.sidebarThumbnail}
 										src={watch.content.thumbnail_200x200 ? watch.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
@@ -100,7 +101,7 @@ export default function Sidebar({ userId, ip }) {
 									/>
 									<div className={styles.sidebarName}>{watch.content.name.length > 22 ? watch.content.name.slice(0, 22) + '...' : watch.content.name}</div>
 									<div className="led"></div>
-								</Link>
+								</LoadingLink>
 							</li>
 						))}
 					</ul>

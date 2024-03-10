@@ -9,6 +9,7 @@ import Menu from '../components/Menu';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 import SEO from '../components/SEO';
+import LoadingLink from '../components/LoadingLink';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -133,22 +134,22 @@ return (
 												<li key={content.id} className={content.matched_content_name ? "doubleRow" : "singleRow"}>
 													{content.matched_content_name ? (
 														<>
-															<Link href={`/${content.page_type}/${content.slug}`} passHref>
+															<LoadingLink href={`/${content.page_type}/${content.slug}`}>
 																<Image width={40} height={40} src={content.thumbnail_200x200} className="thumbnailImage" alt={content.featured_img_alt_text || 'robert johnson guitar at crossroads'} />
 																<div>
 																	{window.innerWidth <= 768 && content.name.length > 15
 																		? content.name.slice(0, 15) + '...'
 																		: content.name}
 																</div>
-															</Link>
-															<Link href={`/${content.matched_page_type}/${content.matched_slug}`} passHref>
+															</LoadingLink>
+															<LoadingLink href={`/${content.matched_page_type}/${content.matched_slug}`} passHref>
 																<Image width={30} height={30} src={content.matched_thumbnail_200x200} className="artistImage" alt={content.matched_featured_img_alt_text || 'robert johnson guitar at crossroads'} />
 																<div className="artistName">{content.matched_content_name}</div>
-															</Link>
-															<Link href={`/${content.page_type}/${content.slug}`} passHref><div className="led"></div></Link>
+															</LoadingLink>
+															<LoadingLink href={`/${content.page_type}/${content.slug}`} passHref><div className="led"></div></LoadingLink>
 														</>
 													) : (
-														<Link href={`/${content.page_type}/${content.slug}`} passHref>
+														<LoadingLink href={`/${content.page_type}/${content.slug}`} passHref>
 															<Image width={40} height={40} src={content.thumbnail_200x200} className="thumbnailImage" alt={content.featured_img_alt_text || 'robert johnson guitar at crossroads'} />
 															<div>
 																{window.innerWidth <= 768 && content.name.length > 27
@@ -156,7 +157,7 @@ return (
 																	: content.name}
 															</div>
 															<div className="led"></div>
-														</Link>
+														</LoadingLink>
 													)}
 												</li>
 											))}

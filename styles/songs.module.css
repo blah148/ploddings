@@ -291,8 +291,9 @@ svg.victrola {
 .contentFeedItem {
 	list-style: none;
 }
-.contentFeedItem a {
+.LoadingLinkContainer {
 	display: flex;
+	width: 100%;
 	align-items: center;
 	padding-right: 16px;
 	border-bottom: 1px solid #ddd;
