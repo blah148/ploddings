@@ -2,7 +2,8 @@
 @media (max-width: 1024px) {
   .loaderContainer {
     height: 7px; /* Adjusted to your specific needs */
-    margin: auto 0 12px 0;
+    margin: -16px 0 12px 0;
+		position: fixed;
   }
   
   .ldsEllipsis {
