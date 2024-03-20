@@ -16,7 +16,7 @@ const UnlockAudioButton = () => {
         ref={audioRef}
         controls
         style={{ display: 'none' }} // Use inline style to hide the audio element
-        src="https://bmvuqgfxczoytjwjpvcn.supabase.co/storage/v1/object/sign/audio-hardcoded/initialize-audio.mp3?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJhdWRpby1oYXJkY29kZWQvaW5pdGlhbGl6ZS1hdWRpby5tcDMiLCJpYXQiOjE3MDk2NzUzMzAsImV4cCI6MTcxMDUzOTMzMH0.xU9XnyaaB9_Ex9iR2iWSPgFAas3yB28cX5IUH-CihKw&t=2024-03-05T21%3A49%3A51.965Z"
+        src="https://bmvuqgfxczoytjwjpvcn.supabase.co/storage/v1/object/sign/audio-hardcoded/initialize-audio.mp3?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJhdWRpby1oYXJkY29kZWQvaW5pdGlhbGl6ZS1hdWRpby5tcDMiLCJpYXQiOjE3MTA5MDM4NDcsImV4cCI6MjAyNjI2Mzg0N30.qYRxsYx4EiAQ62HkzI-CvQqOYR9MOHJfW4EbMcaTkKw&t=2024-03-20T03%3A05%3A23.897Z"
       >
         Your browser does not support the audio element.
       </audio>
