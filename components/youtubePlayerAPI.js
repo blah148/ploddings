@@ -4,6 +4,9 @@ import { useLoading } from '../context/LoadingContext';
 
 const YouTubeVideo = ({ videoId }) => {
 	const { isLoading, startLoading, stopLoading } = useLoading();
+
+  // Check if the videoId contains "youtube.com"
+  const isYouTubeLink = videoId.includes("youtube.com");
 	
 	var slicedLink = videoId.substring("https://www.youtube.com/watch?v=".length);
 	var finishedLink = slicedLink.split('&')[0];
@@ -16,9 +19,11 @@ const YouTubeVideo = ({ videoId }) => {
     },
   };
 
-  useEffect(() => {
-    startLoading(); // Set isLoading to true when the component mounts
-  }, []);
+	useEffect(() => {
+		if (isYouTubeLink) {
+			startLoading(); // Set isLoading to true only if it's a YouTube video
+		}
+	}, [isYouTubeLink]);
 
   const onReady = (event) => {
     // Access to player in all event handlers via event.target
@@ -27,7 +32,11 @@ const YouTubeVideo = ({ videoId }) => {
 
   return (
     <div>
-      <YouTube videoId={finishedLink} opts={opts} onReady={onReady} />
+      {isYouTubeLink ? (
+        <YouTube videoId={finishedLink} opts={opts} onReady={onReady} />
+      ) : (
+        <div dangerouslySetInnerHTML={{ __html: videoId }} />
+      )}
     </div>
   );
 };
