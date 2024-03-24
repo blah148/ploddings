@@ -1,4 +1,4 @@
-import { supabase } from './utils/supabase'; // Import your Supabase client instance
+import { supabase } from './utils/supabase'; // Import your Supabase client instance  
 import jwt from 'jsonwebtoken';
 
 async function fetchSlugsFromTable(tableName) {
