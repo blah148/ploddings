@@ -21,6 +21,8 @@ import TuningDetails from '../../components/TuningButton';
 import Menu from '../../components/Menu';
 import Footer from '../../components/Footer';
 import SEO from '../../components/SEO';
+import UnlockButton from '../../components/UnlockButton';
+import PDFDownloadButton from '../../components/PDFDownloadButton';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -35,7 +37,7 @@ const verifyUserSession = (req) => {
   }
 };
 
-export default function Song({ userId, ip, threadData, songData }) {
+export default function Song({ userId, ip, threadData, songData, isUnlocked }) {
 
 	const { isLoading, startLoading, stopLoading } = useLoading();
 	const [relatedContentLength, setRelatedContentLength] = useState(null);
@@ -81,6 +83,11 @@ return (
           </div>
           <ParentInfoLink threadData={threadData} fallBack='/' />
           <TuningDetails tuning_id={songData.tuning} />
+          {!isUnlocked ? (
+            <UnlockButton userId={userId} contentId={songData.id} />
+              ) : (
+            <PDFDownloadButton userId={userId} pdfUrl={songData.pdf_download} songName={songData.name} />
+          )}
           <div className={styles.bottomBorder}></div>
           <div className={styles.componentsContainer}>
             <div className={styles.primaryColumn}>
@@ -96,7 +103,7 @@ return (
                 </iframe>
               )}
 							<h2 id="ii">ii) Slow-downer</h2>
-              <SlowDownerComponent dropbox_mp3_link={songData.link_1} />
+              <SlowDownerComponent isUnlocked={isUnlocked} dropbox_mp3_link={songData.link_1} />
 							<h2 id="iii">iii) More info</h2>
               {(songData.body_text || songData.lyrics || songData.tuning) && (
                 <TabsComponent extra_notes={songData.body_text} song_lyrics={songData.lyrics} youtube_link={songData.link_2} />
@@ -124,19 +131,35 @@ return (
 }
 
 export async function getServerSideProps({ params, req }) {
-
-	const userSession = verifyUserSession(req);
-  const songData = await fetchSongData(params.id);
-	const threadData = await getParentObject(songData.thread_id);
+  const userSession = verifyUserSession(req); // Assumes verifyUserSession properly extracts the user session
+  const songData = await fetchSongData(params.id); // Assumes fetchSongData fetches song details
+  const threadData = await getParentObject(songData.thread_id); // Assumes getParentObject fetches parent thread details based on song's thread_id
   const forwardedFor = req.headers['x-forwarded-for'];
   const ip = forwardedFor ? forwardedFor.split(',')[0] : req.connection.remoteAddress;
-  
+
+  let isUnlocked = false;
+  if (userSession) {
+    const { data, error } = await supabase
+      .from('users_content')
+      .select('*')
+      .eq('user_id', userSession.id) // Corrected from user.id to userSession.id
+      .eq('content_id', songData.id) // Corrected from id to params.id
+      .single();
+      
+    isUnlocked = !!data;
+
+    if (error) {
+      console.error('Error fetching unlock status:', error.message);
+    }
+  }
+
   return {
     props: {
+      isUnlocked,
       songData,
-			threadData,
-			ip,
-			userId: userSession?.id || null,
+      threadData,
+      ip,
+      userId: userSession?.id || null,
     },
   };
 }

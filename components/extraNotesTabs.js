@@ -26,9 +26,6 @@ export default function TabsComponent ({ extra_notes = null, song_lyrics = null,
 		}
 	}, [selectedTab]);
 	
-console.log('lyrics', song_lyrics);
-
-
   return (
     <div>
 			<div className={styles.tabs}>

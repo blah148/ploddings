@@ -37,15 +37,17 @@ export default function Account({ ip, userId }) {
 	const { 
 		visitHistory, 
 		starred, 
+		unlockedSongs,
 		fetchAndSetStarred, 
 		fetchAndSetVisitHistory,
+		fetchAndSetUnlockedSongs,
 	} = useStore();
 
 	useEffect(() => {
 		// Initialize guest data loading
 		fetchAndSetStarred(userId, null, ip);
 		fetchAndSetVisitHistory(userId, null, ip);
-
+		fetchAndSetUnlockedSongs(userId, null);
 	}, [userId]);
 
   return (
@@ -75,6 +77,26 @@ export default function Account({ ip, userId }) {
 											}
 											{userId && (<EmailUpdater userId={userId} />)}
 											{message && <p>{message}</p>}
+											<div className="categoryGroup">
+												<h2 id="unlocked-songs">Unlocked songs</h2>
+												{unlockedSongs.length === 0 ? (
+													<div>No unlocked songs</div>
+												) : (
+													<ul>
+														{unlockedSongs.map((unlocked, index) => (
+															<li key={unlocked.content.id}>
+																<Link href={`/${unlocked.content.page_type}/${unlocked.content.slug}`} passHref>
+																	<Image width={40} height={40} src={unlocked.content.thumbnail_200x200} alt={unlocked.content.featured_img_alt_text}/>
+																	{window.innerWidth <= 768 && unlocked.content.name.length > 27
+																		? unlocked.content.name.slice(0, 27) + '...'
+																		: unlocked.content.name}
+																	<div className="led"></div>
+																</Link>
+															</li>
+														))}
+													</ul>
+												)}
+											</div>
 											<div className="categoryGroup">
 												<h2 id="starred">Starred</h2>
 												{starred.length === 0 ? (<div>No starred items</div>) : (

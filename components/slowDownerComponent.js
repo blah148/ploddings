@@ -5,7 +5,7 @@ const SlowDowner = dynamic(() => import('./SlowDowner'), { ssr: false });
 import styles from '../styles/songs.module.css';
 import UnlockAudioButton from './UnlockAudioButton';
 
-export default function SlowDownerComponent({ dropbox_mp3_link }) {
+export default function SlowDownerComponent({ isUnlocked, dropbox_mp3_link }) {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
@@ -18,10 +18,14 @@ export default function SlowDownerComponent({ dropbox_mp3_link }) {
     setIsMobile(detectMobile());
   }, []);
 
+  useEffect(() => {
+    console.log('testing unlock status', isUnlocked);
+  }, [isUnlocked]);
+
   return (
     <>
-			{isMobile && <UnlockAudioButton />}
-      <SlowDowner mp3={dropbox_mp3_link} />
+			{isMobile && (<UnlockAudioButton />)}
+      <SlowDowner isUnlocked={isUnlocked} mp3={dropbox_mp3_link} />
     </>
   );
 }

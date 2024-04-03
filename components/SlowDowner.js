@@ -153,8 +153,15 @@ formatTime(seconds) {
 
     let hrBlue = {border: '1px dotted', color: 'blue'};
 
+		const { isUnlocked } = this.props; // Assuming isUnlocked is passed as a prop
+
+    // Conditional styling based on unlock status
+    const componentStyle = {
+      opacity: isUnlocked ? 1 : 0.5,
+    };
+
     return (
-      <div className={styles.App}>
+      <div style={componentStyle} className={styles.App}>
 			 	<div className={styles.slowDownerRow}>
           <h3>Speed</h3>
 			    <center>
@@ -387,6 +394,10 @@ handleTimeBSliderChange = (event) => {
   }
 
   handlePlay(event) { 
+  if (!this.props.isUnlocked) {
+		alert("Unlock song for 1 credit to use slow-downer / pitch-shifter tool");
+    return;
+  }
      const {audioBuffer} = this.params;
 
 // startPause or LoopAB

@@ -2,6 +2,7 @@ import { create } from 'zustand';
 import fetchStarred from './components/fetchStarred.js';
 import fetchVisitHistory from './components/fetchVisitHistory.js';
 import fetchBeingWatched from './components/fetchBeingWatched.js';
+import fetchUnlockedSongs from './components/fetchUnlockedSongs.js';
 
 const useStore = create((set, get) => ({
   maximumObjects: 15,
@@ -50,6 +51,17 @@ const useStore = create((set, get) => ({
       }
     }
   },
+
+	unlockedSongs: [],
+  fetchAndSetUnlockedSongs: async (userId) => {
+    try {
+      const data = await fetchUnlockedSongs(userId); // Assuming fetchUnlockedSongs no longer returns count
+      set({ unlockedSongs: data });
+    } catch (error) {
+      console.error('Failed to fetch unlocked songs:', error);
+    }
+  },
+	
   
   // Method to recalculate the object limit based on the current counts
   recalculateObjectLimit: () => set(state => {
@@ -76,6 +88,11 @@ const useStore = create((set, get) => ({
   refreshBeingWatched: async (userId, ip) => {
     await get().fetchAndSetBeingWatched(userId, ip, get().objectLimit);
   },
+
+  refreshUnlockedSongs: async (userId) => {
+    await get().fetchAndSetUnlockedSongs(userId);
+  },
+
 }));
 
 export default useStore;
