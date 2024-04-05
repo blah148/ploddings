@@ -14,6 +14,8 @@ import CreateAccountForm from '../components/createAccount';
 import { useLoading } from '../context/LoadingContext';
 import Loader from '../components/Loader';
 import SEO from '../components/SEO';
+import UserCreditBalance from '../components/UserCreditBalance.js';
+import NextBillingDate from '../components/NextBillingDate';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -75,7 +77,13 @@ export default function Account({ ip, userId }) {
 											  	<CreateAccountForm />
 												</>
 											}
-											{userId && (<EmailUpdater userId={userId} />)}
+											{userId && (
+													<>
+														<EmailUpdater userId={userId} />
+														<div style={{display: "flex", marginTop: "12px"}}>You have <strong style={{display: "flex"}}><UserCreditBalance userId={userId} /> credits</strong>. Get 1 additional credit: open link</div>
+														<NextBillingDate userId={userId} />
+													</>
+											)}
 											{message && <p>{message}</p>}
 											<div className="categoryGroup">
 												<h2 id="unlocked-songs">Unlocked songs</h2>

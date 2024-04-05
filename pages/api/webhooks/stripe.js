@@ -16,7 +16,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
   apiVersion: '2019-02-11',
 });
 
-async function updateCredits(email, productType) {
+async function updateCredits(email, productType, stripeCustomerId) {
   let additionalCredits = 0;
   if (productType === 'payment') {
     additionalCredits = 1;
@@ -25,39 +25,37 @@ async function updateCredits(email, productType) {
   }
 
   try {
-		console.log('this is the email', email);
-    // Fetch the current credit balance
-    let { data: initialData, error: initialError } = await supabase
+    console.log('Updating user data for email:', email);
+    
+    // Fetch the current credit balance and stripe_id (if it exists)
+    const { data: userData, error: fetchError } = await supabase
       .from('users')
-      .select('credit_balance')
+      .select('credit_balance, stripe_id')
       .eq('email', email)
       .single();
 
-    if (initialError) throw new Error(`Fetching initial credit balance failed: ${initialError.message}`);
+    if (fetchError) throw new Error(`Fetching user data failed: ${fetchError.message}`);
+    console.log(`Fetched user data for ${email}:`, userData);
 
-    console.log(`Initial credit balance for ${email}:`, initialData.credit_balance);
+    // Define the update object, always include the credit balance update
+    const updateData = { credit_balance: userData.credit_balance + additionalCredits };
+    
+    // Only add the stripeCustomerId to the update if it's different from what's already stored
+    if (userData.stripe_id !== stripeCustomerId) {
+      updateData.stripe_id = stripeCustomerId;
+    }
 
-    // Perform the update
-    let { data: updatedData, error: updateError } = await supabase
+    // Perform the update with conditional stripe_id update
+    const { error: updateError } = await supabase
       .from('users')
-      .update({ credit_balance: initialData.credit_balance + additionalCredits })
+      .update(updateData)
       .eq('email', email);
 
-    if (updateError) throw new Error(`Updating credit balance failed: ${updateError.message}`);
-
-    // Fetch the updated credit balance for logging
-    let { data: finalData, error: finalError } = await supabase
-      .from('users')
-      .select('credit_balance')
-      .eq('email', email)
-      .single();
-
-    if (finalError) throw new Error(`Fetching final credit balance failed: ${finalError.message}`);
-
-    console.log(`Final credit balance for ${email}:`, finalData.credit_balance);
+    if (updateError) throw new Error(`Updating user data failed: ${updateError.message}`);
+    console.log(`User data updated for ${email}. New credit balance: ${updateData.credit_balance}, Stripe ID: ${updateData.stripe_id || userData.stripe_id}`);
   } catch (error) {
     console.error('Supabase operation error:', error.message);
-    throw error; // Rethrow the error after logging it
+    throw error;
   }
 }
 
@@ -82,7 +80,9 @@ export default async function handler(req, res) {
 
           // Assuming mode can be 'payment' (one-time) or 'subscription'
           const productType = session.mode;
-          await updateCredits(userEmail, productType);
+					const stripeCustomerId = session.customer;
+					console.log('this is the customer id', stripeCustomerId);
+          await updateCredits(userEmail, productType, stripeCustomerId);
           console.log(`Credits updated successfully for ${userEmail}`);
           break;
 
