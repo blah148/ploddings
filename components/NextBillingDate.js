@@ -1,31 +1,42 @@
-// components/NextBillingDate.js
 import { useState, useEffect } from 'react';
 import { supabase } from '../utils/supabase'; // Adjust the import path as necessary
 
 const NextBillingDate = ({ userId }) => {
   const [nextBillingDate, setNextBillingDate] = useState('');
+  const [customerPortalUrl, setCustomerPortalUrl] = useState('');
 
   useEffect(() => {
     const fetchNextBillingDate = async () => {
       try {
         // Fetch the stripe_id from the Supabase users table
-        let { data, error } = await supabase
+        const { data, error } = await supabase
           .from('users')
           .select('stripe_id')
           .eq('id', userId)
           .single();
 
-        if (error) throw error;
+        if (error) throw new Error(`Fetching user failed: ${error.message}`);
         if (!data || !data.stripe_id) throw new Error('Stripe ID not found.');
 
         // Fetch the next billing date using the stripe_id
-        const response = await fetch(`/api/stripe/${data.stripe_id}`);
-        if (!response.ok) throw new Error('Failed to fetch billing date.');
+        const billingResponse = await fetch(`/api/stripe/${data.stripe_id}`);
+        if (!billingResponse.ok) throw new Error('Failed to fetch billing date.');
 
-        const { nextBillingDate } = await response.json();
-        setNextBillingDate(nextBillingDate);
+        const billingData = await billingResponse.json();
+        setNextBillingDate(billingData.nextBillingDate);
+
+        // Fetch the Customer Portal URL
+        const portalResponse = await fetch('/api/stripe/create-portal-session', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ customerId: data.stripe_id }),
+        });
+        if (!portalResponse.ok) throw new Error('Failed to fetch customer portal URL.');
+
+        const portalData = await portalResponse.json();
+        setCustomerPortalUrl(portalData.url);
       } catch (error) {
-        console.error('Failed to fetch next billing date:', error.message);
+        console.error(error.message);
       }
     };
 
@@ -33,9 +44,17 @@ const NextBillingDate = ({ userId }) => {
   }, [userId]);
 
   return (
-    <div>
-      Next Billing Date: {nextBillingDate ? new Date(nextBillingDate).toLocaleDateString() : 'Loading...'}
-    </div>
+<div>
+  <p>
+    Next billing date:
+    {nextBillingDate ? (
+      <a style={{marginLeft: "5px"}} href={customerPortalUrl} target="_blank" rel="noopener noreferrer">
+        {new Date(nextBillingDate).toLocaleDateString()}
+      </a>
+    ) : 'Loading...'}
+  </p>
+</div>
+
   );
 };
 
