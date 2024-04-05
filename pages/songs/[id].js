@@ -58,6 +58,34 @@ export default function Song({ userId, ip, threadData, songData, isUnlocked }) {
 		logPageVisit();
 	}, [userId, ip]);
 
+  const [buttonLoaded, setButtonLoaded] = useState(false);
+
+useEffect(() => {
+  const loadButton = () => {
+    // Debugging line
+    console.log("Iframe loaded, setting buttonLoaded to true.");
+
+    // Make button visible
+    setButtonLoaded(true);
+  };
+
+  // Detect when the MuseScore content has loaded
+  const iframeElement = document.getElementById('musescoreIframe');
+  if (iframeElement) {
+    iframeElement.addEventListener('load', loadButton);
+  } else {
+    // Debugging line
+    console.log("Iframe element not found.");
+  }
+
+  // Cleanup
+  return () => {
+    if (iframeElement) {
+      iframeElement.removeEventListener('load', loadButton);
+    }
+  };
+}, []);
+
 
 return (
   <div className="bodyA">
@@ -83,25 +111,28 @@ return (
           </div>
           <ParentInfoLink threadData={threadData} fallBack='/' />
           <TuningDetails tuning_id={songData.tuning} />
-          {!isUnlocked ? (
-            <UnlockButton userId={userId} contentId={songData.id} />
-              ) : (
-            <PDFDownloadButton userId={userId} pdfUrl={songData.pdf_download} songName={songData.name} />
-          )}
           <div className={styles.bottomBorder}></div>
           <div className={styles.componentsContainer}>
             <div className={styles.primaryColumn}>
 							<h2 id="i">i) Sheet music</h2>
-              {songData.link_3 && (
-                <iframe
-                  width="100%"
-                  height="600px"
-                  src={songData.link_3}
-                  frameBorder="0"
-                  allowFullScreen
-                  allow="autoplay; fullscreen">
-                </iframe>
-              )}
+							<div style={{ position: "relative" }}>
+								{!isUnlocked ? (
+									<UnlockButton userId={userId} contentId={songData.id} />
+										) : (
+									<PDFDownloadButton userId={userId} pdfUrl={songData.pdf_download} songName={songData.name} />
+								)}
+								{songData.link_3 && (
+									<iframe
+										id="musescoreIframe"
+										width="100%"
+										height="600px"
+										src={songData.link_3}
+										frameBorder="0"
+										allowFullScreen
+										allow="autoplay; fullscreen">
+									</iframe>
+								)}
+							</div>
 							<h2 id="ii">ii) Slow-downer</h2>
               <SlowDownerComponent isUnlocked={isUnlocked} dropbox_mp3_link={songData.link_1} />
 							<h2 id="iii">iii) More info</h2>

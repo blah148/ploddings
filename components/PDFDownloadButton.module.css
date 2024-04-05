@@ -1,0 +1,91 @@
+/* PDFDownloadButton.module.css */
+
+@media (min-width: 1723px) {
+	.button {
+		font-family: 'Inter', sans-serif;
+		font-size: 14px;
+		width: 100px;
+		height: 40px;
+		background: #2e68c0;
+		box-shadow: none;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border: none;
+		color: white;
+		position: absolute;
+		border-radius: 6px;
+		right: 149px;
+		top: 4px;
+	}
+}
+
+@media (min-width: 1589px) and (max-width: 1722px) {
+	.button {
+		font-family: 'Inter', sans-serif;
+		font-size: 14px;
+		width: 100px;
+		height: 40px;
+		background: #2e68c0;
+		box-shadow: none;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border: none;
+		color: white;
+		position: absolute;
+		border-radius: 6px;
+		right: 89px;
+		top: 1px;
+	}
+}
+
+@media (max-width: 1588px) {
+	.button {
+		font-family: 'Inter', sans-serif;
+		font-size: 14px;
+		width: 98px;
+		height: 32px;
+		background: #2e68c0;
+		box-shadow: none;
+		display: inline-flex;
+		align-items: center;
+		justify-content: center;
+		border: none;
+		color: white;
+		position: absolute;
+		border-radius: 6px;
+		right: 89px;
+		top: 5px;
+	}
+}
+
+.buttonMobile {
+	font-family: 'Inter', sans-serif;
+	font-size: 13.5px;
+	width: 68px;
+	height: 32px;
+	background: #2e68c0;
+	box-shadow: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	border: none;
+	color: white;
+	position: absolute;
+	border-radius: 6px;
+	left: 113px;
+	bottom: 17px;
+}
+
+.button:hover {
+	background: #1a4f9f;
+}
+
+.svgIcon {
+  display: none;
+  width: 25px;
+  margin-right: 6px;
+  margin-top: -3px;
+}
+

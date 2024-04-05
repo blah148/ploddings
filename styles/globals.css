@@ -467,6 +467,13 @@ div.categoryGroup img {
   font-style: normal;
 }
 
+@font-face {
+    font-family: 'Inter';
+    src: url('./fonts/Inter-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 /******************
 ***** Menu Button ***
 ******************/

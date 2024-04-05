@@ -19,7 +19,6 @@ export default function SlowDownerComponent({ isUnlocked, dropbox_mp3_link }) {
   }, []);
 
   useEffect(() => {
-    console.log('testing unlock status', isUnlocked);
   }, [isUnlocked]);
 
   return (
