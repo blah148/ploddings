@@ -23,6 +23,7 @@ const TableDataFetcher = ({ threadId, userId }) => {
           throw error;
         }
         setChildData(data);
+				console.log('this is the table data fetcher data', data);
         stopLoading();
       } catch (error) {
         console.error('Error fetching data:', error.message);
@@ -48,9 +49,7 @@ const TableDataFetcher = ({ threadId, userId }) => {
                   <div className={styles.feedItemTitle}>
                     {window.innerWidth <= 768 && item.name.length > 27 ? item.name.slice(0, 27) + '...' : item.name}
                   </div>
-                  <div className="led"></div>
-                  {/* Render is_unlocked status */}
-                  {item.is_unlocked && <span>Unlocked</span>}
+									<div className={`led ${item.is_unlocked ? 'unlocked' : 'locked'}`}></div>
                 </div>
               </LoadingLink>
             </li>

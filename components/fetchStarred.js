@@ -35,7 +35,6 @@ async function fetchStarred(userId, limit = null, ip = null) {
 
     // Parse count
     const totalCount = parseInt(count, 10) || 0;
-		console.log('starred data', data);
 
     return { data, count: totalCount };
   } catch (error) {

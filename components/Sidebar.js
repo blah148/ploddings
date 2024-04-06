@@ -63,7 +63,7 @@ export default function Sidebar({ userId, ip }) {
 											alt={star.featured_img_alt_text}
 										/>
 										<div className={styles.sidebarName}>{star.name.length > 22 ? star.name.slice(0, 22) + '...' : star.name}</div>
-										<div className="led"></div>
+										<div className={`led ${star.is_unlocked ? 'unlocked' : 'locked'}`}></div>
 									</LoadingLink>
 								</li>
 							))}
@@ -82,7 +82,7 @@ export default function Sidebar({ userId, ip }) {
 										alt={visit.featured_img_alt_text}
 									/>
 									<div className={styles.sidebarName}>{visit.name.length > 22 ? visit.name.slice(0, 22) + '...' : visit.name}</div>
-									<div className="led"></div>
+									<div className={`led ${visit.is_unlocked ? 'unlocked' : 'locked'}`}></div>
 								</LoadingLink>
 							</li>
 						))}
@@ -100,7 +100,7 @@ export default function Sidebar({ userId, ip }) {
 										alt={watch.featured_img_alt_text}
 									/>
 									<div className={styles.sidebarName}>{watch.name.length > 22 ? watch.name.slice(0, 22) + '...' : watch.name}</div>
-									<div className="led"></div>
+									<div className={`led ${watch.is_unlocked ? 'unlocked' : 'locked'}`}></div>
 								</LoadingLink>
 							</li>
 						))}

@@ -281,11 +281,17 @@ div.sidebarName {
 div.led {
   width: 13px;
   height: 13px;
-  background-color: #2ac64f;
   border-radius: 100px;
   margin: auto 0 auto auto;
   display: block;
-  box-shadow: 0 0 6px 1px rgba(38,175,52,.88);
+}
+div.led.unlocked {
+	background-color: #2ac64f;
+	box-shadow: 0 0 6px 1px rgba(25, 124, 35, 0.88);
+}
+div.led.locked {
+	background-color: #ffcb51;
+	box-shadow: 0 0 6px 1px rgba(181, 125, 66, 0.88);
 }
 div.threadsLed {
 	background-color: #f08e25;

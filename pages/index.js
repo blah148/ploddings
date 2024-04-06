@@ -96,11 +96,9 @@ async function FetchContentByCategory(userId) {
         // Convert categoriesMap to array and sort by column_order
         const categoriesArray = Object.values(categoriesMap).sort((a, b) => a.column_order - b.column_order);
         
-        // Log the final arranged array for debugging
-        console.log("Final arranged array:", categoriesArray);
-
         // Update the state with the sorted data
         setCategories(categoriesArray);
+				console.log('these are the categories', categoriesArray);
     } catch (error) {
         console.error('Error fetching content by category:', error.message);
     } finally {
@@ -151,7 +149,7 @@ return (
 																<Image width={30} height={30} src={content.matched_thumbnail_200x200} className="artistImage" alt={content.matched_featured_img_alt_text || 'robert johnson guitar at crossroads'} />
 																<div className="artistName">{content.matched_content_name}</div>
 															</LoadingLink>
-															<LoadingLink href={`/${content.page_type}/${content.slug}`} passHref><div className="led"></div></LoadingLink>
+															<LoadingLink href={`/${content.page_type}/${content.slug}`} passHref><div className={`led ${content.is_unlocked ? 'unlocked' : 'locked'}`}></div></LoadingLink>
 														</>
 													) : (
 														<LoadingLink href={`/${content.page_type}/${content.slug}`} passHref>
@@ -161,7 +159,7 @@ return (
 																	? content.name.slice(0, 27) + '...'
 																	: content.name}
 															</div>
-															<div className="led"></div>
+															<div className={`led ${content.is_unlocked ? 'unlocked' : 'locked'}`}></div>
 														</LoadingLink>
 													)}
 												</li>
