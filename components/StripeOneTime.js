@@ -31,7 +31,9 @@ const OneTimePaymentButton = ({ email }) => {
   };
 
   return (
-    <button onClick={handleClick}>Pay Now</button> // Adjust the button label to reflect the action
+    <a href="#" onClick={handleClick} style={{ marginLeft: "5px", cursor: 'pointer', color: 'blue'}}>
+      Buy 1 additional credit.
+    </a>
   );
 };
 

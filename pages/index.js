@@ -32,18 +32,23 @@ export default function Home({ userId, ip }) {
 useEffect(() => {
   const fetchDataForTab = async () => { // Added function name
     startLoading();
-    await FetchContentByCategory();
+    await FetchContentByCategory(userId);
     stopLoading();
   };
   fetchDataForTab();
 }, []);
 
-async function FetchContentByCategory() {
+async function FetchContentByCategory(userId) {
     startLoading(); // Signal that loading has started
 
     try {
-        // Call the PostgreSQL function
-        const { data, error } = await supabase.rpc('fetch_categories_with_content2');
+        // Ensure userId is available
+        if (!userId) {
+            throw new Error("User ID is required to fetch content.");
+        }
+
+        // Call the PostgreSQL function with userId
+        const { data, error } = await supabase.rpc('fetch_categories_with_content4', { user_id: userId });
 
         if (error) {
             throw error;
@@ -51,50 +56,50 @@ async function FetchContentByCategory() {
 
         // Transform the data into the desired structure 
         const categoriesMap = data.reduce((acc, item) => {
-            // If the category hasn't been added to the accumulator, add it
+            // Initialize the category in the accumulator if it doesn't exist
             if (!acc[item.category_id]) {
                 acc[item.category_id] = {
                     id: item.category_id,
                     name: item.category_name,
-                    column_order: item.column_order, // Including column_order here
+                    column_order: item.column_order, // Including column_order
                     content: [],
                 };
             }
             
-            // Add the content item to the appropriate category
+            // Add content item to the category, including unlock status for songs
+            const contentItem = {
+                id: item.content_id,
+                name: item.content_name,
+                page_type: item.content_type,
+                thumbnail_200x200: item.thumbnail_200x200,
+                featured_img_alt_text: item.featured_img_alt_text,
+                slug: item.slug,
+                is_unlocked: item.is_unlocked, // Include unlock status
+            };
+
+            // Include matched details for songs
             if (item.content_type === 'songs' && item.matched_content_name) {
-                acc[item.category_id].content.push({
-                    id: item.content_id,
-                    name: item.content_name,
-                    page_type: item.content_type,
-                    thumbnail_200x200: item.thumbnail_200x200,
-                    featured_img_alt_text: item.featured_img_alt_text,
-                    slug: item.slug,
+                Object.assign(contentItem, {
                     matched_content_name: item.matched_content_name,
                     matched_thumbnail_200x200: item.matched_thumbnail_200x200,
                     matched_slug: item.matched_slug,
                     matched_page_type: item.matched_page_type,
                     matched_featured_img_alt_text: item.matched_featured_img_alt_text,
                 });
-            } else {
-                // For other content types, add without matched details
-                acc[item.category_id].content.push({
-                    id: item.content_id,
-                    name: item.content_name,
-                    page_type: item.content_type,
-                    thumbnail_200x200: item.thumbnail_200x200,
-                    featured_img_alt_text: item.featured_img_alt_text,
-                    slug: item.slug,
-                });
             }
+
+            acc[item.category_id].content.push(contentItem);            
             
             return acc;
         }, {});
         
-        // Convert the categoriesMap object back into an array and sort by column_order
+        // Convert categoriesMap to array and sort by column_order
         const categoriesArray = Object.values(categoriesMap).sort((a, b) => a.column_order - b.column_order);
         
-        // Update the component state with the transformed and sorted data
+        // Log the final arranged array for debugging
+        console.log("Final arranged array:", categoriesArray);
+
+        // Update the state with the sorted data
         setCategories(categoriesArray);
     } catch (error) {
         console.error('Error fetching content by category:', error.message);

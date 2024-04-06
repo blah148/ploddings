@@ -1,45 +1,45 @@
 import { supabase } from '../utils/supabase';
 
-async function fetchStarred(userId, limit = null, ip) {
-  if (!userId && !ip) {
-    return { data: [], count: 0 };
-  }
-
+/**
+ * Fetches starred pages for a specific user or IP.
+ * 
+ * @param {string|null} userId The user ID of the current user, null if guest.
+ * @param {number|null} limit (Optional) The maximum number of entries to retrieve.
+ * @param {string|null} ip The IP address of the current user, used if guest.
+ * @returns {Promise<{ data: Array, count: number }>} A promise that resolves to an object containing an array of entries and the count of objects.
+ */
+async function fetchStarred(userId, limit = null, ip = null) {
   try {
-    // Construct the query with deep fetching using the foreign key relationship
-    // Note: This syntax is hypothetical and assumes that you've set up a view or
-    // a stored procedure in Supabase that can handle this complex query.
-    // Adjust 'content->' to match your actual database schema.
-    let query = supabase
-      .from('favorites')
-      .select(`
-        page_id,
-        content:page_id (id, slug, page_type, name, thumbnail_200x200, featured_img_alt_text)
-      `, { count: 'exact' })
-			.order('created_at', { ascending: false });
+    let params = {
+      p_user_id: userId || null,
+      fetch_limit: limit,
+      p_ip_address: null // If userId is present, set ip to null
+    };
 
-    if (userId) {
-      query = query.eq('user_id', userId);
-    } else if (ip) {
-      query = query.eq('ip', ip);
+    // If userId is null and ip is present, set ip
+    if (!userId && ip) {
+      params.p_ip_address = ip;
     }
 
-    if (limit !== null) {
-      query = query.limit(limit);
-    }
+    // Construct the query based on parameters
+    let query = supabase.rpc('fetch_starred', params);
 
+    // Execute the query
     const { data, error, count } = await query;
 
+    // Handle errors
     if (error) {
-      console.error('Error fetching starred pages:', error.message);
+      console.error('Error fetching starred pages:', error.message, data);
       return { data: [], count: 0 };
     }
 
-    // Assuming the structure of the returned data includes the content details nested
-    // under each favorite, you can directly return this data.
-    return { data, count: parseInt(count, 10) || 0 };
+    // Parse count
+    const totalCount = parseInt(count, 10) || 0;
+		console.log('starred data', data);
+
+    return { data, count: totalCount };
   } catch (error) {
-    console.error('Error in fetchStarred:', error.message);
+    console.error('Error executing fetchStarred function:', error.message);
     return { data: [], count: 0 };
   }
 }

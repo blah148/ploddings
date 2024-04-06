@@ -55,14 +55,14 @@ export default function Sidebar({ userId, ip }) {
 						<h2>Starred</h2>
 						<ul>
 							{starred.map((star, index) => (
-								<li className={styles.listElement} key={star.content.id}>
-									<LoadingLink className={styles.listLink} href={`/${star.content.page_type}/${star.content.slug}`} passHref>
+								<li className={styles.listElement} key={star.id}>
+									<LoadingLink className={styles.listLink} href={`/${star.page_type}/${star.slug}`} passHref>
 										<Image width={40} height={40} 
 											className={styles.sidebarThumbnail}
-											src={star.content.thumbnail_200x200 ? star.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
-											alt={star.content.featured_img_alt_text}
+											src={star.thumbnail_200x200 ? star.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
+											alt={star.featured_img_alt_text}
 										/>
-										<div className={styles.sidebarName}>{star.content.name.length > 22 ? star.content.name.slice(0, 22) + '...' : star.content.name}</div>
+										<div className={styles.sidebarName}>{star.name.length > 22 ? star.name.slice(0, 22) + '...' : star.name}</div>
 										<div className="led"></div>
 									</LoadingLink>
 								</li>
@@ -74,14 +74,14 @@ export default function Sidebar({ userId, ip }) {
 					<h2>History</h2>
 					<ul>
 						{visitHistory.map((visit, index) => (
-							<li className={styles.listElement} key={visit.content.id}>
-								<LoadingLink className={styles.listLink} href={`/${visit.content.page_type}/${visit.content.slug}`} passHref>
+							<li className={styles.listElement} key={visit.id}>
+								<LoadingLink className={styles.listLink} href={`/${visit.page_type}/${visit.slug}`} passHref>
 									<Image width={40} height={40} 
 										className={styles.sidebarThumbnail}
-										src={visit.content.thumbnail_200x200 ? visit.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
-										alt={visit.content.featured_img_alt_text}
+										src={visit.thumbnail_200x200 ? visit.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
+										alt={visit.featured_img_alt_text}
 									/>
-									<div className={styles.sidebarName}>{visit.content.name.length > 22 ? visit.content.name.slice(0, 22) + '...' : visit.content.name}</div>
+									<div className={styles.sidebarName}>{visit.name.length > 22 ? visit.name.slice(0, 22) + '...' : visit.name}</div>
 									<div className="led"></div>
 								</LoadingLink>
 							</li>
@@ -92,14 +92,14 @@ export default function Sidebar({ userId, ip }) {
 					<h2>Being watched</h2>
 					<ul>
 						{beingWatched.map((watch, index) => (
-							<li key={watch.content.id} className={styles.listElement}>
-								<LoadingLink className={styles.listLink} href={`/${watch.content.page_type}/${watch.content.slug}`} passHref>
+							<li key={watch.id} className={styles.listElement}>
+								<LoadingLink className={styles.listLink} href={`/${watch.page_type}/${watch.slug}`} passHref>
 									<Image width={40} height={40} 
 										className={styles.sidebarThumbnail}
-										src={watch.content.thumbnail_200x200 ? watch.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
-										alt={watch.content.featured_img_alt_text}
+										src={watch.thumbnail_200x200 ? watch.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
+										alt={watch.featured_img_alt_text}
 									/>
-									<div className={styles.sidebarName}>{watch.content.name.length > 22 ? watch.content.name.slice(0, 22) + '...' : watch.content.name}</div>
+									<div className={styles.sidebarName}>{watch.name.length > 22 ? watch.name.slice(0, 22) + '...' : watch.name}</div>
 									<div className="led"></div>
 								</LoadingLink>
 							</li>

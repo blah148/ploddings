@@ -88,7 +88,7 @@ export default function Thread({ userId, ip, threadData }) {
 								</div>
 							</div>
 							<h2>MuseScore tabs</h2>
-							<TableDataFetcher threadId={threadData.id} />
+							<TableDataFetcher threadId={threadData.id} userId={userId} />
 						</div>
 					</div>
 				</div>
