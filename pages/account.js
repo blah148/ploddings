@@ -99,7 +99,7 @@ export default function Account({ ip, userId }) {
 																	{window.innerWidth <= 768 && unlocked.content.name.length > 27
 																		? unlocked.content.name.slice(0, 27) + '...'
 																		: unlocked.content.name}
-																	<div className="led"></div>
+																	<div className="led unlocked"></div>
 																</Link>
 															</li>
 														))}
@@ -111,13 +111,13 @@ export default function Account({ ip, userId }) {
 												{starred.length === 0 ? (<div>No starred items</div>) : (
 													<ul>
 														{starred.map((star, index) => (
-															<li key={star.content.id}>
-																<Link href={`/${star.content.page_type}/${star.content.slug}`} passHref>
-																	<Image width={40} height={40} src={star.content.thumbnail_200x200} alt={star.content.featured_img_alt_text}/>
-																	{window.innerWidth <= 768 && star.content.name.length > 27
-																		? star.content.name.slice(0, 27) + '...'
-																		: star.content.name}
-																	<div className="led"></div>
+															<li key={star.id}>
+																<Link href={`/${star.page_type}/${star.slug}`} passHref>
+																	<Image width={40} height={40} src={star.thumbnail_200x200} alt={star.featured_img_alt_text}/>
+																	{window.innerWidth <= 768 && star.name.length > 27
+																		? star.name.slice(0, 27) + '...'
+																		: star.name}
+																	<div className={`led ${star.is_unlocked ? 'unlocked' : 'locked'}`}></div>
 																</Link>
 															</li>
 														))}
@@ -131,13 +131,13 @@ export default function Account({ ip, userId }) {
 												) : (
 													<ul>
 														{visitHistory.map((visit, index) => (
-															<li key={visit.content.id}>
-																<Link href={`/${visit.content.page_type}/${visit.content.slug}`} passHref>
-																	<Image width={40} height={40} src={visit.content.thumbnail_200x200} alt={visit.content.featured_img_alt_text}/>
-																	{window.innerWidth <= 768 && visit.content.name.length > 27
-																		? visit.content.name.slice(0, 27) + '...'
-																		: visit.content.name}
-																	<div className="led"></div>
+															<li key={visit.id}>
+																<Link href={`/${visit.page_type}/${visit.slug}`} passHref>
+																	<Image width={40} height={40} src={visit.thumbnail_200x200} alt={visit.featured_img_alt_text}/>
+																	{window.innerWidth <= 768 && visit.name.length > 27
+																		? visit.name.slice(0, 27) + '...'
+																		: visit.name}
+																  <div className={`led ${visit.is_unlocked ? 'unlocked' : 'locked'}`}></div>
 																</Link>
 															</li>
 														))}

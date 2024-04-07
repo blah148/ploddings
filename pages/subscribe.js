@@ -11,6 +11,7 @@ import IpodMenuLink from '../components/ParentBackLink';
 import SEO from '../components/SEO';
 import SubscribeButton from '../components/StripeSubscription';
 import OneTimePaymentButton from '../components/StripeOneTime';
+import StabilizerText from '../components/StabilizerText';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -29,10 +30,6 @@ export default function CreateAccount({ userId, ip }) {
   const { isLoading, setIsLoading } = useLoading();
   const router = useRouter();
   const [email, setEmail] = useState('');
-
-  useEffect(() => {
-    console.log('this is the email', email);
-  }, [email]);
 
   const handleCreateAccount = async (e) => {
     e.preventDefault(); // Prevent the form's default submission behavior
@@ -68,9 +65,9 @@ export default function CreateAccount({ userId, ip }) {
   return (
     <div className="bodyA">
       <SEO
-        title="Join | Ploddings"
+        title="Subscribe | Ploddings"
         description="To persist your: (i) visit history, (ii) starred guitar tablature, and (iii) access the pitch-shifter and slow-downer, create an account on Ploddings with an email"
-        slug="/create-account"
+        slug="/subscribe"
       />
 			<Sidebar userId={userId} ip={ip} />
       <div className="mainFeedAll">
@@ -82,9 +79,15 @@ export default function CreateAccount({ userId, ip }) {
               <Menu userId={userId} />
             </div>
             <div className="narrowedFeedBody">
-              <h1>Join</h1>
+							<StabilizerText />
+              <h1>Subscribe</h1>
+							<div>
+								<ul>
+									<li>2 credits per-month</li>
+									<li>All proceeds to Mt. Zion Memorial Fund</li>
+								</ul>
+							</div>
 							<SubscribeButton />
-							<OneTimePaymentButton />
             </div>
           </div>
         </div>
