@@ -492,6 +492,12 @@ svg.menuIcon {
 	display: block;
   margin-left: auto;
 }
+svg.notIcon {
+	width: 36px;
+	height: 44px;
+	margin: 12.8px 0 0 0;
+	cursor: pointer;
+}
 
 @media (min-width 1025px) {
 	svg.menuIcon {
@@ -505,7 +511,7 @@ svg.menuIcon {
 	}
 }
 
-svg.menuIcon:hover path {
+svg.menuIcon:hover path, svg.notIcon:hover path {
   fill: #5dbfbc;
 }
 
