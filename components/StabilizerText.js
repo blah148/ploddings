@@ -1,66 +1,66 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { supabase } from '../utils/supabase';
 import ExitIcon from './ExitIcon';
 import SleepIcon from './SleepIcon';
+import { useLoading } from '../context/LoadingContext';
 
 export default function StabilizerText() {
   const [text, setText] = useState('');
+  const [shouldRender, setShouldRender] = useState(false);
+  const { startLoading, stopLoading } = useLoading();
 
   useEffect(() => {
-    const fetchTextById = async (id) => {
-      const { data, error } = await supabase
-        .from('stabilizers')
-        .select('body_text')
-        .eq('id', id)
-        .single();
+    setShouldRender(!sessionStorage.getItem('noMoreStabilizersThisSession'));
 
-      if (error) {
-        console.error('Error fetching data:', error);
-        return;
-      }
+    if (typeof window !== 'undefined' && !sessionStorage.getItem('noMoreStabilizersThisSession')) {
+      const fetchText = async () => {
+        let id = localStorage.getItem('stabilizerId');
+        
+        startLoading(); // Indicate the start of a loading process
 
-      setText(data.body_text);
-    };
-
-    const storedId = localStorage.getItem('stabilizerId');
-
-    if (storedId) {
-      // If there's an ID stored, use it to fetch the text
-      fetchTextById(storedId);
-    } else {
-      // If no ID is stored, fetch IDs to select a random one
-      const fetchRandomText = async () => {
-        const { data: ids, error: idsError } = await supabase
-          .from('stabilizers')
-          .select('id');
-
-        if (idsError) {
-          console.error('Error fetching IDs:', idsError);
-          return;
+        if (!id) {
+          // Fetch IDs to get a random ID if none is stored
+          const { data: ids, error: idsError } = await supabase.from('stabilizers').select('id');
+          if (idsError || !ids.length) {
+            console.error('Error fetching IDs:', idsError);
+            stopLoading(); // Stop loading on error
+            return;
+          }
+          const randomIndex = Math.floor(Math.random() * ids.length);
+          id = ids[randomIndex].id;
+          localStorage.setItem('stabilizerId', id.toString());
         }
 
-        // Select a random ID from the fetched list
-        const randomIndex = Math.floor(Math.random() * ids.length);
-        const randomId = ids[randomIndex].id;
+        const { data, error } = await supabase.from('stabilizers').select('body_text').eq('id', id).single();
+        if (error) {
+          console.error('Error fetching data:', error);
+        } else {
+          setText(data.body_text);
+        }
 
-        // Store the randomId in localStorage for future use
-        localStorage.setItem('stabilizerId', randomId.toString());
-
-        // Fetch the full row data for the selected ID
-        await fetchTextById(randomId);
+        stopLoading(); // Indicate the end of the loading process
       };
 
-      fetchRandomText();
+      fetchText();
     }
+  }, [startLoading, stopLoading]);
+
+  const handleExitClick = useCallback(() => {
+    localStorage.removeItem('stabilizerId');
+    sessionStorage.setItem('noMoreStabilizersThisSession', 'true');
+    setShouldRender(false);
   }, []);
+
+  if (!shouldRender) {
+    return null;
+  }
 
   return (
     <div className="stabilizerText">
       <div>
-        <SleepIcon />
-        <ExitIcon />
+        <div style={{cursor: "pointer", display: "inline-flex", width: "16px", padding: "16px"}}onClick={handleExitClick}><ExitIcon /></div>
       </div>
-      {text ? text : 'Loading...'}
+			<div>{text}</div>
     </div>
   );
 }
