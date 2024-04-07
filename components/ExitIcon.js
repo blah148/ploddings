@@ -1,5 +1,9 @@
-const ExitIcon = () => (
-  <svg width="32" height="32" viewBox="0 0 32 32">
+// ExitIcon.js
+import React from 'react';
+import styles from './StabilizerText.module.css';
+
+const ExitIcon = ({ onClick }) => (
+  <svg width="32" height="32" viewBox="0 0 32 32" className={styles.exitIcon} onClick={onClick}>
     <defs>
       <style>{`.cls-1 { fill: none; }`}</style>
     </defs>

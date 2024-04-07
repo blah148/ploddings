@@ -3,6 +3,7 @@ import { supabase } from '../utils/supabase';
 import ExitIcon from './ExitIcon';
 import SleepIcon from './SleepIcon';
 import { useLoading } from '../context/LoadingContext';
+import styles from './StabilizerText.module.css';
 
 export default function StabilizerText() {
   const [text, setText] = useState('');
@@ -56,12 +57,13 @@ export default function StabilizerText() {
   }
 
   return (
-    <div className="stabilizerText">
-      <div>
-        <div style={{cursor: "pointer", display: "inline-flex", width: "16px", padding: "16px"}}onClick={handleExitClick}><ExitIcon /></div>
-      </div>
-			<div>{text}</div>
+    <div className={styles.stabilizerText}>
+        <div className={styles.exitIconContainer}>
+					<ExitIcon onClick={handleExitClick} />
+				</div>
+      <div className={styles.textContent}>{text}</div>
     </div>
   );
+
 }
 

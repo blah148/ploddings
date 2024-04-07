@@ -1,0 +1,43 @@
+/* StabilizerText.module.css */
+
+.stabilizerText {
+	padding: 12px 12px 12px 12px;
+  box-shadow: 0px 8px 25px hsla(255, 24%, 91%, 1);
+	display: flex;
+	border-radius: 5px;
+	font-size: 16.5px;
+	flex-direction: column;
+	justify-content: center;
+	align-content: center;
+	min-height: 60px;
+}
+
+@media (min-width: 769px) {
+	.stabilizerText {
+		max-width: 900px;
+	}
+}
+
+.exitIconContainer {
+  cursor: pointer;
+  display: flex;
+	position: relative;
+	padding: 8px;
+	top: -12px;
+}
+.exitIcon {
+	width: 16px;
+	height: 16px;
+	margin-left: auto;
+	opacity: 0.8
+}
+.exitIcon:hover {
+	opacity: 0.5;
+}
+
+.textContent {
+	position: relative;
+	top: -16px;
+	text-align: center;
+}
+
