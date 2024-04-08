@@ -10,6 +10,8 @@ import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 import SEO from '../components/SEO';
 import LoadingLink from '../components/LoadingLink';
+import NotificationIcon from '../components/NotificationIcon';
+import StabilizerText from '../components/StabilizerText';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -125,9 +127,13 @@ return (
 									</svg>
 									<div className="homeText">Home</div>
 								</Link>
-					     <Menu userId={userId} />
+							<div style={{display: "flex", marginLeft: "auto"}}>
+								<NotificationIcon userId={userId} />
+                <Menu userId={userId} />
 						 </div>
+						</div>
 						<div className="narrowedFeedBody">
+							<StabilizerText />
 							 <div className="categoriesContainer">
 								 {categories.map(category => ( // Iterate over categories
 									  <div key={category.id} className="categoryGroup">

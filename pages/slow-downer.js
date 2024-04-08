@@ -10,6 +10,8 @@ import IpodMenuLink from '../components/ParentBackLink';
 import { uploadSong } from '../utils/uploadSong';
 import SEO from '../components/SEO';
 import UnlockAudioButton from '../components/UnlockAudioButton';
+import NotificationIcon from '../components/NotificationIcon';
+import StabilizerText from '../components/StabilizerText';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -92,8 +94,12 @@ const handleFileChange = (e) => {
 					<div className="mainFeed">
 						<div className="topRow">
 							<IpodMenuLink fallBack='' />
-							<Menu userId={userId} />
+							<div style={{display: "flex"}}>
+								<NotificationIcon userId={userId} />
+                <Menu userId={userId} />
+							</div>
 						</div>
+						<StabilizerText />
 						<h1>Slow-Downer & Pitch-Shifter</h1>
 						<div style={{display: 'block'}}>
 							<div className="messageNotice">Accepts mp3/wav/aac/m4a/opus file-types with a maximum size of 5MB</div>

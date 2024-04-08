@@ -7,6 +7,8 @@ import jwt from 'jsonwebtoken';
 import Loader from '../components/Loader';
 import { useLoading } from '../context/LoadingContext';
 import SEO from '../components/SEO';
+import NotificationIcon from '../components/NotificationIcon';
+import StabilizerText from '../components/StabilizerText';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -39,9 +41,13 @@ export default function TermsAndConditions({ userId, ip }) {
 								<div className="mainFeed">
 										<div className="topRow">
 												<IpodMenuLink fallBack='' />
-												<Menu userId={userId} />
+												<div style={{display: "flex"}}>
+													<NotificationIcon userId={userId} />
+													<Menu userId={userId} />
+												</div>
 										</div>
 										<div className="narrowedFeedBody">
+											<StabilizerText />
 											<h1>Terms and Conditions</h1>
 											<p>These terms and conditions govern the use of Ploddings, a platform dedicated to guitar learning with resources including tablature, video content, and slow-downer software, all designed for educational purposes only.</p>
 											

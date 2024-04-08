@@ -7,6 +7,8 @@ import jwt from 'jsonwebtoken';
 import Loader from '../components/Loader';
 import { useLoading } from '../context/LoadingContext';
 import SEO from '../components/SEO';
+import NotificationIcon from '../components/NotificationIcon';
+import StabilizerText from '../components/StabilizerText';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -39,9 +41,13 @@ export default function PrivacyPolicy({ userId, ip }) {
 								<div className="mainFeed">
 										<div className="topRow">
 												<IpodMenuLink fallBack='' />
-												<Menu userId={userId} />
+												<div style={{display: "flex"}}>
+													<NotificationIcon userId={userId} />
+													<Menu userId={userId} />
+												</div>
 										</div>
 										<div className="narrowedFeedBody">
+												<StabilizerText />
 												<h1>Privacy Policy</h1>
 												<p>Ploddings is dedicated to safeguarding the privacy of all users. This Privacy Policy outlines the types of personal information collected and how it is used and protected.</p>
 

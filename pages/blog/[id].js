@@ -22,6 +22,8 @@ import Footer from '../../components/Footer';
 import Menu from '../../components/Menu';
 import styles from '../../styles/songs.module.css';
 import SEO from '../../components/SEO';
+import StabilizerText from '../../components/StabilizerText';
+import NotificationIcon from '../../components/NotificationIcon';
 
 // Verify the user's session using the JWT token
 const verifyUserSession = (req) => {
@@ -93,8 +95,12 @@ return (
         <div className="mainFeed">
           <div className="topRow">
             <IpodMenuLink threadData={threadData} fallBack='blog' />
-            <Menu userId={userId} />
+							<div style={{display: "flex"}}>
+								<NotificationIcon userId={userId} />
+                <Menu userId={userId} />
+							</div>
           </div>
+					<StabilizerText />
           <div className={styles.songNameContainer}>
             <h1>{blogData.name}</h1>
             <FavoriteButton userId={userId} id={blogData.id} ip={ip} />

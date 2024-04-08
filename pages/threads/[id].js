@@ -18,6 +18,8 @@ import IpodMenuLink from '../../components/ParentBackLink';
 import VictrolaIcon from '../../components/VictrolaIcon';
 import WikipediaIcon from '../../components/WikipediaIcon';
 import SEO from '../../components/SEO';
+import StabilizerText from '../../components/StabilizerText';
+import NotificationIcon from '../../components/NotificationIcon';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -69,9 +71,13 @@ export default function Thread({ userId, ip, threadData }) {
 			    <div className="mainFeed">
 						<div className="topRow">
 							<IpodMenuLink fallBack='' />
-							<Menu userId={userId} />
-						</div>
+							<div style={{display: "flex"}}>
+								<NotificationIcon userId={userId} />
+                <Menu userId={userId} />
+							</div>
+            </div>
 						<div className="narrowedFeedBody">
+							<StabilizerText />
 							<div className={styles.headerContainer}>		
 								<Image width={300} height={300} alt={threadData.featured_img_alt_text ? threadData.featured_img_alt_text : `${threadData.name} guitar portrait`} src={threadData.link_3 || 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_550px/default_550px.webp'} />
 								<div className={styles.rightColumn}>

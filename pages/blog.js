@@ -10,6 +10,8 @@ import Sidebar from '../components/Sidebar';
 import Image from 'next/image';
 import Link from 'next/link';
 import SEO from '../components/SEO';
+import NotificationIcon from '../components/NotificationIcon';
+import StabilizerText from '../components/StabilizerText';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -83,9 +85,13 @@ export default function Blog({ userId, ip }) {
           <div className="mainFeed">
             <div className="topRow">
               <IpodMenuLink fallBack='' />
-              <Menu userId={userId} />
+							<div style={{display: "flex"}}>
+								<NotificationIcon userId={userId} />
+                <Menu userId={userId} />
+							</div>
             </div>
             <div className="narrowedFeedBody">
+							<StabilizerText />
               <h1>Blog</h1>
               <div className="blogCardContainer">
 								{posts.map((post) => (

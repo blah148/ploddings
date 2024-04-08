@@ -10,6 +10,8 @@ import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 import SEO from '../components/SEO';
 import Link from 'next/link';
+import NotificationIcon from '../components/NotificationIcon';
+import StabilizerText from '../components/StabilizerText';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -82,9 +84,13 @@ export default function Login({ userId, ip }) {
 					<div className="mainFeed">
 						<div className="topRow">
 							<IpodMenuLink fallBack='' />
-						  <Menu userId={userId} />
+							<div style={{display: "flex"}}>
+								<NotificationIcon userId={userId} />
+                <Menu userId={userId} />
+							</div>
 						</div>
 						<div className="narrowedFeedBody">
+							<StabilizerText />
 						  <h1>Login</h1>
 							<form onSubmit={handleEmailSubmit}>
 								<label>Step 1: Receive code via email</label>

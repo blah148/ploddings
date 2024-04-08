@@ -9,6 +9,8 @@ import Menu from '../components/Menu';
 import jwt from 'jsonwebtoken';
 import IpodMenuLink from '../components/ParentBackLink';
 import SEO from '../components/SEO';
+import NotificationIcon from '../components/NotificationIcon';
+import StabilizerText from '../components/StabilizerText';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -77,9 +79,13 @@ export default function CreateAccount({ userId, ip }) {
           <div className="mainFeed">
             <div className="topRow">
               <IpodMenuLink fallBack='' />
-              <Menu userId={userId} />
+							<div style={{display: "flex"}}>
+								<NotificationIcon userId={userId} />
+                <Menu userId={userId} />
+							</div>
             </div>
             <div className="narrowedFeedBody">
+							<StabilizerText />
               <h1>Create Account</h1>
               <form onSubmit={handleCreateAccount}>
                 <input

@@ -7,6 +7,8 @@ import IpodMenuLink from '../components/ParentBackLink';
 import jwt from 'jsonwebtoken';
 import { useLoading } from '../context/LoadingContext';
 import SEO from '../components/SEO';
+import NotificationIcon from '../components/NotificationIcon';
+import StabilizerText from '../components/StabilizerText';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -89,9 +91,13 @@ export default function ContactForm ({ userId, ip  }) {
 					<div className="mainFeed">
 						<div className="topRow">
 							<IpodMenuLink fallBack="" />
-							<Menu userId={userId} />
+							<div style={{display: "flex"}}>
+								<NotificationIcon userId={userId} />
+                <Menu userId={userId} />
+							</div>
 						</div>
 						<div className="narrowedFeedBody">
+							<StabilizerText />
 							<h1>Contact</h1>
 							<form onSubmit={handleSubmit}>
 								<label htmlFor="name">Name: (optional)</label>

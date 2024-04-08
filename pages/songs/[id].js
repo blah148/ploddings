@@ -23,6 +23,8 @@ import Footer from '../../components/Footer';
 import SEO from '../../components/SEO';
 import UnlockButton from '../../components/UnlockButton';
 import PDFDownloadButton from '../../components/PDFDownloadButton';
+import StabilizerText from '../../components/StabilizerText';
+import NotificationIcon from '../../components/NotificationIcon';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -103,8 +105,12 @@ return (
         <div className="mainFeed">
           <div className="topRow">
             <IpodMenuLink threadData={threadData} fallBack='/' />
-            <Menu userId={userId} />
+							<div style={{display: "flex"}}>
+								<NotificationIcon userId={userId} />
+                <Menu userId={userId} />
+							</div>
           </div>
+					<StabilizerText />
           <div className={styles.songNameContainer}>
             <h1>{songData.name}</h1>
             <FavoriteButton userId={userId} id={songData.id} ip={ip} />

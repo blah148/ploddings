@@ -17,6 +17,8 @@ import SEO from '../components/SEO';
 import UserCreditBalance from '../components/UserCreditBalance.js';
 import NextBillingDate from '../components/NextBillingDate';
 import OneTimePaymentButton from '../components/StripeOneTime';
+import NotificationIcon from '../components/NotificationIcon';
+import StabilizerText from '../components/StabilizerText';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -67,9 +69,13 @@ export default function Account({ ip, userId }) {
 								<div className="mainFeed">
 										<div className="topRow">
 												<IpodMenuLink fallBack='' />
-												<Menu userId={userId} />
+												<div style={{display: "flex"}}>
+													<NotificationIcon userId={userId} />
+													<Menu userId={userId} />
+												</div>
 										</div>
 										<div className="narrowedFeedBody">
+											<StabilizerText />
 											<h1>My profile</h1>
 											<h2>Save settings</h2>
 											{!userId &&
