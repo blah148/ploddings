@@ -497,6 +497,7 @@ svg.notIcon {
 	height: 44px;
 	margin: 12.8px 0 0 0;
 	cursor: pointer;
+	user-select: none;
 }
 
 @media (min-width 1025px) {
@@ -526,6 +527,7 @@ svg.menuIcon:hover path, svg.notIcon:hover path {
   right: 10px; /* Adjust as needed */
   width: 250px; /* Adjust as needed */
   padding: 0 10px;
+	z-index: 50;
 }
 
 .menu.show {
@@ -533,7 +535,41 @@ svg.menuIcon:hover path, svg.notIcon:hover path {
   opacity: 1;
   border-radius: 10px;
 }
-
+.notItem {
+	display: flex;
+	padding: 4px 0px;
+	border-radius: 8px;
+	text-decoration: none;
+}
+.redDot {
+  margin: 0 2px 0 auto; 
+  font-size: larger;
+	width: 8px;
+	height: 8px;
+	background-color: #fd5858;
+	box-shadow: 0 1px 2.5px 1px rgba(184, 53, 53, 0.75);
+	align-self: center;
+	border-radius: 50px;
+}
+.greenDot {
+  margin: 0 2px 0 auto; 
+  font-size: larger;
+	width: 8px;
+	height: 8px;
+	background-color: #2ac64f;
+	box-shadow: 0 0 3px 1px rgba(25, 124, 35, 0.88);
+	align-self: center;
+	border-radius: 50px;
+}
+.timestamp {
+	font-size: 13px;
+}
+.notificationText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 200px; /* Adjust based on your design */
+}
 .menuItem {
   margin: 8px 0;
   padding: 4px 8px;
@@ -543,9 +579,30 @@ svg.menuIcon:hover path, svg.notIcon:hover path {
   border-radius: 8px;
   text-decoration: none;
 }
-.menuItem:hover {
+.menuItem:hover, .notItem:hover a {
   color: #fafafa;
   background-color: #1CC5CB;
+}
+.notItem a {
+	display: flex;
+	border-radius: 8px;
+	width: 100%;
+	padding: 4px 3px 4px 8px;
+}
+.separator {
+	height: 1px;
+	margin: 4px auto 8px auto;
+	width: 91%;
+	background-color: #e9e9e9;
+}
+.viewAllButton {
+	padding: 2px 8px;
+	font-size: 11.5px;
+	text-transform: capitalize;
+	margin-bottom: 6px;
+}
+.viewAllButton:hover{
+	opacity: 0.7;
 }
 .menuItem svg {
   height: 18px;
