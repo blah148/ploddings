@@ -526,7 +526,7 @@ svg.menuIcon:hover path, svg.notIcon:hover path {
   top: 50px; /* Adjust as needed */
   right: 10px; /* Adjust as needed */
   width: 250px; /* Adjust as needed */
-  padding: 0 10px;
+  padding: 0 8px;
 	z-index: 50;
 }
 
@@ -562,7 +562,7 @@ svg.menuIcon:hover path, svg.notIcon:hover path {
 	border-radius: 50px;
 }
 .timestamp {
-	font-size: 13px;
+	font-size: 12px;
 }
 .notificationText {
   white-space: nowrap;
@@ -587,6 +587,7 @@ svg.menuIcon:hover path, svg.notIcon:hover path {
 	display: flex;
 	border-radius: 8px;
 	width: 100%;
+	font-size: 15px;
 	padding: 4px 3px 4px 8px;
 }
 .separator {
@@ -594,6 +595,18 @@ svg.menuIcon:hover path, svg.notIcon:hover path {
 	margin: 4px auto 8px auto;
 	width: 91%;
 	background-color: #e9e9e9;
+}
+.notIndicators {
+	display: flex;
+	flex-direction: column;
+	align-content: center;
+	justify-content: center;
+}
+.notIndicators svg {
+	margin: 9px -2px 0 0;
+	padding: 3px;
+	cursor: pointer;
+	opacity: 0.6;
 }
 .viewAllButton {
 	padding: 2px 8px;
