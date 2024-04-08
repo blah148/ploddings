@@ -535,6 +535,13 @@ svg.menuIcon:hover path, svg.notIcon:hover path {
   opacity: 1;
   border-radius: 10px;
 }
+.menu.notifications.show {
+	display: block;
+	opacity: 1;
+	border-radius: 10px;
+	max-height: 300px;
+	overflow-y: auto;
+}
 .notItem {
 	display: flex;
 	padding: 4px 0px;
@@ -569,6 +576,11 @@ svg.menuIcon:hover path, svg.notIcon:hover path {
   overflow: hidden;
   text-overflow: ellipsis;
   max-width: 200px; /* Adjust based on your design */
+}
+.noNotifications {
+	padding: 2px 8px;
+	font-size: 14px;
+	margin: 6px 0 4px 0;	
 }
 .menuItem {
   margin: 8px 0;

@@ -1,0 +1,25 @@
+.sun {
+  animation: rotateSun 4s linear infinite;
+	fill: #ecde6c;
+}
+
+.cloud {
+  animation: rotateCloud 6s linear infinite;
+	fill: #fbe84d;
+}
+
+@keyframes twist {
+  0%, 100% {
+    transform: rotateY(0deg);
+    transform-origin: center center;
+  }
+  50% {
+    transform: rotateY(25deg);
+    transform-origin: center center;
+  }
+}
+
+.animation {
+  animation: twist 5s infinite linear;
+}
+

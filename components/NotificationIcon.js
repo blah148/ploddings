@@ -195,7 +195,7 @@ const deleteNotification = async (notificationId) => {
 				<rect fill="#c3c7c7" transform="scale(0.85)" id="_Transparent_Rectangle_" data-name="<Transparent Rectangle>" className="cls-1" width="32" height="32"/>
 			</svg>
 
-    <div ref={menuRef} className={`menu ${showMenu ? 'show' : ''}`}>
+    <div ref={menuRef} className={`menu notifications ${showMenu ? 'show' : ''}`}>
       {notifications.length > 0 ? (
         notifications.map((notification) => (
           <div key={notification.id} className="notItem">
@@ -213,11 +213,6 @@ const deleteNotification = async (notificationId) => {
       ) : (
         <div className="noNotifications">No new notifications</div>
       )}
-
-				<div className="separator"></div>
-				<Link href="/account" passHref>
-					<div className="viewAllButton">View all</div>
-				</Link>
 			</div>
 		</>
   );
