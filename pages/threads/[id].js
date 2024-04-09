@@ -20,7 +20,7 @@ import WikipediaIcon from '../../components/WikipediaIcon';
 import SEO from '../../components/SEO';
 import StabilizerText from '../../components/StabilizerText';
 import NotificationIcon from '../../components/NotificationIcon';
-import TokenAndBalance from '../components/TokensMenuItem';
+import TokenAndBalance from '../../components/TokensMenuItem';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];

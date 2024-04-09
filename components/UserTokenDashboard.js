@@ -66,7 +66,7 @@ const UserTokenDashboard = ({ userId }) => {
         <li>
           <div className={styles.liItem}>
             <NextBillingDate userId={userId} />
-            <InfoIcon tooltipMessage="Set to receive 2 credits per month" />
+            <InfoIcon tooltipMessage="Receive 2 credits per month" />
           </div>
         </li>
         <li>
