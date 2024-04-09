@@ -25,6 +25,7 @@ import UnlockButton from '../../components/UnlockButton';
 import PDFDownloadButton from '../../components/PDFDownloadButton';
 import StabilizerText from '../../components/StabilizerText';
 import NotificationIcon from '../../components/NotificationIcon';
+import TokenAndBalance from '../components/TokensMenuItem';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -106,6 +107,7 @@ return (
           <div className="topRow">
             <IpodMenuLink threadData={threadData} fallBack='/' />
 							<div style={{display: "flex"}}>
+								{userId && <TokenAndBalance userId={userId} />}
 								<NotificationIcon userId={userId} />
                 <Menu userId={userId} />
 							</div>

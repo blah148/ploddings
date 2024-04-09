@@ -69,7 +69,7 @@ export default function Account({ ip, userId }) {
 										<div className="topRow">
 												<IpodMenuLink fallBack='' />
 												<div style={{display: "flex"}}>
-													<TokenAndBalance userId={userId} />
+													{userId && <TokenAndBalance userId={userId} />}
 													<NotificationIcon userId={userId} />
 													<Menu userId={userId} />
 												</div>

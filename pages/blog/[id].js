@@ -24,6 +24,7 @@ import styles from '../../styles/songs.module.css';
 import SEO from '../../components/SEO';
 import StabilizerText from '../../components/StabilizerText';
 import NotificationIcon from '../../components/NotificationIcon';
+import TokenAndBalance from '../components/TokensMenuItem';
 
 // Verify the user's session using the JWT token
 const verifyUserSession = (req) => {
@@ -96,6 +97,7 @@ return (
           <div className="topRow">
             <IpodMenuLink threadData={threadData} fallBack='blog' />
 							<div style={{display: "flex"}}>
+								{userId && <TokenAndBalance userId={userId} />}
 								<NotificationIcon userId={userId} />
                 <Menu userId={userId} />
 							</div>

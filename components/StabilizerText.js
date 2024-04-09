@@ -15,7 +15,7 @@ export default function StabilizerText() {
 
     if (typeof window !== 'undefined' && !sessionStorage.getItem('noMoreStabilizersThisSession')) {
       const fetchText = async () => {
-        let id = localStorage.getItem('stabilizerId');
+        let id = sessionStorage.getItem('stabilizerId');
         
         startLoading(); // Indicate the start of a loading process
 
@@ -29,7 +29,7 @@ export default function StabilizerText() {
           }
           const randomIndex = Math.floor(Math.random() * ids.length);
           id = ids[randomIndex].id;
-          localStorage.setItem('stabilizerId', id.toString());
+          sessionStorage.setItem('stabilizerId', id.toString());
         }
 
         const { data, error } = await supabase.from('stabilizers').select('body_text').eq('id', id).single();
@@ -47,7 +47,7 @@ export default function StabilizerText() {
   }, [startLoading, stopLoading]);
 
   const handleExitClick = useCallback(() => {
-    localStorage.removeItem('stabilizerId');
+    sessionStorage.removeItem('stabilizerId');
     sessionStorage.setItem('noMoreStabilizersThisSession', 'true');
     setShouldRender(false);
   }, []);

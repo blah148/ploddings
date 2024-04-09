@@ -20,6 +20,7 @@ import WikipediaIcon from '../../components/WikipediaIcon';
 import SEO from '../../components/SEO';
 import StabilizerText from '../../components/StabilizerText';
 import NotificationIcon from '../../components/NotificationIcon';
+import TokenAndBalance from '../components/TokensMenuItem';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -72,6 +73,7 @@ export default function Thread({ userId, ip, threadData }) {
 						<div className="topRow">
 							<IpodMenuLink fallBack='' />
 							<div style={{display: "flex"}}>
+								{userId && <TokenAndBalance userId={userId} />}
 								<NotificationIcon userId={userId} />
                 <Menu userId={userId} />
 							</div>
