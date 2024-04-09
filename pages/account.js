@@ -14,12 +14,9 @@ import CreateAccountForm from '../components/createAccount';
 import { useLoading } from '../context/LoadingContext';
 import Loader from '../components/Loader';
 import SEO from '../components/SEO';
-import UserCreditBalance from '../components/UserCreditBalance.js';
-import NextBillingDate from '../components/NextBillingDate';
-import OneTimePaymentButton from '../components/StripeOneTime';
 import NotificationIcon from '../components/NotificationIcon';
 import StabilizerText from '../components/StabilizerText';
-import TokenIcon from '../components/TokenIcon';
+import UserTokenDashboard from '../components/UserTokenDashboard';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -88,8 +85,7 @@ export default function Account({ ip, userId }) {
 											{userId && (
 													<>
 														<EmailUpdater userId={userId} />
-														<div style={{display: "flex", marginTop: "18px"}}>You have <strong style={{display: "flex"}}><UserCreditBalance userId={userId} /> credits. </strong><OneTimePaymentButton /></div><TokenIcon />
-														<NextBillingDate userId={userId} />
+														<UserTokenDashboard userId={userId} />
 													</>
 											)}
 											{message && <p>{message}</p>}

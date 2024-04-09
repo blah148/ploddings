@@ -1,11 +1,16 @@
+.tokenIcon {
+	width: 25px;
+
+}
+
 .sun {
   animation: rotateSun 4s linear infinite;
-	fill: #ecde6c;
+	fill: #c1b550;
 }
 
 .cloud {
   animation: rotateCloud 6s linear infinite;
-	fill: #fbe84d;
+	fill: #f8de08;
 }
 
 @keyframes twist {
@@ -14,12 +19,12 @@
     transform-origin: center center;
   }
   50% {
-    transform: rotateY(25deg);
+    transform: rotateY(20deg);
     transform-origin: center center;
   }
 }
 
 .animation {
-  animation: twist 5s infinite linear;
+  animation: twist 4.5s infinite linear;
 }
 

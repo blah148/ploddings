@@ -2,7 +2,7 @@ import { loadStripe } from '@stripe/stripe-js';
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
-const OneTimePaymentButton = ({ email }) => {
+const SubscribeText = ({ email, text }) => {
   const handleClick = async () => {
     const stripe = await stripePromise;
 
@@ -11,18 +11,17 @@ const OneTimePaymentButton = ({ email }) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, productType: 'one-time' }), // Specify 'one-time' for productType
+      body: JSON.stringify({ email, productType: 'subscription' }),
     });
 
     const session = await response.json();
 
     const result = await stripe.redirectToCheckout({
-      // Specify the one-time price ID here
-      lineItems: [{ price: 'price_1P1XjHKC15IuzqSc6M7w0XpD', quantity: 1 }],
-      mode: 'payment', // Set mode to 'payment' for a one-time payment
-      customerEmail: email, // Optionally prefill the customer's email address
+      lineItems: [{ price: 'price_1P1XhzKC15IuzqSc4JdF2aeR', quantity: 1 }],
+      mode: 'subscription',
+      customerEmail: email,
       successUrl: window.location.href, // Use the current page URL as the success URL
-      cancelUrl: window.location.href, // Use the current page URL as the cancel URL
+      sessionId: session.id,
     });
 
     if (result.error) {
@@ -31,11 +30,10 @@ const OneTimePaymentButton = ({ email }) => {
   };
 
   return (
-    <a href="#" onClick={handleClick} style={{ margin: "auto 8px auto 0", cursor: 'pointer', color: 'blue'}}>
-      Buy 1 additional credit.
-    </a>
+    <a style={{color: "blue", cursor: "pointer", margin: "auto 8px auto 0"}} onClick={handleClick}>{text}</a>
   );
 };
 
-export default OneTimePaymentButton;
+export default SubscribeText;
+
 

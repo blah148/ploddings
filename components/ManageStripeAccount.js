@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '../utils/supabase'; // Adjust the import path as necessary
 
-const NextBillingDate = ({ userId }) => {
+const ManageStripeAccount = ({ userId }) => {
   const [nextBillingDate, setNextBillingDate] = useState('');
   const [customerPortalUrl, setCustomerPortalUrl] = useState('');
 
@@ -45,10 +45,9 @@ const NextBillingDate = ({ userId }) => {
 
   return (
 <div style={{margin: "auto 8px auto 0"}}>
-    Next billing date:
-    {nextBillingDate ? (
-      <a style={{marginLeft: "5px"}} href={customerPortalUrl} target="_blank" rel="noopener noreferrer">
-        {new Date(nextBillingDate).toLocaleDateString()}
+    {customerPortalUrl ? (
+      <a style={{marginLeft: "0px"}} href={customerPortalUrl} target="_blank" rel="noopener noreferrer">
+				View Stripe history
       </a>
     ) : 'Loading...'}
 </div>
@@ -56,5 +55,6 @@ const NextBillingDate = ({ userId }) => {
   );
 };
 
-export default NextBillingDate;
+export default ManageStripeAccount;
+
 
