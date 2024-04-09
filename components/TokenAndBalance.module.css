@@ -1,0 +1,45 @@
+.tokenIcon {
+	width: 30px;
+
+}
+
+.sun {
+  animation: rotateSun 4s linear infinite;
+	fill: #c1b550;
+}
+
+.cloud {
+  animation: rotateCloud 6s linear infinite;
+	fill: #f8de08;
+}
+
+@keyframes twist {
+  0%, 100% {
+    transform: rotateY(0deg);
+    transform-origin: center center;
+  }
+  50% {
+    transform: rotateY(20deg);
+    transform-origin: center center;
+  }
+}
+
+.animation {
+  animation: twist 4.5s infinite linear;
+}
+
+.tokenAndBalance {
+  display: flex;
+  align-items: center;
+}
+
+.tokenBalance {
+  margin-left: 10px; /* Adjust margin as needed */
+}
+
+.lowCredits {
+	margin: 3px 30px auto -20px;
+}
+.highCredits {
+	margin: 4px 30px auto -22px;
+}

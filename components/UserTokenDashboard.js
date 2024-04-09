@@ -43,7 +43,7 @@ const UserTokenDashboard = ({ userId }) => {
   }, [userId]);
 
   return (
-    <div className={styles.tokenDashboard}>
+    <div className={styles.tokenDashboard} id="credits">
       <div style={{ fontSize: "17px" }}>You have: </div>
       <div className={styles.dashboardRow}>
         <TokenIcon />
@@ -66,7 +66,7 @@ const UserTokenDashboard = ({ userId }) => {
         <li>
           <div className={styles.liItem}>
             <NextBillingDate userId={userId} />
-            <InfoIcon tooltipMessage="You will receive 2 credits" />
+            <InfoIcon tooltipMessage="Set to receive 2 credits per month" />
           </div>
         </li>
         <li>
@@ -90,7 +90,7 @@ const UserTokenDashboard = ({ userId }) => {
         <li>
           <div className={styles.liItem}>
             <SubscribeText userId={userId} text="Renew subscription"/>
-            <InfoIcon tooltipMessage="2 credits per month" />
+            <InfoIcon tooltipMessage="Receive 2 credits per month" />
           </div>
         </li>
       </ul>
@@ -103,7 +103,7 @@ const UserTokenDashboard = ({ userId }) => {
         <li>
           <div className={styles.liItem}>
             <SubscribeText userId={userId} text="Activate subscription" />
-            <InfoIcon tooltipMessage="2 credits per month" />
+            <InfoIcon tooltipMessage="Receive 2 credits per month" />
           </div>
         </li>
       </ul>
