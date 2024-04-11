@@ -25,14 +25,16 @@
 	padding: 8px;
 	top: -12px;
 }
+.exitIconContainer path, .exitIconContainer polygon {
+	fill: #aaaeae;
+}
 .exitIcon {
 	width: 16px;
 	height: 16px;
 	margin-left: auto;
-	opacity: 0.8
 }
 .exitIcon:hover {
-	opacity: 0.5;
+	opacity: 0.7;
 }
 
 .textContent {
