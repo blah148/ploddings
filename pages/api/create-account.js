@@ -1,5 +1,8 @@
+import sgMail from '@sendgrid/mail';
 import { supabase } from '../../utils/supabase'; // Adjust the import path as needed
 import jwt from 'jsonwebtoken';
+require('dotenv').config({ path: '../../.env' });
+sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 
 // A simple regex for basic email validation
 function isValidEmail(email) {
@@ -71,6 +74,18 @@ export default async function handler(req, res) {
 
     // Set the JWT token as a secure, HTTP-only cookie on the client side
     res.setHeader('Set-Cookie', `auth_token=${token}; HttpOnly; Path=/; Max-Age=604800; SameSite=Lax; ${process.env.NODE_ENV === 'production' ? 'Secure;' : ''}`);
+
+    // After successful account creation/update, send the notification email
+    const notificationMsg = {
+      to: 'mpark148@gmail.com', // The email address to receive the notification
+      from: 'no-reply@ploddings.com', // Your verified sender address
+      subject: 'New User Signup Notification',
+      text: `A new user has signed up with the email: ${email}`,
+      html: `<p>A new user has signed up with the email: <strong>${email}</strong></p>`,
+    };
+
+    // Send the email
+    await sgMail.send(notificationMsg);
 
     // Respond to indicate the account was created or updated successfully
     res.status(200).json({ message: 'Account created/updated successfully', userId: user.id });
