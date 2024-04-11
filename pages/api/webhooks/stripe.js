@@ -30,36 +30,35 @@ async function updateCredits(email, productType, stripeCustomerId) {
   try {
     console.log('Updating user data for email:', email);
     
-    // Fetch the current credit balance, active_membership, and stripe_id
     const { data: userData, error: fetchError } = await supabase
       .from('users')
-      .select('credit_balance, active_membership, stripe_id')
+      .select('credit_balance, active_membership, stripe_id, pending_credits')
       .eq('email', email)
       .single();
 
     if (fetchError) throw new Error(`Fetching user data failed: ${fetchError.message}`);
     console.log(`Fetched user data for ${email}:`, userData);
 
-    // Define the update object, always include the credit balance update
-    const updateData = { 
-      credit_balance: userData.credit_balance + additionalCredits,
-      // Conditionally update active_membership if we're activating the membership
-      ...(activateMembership && !userData.active_membership && { active_membership: true })
+    let updateData = { 
+      credit_balance: userData.credit_balance + additionalCredits + (userData.pending_credits > 0 ? 1 : 0), // Add pending credit if available
+      pending_credits: userData.pending_credits > 0 ? userData.pending_credits - 1 : userData.pending_credits, // Decrement pending_credits by 1 if any
     };
+
+    if (activateMembership || userData.pending_credits > 0) { // Adjust logic as needed
+      updateData.active_membership = true;
+    }
     
-    // Only add the stripeCustomerId to the update if it's different from what's already stored
     if (userData.stripe_id !== stripeCustomerId) {
       updateData.stripe_id = stripeCustomerId;
     }
 
-    // Perform the update with conditional updates
     const { error: updateError } = await supabase
       .from('users')
       .update(updateData)
       .eq('email', email);
 
     if (updateError) throw new Error(`Updating user data failed: ${updateError.message}`);
-    console.log(`User data updated for ${email}. New credit balance: ${updateData.credit_balance}, Active Membership: ${updateData.active_membership}, Stripe ID: ${updateData.stripe_id || userData.stripe_id}`);
+    console.log(`User data updated for ${email}:`, updateData);
   } catch (error) {
     console.error('Supabase operation error:', error.message);
     throw error;
@@ -181,25 +180,32 @@ async function activateMembershipAndHandleCredits(stripeCustomerId) {
 
     console.log(`User Data:`, userData);
 
-    if (!userData.active_membership) {
-      const newCreditBalance = userData.pending_credits > 0 ? userData.credit_balance + userData.pending_credits : userData.credit_balance;
+    // Initialize the update object with active_membership set to true.
+    // This ensures that active_membership is always true after this operation,
+    // regardless of its previous state.
+    const updateData = { active_membership: true };
+		console.log("testing here", userData.pending_credits);
 
-      console.log(`Updating user data with new credit balance: ${newCreditBalance} and setting active_membership to true`);
-
-      const { error: updateError } = await supabase
-        .from('users')
-        .update({ active_membership: true, credit_balance: newCreditBalance, pending_credits: 0 })
-        .eq('stripe_id', stripeCustomerId);
-
-      if (updateError) {
-        console.error('Error updating user data:', updateError.message);
-        return;
-      }
-
-      console.log(`Membership activated and/or credits updated for Stripe Customer ID: ${stripeCustomerId}`);
+    // Dispense 1 pending credit if available, regardless of the active_membership status.
+    if (userData.pending_credits > 0) {
+      updateData.credit_balance = userData.credit_balance + 1; // Increase credit balance by 1
+      updateData.pending_credits = userData.pending_credits - 1; // Decrease pending credits by 1
+      console.log(`Dispensing 1 pending credit. New credit balance: ${updateData.credit_balance}, Remaining pending credits: ${updateData.pending_credits}`);
     } else {
-      console.log('Membership already active, no action taken.');
+      console.log('No pending credits to dispense.');
     }
+
+    const { error: updateError } = await supabase
+      .from('users')
+      .update(updateData)
+      .eq('stripe_id', stripeCustomerId);
+
+    if (updateError) {
+      console.error('Error updating user data:', updateError.message);
+      return;
+    }
+
+    console.log(`Membership status updated and/or credits dispensed for Stripe Customer ID: ${stripeCustomerId}`);
   } catch (error) {
     console.error('Unexpected error in activateMembershipAndHandleCredits:', error.message);
   }

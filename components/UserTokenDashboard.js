@@ -55,7 +55,7 @@ const UserTokenDashboard = ({ userId }) => {
           <TokenIcon />
           <div style={{ margin: "auto 5px" }}>{pendingCredits}</div>
           <div style={{margin: "auto 8px auto 0"}}>pending credits</div>
-					<InfoIcon tooltipMessage="Bonus tokens released with next subscription billing" />
+					<InfoIcon tooltipMessage="Bonus credits released one at a time with next subscription billing" />
         </div>
       )}
 <div className={styles.membershipState}>
@@ -90,7 +90,7 @@ const UserTokenDashboard = ({ userId }) => {
         <li>
           <div className={styles.liItem}>
             <SubscribeText userId={userId} text="Renew subscription"/>
-            <InfoIcon tooltipMessage="Receive 2 credits per month" />
+            <InfoIcon tooltipMessage="Receive 2 unlock credits per month" />
           </div>
         </li>
       </ul>
@@ -98,12 +98,12 @@ const UserTokenDashboard = ({ userId }) => {
   )}
   {activeMembership === null && (
     <>
-      <div>No active subscriptions</div>
+      <div>No active subscription</div>
       <ul>
         <li>
           <div className={styles.liItem}>
             <SubscribeText userId={userId} text="Activate subscription" />
-            <InfoIcon tooltipMessage="Receive 2 credits per month" />
+            <InfoIcon tooltipMessage="Receive 2 unlock credits per month" />
           </div>
         </li>
       </ul>

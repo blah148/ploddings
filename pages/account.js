@@ -17,6 +17,7 @@ import SEO from '../components/SEO';
 import NotificationIcon from '../components/NotificationIcon';
 import StabilizerText from '../components/StabilizerText';
 import UserTokenDashboard from '../components/UserTokenDashboard';
+import VisitorTokenDashboard from '../components/VisitorTokenDashboard';
 import TokenAndBalance from '../components/TokensMenuItem';
 
 const verifyUserSession = (req) => {
@@ -76,12 +77,12 @@ export default function Account({ ip, userId }) {
 										</div>
 										<div className="narrowedFeedBody">
 											<StabilizerText />
-											<h1>My profile</h1>
+											<h1>{userId ? "My profile" : "Visitor profile"}</h1>
 											<h2>Save settings</h2>
 											{!userId &&
 												<> 
-												  <div className="alertNotice">Persist favorites and viewing history across devices</div>
 											  	<CreateAccountForm />
+													<VisitorTokenDashboard />
 												</>
 											}
 											{userId && (

@@ -98,7 +98,6 @@ async function FetchContentByCategory(userId) {
         
         // Update the state with the sorted data
         setCategories(categoriesArray);
-				console.log('these are the categories', categoriesArray);
     } catch (error) {
         console.error('Error fetching content by category:', error.message);
     } finally {
