@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useLoading } from '../context/LoadingContext';
 import styles from './PDFDownloadButton.module.css';
+import { useRouter } from 'next/router'; // Import useRouter hook
 
 const UnlockButton = ({ userId, contentId }) => {
   const { isLoading, startLoading, stopLoading } = useLoading();
@@ -8,6 +9,7 @@ const UnlockButton = ({ userId, contentId }) => {
   const [isUnlocking, setIsUnlocking] = useState(false);
   const [isMobile, setIsMobile] = useState(false);
   const [isUnlocked, setIsUnlocked] = useState(false); // Declare isUnlocked state
+  const router = useRouter(); // Initialize useRouter
 
   useEffect(() => {
     const detectMobile = () => {
@@ -19,7 +21,8 @@ const UnlockButton = ({ userId, contentId }) => {
 
   const unlockContent = async () => {
     if (!userId) {
-      setMessage('User ID is missing. You must be logged in to unlock content.');
+      alert('User ID is missing. You must be logged in to unlock content.');
+      router.push('/account'); // Navigate to account page if user is not logged in
       return;
     }
 
@@ -45,11 +48,11 @@ const UnlockButton = ({ userId, contentId }) => {
 
     if (data.success) {
       console.log('Content unlocked successfully');
-      setMessage('Content unlocked successfully!');
+      alert('Content unlocked successfully!');
       setIsUnlocked(true); // Update isUnlocked based on success
     } else {
       console.error('Failed to unlock content:', data.message);
-      setMessage(`Failed to unlock content: ${data.message}`);
+      alert(`Failed to unlock content: ${data.message}`);
       setIsUnlocked(false); // Keep or update isUnlocked based on failure
     }
   };
@@ -63,7 +66,6 @@ const UnlockButton = ({ userId, contentId }) => {
       >
         {isMobile ? (isUnlocking ? 'Get...' : '1 Credit') : (isUnlocking ? 'Loading...' : '1 Credit')}
       </button>
-      {message && <p>{message}</p>}
     </div>
   );
 };
