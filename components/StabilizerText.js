@@ -10,17 +10,24 @@ export default function StabilizerText() {
   const [shouldRender, setShouldRender] = useState(false);
   const { startLoading, stopLoading } = useLoading();
 
-  useEffect(() => {
-    setShouldRender(!sessionStorage.getItem('noMoreStabilizersThisSession'));
+  // Function to check if the sleep period has expired
+  const checkSleepExpiration = useCallback(() => {
+    const hideUntil = localStorage.getItem('hideStabilizerUntil');
+    if (!hideUntil) return true;
+    return new Date() > new Date(hideUntil);
+  }, []);
 
-    if (typeof window !== 'undefined' && !sessionStorage.getItem('noMoreStabilizersThisSession')) {
+  useEffect(() => {
+    const shouldRenderComponent = checkSleepExpiration() && !sessionStorage.getItem('noMoreStabilizersThisSession');
+    setShouldRender(shouldRenderComponent);
+
+    if (typeof window !== 'undefined' && shouldRenderComponent) {
       const fetchText = async () => {
         let id = sessionStorage.getItem('stabilizerId');
-        
+
         startLoading(); // Indicate the start of a loading process
 
         if (!id) {
-          // Fetch IDs to get a random ID if none is stored
           const { data: ids, error: idsError } = await supabase.from('stabilizers').select('id');
           if (idsError || !ids.length) {
             console.error('Error fetching IDs:', idsError);
@@ -44,11 +51,25 @@ export default function StabilizerText() {
 
       fetchText();
     }
-  }, [startLoading, stopLoading]);
+  }, [startLoading, stopLoading, checkSleepExpiration]);
 
   const handleExitClick = useCallback(() => {
     sessionStorage.removeItem('stabilizerId');
     sessionStorage.setItem('noMoreStabilizersThisSession', 'true');
+    setShouldRender(false);
+  }, []);
+
+  const handleSleepClick = useCallback(() => {
+    // Retrieve or initialize the delay multiplier
+    let delayMultiplier = parseInt(localStorage.getItem('delayMultiplier'), 10) || 1; // Starts with 4 days
+
+    const hideUntil = new Date();
+    hideUntil.setDate(hideUntil.getDate() + 4 * delayMultiplier); // Multiply 4 days by the current multiplier
+
+    localStorage.setItem('hideStabilizerUntil', hideUntil.toISOString());
+    // Update and store the new delay multiplier by doubling it for the next time
+    localStorage.setItem('delayMultiplier', (delayMultiplier * 2).toString());
+
     setShouldRender(false);
   }, []);
 
@@ -58,12 +79,16 @@ export default function StabilizerText() {
 
   return (
     <div className={styles.stabilizerText}>
+      <div style={{ display: "flex", justifyContent: "flex-end" }}>
+        <div className={styles.exitIconContainer} onClick={handleSleepClick}>
+          <SleepIcon />
+        </div>
         <div className={styles.exitIconContainer}>
-					<ExitIcon onClick={handleExitClick} />
-				</div>
+          <ExitIcon onClick={handleExitClick} />
+        </div>
+      </div>
       <div className={styles.textContent}>{text}</div>
     </div>
   );
-
 }
 

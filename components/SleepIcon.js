@@ -1,5 +1,8 @@
+import React from 'react';
+import styles from './StabilizerText.module.css';
+
 const SleepIcon = () => (
-  <svg id="icon" xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32">
+  <svg id="icon" className={styles.exitIcon} width="32" height="32" viewBox="0 0 32 32">
     <defs>
       <style>{`.cls-1 { fill: none; }`}</style>
     </defs>

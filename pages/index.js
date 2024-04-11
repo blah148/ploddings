@@ -46,9 +46,6 @@ async function FetchContentByCategory(userId) {
 
     try {
         // Ensure userId is available
-        if (!userId) {
-            throw new Error("User ID is required to fetch content.");
-        }
 
         // Call the PostgreSQL function with userId
         const { data, error } = await supabase.rpc('fetch_categories_with_content4', { user_id: userId });
