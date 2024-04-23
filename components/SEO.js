@@ -18,7 +18,7 @@ export default function SEO({ title, description, image, page_type, slug, altern
 			<link rel="canonical" href={canonicalUrl} />
 			{author && (<meta name="author" content={author} />)}
 			{nofollow ? (<meta name="robots" content="noindex, nofollow" />) : (<meta name="robots" content="index, follow" />)}
-			<meta http-equiv="content-language" content="en-US" />
+			<meta httpEquiv="content-language" content="en-US" />
       <meta name="twitter:card" content="summary_large_image" />
 			{published_date && (<meta property="og:article:published_time" content={published_date} />)}
     </Head>
