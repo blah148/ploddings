@@ -80,7 +80,7 @@ export default function StabilizerText() {
   return (
     <div className={styles.stabilizerText}>
       <div style={{ display: "flex", justifyContent: "flex-end" }}>
-        <div className={styles.exitIconContainer} onClick={handleSleepClick}>
+					<div className={styles.exitIconContainer} onClick={handleSleepClick}>
           <SleepIcon />
         </div>
         <div className={styles.exitIconContainer}>

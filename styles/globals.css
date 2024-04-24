@@ -732,20 +732,43 @@ div.footer_link-item:hover, a.footer_link-item:hover {
 }
 div.footer_lower-row {
   display: flex;
+	flex-direction: column;
   height: 10vh;
   padding: 22px 0 0 0;
-  display: flex;
   justify-content: center;
+	align-content: center;
+}
+div.classFooterLinks {
+	margin: auto;
+}
+.footerTagline {
+	margin: auto;
+	font-size: 15.5px;
+}
+.footerTagline a {
+	color: white;
+	opacity: 0.9;
+}
+@media (max-width: 768px) {
+	.footerTagline {
+		margin: 0px auto 14px auto;	}
+	.footer_lower-row {
+		margin: 8px auto 22px auto;
+	}
+}
+.footerTagline:hover {
+	opacity: 0.75;
 }
 a.footer_lower-item {
   margin: 0 16px; 
-  font-size: 13.5px;
+  font-size: 13.2px;
   text-decoration: none;
+	opacity: 0.75;
   color: white;
   text-align: center;
 }
 a.footer_lower-item:hover {
-  opacity: 0.8;
+  opacity: 0.5;
 }
 @media only screen and (max-width: 768px) {
   div.footerContainer {

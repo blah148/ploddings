@@ -43,8 +43,13 @@ export default function Footer ({ userId = null  }) {
 				</div>
 			</div>
 			<div className="footer_lower-row">
-				<Link href="/privacy-policy" className="footer_lower-item" passHref>Privacy policy</Link>
-				<Link href="/terms-and-conditions" className="footer_lower-item" passHref>Terms & conditions</Link>
+				<div className="footerTagline">
+					<Link href="/about">Support the Mt. Zion Memorial Fund</Link>
+				</div>
+				<div className="classFooterLinks">
+				  <Link href="/privacy-policy" className="footer_lower-item" passHref>Privacy policy</Link>
+				  <Link href="/terms-and-conditions" className="footer_lower-item" passHref>Terms & conditions</Link>
+				</div>
 			</div>
 		</div>
 	);

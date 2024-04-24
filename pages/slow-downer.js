@@ -13,6 +13,7 @@ import UnlockAudioButton from '../components/UnlockAudioButton';
 import NotificationIcon from '../components/NotificationIcon';
 import StabilizerText from '../components/StabilizerText';
 import TokenAndBalance from '../components/TokensMenuItem';
+import VideoComponent from '../components/CustomYoutubePlayer';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];

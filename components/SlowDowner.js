@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import { withRouter } from 'next/router';
 import {PitchShifter} from 'soundtouchjs';
 import messages from './language.json';
 import styles from './SlowDowner.module.css';
@@ -154,6 +155,7 @@ formatTime(seconds) {
     let hrBlue = {border: '1px dotted', color: 'blue'};
 
 		const { isUnlocked } = this.props; // Assuming isUnlocked is passed as a prop
+		const { router } = this.props;
 
     // Conditional styling based on unlock status
     const componentStyle = {
@@ -396,6 +398,7 @@ handleTimeBSliderChange = (event) => {
   handlePlay(event) { 
   if (!this.props.isUnlocked) {
 		alert("Unlock song for 1 credit to use slow-downer / pitch-shifter tool");
+		this.props.router.push('/account#credits');
     return;
   }
      const {audioBuffer} = this.params;
@@ -591,6 +594,5 @@ handleTimeBSliderChange = (event) => {
  
 } // end class
 
-export default SlowDowner;
-
+export default withRouter(SlowDowner);
 

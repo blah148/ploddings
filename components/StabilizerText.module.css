@@ -43,3 +43,14 @@
 	text-align: center;
 }
 
+
+@media (max-width: 768px) {
+	.stabilizerText {
+		margin: 16px 0 12px 0;
+	}
+	.exitIcon {
+		width: 14px;
+		height: 14px;
+	}
+}
+

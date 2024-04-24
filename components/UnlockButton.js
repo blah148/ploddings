@@ -22,7 +22,7 @@ const UnlockButton = ({ userId, contentId }) => {
   const unlockContent = async () => {
     if (!userId) {
       alert('User ID is missing. You must be logged in to unlock content.');
-      router.push('/account'); // Navigate to account page if user is not logged in
+      router.push('/account#credits'); // Navigate to account page if user is not logged in
       return;
     }
 
