@@ -9,7 +9,7 @@ export default async function handler(req, res) {
         payment_method_types: ['card'],
         line_items: [
           {
-            price: productType === 'one-time' ? 'price_1P1XjHKC15IuzqSc6M7w0XpD' : 'price_1P1XhzKC15IuzqSc4JdF2aeR',
+            price: productType === 'one-time' ? 'price_1OyHDgKC15IuzqScTor4eoiK' : 'price_1OyH9RKC15IuzqScWF0RXLmm',
             quantity: 1,
           },
         ],
