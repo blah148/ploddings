@@ -8,6 +8,7 @@ import OneTimePaymentButton from '../components/StripeOneTime';
 import SubscribeText from '../components/StripeSubscriptionText';
 import TokenIcon from '../components/TokenIcon';
 import InfoIcon from '../components/InfoIcon';
+import Link from 'next/link';
 
 const UserTokenDashboard = ({ userId }) => {
   const [pendingCredits, setPendingCredits] = useState(null);
@@ -54,14 +55,14 @@ const UserTokenDashboard = ({ userId }) => {
         <div className={styles.dashboardRow}>
           <TokenIcon />
           <div style={{ margin: "auto 5px" }}>{pendingCredits}</div>
-          <div style={{margin: "auto 8px auto 0"}}>pending credits</div>
+          <div style={{margin: "auto 8px auto 0"}}>pending credit(s)</div>
 					<InfoIcon tooltipMessage="Bonus credits released one at a time with next subscription billing" />
         </div>
       )}
 <div className={styles.membershipState}>
   {activeMembership === true && (
     <>
-      <div>Your subscription is: <strong>active</strong></div>
+      <div className={styles.learnMore}>Your subscription is: <strong>active</strong>. <Link href="/about">(Learn more)</Link></div>
       <ul>
         <li>
           <div className={styles.liItem}>
@@ -80,7 +81,7 @@ const UserTokenDashboard = ({ userId }) => {
   )}
   {activeMembership === false && (
     <>
-      <div>Your subscription is: <strong>inactive</strong></div>
+      <div className={styles.learnMore}>Your subscription is: <strong>inactive</strong>. <Link href="/about">(Learn more)</Link></div>
       <ul>
         <li>
           <div className={styles.liItem}>
@@ -98,7 +99,7 @@ const UserTokenDashboard = ({ userId }) => {
   )}
   {activeMembership === null && (
     <>
-      <div>No active subscription</div>
+      <div className={styles.learnMore}>No active subscription. <Link href="/about">(Learn more)</Link></div>
       <ul>
         <li>
           <div className={styles.liItem}>

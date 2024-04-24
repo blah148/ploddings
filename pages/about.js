@@ -56,18 +56,18 @@ export default function About({ userId, ip }) {
 							<StabilizerText />
               <h1>About</h1>
 							<div>
-                <p>Ploddings (est. 2018) is a non-profit educational resource, focused on American early blues & folk styles for stringed-instruments. It incentivises membership fees, where <b>100% of proceeds</b> are alotted to the Mt. Zion Memorial Fund For Blues & Justice.</p>
+                <p>Ploddings (est. 2018) is a non-profit educational resource, focused on American early blues & folk styles for stringed-instruments. It incentivises membership fees, where <b>100% of proceeds</b> are alotted to & managed by the Mt. Zion Memorial Fund For Blues & Justice.</p>
                 <h2>i) Partnership with Mt. Zion Memorial Fund</h2>
                 <p>Since 2023, Ploddings is proudly partnered with the Mt. Zion Memorial Fund, led by Dr. T. DeWayne Moore.</p>
-                <p>Their work includes: (i) the erection of tombstones for musicians such as Bo Carter, Sonny Boy Williamson II, Mississippi Fred McDowell, Memphis Minnie, Sam Chatmon, Elmore James, Charley Patton, Frank Stokes; (ii) the preservation of historical sites; and (iii) the creation of memorials such as the Mississippi John Hurt museum.</p>
+                <p>Their work includes: (i) the erection of tombstones for musicians such as Belton Sutherland, Bo Carter, Sonny Boy Williamson II, Mississippi Fred McDowell, Memphis Minnie, Sam Chatmon, Elmore James, Charley Patton, and Frank Stokes; (ii) the preservation of historical sites; and (iii) the creation of memorials such as the Mississippi John Hurt museum.</p>
                 <h3>How Payments/Donations are Processed</h3>
-                <p>100% of membership fees collected via Ploddings are alotted to & controlled by the Mt. Zion Memorial Fund organization as charitable donations*. To be specific, their bank account directly receives all Stripe payments on Ploddings; therefore, no middle-man handling of payments/donations exists. </p>
+                <p>100% of membership fees on Ploddings are controlled by the Mt. Zion Memorial Fund organization as charitable donations*. To be specific, their bank account is attached to & directly receives all Stripe payments on Ploddings; therefore, no middle-man handling of payments/donations exists. </p>
 
                 <sub>
 	                <p>*For citizens of the USA, that means Ploddings membership fees are tax-deductible, as the Mt. Zion Memorial Fund has public charity status approved by the IRS per section 170(b)(1)(A)(vi) of the IRC.
                   </p>
                 </sub>
-								<h2>ii) How Memberships Work</h2>
+								<h2>ii) How Subscriptions Work</h2>
 								<p>Users of Ploddings may sign-up for a $5-per-month subscription fee, representing a donation to the Mt. Zion Memorial Fund account. Each successful payment dispenses 2 unlock tokens, where 1 token can unlock 1 song.</p>
 								<p>After unlocking a song, 2 additional features are granted. The ability to:</p>
 								<ol>
@@ -81,7 +81,7 @@ export default function About({ userId, ip }) {
 									<li>Do not expire</li>
 								</ul>
                 <h2>iii) More Information</h2>
-                <p>Still have questions? For general inquiries, user support, or comments please reach out via the Ploddings <Link href="/contact">contact page</Link>. You will see a reply in your inbox within 12 hours. To learn more about the Mt. Zion Memorial Fund, its current endeavors, how to get involved as a volunteer, or its relationship with Ploddings, please contact them via <a href="https://mtzionmemorialfund.com/" target="_blank">their website</a>.</p>
+                <p>Still have questions? For general inquiries, user support, or comments please reach out via the Ploddings <Link href="/contact">contact page</Link>. To learn more about the Mt. Zion Memorial Fund, its current endeavors, how to volunteer, or its relationship with Ploddings, please get in touch via <a href="https://mtzionmemorialfund.com/" target="_blank">their website</a>.</p>
 
 							</div>
             </div>

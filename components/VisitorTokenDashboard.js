@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import styles from './UserTokenDashboard.module.css';
 import SubscribeText from '../components/StripeSubscriptionText';
 import TokenIcon from '../components/TokenIcon';
@@ -52,7 +53,7 @@ const VisitorTokenDashboard = ({ userId }) => {
 				<InfoIcon tooltipMessage="Bonus credits released one at a time with next subscription billing" />
 			</div>
 			<div className={styles.membershipState}>
-						<div>No active subscription</div>
+						<div className={styles.learnMore}>No active subscription. <Link href="/about">(Learn more)</Link></div>
 						<ul>
 							<li>
 								<div className={styles.liItem}>

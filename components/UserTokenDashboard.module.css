@@ -36,3 +36,10 @@
 	display: flex;
 	margin: auto 0;
 }
+
+.learnMore a {
+	font-size: 13px;
+}
+.learnMore a:hover {
+	opacity: 0.7;
+}
