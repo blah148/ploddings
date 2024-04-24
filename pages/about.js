@@ -56,11 +56,11 @@ export default function About({ userId, ip }) {
 							<StabilizerText />
               <h1>About</h1>
 							<div>
-                <p>Ploddings (est. 2018) is a non-profit educational resource, focused on American early blues & folk styles for stringed-instruments. It collects membership fees, where <b>100% of proceeds</b> are alotted to the Mt. Zion Memorial Fund For Blues & Justice.</p>
+                <p>Ploddings (est. 2018) is a non-profit educational resource, focused on American early blues & folk styles for stringed-instruments. It incentivises membership fees, where <b>100% of proceeds</b> are alotted to the Mt. Zion Memorial Fund For Blues & Justice.</p>
                 <h2>i) Partnership with Mt. Zion Memorial Fund</h2>
                 <p>Since 2023, Ploddings is proudly partnered with the Mt. Zion Memorial Fund, led by Dr. T. DeWayne Moore.</p>
                 <p>Their work includes: (i) the erection of tombstones for musicians such as Bo Carter, Sonny Boy Williamson II, Mississippi Fred McDowell, Memphis Minnie, Sam Chatmon, Elmore James, Charley Patton, Frank Stokes; (ii) the preservation of historical sites; and (iii) the creation of memorials such as the Mississippi John Hurt museum.</p>
-                <h3>How Donations are Processed</h3>
+                <h3>How Payments/Donations are Processed</h3>
                 <p>100% of membership fees collected via Ploddings are alotted to & controlled by the Mt. Zion Memorial Fund organization as charitable donations*. To be specific, their bank account directly receives all Stripe payments on Ploddings; therefore, no middle-man handling of payments/donations exists. </p>
 
                 <sub>
