@@ -38,9 +38,9 @@ export default function Footer ({ userId = null  }) {
 					<Link href="/contact" className="footer_link-item" passHref>Contact</Link>
 				</div>
 				<div className="footer_column">
-					<h2 className="footer_header">Github</h2> 
-					<a target="_blank" href="https://github.com/blah148/ploddings" rel="noopener noreferrer" className="footer_link-item">Create a fork</a>
-					<a target="_blank" href="https://github.com/blah148/ploddings/issues" rel="noopener noreferrer" className="footer_link-item">Report a bug</a>
+					<h2 className="footer_header">Project</h2> 
+					<Link href="/about" className="footer_link-item" passHref>About</Link>
+					<a target="_blank" href="https://github.com/blah148/ploddings" rel="noopener noreferrer" className="footer_link-item">Github</a>
 				</div>
 			</div>
 			<div className="footer_lower-row">
