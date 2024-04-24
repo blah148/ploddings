@@ -10,6 +10,7 @@
 	justify-content: center;
 	align-content: center;
 	min-height: 60px;
+	margin-bottom: 26px;
 }
 
 @media (min-width: 769px) {

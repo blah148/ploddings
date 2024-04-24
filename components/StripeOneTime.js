@@ -18,7 +18,7 @@ const OneTimePaymentButton = ({ email }) => {
 
     const result = await stripe.redirectToCheckout({
       // Specify the one-time price ID here
-      lineItems: [{ price: 'price_1P1XjHKC15IuzqSc6M7w0XpD', quantity: 1 }],
+      lineItems: [{ price: 'price_1OyHDgKC15IuzqScTor4eoiK', quantity: 1 }],
       mode: 'payment', // Set mode to 'payment' for a one-time payment
       customerEmail: email, // Optionally prefill the customer's email address
       successUrl: window.location.href, // Use the current page URL as the success URL
