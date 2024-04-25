@@ -61,7 +61,7 @@ export default function About({ userId, ip }) {
                 <p>Since 2023, Ploddings is proudly partnered with the Mt. Zion Memorial Fund, led by Dr. T. DeWayne Moore.</p>
                 <p>Their work includes: (i) the erection of tombstones for musicians such as Belton Sutherland, Bo Carter, Sonny Boy Williamson II, Mississippi Fred McDowell, Memphis Minnie, Sam Chatmon, Elmore James, Charley Patton, and Frank Stokes; (ii) the preservation of historical sites; and (iii) the creation of memorials such as the Mississippi John Hurt museum.</p>
                 <h3>How Payments/Donations are Processed</h3>
-                <p>100% of membership fees on Ploddings are controlled by the Mt. Zion Memorial Fund organization as charitable donations*. To be specific, their bank account is attached to & directly receives all Stripe payments on Ploddings; therefore, no middle-man handling of payments/donations exists. </p>
+                <p>100% of membership fees on Ploddings are controlled by the Mt. Zion Memorial Fund organization as charitable donations*. To be specific, their bank account is attached to & directly receives all Stripe payments on Ploddings; therefore, no middle-man handling of payments/donations exists. The custodian of Ploddings is Blah148. </p>
 
                 <sub>
 	                <p>*For citizens of the USA, that means Ploddings membership fees are tax-deductible, as the Mt. Zion Memorial Fund has public charity status approved by the IRS per section 170(b)(1)(A)(vi) of the IRC.
