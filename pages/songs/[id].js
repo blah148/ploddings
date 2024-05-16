@@ -25,7 +25,7 @@ import UnlockButton from '../../components/UnlockButton';
 import PDFDownloadButton from '../../components/PDFDownloadButton';
 import StabilizerText from '../../components/StabilizerText';
 import NotificationIcon from '../../components/NotificationIcon';
-import TokenAndBalance from '../../components/TokensMenuItem';
+import MusescoreEmbed from '../../components/MusescoreEmbed';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -44,23 +44,6 @@ export default function Song({ userId, ip, threadData, songData, isUnlocked }) {
 
 	const { isLoading, startLoading, stopLoading } = useLoading();
 	const [relatedContentLength, setRelatedContentLength] = useState(null);
-
-	const logPageVisit = async () => {
-		try {
-			await axios.post('/api/log-visit', {
-				page_id: songData.id,
-				userId,
-				ip: !userId ? ip : null,
-			});
-		} catch (error) {
-			console.error('Failed to log page visit:', error);
-		}
-	};
-
-	useEffect(() => {
-		logPageVisit();
-	}, [userId, ip]);
-
   const [buttonLoaded, setButtonLoaded] = useState(false);
 
 useEffect(() => {
@@ -107,7 +90,6 @@ return (
           <div className="topRow">
             <IpodMenuLink threadData={threadData} fallBack='/' />
 							<div style={{display: "flex"}}>
-								{userId && <TokenAndBalance userId={userId} />}
 								<NotificationIcon userId={userId} />
                 <Menu userId={userId} />
 							</div>
@@ -123,6 +105,12 @@ return (
           <div className={styles.componentsContainer}>
             <div className={styles.primaryColumn}>
 							<h2 id="i">i) Sheet music</h2>
+          <MusescoreEmbed
+            pageId={songData.id}
+            userId={userId}
+            ip={ip}
+						embed_link={songData.link_3}
+          />
 							<div style={{ position: "relative" }}>
 								{!isUnlocked ? (
 									<UnlockButton userId={userId} contentId={songData.id} />

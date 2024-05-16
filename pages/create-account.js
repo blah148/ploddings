@@ -11,7 +11,6 @@ import IpodMenuLink from '../components/ParentBackLink';
 import SEO from '../components/SEO';
 import NotificationIcon from '../components/NotificationIcon';
 import StabilizerText from '../components/StabilizerText';
-import TokenAndBalance from '../components/TokensMenuItem';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];

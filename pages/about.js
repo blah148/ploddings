@@ -14,7 +14,6 @@ import Link from 'next/link';
 import SubscribeButton from '../components/StripeSubscription';
 import OneTimePaymentButton from '../components/StripeOneTime';
 import StabilizerText from '../components/StabilizerText';
-import TokenAndBalance from '../components/TokensMenuItem';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
