@@ -124,7 +124,6 @@ return (
 									<div className="homeText">Home</div>
 								</Link>
 							<div style={{display: "flex", marginLeft: "auto"}}>
-								{userId && <TokenAndBalance userId={userId} />}
 								<NotificationIcon userId={userId} />
                 <Menu userId={userId} />
 						 </div>

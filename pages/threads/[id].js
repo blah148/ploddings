@@ -72,7 +72,6 @@ export default function Thread({ userId, ip, threadData }) {
 						<div className="topRow">
 							<IpodMenuLink fallBack='' />
 							<div style={{display: "flex"}}>
-								{userId && <TokenAndBalance userId={userId} />}
 								<NotificationIcon userId={userId} />
                 <Menu userId={userId} />
 							</div>

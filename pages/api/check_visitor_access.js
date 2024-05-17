@@ -4,6 +4,7 @@ export default async function handler(req, res) {
   const { fingerprint, ip, pageId } = req.body;
 
   try {
+		console.log("testing here");
     // Check if there are matching rows in the visitors table
     const { data: matchingRows, error: queryError } = await supabase
       .from('visitors')

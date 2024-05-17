@@ -397,8 +397,8 @@ handleTimeBSliderChange = (event) => {
 
   handlePlay(event) { 
   if (!this.props.isUnlocked) {
-		alert("Unlock song for 1 credit to use slow-downer / pitch-shifter tool");
-		this.props.router.push('/account#credits');
+		alert("Slow-downer/pitch-shifter tool is: (i) available without limit for active members and (ii) limited to 1-song every 72 hours for non-active members & visitors");
+		this.props.router.push('/account');
     return;
   }
      const {audioBuffer} = this.params;

@@ -96,7 +96,6 @@ return (
           <div className="topRow">
             <IpodMenuLink threadData={threadData} fallBack='blog' />
 							<div style={{display: "flex"}}>
-								{userId && <TokenAndBalance userId={userId} />}
 								<NotificationIcon userId={userId} />
                 <Menu userId={userId} />
 							</div>

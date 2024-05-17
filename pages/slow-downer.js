@@ -96,7 +96,6 @@ const handleFileChange = (e) => {
 						<div className="topRow">
 							<IpodMenuLink fallBack='' />
 							<div style={{display: "flex"}}>
-								{userId && <TokenAndBalance userId={userId} />}
 								<NotificationIcon userId={userId} />
                 <Menu userId={userId} />
 							</div>
@@ -112,7 +111,7 @@ const handleFileChange = (e) => {
 						</button>
 						<div style={{ opacity: mp3Link ? 1 : 0.5 }}>
 							{/* Assign the unique key to SlowDownerComponent */}
-							{<SlowDownerComponent key={mp3Key} dropbox_mp3_link={mp3Link} />}
+							{<SlowDownerComponent isUnlocked={true} key={mp3Key} dropbox_mp3_link={mp3Link} />}
 						</div>
 					</div>
 				</div>
