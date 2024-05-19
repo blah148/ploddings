@@ -55,7 +55,10 @@ const AlternativeMusescoreEmbed = ({ ip, fingerprint, songId, currentSongName })
   return (
     <div>
 			<div className="alertNotice">
-				For non-active members & visitors, there exists a viewing limit of 1-song per 72-hours. Until this time has elapsed, the MIDI-tablature & slow-downer/pitch-shifter for {currentSongName} will remain hidden. Until then, the materials for <Link href={`/songs/${contentData.slug}`}>{contentData.name}</Link> are available.
+				*For non-active members & visitors, there exists a viewing limit of 1-song per 72-hours. Until this time elapses, the MIDI-tablature & slow-downer/pitch-shifter for {currentSongName} will remain hidden. Until then, the materials for <Link href={`/songs/${contentData.slug}`}>{contentData.name}</Link> are available.
+				<div style={{ fontSize: "13px", display: "inline-flex", marginLeft: "6px" }}>
+					<Link href="/about">(Learn more)</Link>
+				</div>
 			</div>
 			<div className={styles.embed}>
 				<iframe
