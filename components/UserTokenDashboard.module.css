@@ -4,7 +4,9 @@
   box-shadow: 0px 8px 25px hsl(250.9, 24.4%, 91.2%);
   width: 300px;
   padding: 18px 16px;
-  margin: 14px 0;
+  margin: 18px 0 10px 0;
+	border: 1px solid #eaeaea;
+	border-radius: 10px;
 }
 
 .tokenDashboard strong {
@@ -22,7 +24,7 @@
 .membershipState {
 	display: flex;
 	flex-direction: column;
-	margin: 12px 0 0 0;
+	margin: 4px 0 0 0;
 }
 .membershipState ul {
 	margin: 4px 0 0 12px;

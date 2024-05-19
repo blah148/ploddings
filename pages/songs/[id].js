@@ -26,6 +26,7 @@ import StabilizerText from '../../components/StabilizerText';
 import NotificationIcon from '../../components/NotificationIcon';
 import MusescoreEmbed from '../../components/MusescoreEmbed';
 import { getFingerprint } from '../../utils/fingerprint';
+import AlternativeMusescoreEmbed from '../../components/AlternativeMusescoreEmbed';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -46,6 +47,7 @@ export default function Song({ userId, ip, threadData, songData }) {
   const [relatedContentLength, setRelatedContentLength] = useState(null);
   const [buttonLoaded, setButtonLoaded] = useState(false);
   const [canAccess, setCanAccess] = useState(null);
+	const [fingerprint, setFingerprint] = useState(null);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,14 +64,14 @@ export default function Song({ userId, ip, threadData, songData }) {
       }
 
       try {
-        const fingerprint = await getFingerprint();
-				console.log("fingerprint, ip, page_id", fingerprint, ip, songData.id);
+        const fp = await getFingerprint();
+				setFingerprint(fp);
         const response = await fetch('/api/check_visitor_access', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
-          body: JSON.stringify({ ip, fingerprint, pageId: songData.id }),
+          body: JSON.stringify({ ip, fingerprint: fp, pageId: songData.id }),
         });
 
         if (response.status === 200) {
@@ -157,6 +159,7 @@ export default function Song({ userId, ip, threadData, songData }) {
 										</>
                   )}
                 </div>
+                <AlternativeMusescoreEmbed ip={ip} fingerprint={fingerprint} songId={songData.id} />
                 <h2 id="ii">ii) Slow-downer</h2>
                   <SlowDownerComponent isUnlocked={canAccess} dropbox_mp3_link={songData.link_1} />
                 <h2 id="iii">iii) More info</h2>

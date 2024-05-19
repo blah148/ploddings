@@ -3,18 +3,21 @@ import { supabase } from '../../utils/supabase';
 export default async function handler(req, res) {
   const { fingerprint, ip, pageId } = req.body;
 
+  console.log("Variables received:", { fingerprint, ip, pageId });
+
   try {
-		console.log("testing here");
     // Check if there are matching rows in the visitors table
     const { data: matchingRows, error: queryError } = await supabase
       .from('visitors')
       .select('*')
-      .or(`fingerprint.eq.${fingerprint}`, `ip.eq.${ip}`);
+      .or(`fingerprint.eq.${fingerprint},ip.eq.${ip}`);
 
     if (queryError) {
       console.error('Error querying visitors:', queryError.message);
       return res.status(500).json({ error: 'Error querying visitors' });
     }
+
+    console.log('Matching rows:', matchingRows);
 
     if (!matchingRows || matchingRows.length === 0) {
       // No matching rows, add a new row
@@ -27,6 +30,8 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: 'Error adding visitor' });
       }
 
+      console.log('New visitor added:', newVisitor);
+
       if (newVisitor && newVisitor.length > 0) {
         return res.status(200).json({ message: 'New visitor added', visitor: newVisitor[0] });
       } else {
@@ -36,6 +41,7 @@ export default async function handler(req, res) {
     } else {
       // Matching rows found, check if any row has different pageId
       const hasMismatch = matchingRows.some(row => row.free_visit_page_id !== pageId);
+      console.log('Has mismatch:', hasMismatch);
       if (hasMismatch) {
         return res.status(403).json({ error: 'Access denied: Mismatched pageId' });
       } else {

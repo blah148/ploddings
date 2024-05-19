@@ -46,19 +46,6 @@ const UserTokenDashboard = ({ userId }) => {
   return (
     <div className={styles.tokenDashboard} id="credits">
       <div style={{ fontSize: "17px" }}>You have: </div>
-      <div className={styles.dashboardRow}>
-        <TokenIcon />
-        <UserCreditBalance userId={userId} />
-        <div>active credits</div>
-      </div>
-      {pendingCredits > 0 && (
-        <div className={styles.dashboardRow}>
-          <TokenIcon />
-          <div style={{ margin: "auto 5px" }}>{pendingCredits}</div>
-          <div style={{margin: "auto 8px auto 0"}}>pending credit(s)</div>
-					<InfoIcon tooltipMessage="Bonus credits released one at a time with next subscription billing" />
-        </div>
-      )}
 <div className={styles.membershipState}>
   {activeMembership === true && (
     <>
@@ -67,13 +54,7 @@ const UserTokenDashboard = ({ userId }) => {
         <li>
           <div className={styles.liItem}>
             <NextBillingDate userId={userId} />
-            <InfoIcon tooltipMessage="Receive 2 credits per month" />
-          </div>
-        </li>
-        <li>
-          <div className={styles.liItem}>
-            <OneTimePaymentButton />
-            <InfoIcon tooltipMessage="$3 one-time additional credit" />
+            <InfoIcon tooltipMessage="Persist access to MIDI-tablature, slow-downer/pitch-shifter tool, & PDF download privileges" />
           </div>
         </li>
       </ul>
@@ -91,7 +72,7 @@ const UserTokenDashboard = ({ userId }) => {
         <li>
           <div className={styles.liItem}>
             <SubscribeText userId={userId} text="Renew subscription"/>
-            <InfoIcon tooltipMessage="Receive 2 unlock credits per month" />
+            <InfoIcon tooltipMessage="Regain access to MIDI-tablature, slow-downer/pitch-shifter tool, & PDF download privileges" />
           </div>
         </li>
       </ul>
@@ -104,7 +85,7 @@ const UserTokenDashboard = ({ userId }) => {
         <li>
           <div className={styles.liItem}>
             <SubscribeText userId={userId} text="Activate subscription" />
-            <InfoIcon tooltipMessage="Receive 2 unlock credits per month" />
+            <InfoIcon tooltipMessage="Gain access to MIDI-tablature, slow-downer/pitch-shifter tool, & PDF download privileges" />
           </div>
         </li>
       </ul>
