@@ -839,14 +839,14 @@ form.registerForm button:hover {
 }
 .alertNotice {
   padding: 8px 24px;
+	max-width: 768px;
   margin: 12px 0;
   background-color: #e96d6d82;
   border-radius: 10px;
   font-style: italic;
-  text-align: center;
   border: 2px solid #cf8888;
   opacity: 0.85;
-  display: inline-flex;
+  display: inherit;
 }
 .messageNotice {
   padding: 8px 24px;

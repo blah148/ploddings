@@ -17,7 +17,7 @@ const PDFDownloadButton_SignupFirst = ({ pdfUrl, songName }) => {
   }, []);
 
   const buttonClick = async () => {
-    const email = prompt('Please enter your email address to receive the PDF:');
+    const email = prompt(`Please enter your email address to receive the PDF tablature for ${songName}:`);
     if (email) {
       startLoading();
 
@@ -44,7 +44,7 @@ const PDFDownloadButton_SignupFirst = ({ pdfUrl, songName }) => {
         stopLoading();
       }
     } else {
-      alert('Email is required to receive the PDF.');
+     // alert('Email is required to receive the PDF.');
     }
 
   };

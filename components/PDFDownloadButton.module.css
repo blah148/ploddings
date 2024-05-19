@@ -15,8 +15,8 @@
 		color: white;
 		position: absolute;
 		border-radius: 6px;
-		right: 149px;
-		top: 4px;
+		right: 119px;
+		top: 6px;
 	}
 }
 
@@ -96,6 +96,10 @@
 	border-radius: 6px;
 	left: 113px;
 	bottom: 17px;
+}
+
+.buttonMobile, .button {
+	z-index: 50;
 }
 
 .button:hover {

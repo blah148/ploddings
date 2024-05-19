@@ -142,24 +142,28 @@ export default function Song({ userId, ip, threadData, songData }) {
               <div className={styles.primaryColumn}>
                 <h2 id="i">i) Sheet music</h2>
                 <div style={{ position: "relative" }}>
-                  {canAccess && (
-										<>
-											{userId ? (
-												<PDFDownloadButton userId={userId} pdfUrl={songData.pdf_download} songName={songData.name} />
-											) : (
-												<PDFDownloadButton_SignupFirst pdfUrl={songData.pdf_download} songName={songData.name} />
-											)}
-											<MusescoreEmbed
-												pageId={songData.id}
-												userId={userId}
-												ip={ip}
-												embed_link={songData.link_3}
-												canAccess={canAccess}
-											/>
-										</>
-                  )}
+									{canAccess && (userId ? (
+										<PDFDownloadButton userId={userId} pdfUrl={songData.pdf_download} songName={songData.name} />
+									) : (
+										<PDFDownloadButton_SignupFirst pdfUrl={songData.pdf_download} songName={songData.name} />
+									))}
+                  {canAccess ? (
+										<MusescoreEmbed
+											pageId={songData.id}
+											userId={userId}
+											ip={ip}
+											embed_link={songData.link_3}
+											canAccess={canAccess}
+										/>
+                  ) : (
+										<AlternativeMusescoreEmbed 
+											ip={ip} 
+											fingerprint={fingerprint} 
+											songId={songData.id}
+											currentSongName={songData.name}
+										/>
+								)}
                 </div>
-                <AlternativeMusescoreEmbed ip={ip} fingerprint={fingerprint} songId={songData.id} />
                 <h2 id="ii">ii) Slow-downer</h2>
                   <SlowDownerComponent isUnlocked={canAccess} dropbox_mp3_link={songData.link_1} />
                 <h2 id="iii">iii) More info</h2>
