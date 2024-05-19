@@ -91,7 +91,7 @@ export default function Song({ userId, ip, threadData, songData }) {
 
   useEffect(() => {
     const loadButton = () => {
-      console.log("Iframe loaded, setting buttonLoaded to true.");
+     // console.log("Iframe loaded, setting buttonLoaded to true.");
       setButtonLoaded(true);
     };
 
@@ -99,7 +99,7 @@ export default function Song({ userId, ip, threadData, songData }) {
     if (iframeElement) {
       iframeElement.addEventListener('load', loadButton);
     } else {
-      console.log("Iframe element not found.");
+     // console.log("Iframe element not found.");
     }
 
     return () => {
