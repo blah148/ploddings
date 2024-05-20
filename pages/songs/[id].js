@@ -49,6 +49,22 @@ export default function Song({ userId, ip, threadData, songData }) {
   const [canAccess, setCanAccess] = useState(null);
 	const [fingerprint, setFingerprint] = useState(null);
 
+  const logPageVisit = async () => {
+    try {
+      await axios.post('/api/log-visit', {
+        page_id: songData.id,
+				userId,
+				ip: !userId ? ip : null,
+      });
+    } catch (error) {
+      console.error('Failed to log page visit:', error);
+    }
+  };
+
+	useEffect(() => {
+	  logPageVisit();
+	}, [userId, ip]);
+
   useEffect(() => {
     const fetchData = async () => {
       if (userId) {
