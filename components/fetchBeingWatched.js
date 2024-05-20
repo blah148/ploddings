@@ -1,7 +1,7 @@
 import { supabase } from '../utils/supabase';
 
 /**
- * Fetches what's being watched by other users, including unlock status.
+ * Fetches what's being watched by other users, including unlock status and active membership.
  * 
  * @param {string|null} userId - The user ID to query for, null if a guest user.
  * @param {string|null} userIp - The IP address to query for, used if a guest user.
@@ -11,9 +11,9 @@ import { supabase } from '../utils/supabase';
 async function fetchBeingWatched(userId, userIp, limit = null) {
     try {
         const { data, error, count } = await supabase
-            .rpc('fetch_watched_with_unlocked_status', {
+            .rpc('fetch_being_watched', {
                 p_user_id: userId || null,
-                ip_address: userIp || null,
+                p_ip_address: userIp || null,
                 fetch_limit: limit
             });
 
