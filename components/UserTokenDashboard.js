@@ -32,7 +32,7 @@ const UserTokenDashboard = ({ userId }) => {
         setPendingCredits(userData.pending_credits);
         setStripeId(userData.stripe_id);
 				setActiveMembership(userData.active_membership);
-				console.log('stripe_id, active membership', userData.stripe_id, userData.active_membership);
+				// console.log('stripe_id, active membership', userData.stripe_id, userData.active_membership);
       } catch (error) {
         console.error('Error fetching data:', error.message);
       }

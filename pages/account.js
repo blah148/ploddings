@@ -49,9 +49,9 @@ export default function Account({ ip, userId }) {
 
 	useEffect(() => {
 		// Initialize guest data loading
-		fetchAndSetStarred(userId, null, ip);
-		fetchAndSetVisitHistory(userId, null, ip);
-		fetchAndSetUnlockedSongs(userId, null);
+		fetchAndSetStarred(userId, 3, ip);
+		fetchAndSetVisitHistory(userId, ip, 4);
+		fetchAndSetUnlockedSongs(userId, ip, 4);
 	}, [userId]);
 
   return (
@@ -69,7 +69,6 @@ export default function Account({ ip, userId }) {
 										<div className="topRow">
 												<IpodMenuLink fallBack='' />
 												<div style={{display: "flex"}}>
-													{userId && <TokenAndBalance userId={userId} />}
 													<NotificationIcon userId={userId} />
 													<Menu userId={userId} />
 												</div>

@@ -17,7 +17,7 @@ const SubscribeText = ({ email, text }) => {
     const session = await response.json();
 
     const result = await stripe.redirectToCheckout({
-      lineItems: [{ price: 'price_1P1XhzKC15IuzqSc4JdF2aeR', quantity: 1 }],
+      lineItems: [{ price: 'price_1PHVArKC15IuzqScmFav7L0C', quantity: 1 }],
       mode: 'subscription',
       customerEmail: email,
       successUrl: window.location.href, // Use the current page URL as the success URL
