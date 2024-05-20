@@ -44,8 +44,8 @@ const NextBillingDate = ({ userId }) => {
   }, [userId]);
 
   return (
-<div style={{margin: "auto 8px auto 0"}}>
-    Next billing date:
+<div style={{margin: "auto 8px auto 0", display: "flex"}}>
+    <div style={{marginRight: "5px"}}>Next billing date:</div>
     {nextBillingDate ? (
       <a style={{marginLeft: "5px"}} href={customerPortalUrl} target="_blank" rel="noopener noreferrer">
         {new Date(nextBillingDate).toLocaleDateString()}

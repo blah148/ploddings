@@ -45,7 +45,6 @@ const UserTokenDashboard = ({ userId }) => {
 
   return (
     <div className={styles.tokenDashboard} id="credits">
-      <div style={{ fontSize: "17px" }}>You have: </div>
 <div className={styles.membershipState}>
   {activeMembership === true && (
     <>
@@ -54,7 +53,7 @@ const UserTokenDashboard = ({ userId }) => {
         <li>
           <div className={styles.liItem}>
             <NextBillingDate userId={userId} />
-            <InfoIcon tooltipMessage="Persist access to MIDI-tablature, slow-downer/pitch-shifter tool, & PDF download privileges" />
+            <InfoIcon tooltipMessage="Access to MIDI-tablature, slow-downer/pitch-shifter tool, & PDF download privileges" />
           </div>
         </li>
       </ul>

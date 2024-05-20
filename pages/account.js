@@ -51,7 +51,6 @@ export default function Account({ ip, userId }) {
 		// Initialize guest data loading
 		fetchAndSetStarred(userId, 3, ip);
 		fetchAndSetVisitHistory(userId, ip, 4);
-		fetchAndSetUnlockedSongs(userId, ip, 4);
 	}, [userId]);
 
   return (
@@ -101,7 +100,7 @@ export default function Account({ ip, userId }) {
 																	{window.innerWidth <= 768 && star.name.length > 27
 																		? star.name.slice(0, 27) + '...'
 																		: star.name}
-																	<div className={`led ${star.is_unlocked ? 'unlocked' : 'locked'}`}></div>
+																	<div className={`led ${star.user_active_membership ? 'unlocked' : 'locked'}`}></div>
 																</Link>
 															</li>
 														))}
@@ -121,7 +120,7 @@ export default function Account({ ip, userId }) {
 																	{window.innerWidth <= 768 && visit.name.length > 27
 																		? visit.name.slice(0, 27) + '...'
 																		: visit.name}
-																  <div className={`led ${visit.is_unlocked ? 'unlocked' : 'locked'}`}></div>
+																  <div className={`led ${visit.user_active_membership ? 'unlocked' : 'locked'}`}></div>
 																</Link>
 															</li>
 														))}
