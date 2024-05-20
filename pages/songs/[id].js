@@ -180,7 +180,7 @@ export default function Song({ userId, ip, threadData, songData }) {
 										/>
 								)}
                 </div>
-                <h2 id="ii">ii) Slow-downer</h2>
+                <h2 id="ii">ii) Slow-downer / pitch-shifter</h2>
                   <SlowDownerComponent isUnlocked={canAccess} dropbox_mp3_link={songData.link_1} />
                 <h2 id="iii">iii) More info</h2>
                 {(songData.body_text || songData.lyrics || songData.tuning) && (
