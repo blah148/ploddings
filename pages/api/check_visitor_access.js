@@ -23,7 +23,8 @@ export default async function handler(req, res) {
       // No matching rows, add a new row
       const { data: newVisitor, error: addError } = await supabase
         .from('visitors')
-        .insert([{ ip, fingerprint, free_visit_page_id: pageId }]);
+        .insert([{ ip, fingerprint, free_visit_page_id: pageId }])
+        .select(); // Ensure that the inserted row is returned
 
       if (addError) {
         console.error('Error adding visitor:', addError.message);
