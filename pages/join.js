@@ -11,6 +11,9 @@ import IpodMenuLink from '../components/ParentBackLink';
 import SEO from '../components/SEO';
 import NotificationIcon from '../components/NotificationIcon';
 import StabilizerText from '../components/StabilizerText';
+import SubscribeTextJoin from '../components/StripeSubscriptionText_join';
+import styles from '../components/UserTokenDashboard.module.css';
+import Link from 'next/link';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -68,9 +71,9 @@ export default function CreateAccount({ userId, ip }) {
   return (
     <div className="bodyA">
       <SEO
-        title="Create Account"
+        title="Join"
         description="To persist your: (i) visit history, (ii) starred guitar tablature, and (iii) access the pitch-shifter and slow-downer, create an account on Ploddings with an email"
-        slug="/create-account"
+        slug="/join"
       />
 			<Sidebar userId={userId} ip={ip} />
       <div className="mainFeedAll">
@@ -86,18 +89,18 @@ export default function CreateAccount({ userId, ip }) {
             </div>
             <div className="narrowedFeedBody">
 							<StabilizerText />
-              <h1>Create Account</h1>
-              <form onSubmit={handleCreateAccount}>
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="inputLabel"
-                  value={email}
-                  required
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-                <button type="submit" className="formButton">Create Account</button>
-              </form>
+              <h1>Activate membership</h1>
+							<p>To bypass the visitor-only viewing limitation on Ploddings, in which the MIDI-tablature & slow-downer / pitch shifter tool of only 1-song can be viewed every 72 hours, a monthly-fee of <b>$20 USD</b> can be paid, granting the following permissions:</p>
+							<ul>
+								<li>For all songs, unlimited usage of: (i) MIDI-tablature/transcriptions and (ii) slow-downer/pitch-shifter tool</li>
+								<li>Unlimited PDF downloads of tablature/transcriptions</li>
+								<li>100% proceeds donated to Mt. Zion Memorial Fund</li>
+							</ul>
+							<p>As a non-profit project, 100% of membership fees on Ploddings are directly transmitted/donated via Stripe to an account controlled by the Mt. Zion Memorial Fund for Blues & Justice; an IRS-certified charity with a demonstrated history, since 1989, that includes the erection of tombstones for Bo Carter, Charley Patton, Elmore James, Frank Stokes, Mississippi Fred McDowell, and Robert Johnson, as well as other blues preservation projects in the American South.<span className={styles.learnMoreSpan}><Link href="/about">(Learn more)</Link></span></p>
+							<button style={{marginTop: "5px", marginBottom: "5px"}} className="formButton">
+							  <SubscribeTextJoin text="Stripe checkout: $20 USD" />
+							</button>
+							<p>Note: While the monthly-subscription can be cancelled at anytime without penalty, membership fees are non-refundable.</p>
             </div>
           </div>
         </div>

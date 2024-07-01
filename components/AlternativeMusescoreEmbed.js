@@ -60,7 +60,7 @@ return (
 					<div className="alertNotice">
 						*For non-active members & visitors, there exists a viewing limit of 1-song per 72-hours. Until this time elapses, the MIDI-tablature & slow-downer/pitch-shifter for {currentSongName} will remain hidden. Until then, the materials for <Link href={`/songs/${contentData.slug}`}>{contentData.name}</Link> are available.
 						<div style={{ fontSize: "13px", display: "inline-flex", marginLeft: "6px" }}>
-							<Link href="/about">(Learn more)</Link>
+							<Link href="/join">(Become a contributor)</Link>
 						</div>
 					</div>
 					<div className={styles.embed}>
@@ -80,7 +80,7 @@ return (
 					<div className="alertNotice">
 						*For non-active members & visitors, there exists a viewing limit of 1-song per 72-hours. Until this time elapses, the MIDI-tablature & slow-downer/pitch-shifter for {currentSongName} will remain hidden. Until then, this preview of Crossroad Blues exists to demonstrate the type of tablature that will be available.
 						<div style={{ fontSize: "13px", display: "inline-flex", marginLeft: "6px" }}>
-							<Link href="/about">(Learn more)</Link>
+							<Link href="/join">(Become a contributor)</Link>
 						</div>
 					</div>
 					<div className={styles.embed}>

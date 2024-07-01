@@ -67,14 +67,14 @@ export default function Menu({ userId = null }) {
         </>
         ) : (
         <>
-           <Link className="menuItem" href="/account" passHref>
+           <Link className="menuItem" href="/join" passHref>
 						 <svg id="icon" viewBox="0 0 32 32">
 							 <polygon points="32 14 28 14 28 10 26 10 26 14 22 14 22 16 26 16 26 20 28 20 28 16 32 16 32 14"/>
 							 <path d="M12,4A5,5,0,1,1,7,9a5,5,0,0,1,5-5m0-2a7,7,0,1,0,7,7A7,7,0,0,0,12,2Z" transform="translate(0 0)"/>
 							 <path d="M22,30H20V25a5,5,0,0,0-5-5H9a5,5,0,0,0-5,5v5H2V25a7,7,0,0,1,7-7h6a7,7,0,0,1,7,7Z" transform="translate(0 0)"/>
 							 <rect fill="none" id="_Transparent_Rectangle_" data-name="&lt;Transparent Rectangle&gt;" className="cls-1" width="32" height="32"/>
 						 </svg>
-						 <p className="menuLabel">Create account</p>
+						 <p className="menuLabel">Join</p>
            </Link>
            <Link href="/login" className="menuItem" passHref>
              <svg id="icon" viewBox="0 0 32 32">
@@ -86,19 +86,6 @@ export default function Menu({ userId = null }) {
           </Link>
         </>
         )}
-        <Link href="/account#unlocked-songs" className="menuItem mobileOnly" passHref>
-    <svg id="icon" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <style>{`
-        .cls-1 {
-          fill: none;
-        }
-      `}</style>
-      <path fill={"black"} d="M23.499,9.085,16.707,2.293A1,1,0,0,0,16,2H6A2.0058,2.0058,0,0,0,4,4V28a2.0058,2.0058,0,0,0,2,2h8V28H6V4h8v6a2.0023,2.0023,0,0,0,2,2h6.292a1.7075,1.7075,0,0,0,1.207-2.915ZM16,10V4.4141L21.5854,10Z"/>
-      <path fill={"black"} d="M28,21H22V18a2,2,0,0,1,4,0h2a4,4,0,0,0-8,0v3a2.0025,2.0025,0,0,0-2,2v5a2.0025,2.0025,0,0,0,2,2h8a2.0025,2.0025,0,0,0,2-2V23A2.0025,2.0025,0,0,0,28,21Zm-8,7V23h8v5Z"/>
-      <rect className="cls-1" width="32" height="32"/>
-    </svg>
-          <p className="menuLabel">Unlocked songs</p>
-       </Link>
         <Link href="/account#starred" className="menuItem mobileOnly" passHref>
 					<svg id="icon" viewBox="0 0 32 32">
 						<defs>
