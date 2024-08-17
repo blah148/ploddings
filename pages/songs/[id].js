@@ -163,22 +163,13 @@ export default function Song({ userId, ip, threadData, songData }) {
 									) : (
 										<PDFDownloadButton_SignupFirst pdfUrl={songData.pdf_download} songName={songData.name} />
 									))}
-                  {canAccess ? (
-										<MusescoreEmbed
-											pageId={songData.id}
-											userId={userId}
-											ip={ip}
-											embed_link={songData.link_3}
-											canAccess={canAccess}
-										/>
-                  ) : (
-										<AlternativeMusescoreEmbed 
-											ip={ip} 
-											fingerprint={fingerprint} 
-											songId={songData.id}
-											currentSongName={songData.name}
-										/>
-								)}
+								<MusescoreEmbed
+									pageId={songData.id}
+									userId={userId}
+									ip={ip}
+									embed_link={songData.link_3}
+									canAccess={true}
+								/>
                 </div>
                 <h2 id="ii">ii) Slow-downer / pitch-shifter</h2>
                   <SlowDownerComponent isUnlocked={canAccess} dropbox_mp3_link={songData.link_1} />
