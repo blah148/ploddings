@@ -1,0 +1,191 @@
+/* General styles */
+.bodyA {
+  background-color: #f7f7f7;
+  padding: 20px;
+}
+
+.mainFeedAll {
+  display: flex;
+  justify-content: center;
+  padding: 20px;
+}
+
+.feedContainer {
+  width: 100%;
+  max-width: 800px;
+}
+
+.narrowedFeedBody {
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.topRow {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+/* Pricing Table Styles */
+.pricingTable {
+  margin-top: 40px;
+}
+
+.pricingTable h2 {
+  text-align: center;
+  font-size: 24px;
+  margin-bottom: 20px;
+}
+
+.pricingOptions {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+}
+.pricingTable {
+	display: flex;
+	flex-direction: column;
+  text-align: center;
+}
+
+.gridHeader {
+  display: grid;
+	grid-template-columns: 10fr 3fr 3fr;
+}
+
+.gridHeader > div {
+  font-weight: bold;
+  padding: 10px;
+}
+
+.gridBody {
+  display: block;
+}
+
+.gridBody > .bullet {
+  text-align: right;
+  padding-right: 20px; /* Spacing between bullet and leds */
+  align-self: right;
+}
+
+.gridBody > div {
+  text-align: right;
+  padding: 10px 0;
+}
+.bottomBorderRow {
+	display: grid;
+	grid-template-columns: 10fr 3fr 3fr;
+
+}
+div.led {
+	margin-right: auto !important;
+}
+.led.unlocked {
+  color: green; /* Or use background-color/image */
+	margin: auto;
+}
+
+.led.locked {
+  color: red; /* Or use background-color/image */
+}
+
+.denyContainer {
+  border: 2px solid #96f;
+	border-radius: 20px;
+}
+.ctaLightGray {
+  background-color: #e0e0e0;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: #333;
+  font-size: 14px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.ctaPurple {
+  background-color: #6a1b9a;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  color: white;
+  font-size: 16px;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* Sales Content Styles */
+.salesContent {
+  margin-top: 40px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.salesContent h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.salesContent p {
+  margin-bottom: 15px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.salesContent h3 {
+  font-size: 18px;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+.salesContent ol {
+  list-style: decimal;
+  padding-left: 20px;
+}
+
+.salesContent ol li {
+  margin-bottom: 10px;
+}
+
+/* Disclaimer Styles */
+.disclaimer {
+  margin-top: 30px;
+  padding: 15px;
+  background-color: #f5f5f5;
+  border-left: 5px solid #6a1b9a;
+  border-radius: 5px;
+  font-size: 16px;
+  color: #333;
+}
+
+/* Backstory Styles */
+.backstory {
+  margin-top: 50px;
+  padding: 20px;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.backstory h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+.backstory p {
+  margin-bottom: 15px;
+  line-height: 1.6;
+  color: #333;
+}
+
+.backstory strong {
+  font-weight: bold;
+  color: #6a1b9a;
+}
+

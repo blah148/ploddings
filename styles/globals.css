@@ -133,6 +133,16 @@ button {
 button:hover {
 	filter: saturate(1.2);
 }
+.Stripe {
+	background: #9966ff;
+	box-shadow: 0 2px 15px #9966ff;
+	font-size: 15px;
+	transition: transform 250ms ease-in-out, filter 200ms ease-in-out;
+}
+.Stripe:hover {
+	filter: saturate(1.24);
+	transform: scale(1.016);
+}
 a.upLevel {
 	display: block;
 	width: 50px;
@@ -284,6 +294,9 @@ div.led {
   border-radius: 100px;
   margin: auto 0 auto auto;
   display: block;
+}
+div.led.center {
+	margin: auto !important;
 }
 div.led.unlocked {
 	background-color: #2ac64f;
