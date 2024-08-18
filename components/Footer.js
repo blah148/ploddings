@@ -24,7 +24,7 @@ export default function Footer ({ userId = null  }) {
 					<h2>Usage</h2>
 					{!userId && (
 						<>
-							<Link href="/join" className="footer_link-Item" passHref>Join</Link>
+							<Link href="/become-a-contributor" className="footer_link-Item" passHref>Lifetime access</Link>
 							<Link href="/login" className="footer_link-item" passHref>Login</Link>
 						</>
 					)}

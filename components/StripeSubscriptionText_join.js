@@ -17,8 +17,8 @@ const SubscribeTextJoin = ({ email, text }) => {
     const session = await response.json();
 
     const result = await stripe.redirectToCheckout({
-      lineItems: [{ price: 'price_1PHVArKC15IuzqScmFav7L0C', quantity: 1 }],
-      mode: 'subscription',
+      lineItems: [{ price: 'price_1PowdBKC15IuzqScGKhDT7Uv', quantity: 1 }],
+      mode: 'payment',
       customerEmail: email,
       successUrl: `${window.location.origin}/login`,
       sessionId: session.id,
