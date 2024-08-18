@@ -11,7 +11,7 @@ const SubscribeTextJoin = ({ email, text }) => {
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, productType: 'subscription' }),
+      body: JSON.stringify({ email, productType: 'one-time' }),
     });
 
     const session = await response.json();
