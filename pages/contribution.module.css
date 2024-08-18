@@ -32,6 +32,7 @@
 /* Pricing Table Styles */
 .pricingTable {
   margin-top: 40px;
+	max-width: 1100px;
 }
 
 .pricingTable h2 {
@@ -53,12 +54,19 @@
 
 .gridHeader {
   display: grid;
-	grid-template-columns: 10fr 3fr 3fr;
+	grid-template-columns: 6fr 3fr 3fr;
 }
 
 .gridHeader > div {
   font-weight: bold;
   padding: 10px;
+}
+
+.artistIcon {
+	border-radius: 80px;
+	opacity: 0.8;
+	margin: auto;
+
 }
 
 .gridBody {
@@ -77,8 +85,8 @@
 }
 .bottomBorderRow {
 	display: grid;
-	grid-template-columns: 10fr 3fr 3fr;
-
+	grid-template-columns: 6fr 3fr 3fr;
+	border-bottom: 1px solid #d4d4d4;
 }
 div.led {
 	margin-right: auto !important;
@@ -117,7 +125,36 @@ div.led {
   cursor: pointer;
   text-decoration: none;
 }
-
+.gridHeader .tocTitle {
+	margin: auto 0 0 auto;
+	font-size: 16px;
+	font-style: italic;
+}
+.planType {
+	flex-direction: column;
+	display: flex;
+	justify-content: center;
+	align-content: center;
+}
+.planType.bottom {
+	min-height: 8ch;
+	justify-content: flex-start;
+}
+.planType.bottom h3 {
+	margin-top: 5px;
+	margin-bottom: 1rem;
+	font-size: 16px;
+}
+.planType.bottom a {
+	margin: 6px;
+}
+.planType span {
+	font-weight: normal;
+	font-size: 14.5px;
+}
+.planType span:hover {
+	filter: saturate(1.6);
+}
 /* Sales Content Styles */
 .salesContent {
   margin-top: 40px;
@@ -157,13 +194,21 @@ div.led {
 .disclaimer {
   margin-top: 30px;
   padding: 15px;
-  background-color: #f5f5f5;
+  background-color: white;
+	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-left: 5px solid #6a1b9a;
   border-radius: 5px;
   font-size: 16px;
   color: #333;
+	display: flex;
+	flex-direction: column;
 }
-
+.disclaimerRow {
+	display: flex;
+}
+.disclaimerRow.top {
+	margin: 8px 0 12px 0;
+}
 /* Backstory Styles */
 .backstory {
   margin-top: 50px;
