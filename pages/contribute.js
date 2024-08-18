@@ -83,6 +83,11 @@ console.log('Using userID:', userId);
         return;
       }
 
+
+    // Sorting the fetched songs by thread name in alphabetical order
+    const sortedData = data.sort((a, b) => a.matched_content_name.localeCompare(b.matched_content_name));
+
+
       // Structure all songs under a single category called "All Songs"
       const allSongsCategory = {
         id: 0, // Assuming '0' as a placeholder ID for the "All Songs" category
@@ -232,10 +237,56 @@ console.log('Using userID:', userId);
 								<h2>{songs.name}</h2>
 								<ul>
 									{songs.content && songs.content.map(song => (
-										<li key={song.id}>
-											<h3>{song.name}</h3>
-											{/* More detailed rendering can be added here */}
-										</li>
+									<li key={song.id} className={song.matched_content_name ? 'doubleRow' : 'singleRow'}>
+										{song.matched_content_name ? (
+											<>
+												<Link href={`/${song.page_type}/${song.slug}`} passHref>
+														<Image
+															width={40}
+															height={40}
+															src={song.thumbnail_200x200}
+															className="thumbnailImage"
+															alt={song.featured_img_alt_text || 'robert johnson guitar at crossroads'}
+														/>
+														<div>
+															{typeof window !== 'undefined' && window.innerWidth <= 768 && song.name.length > 15
+																? song.name.slice(0, 15) + '...'
+																: song.name}
+														</div>
+												</Link>
+												<Link href={`/${song.matched_page_type}/${song.matched_slug}`} passHref>
+														<Image
+															width={30}
+															height={30}
+															src={song.matched_thumbnail_200x200}
+															className="artistImage"
+															alt={song.matched_featured_img_alt_text || 'robert johnson guitar at crossroads'}
+														/>
+														<div className="artistName">{song.matched_content_name}</div>
+												</Link>
+												<Link href={`/${song.page_type}/${song.slug}`} passHref>
+														<div className={`led ${song.activeMembership ? 'unlocked' : 'locked'}`}></div>
+												</Link>
+											</>
+										) : (
+											<Link href={`/${song.page_type}/${song.slug}`} passHref>
+													<Image
+														width={40}
+														height={40}
+														src={song.thumbnail_200x200}
+														className="thumbnailImage"
+														alt={song.featured_img_alt_text || 'robert johnson guitar at crossroads'}
+													/>
+													<div>
+														{typeof window !== 'undefined' && window.innerWidth <= 768 && song.name.length > 27
+															? song.name.slice(0, 27) + '...'
+															: song.name}
+													</div>
+													<div className={`led ${song.activeMembership ? 'unlocked' : 'locked'}`}></div>
+											</Link>
+										)}
+									</li>
+
 									))}
 								</ul>
 							</div>
