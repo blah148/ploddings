@@ -115,6 +115,7 @@ console.log('Using userID:', userId);
 
     fetchAllSongs();
   }, [userId]);
+
 	useEffect(() => {
 		console.log('Categories updated:', songs);
 	}, [categories]); // This useEffect will run whenever 'categories' changes
@@ -227,20 +228,16 @@ console.log('Using userID:', userId);
               <p>
 								<strong>As long as Ploddings survives (est. 2018), you will have lifetime access to these privileges for all [number of songs].</strong>
 							</p>
-							<div className="categoriesContainer">
-								{categories.map(category => (
-									<div key={category.id} className="categoryGroup">
-										<h2>{category.name}</h2>
-										<ul>
-											{category.content.map(content => (
-												<li key={content.id} className="contentItem">
-													<Image src={content.thumbnail_200x200} alt={content.featured_img_alt_text} width={100} height={100} />
-													<Link href={`/${content.slug}`}>{content.name}</Link>
-												</li>
-											))}
-										</ul>
-									</div>
-								))}
+							<div className="categoryGroup">
+								<h2>{songs.name}</h2>
+								<ul>
+									{songs.content && songs.content.map(song => (
+										<li key={song.id}>
+											<h3>{song.name}</h3>
+											{/* More detailed rendering can be added here */}
+										</li>
+									))}
+								</ul>
 							</div>
               {/* Disclaimer */}
             </div>
