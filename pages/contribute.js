@@ -304,6 +304,14 @@ export default function CreateAccount({ userId, ip, songCount }) {
 						</div>
 						<div className={styles.salesContent}>
 						{/* Backstory */}
+  <h2>Our Story</h2>
+<p>The Ploddings non-profit project was started in 2018 by Mitch Park, also known as Blah148, an Albertan-Korean who's felt an unlikely love for old blues & folk music ever since coming across songs like 32-20 Blues by Robert Johnson and Dark Was the Night (Cold Was the Ground) by Blind Willie Johnson, after he graduated in 2017 from the Schulich Mechanical Engineering program of the University of Calgary. Before taking this on, he enjoyed posting pre-war blues tutorials on his Youtube channel from 2011-2017</p>
+						<p>By spring of 2019, blues enthusiasts from across the map started joining Ploddings, making it feel more communal, but a crucial change took place in 2022 when Ploddings became an official partner of the Mt. Zion Memorial Fund (MZMF), donating 100% of site proceeds to boost their blues preservation initiatives.</p>
+						<h3>Who is the Mt. Zion Memorial Fund? </h3>
+						<p>Rewinding the clock to 1989, a grassroots effort took place to help preserve the 114-year-old Mt. Zion Church (founded in 1909) where Robert Johnson is buried. Organizing at first under the name "The Robert Johnson Mount Zion Memorial Fund" in late-1989, the initiative successfully saved the church and placed a historical marker that still stands today. Under the leadership Skip Henderson & now Tyler DeWayne Moore, the MZMF has successfully erected tombstones for Charley Patton, Elmore James, Mississippi Fred McDowell, Big Joe Williams, Mississippi Joe Callicott, Memphis Minnie & James Thomas, Sam Chatmon & Sonny Boy Nelson, Lonnie Pitchford, Tommy Johnson, Charlie Burse, and T-Model Ford, as well as preserved venues and built museums honoring blues music.</p>
+						<p>Today, Mitch Park still runs Ploddings.com & creates content as a way to get better at guitar & connect with others. In the spring of 2024, Tyler DeWayne Moore spoke as one of Mitch's job application references, helping him get his current day-job as a clerk of the Albertan provincial court. Since July 2024, it has afforded him time to twang at the guitar, all from the quaint lakeland area of St. Paul, Alberta.</p>
+						</div>
+						<div className={styles.salesContent}>
 							<p><strong>Question #1:</strong> Does Ploddings.com act as a payment processing middleman between the site-access contribution & the Mt. Zion Memorial Fund?</p>
 							<p><strong>Answer:</strong> No, all payment contributions through Stripe are directly sent to the Mt. Zion Memorial Fund, and contributors are encouraged to reach out to the Mt. Zion Memorial Fund immediately after transferring their donation to confirm their 100% proceeds donation to MZMF & tax-deductible receipt, while verifying access to Ploddings.</p>
 							<p><strong>Question #2:</strong> Is the one-time contribution refundable?</p>
