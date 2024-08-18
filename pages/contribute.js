@@ -33,12 +33,12 @@ const verifyUserSession = (req) => {
   }
 };
 
-export default function CreateAccount({ userId, ip }) {
+export default function CreateAccount({ userId, ip, songCount }) {
   const { isLoading, setIsLoading } = useLoading();
   const router = useRouter();
   const [email, setEmail] = useState('');
   const [categories, setCategories] = useState([]); 
-const [songs, setSongs] = useState({});
+  const [songs, setSongs] = useState({});
 
   useEffect(() => {
   }, [email]);
@@ -72,8 +72,6 @@ const [songs, setSongs] = useState({});
       console.error('Error during account creation:', error.message);
     }
   };
-
-console.log('Using userID:', userId);
 
   useEffect(() => {
     async function fetchAllSongs() {
@@ -123,6 +121,7 @@ console.log('Using userID:', userId);
 
 	useEffect(() => {
 		console.log('Categories updated:', songs);
+		console.log('count', songCount);
 	}, [categories]); // This useEffect will run whenever 'categories' changes
 
 
@@ -231,7 +230,7 @@ console.log('Using userID:', userId);
                 />
               </ol>
               <p>
-								<strong>As long as Ploddings survives (est. 2018), you will have lifetime access to these privileges for all [number of songs].</strong>
+								<strong>As long as Ploddings survives (est. 2018), you will have lifetime access to these privileges for all <span style={{ fontWeight: 'bold' }}>{songCount}</span> songs.</strong>
 							</p>
 							<div className="categoryGroup">
 								<h2>{songs.name}</h2>
@@ -324,15 +323,34 @@ console.log('Using userID:', userId);
   );
 }
 
-export async function getServerSideProps({ req }) {
-  const userSession = verifyUserSession(req);
-  const forwardedFor = req.headers['x-forwarded-for'];
-  const ip = forwardedFor ? forwardedFor.split(',')[0] : req.connection.remoteAddress; // Corrected line
+export async function getServerSideProps(context) {
+  // Verify user session first
+  const userSession = verifyUserSession(context.req);
+  const forwardedFor = context.req.headers['x-forwarded-for'];
+  const ip = forwardedFor ? forwardedFor.split(',')[0] : context.req.connection.remoteAddress;
 
+  // Attempt to fetch the count of songs from the 'content' table where 'page_type' is 'songs'
+  // and exclude specific thread IDs
+  const excludedThreadIds = [47, 48, 49, 50, 51, 52];
+  const { data, error, count } = await supabase
+    .from('content')
+    .select('*', { count: 'exact' })
+    .eq('page_type', 'songs')
+    .not('thread_id', 'in', `(${excludedThreadIds.join(',')})`);
+
+  // Initialize songCount to zero or extract the count if data is correctly retrieved
+  let songCount = count || 0; // Directly use the count provided by Supabase
+
+  if (error) {
+    console.error('Error fetching song count:', error.message);
+  }
+
+  // Return props to the component
   return {
     props: {
       ip,
       userId: userSession?.id || null,
+      songCount // Always return a valid number or null
     },
   };
 }
