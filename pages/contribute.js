@@ -146,7 +146,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
             </div>
             <div className="narrowedFeedBody">
               <StabilizerText />
-              <h1>Obtain lifetime access</h1>
+              <h1>Full access (lifetime)</h1>
             </div>
 						<div className={styles.pricingTable}>
 							<div className={styles.gridHeader}>
@@ -274,7 +274,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
 							<p>And if for example 35% speed feels doable today, then try raising it to 42% tomorrow.</p>
 							<div className="categoryGroup">
 								<h2>The complete Ploddings™ library: </h2>
-								<p>In the same way as Dark Was the Night (Cold Was the Ground) is shown above, there are <span style={{ fontWeight: 'bold' }}>{songCount}</span> other songs in the Ploddings library for checking out and more are always being added on a weekly & monthly basis,</p>
+								<p>In the same way as Dark Was the Night (Cold Was the Ground) is shown above, there are <span style={{ fontWeight: 'bold' }}>{songCount-1}</span> other songs in the Ploddings library for checking out and more are always being added on a weekly & monthly basis,</p>
 								<ul>
 									{songs.content && songs.content.map(song => (
 									<li key={song.id} className={song.matched_content_name ? 'doubleRow' : 'singleRow'}>
