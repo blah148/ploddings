@@ -199,7 +199,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
 								</div>
 								<div className={[styles.planType, styles.bottom].join(' ')} >
 									<h3>$195 CAD (lifetime)</h3>
-									<button style={{marginTop: "5px", marginBottom: "5px"}} className="formButton Stripe">
+									<button style={{marginTop: "5px", marginBottom: "5px"}} className="formButton Stripe two">
 										<SubscribeTextJoin text="Step 2: Continue to Stripe" />
 									</button>
 								</div>

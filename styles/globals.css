@@ -143,6 +143,14 @@ button:hover {
 	filter: saturate(1.24);
 	transform: scale(1.016);
 }
+@media only screen and (max-width: 768px) {
+
+	.Stripe.two {
+		margin-left: -200px;
+		min-width: 130px;
+	}
+
+}
 a.upLevel {
 	display: block;
 	width: 50px;
