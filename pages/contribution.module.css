@@ -51,6 +51,13 @@
 	flex-direction: column;
   text-align: center;
 }
+.pricingTable2 {
+	display: flex;
+	flex-direction: column;
+  text-align: left;
+	margin: 28px 0 8px 0;
+}
+
 
 .gridHeader {
   display: grid;
@@ -68,11 +75,30 @@
 	margin: auto;
 
 }
-
+button.noMargin {
+	margin: auto;
+}
 .gridBody {
   display: block;
 }
-
+.gridBody2 {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+}
+@media only screen and (max-width: 768px) {
+	.gridBody2 {
+		display: block;
+	}
+	.gridBody2 span {
+		min-width: 130px !important;;
+	}
+}
+.gridBody2 span {
+	text-align: right;
+	min-width: 180px;
+	margin: 0 9px 0 0 ;
+	font-weight: 600;
+}
 .gridBody > .bullet {
   text-align: right;
   padding-right: 20px; /* Spacing between bullet and leds */
@@ -87,6 +113,10 @@
 	display: grid;
 	grid-template-columns: 6fr 3fr 3fr;
 	border-bottom: 1px solid #d4d4d4;
+}
+.bottomBorderRow2 {
+	display: flex;
+	margin: 0 0 12px 0;
 }
 div.led {
 	margin-right: auto !important;

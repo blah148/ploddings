@@ -177,19 +177,19 @@ export default function CreateAccount({ userId, ip, songCount }) {
 							</div>
 							<div className={styles.gridBody}>
 								<div className={styles.bottomBorderRow}>
-								<a href="#a" className="bullet">a. Viewing permissions for all MuseScore™ tablature</a>
-								<div className="led center unlocked"></div>
-								<div className="led center unlocked"></div>
+								  <a href="#a" className="bullet">a. Unlimited use of the slow-downer & pitch shifter tool</a>
+									<div className="led center locked"></div>
+									<div className="led center unlocked"></div>
+							  </div>
+								<div className={styles.bottomBorderRow}>
+									<a href="#b" className="bullet">b. Viewing permissions for all MuseScore™ tablature</a>
+									<div className="led center unlocked"></div>
+									<div className="led center unlocked"></div>
 								</div>
 								<div className={styles.bottomBorderRow}>
-								<a href="#b" className="bullet">b. Download permissions for: (i) PDF tablature, and (ii) MuseScore™ files</a>
-								<div className="led center locked"></div>
-								<div className="led center unlocked"></div>
-								</div>
-								<div className={styles.bottomBorderRow}>
-								<a href="#c" className="bullet">c. Unlimited use of the slow-downer & pitch shifter tool</a>
-								<div className="led center locked"></div>
-								<div className="led center unlocked"></div>
+									<a href="#c" className="bullet">c. Download permissions for: (i) PDF tablature, and (ii) MuseScore™ files</a>
+									<div className="led center locked"></div>
+									<div className="led center unlocked"></div>
 								</div>
 							</div>
 							<div className={styles.gridHeader}>
@@ -207,33 +207,74 @@ export default function CreateAccount({ userId, ip, songCount }) {
 						</div>
             {/* Sales Content */}
             <div className={styles.salesContent}>
-              <h2>How can I use the site?</h2>
-              <p>Imagine finding your unique guitar playing voice by first learning the ways of guitarists of yesterdays such as Etta Baker, John Fahey, Elizabeth Cotten, Reverend Gary Davis, King Solomon Hill, Charley Patton, Robert Petway, Robert Johnson, and others..</p>
-              <h3 id="a">a. How would you find your unique sound?</h3>
-              <p>Well for instance, as a contributor, not only do you get playable tablature to know exact notes for songs like Blind Willie Johnson's seminal tune, Dark Was the Night (Cold Was the Ground)..</p>
-              <MusescoreEmbed
-                pageId={275}
-                userId={userId}
-                ip={ip}
-                embed_link="https://musescore.com/user/69479854/scores/12391498/s/egzyiU/embed"
-                canAccess={true}
-              />
-              <ol>
-                <h3 id="b">b. But you also get to have..</h3>
-                <li>The ability to print the (above) PDF files of MuseScore™ guitar tablature for offline practice,</li>
-                <li>The access to download all editable MuseScore™ files for the site's song library (however no commercial usage of MuseScore file downloads is allowed)</li>
-								<h3 id="c">c. The slow-downer / pitch-shifter playalong tool</h3>
-                <li>Unlimited usage of the slow-downer & pitch-shifter play-along tool. Give it a try by testing playback with the interactive tool right below,</li>
+							<h2>Example: Dark Was the Night (Cold Was the Ground) by Blind Willie Johnson</h2>
+							<p>This talks about how someone who's experienced or inexperienced could start learning on a slide song like Blind Willie Johnson's classic, Dark Was the Night (Cold Was the Ground). Two things to do are to: (a) change to the Vestapol / Open D tuning of DADF#AD, and (b) have a bottleneck slide on-hand. </p>
+              <h3 id="a">Step 1: Listening to the recording, slowed-down..</h3>
+								<p>One idea as an end-goal might be to play-along at full speed with Blind Willie Johnson as a way to possibly absorb the sounds he creates. They say the "devil" is in the details.. and if it is, then dragging the orange slider (right below) back to 74%, 54%, 48%, or even 25% speed could help.. </p>
                 <SlowDownerComponent 
                   isUnlocked={true} 
                   dropbox_mp3_link="https://dl.dropboxusercontent.com/scl/fi/62dzveezgsork7o4odf4x/Blind-Willie-Johnson-Dark-Was-the-Night-Cold-Was-the-Ground.mp3?rlkey=3bg5q0jm7yvpp9ckevy4g6ims&dl=0"
                 />
-              </ol>
-              <p>
-								<strong>As long as Ploddings survives (est. 2018), you will have lifetime access to these privileges for all <span style={{ fontWeight: 'bold' }}>{songCount}</span> songs.</strong>
-							</p>
+							<p><strong>Note:</strong> The orange "setA" button (on audio player above) picks new "checkpoints" to rewind to, like the 1st turnaround, or the start of the 3rd chorus that Blind Willie Johnson plays. The setB button creates a loop between the two (setA and setB) points. Also, the pitch-shifter is probably most useful when the original recording is out-of-tune by a 1/4-step or a 1/2-step, and could be tweaked to more easily match the user's tuning. </p>
+							<h3 id="b">Step 2: Link the sounds to the fretboard & strings</h3>
+							<p>An old adage says, "imitate, assimilate, innovate." Getting into the recording like this is a great way to imitate & assimilate (but don't forget about the list to-do: innovate)! Walking in the footsteps of the player, some questions can include:</p>
+								<ul>
+									<li>What notes are getting played?</li>
+                  <li>What part of the guitar are they being played on?</li>
+                  <li>What's a feasible way to pick/pluck the strings?</li>
+								</ul>
+								<p>This is an audio-playback transcription of Dark Was the Night by Blind Willie, trying to shed some light on those questions,</p>
+								<MusescoreEmbed
+									pageId={275}
+									userId={userId}
+									ip={ip}
+									embed_link="https://musescore.com/user/69479854/scores/12391498/s/egzyiU/embed"
+									canAccess={true}
+								/>
+						<div className={styles.pricingTable2} id="c">
+							<div className={styles.gridBody2}>
+								<div className={styles.bottomBorderRow2}>
+								  <span>PDF file: </span>
+									<a
+									href="https://f005.backblazeb2.com/file/ploddings-songs-pdfs/Dark_Was_the_Night_Cold_Was_the_Ground__Blind_Willie_Johnson.pdf"
+										download
+										target="_blank"
+										rel="noopener noreferrer"
+										className={styles.downloadLink}
+									  >
+										<button className={styles.noMargin}>
+									    Download file (121.7kB)
+										</button>
+								  </a>
+								</div>
+								<div className={styles.bottomBorderRow2}>
+								  <span>MuseScore™ file: </span>
+									<a
+									  href="https://f005.backblazeb2.com/file/ploddings-musescore-files/Dark_Was_the_Night_Cold_Was_the_Ground__Blind_Willie_Johnson(2).mscz"
+										download
+										target="_blank"
+										rel="noopener noreferrer"
+										className={styles.downloadLink}
+									  >
+										<button className={styles.noMargin}>
+									    Download file (40.7kB)
+										</button>
+								  </a>
+								</div>
+
+							</div>
+						</div>
+
+              <h3>Step 3: Absorbing the sound</h3>
+							<p>Then, having the roadmap of the tablature, and the slow-downer to match the Blind Willie Johnson sound to your guitar, the sounds can be blended together with each passing repetition. At full-speed, it almost feels more than impossible to ever match Johnson's finesse with the slide, but at 62% speed, 47% speed, or 35% speed, it at least starts to become conceivably possible to try.</p>
+							<SlowDownerComponent 
+								isUnlocked={true} 
+								dropbox_mp3_link="https://dl.dropboxusercontent.com/scl/fi/62dzveezgsork7o4odf4x/Blind-Willie-Johnson-Dark-Was-the-Night-Cold-Was-the-Ground.mp3?rlkey=3bg5q0jm7yvpp9ckevy4g6ims&dl=0"
+							/>
+							<p>And if for example 35% speed feels doable today, then try raising it to 42% tomorrow.</p>
 							<div className="categoryGroup">
-								<h2>{songs.name}</h2>
+								<h2>The complete Ploddings™ library: </h2>
+								<p>In the same way as Dark Was the Night (Cold Was the Ground) is shown above, there are <span style={{ fontWeight: 'bold' }}>{songCount}</span> other songs in the Ploddings library for checking out and more are always being added on a weekly & monthly basis,</p>
 								<ul>
 									{songs.content && songs.content.map(song => (
 									<li key={song.id} className={song.matched_content_name ? 'doubleRow' : 'singleRow'}>
