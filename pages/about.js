@@ -66,14 +66,12 @@ export default function About({ userId, ip }) {
                   </p>
                 </sub>
 								<h2>ii) How Subscriptions Work</h2>
-								<p>Users of Ploddings may sign-up for a $20-per-month subscription fee, representing a donation to the Mt. Zion Memorial Fund account.</p>
-								<p>An active membership grants privileges that include:</p>
+								<p>Users of Ploddings may sign-up for one-time fee of $195 CAD, representing a donation to the Mt. Zion Memorial Fund account.</p>
+								<p>A membership grants privileges that include:</p>
 								<ol>
-									<li>Viewing & downloading (in PDF form) of MIDI-tablature, and</li>
+									<li>Downloading (in PDF & MusesScore form) of playback-tablature, and</li>
 									<li>Use of the slow-downer / pitch-shifter tool.</li>
 								</ol>
-								<h3>Payment Policy</h3>
-								<p>All payments facilitated by Ploddings to the Mt. Zion Memorial Fund are non-refundable, primarily for the sake of simplicity.</p>
                 <h2>iii) More Information</h2>
                 <p>Still have questions? For general inquiries, user support, or comments please reach out via the Ploddings <Link href="/contact">contact page</Link>. The custodian & builder of Ploddings is Blah148. To learn more about the Mt. Zion Memorial Fund, its current endeavors, how to volunteer, or its relationship with Ploddings, please get in touch via <a href="https://mtzionmemorialfund.com/" target="_blank">their website</a>.</p>
 
