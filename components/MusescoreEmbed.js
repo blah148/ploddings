@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabase';
-import { getFingerprint } from '../utils/fingerprint';
 
 const MusescoreEmbed = ({ userId, ip, pageId, embed_link, canAccess }) => {
 

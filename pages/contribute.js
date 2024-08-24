@@ -120,8 +120,6 @@ export default function CreateAccount({ userId, ip, songCount }) {
   }, [userId]);
 
 	useEffect(() => {
-		console.log('Categories updated:', songs);
-		console.log('count', songCount);
 	}, [categories]); // This useEffect will run whenever 'categories' changes
 
 

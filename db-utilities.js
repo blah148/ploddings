@@ -39,9 +39,8 @@ async function fetchDataBySlug(tableName = 'content', slug) {
   }
 }
 
-
-
 async function fetchThreadData(slug) {
+  console.log(`Fetching thread data by slug: ${slug}`);
   try {
     const { data, error } = await supabase
       .from('content')
@@ -51,15 +50,19 @@ async function fetchThreadData(slug) {
 
     if (error || !data) {
       console.error('Error fetching threadData by slug:', error);
+      console.log('Result data:', data);
       return null;
     }
 
+    console.log('Fetched thread data:', data);
     return data;
   } catch (err) {
-    console.error(err);
+    console.error('Exception occurred while fetching thread data:', err);
     return null;
   }
 }
+
+
 
 async function fetchSongData(slug) {
   try {
