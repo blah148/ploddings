@@ -126,9 +126,9 @@ export default function CreateAccount({ userId, ip, songCount }) {
   return (
     <div className="bodyA">
       <SEO
-        title="Pricing"
+        title="create-user"
         description="The tablature & slow-downer tools can be accessed by choosing between 3 pricing options. All payments are controlled by the non-profit fund, the Mt. Zion Memorial Fund."
-        slug="/pricing"
+        slug="/create-user"
       />
       <Sidebar userId={userId} ip={ip} />
       <div className="mainFeedAll">
@@ -144,7 +144,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
             </div>
             <div className="narrowedFeedBody">
               <StabilizerText />
-              <h1>Pricing</h1>
+              <h1>Create user</h1>
             </div>
             <div className={styles.pricingTable}>
 							<div className={styles.gridHeader}>
