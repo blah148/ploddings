@@ -226,6 +226,21 @@ export default function CreateAccount({ userId, ip, songCount }) {
 								</div>
 							</div>
 						</div>
+            {/* Non-Profit - Disclaimer */}
+						<div className={styles.disclaimer}>
+							<div className={`${styles.disclaimerRow} ${styles.top}`}>
+							  <div><strong>Note: </strong>Ploddings is <i>not-for-profit</i></div> 
+							</div>
+							<div className={styles.disclaimerRow}>
+								<div>
+                  As of March 2024, Ploddings has assigned the{' '}
+                    <a href="https://mtzionmemorialfund.com/" target="_blank" rel="noopener noreferrer">
+                      Mt. Zion Memorial Fund
+                    </a>{' '}
+                  as the Stripe recipient of all website revenue. This means that 100% of the earnings are attempted to be recycled into preservation efforts spearheaded by this IRS-recognized charity. The administrative costs of Ploddings site are paid out-of-pocket by the site custodian, blah148.
+								</div>
+							</div>
+						</div>
             {/* Sales Content */}
             <div className={styles.salesContent}>
 							<h2>Example: Bring Me My Shotgun by Lightnin' Hopkins</h2>
@@ -253,9 +268,11 @@ export default function CreateAccount({ userId, ip, songCount }) {
 								<li>Play and/or sing alongside the slow-downer tool, and progressively increase the tempo to match the original recording,</li>
 								<li>Examine the interactive tablature for unexpected pitch/rhythm details that can help inform future guitar playing</li>
 							</ul>
+							</div>
+							<div className={styles.salesContent}>
 							<div className="categoryGroup">
 	              <h2>What songs are included?</h2>
-	              <p>In addition to Bring Me My Shotgun, these are the other songs in the Ploddings library that have: (i) the slow-downer tool and a (ii) MuseScore transcription. All songs on this list have been added since August of 2023, and more will added with each passing month.</p>
+	              <p>In addition to Bring Me My Shotgun, these are the other songs in the Ploddings library that have: (i) the slow-downer tool and a (ii) MuseScore transcription. All songs on this list have been added since August of 2023, and more are planned to be added with each passing month.</p>
 
 								<ul>
 									{songs.content && songs.content.map(song => (
@@ -312,40 +329,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
 									))}
 								</ul>
 							</div>
-              {/* Disclaimer */}
             </div>
-						<div className={styles.disclaimer}>
-							<div className={`${styles.disclaimerRow} ${styles.top}`}>
-							  <strong>Are you a USA taxpayer?</strong> 
-							  <span role="img" aria-label="USA flag" style={{marginLeft: "8px"}}>🇺🇸</span> 
-							</div>
-							<div className={styles.disclaimerRow}>
-								<div>
-							  For USA taxpayers, the lifetime Ploddings membership is tax-deductible since 100% of all donations are collected on behalf of the Mount Zion Memorial Fund (MZMF), an IRS-recognized charity and the official partner of Ploddings. Users are encouraged to contact the Mt. Zion Memorial Fund directly for proof-of-receipts for tax purposes by providing their: (i) email address and (ii) date of purchase information at: <a href="https://mtzionmemorialfund.com/online-support-portal/" target="_blank" rel="nofollow noopener noreferrer" style={{display: "inline"}}>Mt. Zion Memorial Fund - Contact Page</a>.
-								</div>
-							</div>
-						</div>
-						<div className={styles.salesContent}>
-						{/* Backstory */}
-  <h2>Our Story</h2>
-<p>The Ploddings non-profit project was started in 2018 by Mitch Park, also known as Blah148, an Albertan-Korean who's felt an unlikely love for old blues & folk music ever since coming across songs like 32-20 Blues by Robert Johnson and Dark Was the Night (Cold Was the Ground) by Blind Willie Johnson, after he graduated in 2017 from the Schulich Mechanical Engineering program of the University of Calgary. Before taking this on, he enjoyed posting pre-war blues tutorials on his Youtube channel from 2011-2017</p>
-						<p>By spring of 2019, blues enthusiasts from across the map started joining Ploddings, making it feel more communal, but a crucial change took place in 2022 when Ploddings became an official partner of the Mt. Zion Memorial Fund (MZMF), donating 100% of site proceeds to boost their blues preservation initiatives.</p>
-						<h3>Who is the Mt. Zion Memorial Fund? </h3>
-						<p>Rewinding the clock to 1989, a grassroots effort took place to help preserve the 114-year-old Mt. Zion Church (founded in 1909) where Robert Johnson is buried. Organizing at first under the name "The Robert Johnson Mount Zion Memorial Fund" in late-1989, the initiative successfully saved the church and placed a historical marker that still stands today. Under the leadership Skip Henderson & now Tyler DeWayne Moore, the MZMF has successfully erected tombstones for Charley Patton, Elmore James, Mississippi Fred McDowell, Big Joe Williams, Mississippi Joe Callicott, Memphis Minnie & James Thomas, Sam Chatmon & Sonny Boy Nelson, Lonnie Pitchford, Tommy Johnson, Charlie Burse, and T-Model Ford, as well as preserved venues and built museums honoring blues music.</p>
-						<p>Today, Mitch Park still runs Ploddings.com & creates content as a way to get better at guitar & connect with others. In the spring of 2024, Tyler DeWayne Moore spoke as one of Mitch's job application references, helping him get his current day-job as a clerk of the Albertan provincial court. Since July 2024, it has afforded him time to twang at the guitar, all from the quaint lakeland area of St. Paul, Alberta.</p>
-						</div>
-						<div className={styles.salesContent}>
-							<p><strong>Question #1:</strong> Does Ploddings.com act as a payment processing middleman between the site-access contribution & the Mt. Zion Memorial Fund?</p>
-							<p><strong>Answer:</strong> No, all payment contributions through Stripe are directly sent to the Mt. Zion Memorial Fund, and contributors are encouraged to reach out to the Mt. Zion Memorial Fund immediately after transferring their donation to confirm their 100% proceeds donation to MZMF & tax-deductible receipt, while verifying access to Ploddings.</p>
-							<p><strong>Question #2:</strong> Is the one-time contribution refundable?</p>
-							<p>
-								<strong>Answer:</strong> Since 2018, there has never been a single refund requested by the more than 100 customers of Ploddings, and they are discouraged since users could conceivably pay for a membership, download all the current files, then request a refund. However, if the day arises when a user asks for a refund and needs it, they can reach out to Ploddings support at: 
-								<Link href="/contact" passHref>
-									<span style={{ textDecoration: 'underline', color: 'inherit', cursor: 'pointer', marginLeft: '4px', marginRight: '4px' }}>ploddings.com/contact</span>
-								</Link> 
-								for mediation.
-							</p>
-						</div>
           </div>
         </div>
 				<Footer userId={userId} />

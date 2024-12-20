@@ -185,26 +185,6 @@ div.led {
 .planType span:hover {
 	filter: saturate(1.6);
 }
-.highlighted {
-  border: 3px solid #FFD700; /* Yellow border */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Light box-shadow */
-  border-radius: 80px; /* Maintain circular shape if needed */
-}
-.highlightedButton {
-  border: 2px solid #FFD700; /* Yellow border */
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Light box-shadow */
-  border-radius: 5px; /* Optional: Rounds the corners */
-  color: white; /* Optional: Ensure text is readable */
-}
-.highlightedButton button {
-	width: 100%;
-}
-
-/* Optional: Hover Effect for Highlighted Button */
-.highlightedButton:hover {
-  background-color: #8e24aa; /* Darker shade on hover */
-  border-color: #FFC107; /* Slightly different yellow on hover */
-}
 /* Sales Content Styles */
 .salesContent {
   margin-top: 40px;
@@ -216,7 +196,7 @@ div.led {
 
 .salesContent h2 {
   font-size: 22px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 }
 
 .salesContent p {
