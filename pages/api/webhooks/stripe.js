@@ -131,6 +131,26 @@ const markEventAsProcessed = async (eventId) => {
   }
 };
 
+// Function to associate unique_id with the user for automatic login (if implemented)
+const associateUniqueIdWithUser = async (uniqueId, userId) => {
+  try {
+    const { error } = await supabase
+      .from('pending_logins')
+      .update({ user_id: userId })
+      .eq('unique_id', uniqueId);
+
+    if (error) {
+      console.error(`❌ Failed to associate unique_id ${uniqueId} with user ID ${userId}:`, error);
+      throw error;
+    }
+
+    console.log(`✅ Associated unique_id ${uniqueId} with user ID ${userId}`);
+  } catch (error) {
+    console.error('❗ Error in associateUniqueIdWithUser:', error.message);
+    throw error;
+  }
+};
+
 export default async function handler(req, res) {
   console.log('📥 Received a webhook event.');
 
@@ -202,13 +222,58 @@ export default async function handler(req, res) {
           const session = event.data.object;
           const userEmail = session.customer_details?.email;
           const stripeCustomerId = session.customer;
+          const uniqueId = session.metadata?.unique_id;
 
-          console.log(`🛒 Processing 'checkout.session.completed' for email: ${userEmail}, Customer ID: ${stripeCustomerId}`);
+          console.log(`🛒 Processing 'checkout.session.completed' for email: ${userEmail}, Customer ID: ${stripeCustomerId}, Unique ID: ${uniqueId}`);
 
-          if (userEmail && stripeCustomerId) {
+          if (userEmail && stripeCustomerId && uniqueId) {
+            // Create or update the user
             await createOrUpdateUser(userEmail, stripeCustomerId);
+
+            // Fetch the user from Supabase to get their ID
+            const { data: user, error: userError } = await supabase
+              .from('users')
+              .select('*')
+              .eq('email', userEmail)
+              .single();
+
+            if (userError) {
+              console.error(`❌ Error fetching user after creation:`, userError);
+              throw userError;
+            }
+
+            // Associate unique_id with user for automatic login (if implemented)
+            // await associateUniqueIdWithUser(uniqueId, user.id); // Uncomment if using automatic login
           } else {
-            console.error('❌ Missing email or customer ID in checkout.session.completed event.');
+            console.error('❌ Missing email, customer ID, or unique ID in checkout.session.completed event.');
+          }
+          break;
+        }
+
+        case 'invoice.payment_succeeded': { // Handle invoice.payment_succeeded event
+          const invoice = event.data.object;
+          const stripeCustomerId = invoice.customer;
+
+          console.log(`💰 Processing 'invoice.payment_succeeded' for Customer ID: ${stripeCustomerId}`);
+
+          if (stripeCustomerId) {
+            await createOrUpdateUserByStripeId(stripeCustomerId);
+          } else {
+            console.error('❌ Missing customer ID in invoice.payment_succeeded event.');
+          }
+          break;
+        }
+
+        case 'customer.subscription.created': { // Handle customer.subscription.created event
+          const subscription = event.data.object;
+          const stripeCustomerId = subscription.customer;
+
+          console.log(`📅 Processing 'customer.subscription.created' for Customer ID: ${stripeCustomerId}`);
+
+          if (stripeCustomerId) {
+            await createOrUpdateUserByStripeId(stripeCustomerId);
+          } else {
+            console.error('❌ Missing customer ID in customer.subscription.created event.');
           }
           break;
         }
@@ -256,4 +321,45 @@ export default async function handler(req, res) {
     res.status(400).send(`Bad Request: ${err.message}`);
   }
 }
+
+// Additional helper function to create or update user by stripe_id
+const createOrUpdateUserByStripeId = async (stripeCustomerId) => {
+  try {
+    console.log(`🔍 Attempting to create or update user with Stripe Customer ID: ${stripeCustomerId}`);
+
+    // Check if the user already exists
+    const { data: user, error } = await supabase
+      .from('users')
+      .select('*')
+      .eq('stripe_id', stripeCustomerId)
+      .single();
+
+    if (error && error.code !== 'PGRST116') { // PGRST116: No rows found
+      console.error(`❌ Error selecting user with Stripe Customer ID ${stripeCustomerId}:`, error);
+      throw error;
+    }
+
+    if (user) {
+      // Update existing user
+      console.log(`🛠️ User exists. Updating user: ${user.email}`);
+      const { error: updateError } = await supabase
+        .from('users')
+        .update({ active_membership: true })
+        .eq('stripe_id', stripeCustomerId);
+
+      if (updateError) {
+        console.error(`❌ Failed to update user ${user.email}:`, updateError);
+        throw updateError;
+      }
+      console.log(`✅ Successfully updated user ${user.email} with active_membership: true`);
+    } else {
+      // Optionally, handle cases where the user does not exist
+      console.warn(`⚠️ No user found with Stripe Customer ID: ${stripeCustomerId}`);
+      // You may choose to create a user here or log for manual review
+    }
+  } catch (error) {
+    console.error('❗ Error in createOrUpdateUserByStripeId:', error.message);
+    throw error;
+  }
+};
 
