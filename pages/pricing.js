@@ -126,9 +126,9 @@ export default function CreateAccount({ userId, ip, songCount }) {
   return (
     <div className="bodyA">
       <SEO
-        title="Join"
-        description="To persist your: (i) visit history, (ii) starred guitar tablature, and (iii) access the pitch-shifter and slow-downer, create an account on Ploddings with an email"
-        slug="/join"
+        title="Pricing"
+        description="The tablature & slow-downer tools can be accessed by choosing between 3 pricing options. All payments are controlled by the non-profit fund, the Mt. Zion Memorial Fund."
+        slug="/pricing"
       />
       <Sidebar userId={userId} ip={ip} />
       <div className="mainFeedAll">
@@ -144,135 +144,119 @@ export default function CreateAccount({ userId, ip, songCount }) {
             </div>
             <div className="narrowedFeedBody">
               <StabilizerText />
-              <h1>Full access (lifetime)</h1>
+              <h1>Pricing</h1>
             </div>
-						<div className={styles.pricingTable}>
+            <div className={styles.pricingTable}>
 							<div className={styles.gridHeader}>
-								<div className={styles.tocTitle}>Table of Contents</div>
+								<div className={styles.tocTitle}>(Click/tap to jump-to)</div>
 								<div className={styles.planType}>
-									<h2>Visitor</h2>
-                    <Image 
-											alt="Skip James guitar portrait"
-											src="https://ploddings-threads.s3.us-east-005.backblazeb2.com/featured_img_550px/skip-james.webp"
-											width={70}
-											height={70}
-											loading="lazy"
-											style={{ color: 'transparent' }}
-											className={styles.artistIcon}
-										/>
+									<h2>1-Month</h2>
+									<Image 
+										alt="johnny st. cyr guitar portrait"
+										src="https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px-logo1.0/johnny+(P).jpg"
+										width={70}
+										height={70}
+										loading="lazy"
+										style={{ color: 'transparent' }}
+										className={styles.artistIcon}
+									/>
 								</div>
 								<div className={styles.planType}>
-									<h2>One-time contributor</h2>
-			    			    <Image 
-											alt="robert johnson guitar portrait"
-											src="https://ploddings-threads.s3.us-east-005.backblazeb2.com/featured_img_550px/robert-johnson.webp"
-											width={70}
-											height={70}
-											loading="lazy"
-											className={styles.artistIcon}
-										/>
+									<h2>3-Months</h2>
+									<Image 
+										alt="willie brown future blues guitar portrait"
+										src="https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px-logo1.0/WillieBrown+(P).jpg"
+										width={70}
+										height={70}
+										loading="lazy"
+                    className={`${styles.artistIcon}`}
+									/>
+								</div>
+								<div className={styles.planType}>
+									<h2>12-Months</h2>
+									<Image 
+										alt="etta baker banjo portrait railroad bill"
+										src="https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px-logo1.0/etta+(P).jpg"
+										width={70}
+										height={70}
+										loading="lazy"
+										className={styles.artistIcon}
+									/>
 								</div>
 							</div>
 							<div className={styles.gridBody}>
 								<div className={styles.bottomBorderRow}>
-								  <a href="#a" className="bullet">a. Unlimited use of the slow-downer & pitch shifter tool</a>
-									<div className="led center locked"></div>
+									<a href="#a" className="bullet">a. Unlimited usage of the slow-downer playback tool</a>
 									<div className="led center unlocked"></div>
-							  </div>
-								<div className={styles.bottomBorderRow}>
-									<a href="#b" className="bullet">b. Viewing permissions for all MuseScore™ tablature</a>
 									<div className="led center unlocked"></div>
 									<div className="led center unlocked"></div>
 								</div>
 								<div className={styles.bottomBorderRow}>
-									<a href="#c" className="bullet">c. Download permissions for: (i) PDF tablature, and (ii) MuseScore™ files</a>
-									<div className="led center locked"></div>
+									<a href="#b" className="bullet">b. Viewing & downloading of all MuseScore™ transcription tablature</a>
+									<div className="led center unlocked"></div>
+									<div className="led center unlocked"></div>
 									<div className="led center unlocked"></div>
 								</div>
 							</div>
 							<div className={styles.gridHeader}>
-                <div></div> {/* Empty for alignment */}
-								<div className={[styles.planType, styles.bottom].join(' ')} >
-									<h3>$0</h3>
+								<div></div> {/* Empty for alignment */}
+								<div className={[styles.planType, styles.bottom].join(' ')}>
+									<h3>$10</h3>
+									<SubscribeTextJoin
+										email={email} // Ensure 'email' is managed in the parent component
+										text="Billing cycle: 1-month"
+										priceId="price_1QgJFMGNqRWlCRP" // Replace with your actual Price ID for 1-Month
+									/>
 								</div>
-								<div className={[styles.planType, styles.bottom].join(' ')} >
-									<h3>$195 CAD (lifetime)</h3>
-									<button style={{marginTop: "5px", marginBottom: "5px"}} className="formButton Stripe two">
-										<SubscribeTextJoin text="Step 2: Continue to Stripe" />
-									</button>
+								<div className={[styles.planType, styles.bottom].join(' ')}>
+									<h3>$20</h3>
+									<SubscribeTextJoin
+										email={email}
+										text="Billing cycle: 3-months"
+										priceId="price_1RQjYwfUUsVTH1O" // Replace with your actual Price ID for 3-Months
+									/>
+								</div>
+								<div className={[styles.planType, styles.bottom].join(' ')}>
+									<h3>$60</h3>
+									<SubscribeTextJoin
+										email={email}
+										text="Billing cycle: 12-months"
+										priceId="price_1RQjZAHVkHrRwIe" // Replace with your actual Price ID for 12-Months
+									/>
 								</div>
 							</div>
 						</div>
             {/* Sales Content */}
             <div className={styles.salesContent}>
-							<h2>Example: Dark Was the Night (Cold Was the Ground) by Blind Willie Johnson</h2>
-							<p>This talks about how someone who's experienced or inexperienced could start learning on a slide song like Blind Willie Johnson's classic, Dark Was the Night (Cold Was the Ground). Two things to do are to: (a) change to the Vestapol / Open D tuning of DADF#AD, and (b) have a bottleneck slide on-hand. </p>
-              <h3 id="a">Step 1: Listening to the recording, slowed-down..</h3>
-								<p>One idea as an end-goal might be to play-along at full speed with Blind Willie Johnson as a way to possibly absorb the sounds he creates. They say the "devil" is in the details.. and if it is, then dragging the orange slider (right below) back to 74%, 54%, 48%, or even 25% speed could help.. </p>
+							<h2>Example: Bring Me My Shotgun by Lightnin' Hopkins</h2>
+                <p>The goal of Ploddings, for users, is <i>to help</i> in getting down the sound of pre-war blues style music. This section is meant to demonstrate the 2-tools that the Ploddings site provides to help in this goal: (i) the slow-downer tool, and (ii) the MuseScore transcription tablature.</p>
+                <p>As an example, imagine that the Lightnin' Hopkins sound on Bring Me My Shotgun is set as the 'goal sound'. An E-blues in the style of Lightnin' Hopkins is doable to get 20% or 30% down, but the remaining 70% or 80% – the rhythmic hesitations, the subtle fingerpicked rakes, the usage of the open strings – are easily overlooked and easier still to round-off as not being there at all. Small wonder then why, in listening back to the practicer's playing, it often doesn't quite sound like Lightnin' Hopkins, even though the criteria appears to be met.</p>
+                <h3 id="a">a) the Slow-Downer Tool</h3>
+                <p>To pick-out the details of the pitches and the rhythms, slowing down the original recording of Bring Me My Shotgun, even to 25% speed, can be helpful for tasks like creating a transcription; details that seem unnoticeable at 100% normal speed can become front-and-centre at 50% or 45% speed. For playing alongside the recording, the slow-downer can be set to a lower speed, for example 65% speed, and then steadily increased until the tempo has returned to 95% or 100% speed.</p>
                 <SlowDownerComponent 
                   isUnlocked={true} 
-                  dropbox_mp3_link="https://dl.dropboxusercontent.com/scl/fi/62dzveezgsork7o4odf4x/Blind-Willie-Johnson-Dark-Was-the-Night-Cold-Was-the-Ground.mp3?rlkey=3bg5q0jm7yvpp9ckevy4g6ims&dl=0"
+                  dropbox_mp3_link="https://dl.dropboxusercontent.com/scl/fi/i0q9kawn9pwcmya3o4pp3/Lightnin-Hopkins-Bring-Me-My-Shotgun.mp3?rlkey=9632w5pf421zn8rrdp7ymb83x&dl=0"
                 />
-							<p><strong>Note:</strong> The orange "setA" button (on audio player above) picks new "checkpoints" to rewind to, like the 1st turnaround, or the start of the 3rd chorus that Blind Willie Johnson plays. The setB button creates a loop between the two (setA and setB) points. Also, the pitch-shifter is probably most useful when the original recording is out-of-tune by a 1/4-step or a 1/2-step, and could be tweaked to more easily match the user's tuning. </p>
-							<h3 id="b">Step 2: Link the sounds to the fretboard & strings</h3>
-							<p>An old adage says, "imitate, assimilate, innovate." Getting into the recording like this is a great way to imitate & assimilate (but don't forget about the list to-do: innovate)! Walking in the footsteps of the player, some questions can include:</p>
-								<ul>
-									<li>What notes are getting played?</li>
-                  <li>What part of the guitar are they being played on?</li>
-                  <li>What's a feasible way to pick/pluck the strings?</li>
-								</ul>
-								<p>This is an audio-playback transcription of Dark Was the Night by Blind Willie, trying to shed some light on those questions,</p>
+							<p><strong>Note:</strong> The slow-downer tool is available for all songs on the Ploddings library. It can also be used to loop particular sections, and can pitch-shift the recording to help match the tuning to a physical guitar. </p>
+							<h3 id="b">b) the MuseScore Tablature</h3>
+              <p>The songs in the Ploddings library each have a transcription; that is, note-for-note guitar tablature of the song, which has been derived by blah148, using the slow-downer tool. Unlike earlier iterations of the Ploddings site, that focused more on video demonstrations, the MuseScore tablature allows for more accountability of accuracy, since any user can click the "play" button on the interactive tablature, listen to the tablature, and compare it with the original recording. MuseScore is not-for-profit; it is open-source and free for anyone to use.</p>
 								<MusescoreEmbed
 									pageId={275}
 									userId={userId}
 									ip={ip}
-									embed_link="https://musescore.com/user/69479854/scores/12391498/s/egzyiU/embed"
+									embed_link="https://musescore.com/user/69479854/scores/12391615/s/3iaEz1/embed"
 									canAccess={true}
 								/>
-						<div className={styles.pricingTable2} id="c">
-							<div className={styles.gridBody2}>
-								<div className={styles.bottomBorderRow2}>
-								  <span>PDF file: </span>
-									<a
-									href="https://f005.backblazeb2.com/file/ploddings-songs-pdfs/Dark_Was_the_Night_Cold_Was_the_Ground__Blind_Willie_Johnson.pdf"
-										download
-										target="_blank"
-										rel="noopener noreferrer"
-										className={styles.downloadLink}
-									  >
-										<button className={styles.noMargin}>
-									    Download file (121.7kB)
-										</button>
-								  </a>
-								</div>
-								<div className={styles.bottomBorderRow2}>
-								  <span>MuseScore™ file: </span>
-									<a
-									  href="https://f005.backblazeb2.com/file/ploddings-musescore-files/Dark_Was_the_Night_Cold_Was_the_Ground__Blind_Willie_Johnson(2).mscz"
-										download
-										target="_blank"
-										rel="noopener noreferrer"
-										className={styles.downloadLink}
-									  >
-										<button className={styles.noMargin}>
-									    Download file (40.7kB)
-										</button>
-								  </a>
-								</div>
-
-							</div>
-						</div>
-
-              <h3>Step 3: Absorbing the sound</h3>
-							<p>Then, having the roadmap of the tablature, and the slow-downer to match the Blind Willie Johnson sound to your guitar, the sounds can be blended together with each passing repetition. At full-speed, it almost feels more than impossible to ever match Johnson's finesse with the slide, but at 62% speed, 47% speed, or 35% speed, it at least starts to become conceivably possible to try.</p>
-							<SlowDownerComponent 
-								isUnlocked={true} 
-								dropbox_mp3_link="https://dl.dropboxusercontent.com/scl/fi/62dzveezgsork7o4odf4x/Blind-Willie-Johnson-Dark-Was-the-Night-Cold-Was-the-Ground.mp3?rlkey=3bg5q0jm7yvpp9ckevy4g6ims&dl=0"
-							/>
-							<p>And if for example 35% speed feels doable today, then try raising it to 42% tomorrow.</p>
+							<p>The combination of the: (i) slow-downer tool and the (ii) interactive tablature is not promised as a "magic bullet" to understand and internalize the music. For example, seeing various "pickup" notes that lead into other notes, which initially may not have been so obvious without these implements, does not guarantee that all viewers will then acknowledge such details in their own playing. However, used in its suggested ways it could conceivably abbreviate learning timespans, when compared to just listening at full-speed to the original recordings of songs such as Bring Me My Shotgun; these are some suggested use-cases:</p>
+							<ul>
+								<li>Use the slow-downer tool to make transcriptions, and compare those transcriptions with the ploddings transcriptions,</li>
+								<li>Play and/or sing alongside the slow-downer tool, and progressively increase the tempo to match the original recording,</li>
+								<li>Examine the interactive tablature for unexpected pitch/rhythm details that can help inform future guitar playing</li>
+							</ul>
 							<div className="categoryGroup">
-								<h2>The complete Ploddings™ library: </h2>
-								<p>In the same way as Dark Was the Night (Cold Was the Ground) is shown above, there are <span style={{ fontWeight: 'bold' }}>{songCount-1}</span> other songs in the Ploddings library for checking out and more are always being added on a weekly & monthly basis,</p>
+	              <h2>What songs are included?</h2>
+	              <p>In addition to Bring Me My Shotgun, these are the other songs in the Ploddings library that have: (i) the slow-downer tool and a (ii) MuseScore transcription. All songs on this list have been added since August of 2023, and more will added with each passing month.</p>
+
 								<ul>
 									{songs.content && songs.content.map(song => (
 									<li key={song.id} className={song.matched_content_name ? 'doubleRow' : 'singleRow'}>

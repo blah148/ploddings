@@ -32,7 +32,7 @@
 /* Pricing Table Styles */
 .pricingTable {
   margin-top: 40px;
-	max-width: 1100px;
+	max-width: 1290px;
 }
 
 .pricingTable h2 {
@@ -61,7 +61,7 @@
 
 .gridHeader {
   display: grid;
-	grid-template-columns: 6fr 3fr 3fr;
+	grid-template-columns: 6fr 3fr 3fr 3fr;
 }
 
 .gridHeader > div {
@@ -111,7 +111,7 @@ button.noMargin {
 }
 .bottomBorderRow {
 	display: grid;
-	grid-template-columns: 6fr 3fr 3fr;
+	grid-template-columns: 6fr 3fr 3fr 3fr;
 	border-bottom: 1px solid #d4d4d4;
 }
 .bottomBorderRow2 {
@@ -184,6 +184,26 @@ div.led {
 }
 .planType span:hover {
 	filter: saturate(1.6);
+}
+.highlighted {
+  border: 3px solid #FFD700; /* Yellow border */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Light box-shadow */
+  border-radius: 80px; /* Maintain circular shape if needed */
+}
+.highlightedButton {
+  border: 2px solid #FFD700; /* Yellow border */
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Light box-shadow */
+  border-radius: 5px; /* Optional: Rounds the corners */
+  color: white; /* Optional: Ensure text is readable */
+}
+.highlightedButton button {
+	width: 100%;
+}
+
+/* Optional: Hover Effect for Highlighted Button */
+.highlightedButton:hover {
+  background-color: #8e24aa; /* Darker shade on hover */
+  border-color: #FFC107; /* Slightly different yellow on hover */
 }
 /* Sales Content Styles */
 .salesContent {
