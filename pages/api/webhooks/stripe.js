@@ -293,7 +293,23 @@ export default async function handler(req, res) {
           break;
         }
 
-        case 'customer.subscription.updated':
+case 'customer.subscription.updated': {
+  const subscription = event.data.object;
+  const stripeCustomerId = subscription.customer;
+
+  // Check if the subscription is set to cancel at the end of the period
+  if (subscription.cancel_at_period_end) {
+    console.log(`📅 Subscription for Customer ID ${stripeCustomerId} set to end after current period.`);
+    // Here you might want to schedule a job to update membership status at the period end
+    // For now, let's log this and you can add a job scheduler like later.js or use a time-based trigger in your database
+    console.log(`🕒 Will set active_membership to false for ${stripeCustomerId} at period end.`);
+  } else {
+    console.log(`🔄 Subscription update for Customer ID ${stripeCustomerId} does not affect cancellation.`);
+    // Reactivate the membership if previously set to deactivate at period end if needed
+  }
+  break;
+}
+
         case 'customer.subscription.deleted':
         case 'invoice.payment_failed': {
           const subscription = event.data.object;

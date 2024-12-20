@@ -126,7 +126,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
   return (
     <div className="bodyA">
       <SEO
-        title="create-user"
+        title="Create User"
         description="The tablature & slow-downer tools can be accessed by choosing between 3 pricing options. All payments are controlled by the non-profit fund, the Mt. Zion Memorial Fund."
         slug="/create-user"
       />
