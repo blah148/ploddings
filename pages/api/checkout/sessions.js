@@ -1,32 +1,18 @@
-// pages/api/checkout/sessions.js
-
 import Stripe from 'stripe';
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY);
-
-// Define your valid price IDs to prevent misuse
-const VALID_PRICE_IDS = [
-  'prod_QgJFMGNqRWlCRP', // 1-Month
-  'prod_RQjYwfUUsVTH1O', // 3-Months
-  'prod_RQjZAHVkHrRwIe', // 12-Months
-  // Alternatively, if these are product IDs, you should map to price IDs
-];
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY, {
+  apiVersion: '2024-12-18.acacia', // Replace with your Stripe API version
+});
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
     const { email, priceId } = req.body;
 
-    // Basic validation
-    if (!email || !priceId) {
-      return res.status(400).json({ error: 'Missing email or priceId.' });
-    }
-
-    // Validate priceId
-    if (!VALID_PRICE_IDS.includes(priceId)) {
-      return res.status(400).json({ error: 'Invalid priceId.' });
+    if (!priceId) {
+      return res.status(400).json({ error: 'Missing priceId.' });
     }
 
     try {
-      const session = await stripe.checkout.sessions.create({
+      const sessionParams = {
         payment_method_types: ['card'],
         line_items: [
           {
@@ -34,16 +20,24 @@ export default async function handler(req, res) {
             quantity: 1,
           },
         ],
-        mode: 'subscription', // All plans are subscriptions
-        customer_email: email, // Pass the email here
-        success_url: `${process.env.NEXT_PUBLIC_DOMAIN}/login?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${process.env.NEXT_PUBLIC_DOMAIN}/cancel`,
-      });
+        mode: 'subscription',
+        success_url: `${req.headers.origin}/account?session_id={CHECKOUT_SESSION_ID}`,
+        cancel_url: `${req.headers.origin}/cancel`,
+        metadata: {}, // Add any metadata if needed
+      };
+
+      if (email) {
+        sessionParams.customer_email = email;
+        // Optionally, add more metadata like userId if available
+        // sessionParams.metadata.userId = userId;
+      }
+
+      const session = await stripe.checkout.sessions.create(sessionParams);
 
       res.status(200).json({ sessionId: session.id });
     } catch (error) {
-      console.error('Stripe Checkout Session Error:', error);
-      res.status(500).json({ error: 'Internal Server Error' });
+      console.error('Error creating checkout session:', error);
+      res.status(500).json({ error: error.message });
     }
   } else {
     res.setHeader('Allow', 'POST');

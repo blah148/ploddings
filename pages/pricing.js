@@ -205,7 +205,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
 									<SubscribeTextJoin
 										email={email} // Ensure 'email' is managed in the parent component
 										text="Billing cycle: 1-month"
-										priceId="price_1QgJFMGNqRWlCRP" // Replace with your actual Price ID for 1-Month
+										priceId="price_1QY9QoKC15IuzqScIiXuHnnr" // Replace with your actual Price ID for 1-Month
 									/>
 								</div>
 								<div className={[styles.planType, styles.bottom].join(' ')}>
