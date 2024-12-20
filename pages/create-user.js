@@ -205,7 +205,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
 									<SubscribeTextJoin
 										email={email} // Ensure 'email' is managed in the parent component
 										text="Billing cycle: 1-month"
-										priceId="price_1QY9QoKC15IuzqScIiXuHnnr" // Replace with your actual Price ID for 1-Month
+										priceId="price_1QXs1rKC15IuzqSckNOuTt9O" // Replace with your actual Price ID for 1-Month
 									/>
 								</div>
 								<div className={[styles.planType, styles.bottom].join(' ')}>
@@ -213,7 +213,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
 									<SubscribeTextJoin
 										email={email}
 										text="Billing cycle: 3-months"
-										priceId="price_1RQjYwfUUsVTH1O" // Replace with your actual Price ID for 3-Months
+										priceId="price_1QXs5lKC15IuzqScPLDE65OS" // Replace with your actual Price ID for 3-Months
 									/>
 								</div>
 								<div className={[styles.planType, styles.bottom].join(' ')}>
@@ -221,7 +221,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
 									<SubscribeTextJoin
 										email={email}
 										text="Billing cycle: 12-months"
-										priceId="price_1RQjZAHVkHrRwIe" // Replace with your actual Price ID for 12-Months
+										priceId="price_1QXs6SKC15IuzqScog1wQiQV" // Replace with your actual Price ID for 12-Months
 									/>
 								</div>
 							</div>
