@@ -13,7 +13,7 @@ const MusescoreEmbed = ({ userId, ip, pageId, embed_link, canAccess }) => {
       allowFullScreen
       allow="autoplay; fullscreen"
     ></iframe>
-  ) : <div>Access forbidden - testing</div>;
+  ) : <div>Access forbidden</div>;
 };
 
 export default MusescoreEmbed;

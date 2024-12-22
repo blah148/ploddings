@@ -106,7 +106,7 @@ export default function Home({ userId, ip }) {
   return (
     <div className="bodyA">
       <SEO
-        description="For fingerstyle blues, jazz, folk, and classical guitar, the Ploddings \u0022seed-vault\u0022-like site contains MIDI-tabs, pitch-shifters, and slow-downers for practice time."
+        description="A transcription repository & practice platform for pre-war blues style guitar, such as Charley Patton, Elizabeth Cotten, Etta Baker, Reverend Gary Davis, and John Fahey."
         slug="/"
       />
       <Sidebar userId={userId} ip={ip} />

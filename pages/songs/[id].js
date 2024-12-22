@@ -26,7 +26,7 @@ import StabilizerText from '../../components/StabilizerText';
 import NotificationIcon from '../../components/NotificationIcon';
 import MusescoreEmbed from '../../components/MusescoreEmbed';
 import { getFingerprint } from '../../utils/fingerprint';
-import AlternativeMusescoreEmbed from '../../components/AlternativeMusescoreEmbed';
+import TablaturePlaceholder from '../../components/TablaturePlaceholder';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -158,18 +158,20 @@ export default function Song({ userId, ip, threadData, songData }) {
               <div className={styles.primaryColumn}>
                 <h2 id="i">i) Sheet music</h2>
                 <div style={{ position: "relative" }}>
-									{canAccess && (userId ? (
-										<PDFDownloadButton userId={userId} pdfUrl={songData.pdf_download} songName={songData.name} />
+									{canAccess && (
+											<PDFDownloadButton userId={userId} pdfUrl={songData.pdf_download} songName={songData.name} />
+									)}
+									{canAccess ? (
+											<MusescoreEmbed
+													pageId={songData.id}
+													userId={userId}
+													ip={ip}
+													embed_link={songData.link_3}
+													canAccess={true}
+											/>
 									) : (
-										<PDFDownloadButton_SignupFirst pdfUrl={songData.pdf_download} songName={songData.name} />
-									))}
-								<MusescoreEmbed
-									pageId={songData.id}
-									userId={userId}
-									ip={ip}
-									embed_link={songData.link_3}
-									canAccess={true}
-								/>
+											<TablaturePlaceholder />
+									)}
                 </div>
                 <h2 id="ii">ii) Slow-downer / pitch-shifter</h2>
                   <SlowDownerComponent isUnlocked={canAccess} dropbox_mp3_link={songData.link_1} />

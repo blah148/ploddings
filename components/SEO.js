@@ -1,7 +1,7 @@
 import Head from 'next/head';
 
 export default function SEO({ title, description, image, page_type, slug, alternativeUrl, author, nofollow, published_date }) {
-  const siteTitle = title ? `${title} | Ploddings` : 'Ploddings | Guitar for Blues, Jazz, and Folk';
+  const siteTitle = title ? `${title} - Ploddings` : 'Home - Ploddings';
   const imageUrl = image ? `${image}` : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_550px/lead-belly.webp';
   const pageUrl = page_type ? `https://www.ploddings.com/${page_type}/${slug}` : `https://www.ploddings.com${slug}`;
 	const canonicalUrl = alternativeUrl ? alternativeUrl : pageUrl;
