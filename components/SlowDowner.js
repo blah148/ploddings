@@ -398,7 +398,7 @@ handleTimeBSliderChange = (event) => {
   handlePlay(event) { 
   if (!this.props.isUnlocked) {
 		alert("The slow-downer tool is only available for active users");
-		this.props.router.push('/plans');
+		this.props.router.push('/activate-user-account');
     return;
   }
      const {audioBuffer} = this.params;
