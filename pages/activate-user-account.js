@@ -186,13 +186,13 @@ export default function CreateAccount({ userId, ip, songCount }) {
 							</div>
 							<div className={styles.gridBody}>
 								<div className={styles.bottomBorderRow}>
-									<a href="#a" className="bullet">a. Unlimited usage of the slow-downer playback tool</a>
+									<a href="#a" className="bullet">a. Slow-downer / pitch-shifter</a>
 									<div className="led center unlocked"></div>
 									<div className="led center unlocked"></div>
 									<div className="led center unlocked"></div>
 								</div>
 								<div className={styles.bottomBorderRow}>
-									<a href="#b" className="bullet">b. Viewing & downloading of all MuseScore™ transcription tablature</a>
+									<a href="#b" className="bullet">b. MuseScore™ interactive tablature</a>
 									<div className="led center unlocked"></div>
 									<div className="led center unlocked"></div>
 									<div className="led center unlocked"></div>

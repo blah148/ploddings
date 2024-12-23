@@ -257,7 +257,13 @@ div.led {
   font-size: 16px;
   color: #333;
   display: flex;
-  flexDirection: column;
+}
+/* Add a media query for mobile devices */
+@media (max-width: 768px) {
+  .disclaimer {
+		display: flex;
+    flex-direction: column; /* Stack disclaimer rows vertically on mobile */
+  }
 }
 
 .disclaimerRow {
