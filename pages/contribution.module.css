@@ -32,7 +32,8 @@
 /* Pricing Table Styles */
 .pricingTable {
   margin-top: 40px;
-	max-width: 1290px;
+  max-width: 100%; /* Ensures max width does not exceed the viewport width */
+  overflow-x: auto; /* Allows horizontal scrolling */
 }
 
 .pricingTable h2 {
@@ -46,22 +47,23 @@
   justify-content: space-between;
   gap: 20px;
 }
+
 .pricingTable {
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flex-direction: column;
   text-align: center;
 }
-.pricingTable2 {
-	display: flex;
-	flex-direction: column;
-  text-align: left;
-	margin: 28px 0 8px 0;
-}
 
+.pricingTable2 {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+  margin: 28px 0 8px 0;
+}
 
 .gridHeader {
   display: grid;
-	grid-template-columns: 6fr 3fr 3fr 3fr;
+  grid-template-columns: 6fr 3fr 3fr 3fr;
 }
 
 .gridHeader > div {
@@ -70,35 +72,46 @@
 }
 
 .artistIcon {
-	border-radius: 80px;
-	opacity: 0.8;
-	margin: auto;
+  border-radius: 80px;
+  opacity: 0.8;
+  margin: auto;
+}
 
-}
 button.noMargin {
-	margin: auto;
+  margin: auto;
 }
+
 .gridBody {
   display: block;
 }
+
 .gridBody2 {
-	display: grid;
-	grid-template-columns: 1fr 1fr;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
 }
+
 @media only screen and (max-width: 768px) {
-	.gridBody2 {
-		display: block;
-	}
-	.gridBody2 span {
-		min-width: 130px !important;;
-	}
+  .pricingTable {
+    max-width: 100%; /* Adjusts max-width on mobile */
+    overflow-x: auto; /* Ensures table is scrollable horizontally if content is too wide */
+  }
+
+  .gridBody2 {
+    display: block;
+  }
+
+  .gridBody2 span {
+    min-width: 130px !important; /* Adjusts minimum width for mobile layout */
+  }
 }
+
 .gridBody2 span {
-	text-align: right;
-	min-width: 180px;
-	margin: 0 9px 0 0 ;
-	font-weight: 600;
+  text-align: right;
+  min-width: 180px;
+  margin: 0 9px 0 0 ;
+  font-weight: 600;
 }
+
 .gridBody > .bullet {
   text-align: right;
   padding-right: 20px; /* Spacing between bullet and leds */
@@ -109,21 +122,25 @@ button.noMargin {
   text-align: right;
   padding: 10px 0;
 }
+
 .bottomBorderRow {
-	display: grid;
-	grid-template-columns: 6fr 3fr 3fr 3fr;
-	border-bottom: 1px solid #d4d4d4;
+  display: grid;
+  grid-template-columns: 6fr 3fr 3fr 3fr;
+  border-bottom: 1px solid #d4d4d4;
 }
+
 .bottomBorderRow2 {
-	display: flex;
-	margin: 0 0 12px 0;
+  display: flex;
+  margin: 0 0 12px 0;
 }
+
 div.led {
-	margin-right: auto !important;
+  margin-right: auto !important;
 }
+
 .led.unlocked {
   color: green; /* Or use background-color/image */
-	margin: auto;
+  margin: auto;
 }
 
 .led.locked {
@@ -132,8 +149,9 @@ div.led {
 
 .denyContainer {
   border: 2px solid #96f;
-	border-radius: 20px;
+  border-radius: 20px;
 }
+
 .ctaLightGray {
   background-color: #e0e0e0;
   border: none;
@@ -155,36 +173,44 @@ div.led {
   cursor: pointer;
   text-decoration: none;
 }
+
 .gridHeader .tocTitle {
-	margin: auto 0 0 auto;
-	font-size: 16px;
-	font-style: italic;
+  margin: auto 0 0 auto;
+  font-size: 16px;
+  font-style: italic;
 }
+
 .planType {
-	flex-direction: column;
-	display: flex;
-	justify-content: center;
-	align-content: center;
+  flex-direction: column;
+  display: flex;
+  justify-content: center;
+  align-content: center;
 }
+
 .planType.bottom {
-	min-height: 8ch;
-	justify-content: flex-start;
+  min-height: 8ch;
+  justify-content: flex-start;
 }
+
 .planType.bottom h3 {
-	margin-top: 5px;
-	margin-bottom: 1rem;
-	font-size: 16px;
+  margin-top: 5px;
+  margin-bottom: 1rem;
+  font-size: 16px;
 }
+
 .planType.bottom a {
-	margin: 6px;
+  margin: 6px;
 }
+
 .planType span {
-	font-weight: normal;
-	font-size: 14.5px;
+  font-weight: normal;
+  font-size: 14.5px;
 }
+
 .planType span:hover {
-	filter: saturate(1.6);
+  filter: saturate(1.6);
 }
+
 /* Sales Content Styles */
 .salesContent {
   margin-top: 40px;
@@ -225,20 +251,23 @@ div.led {
   margin-top: 30px;
   padding: 15px;
   background-color: white;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   border-left: 5px solid #6a1b9a;
   border-radius: 5px;
   font-size: 16px;
   color: #333;
-	display: flex;
-	flex-direction: column;
+  display: flex;
+  flexDirection: column;
 }
+
 .disclaimerRow {
-	display: flex;
+  display: flex;
 }
+
 .disclaimerRow.top {
-	margin: 8px 0 12px 0;
+  margin: 8px 0 12px 0;
 }
+
 /* Backstory Styles */
 .backstory {
   margin-top: 50px;
