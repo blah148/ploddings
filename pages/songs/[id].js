@@ -20,12 +20,10 @@ import TuningDetails from '../../components/TuningButton';
 import Menu from '../../components/Menu';
 import Footer from '../../components/Footer';
 import SEO from '../../components/SEO';
-import PDFDownloadButton_SignupFirst from '../../components/PDFDownloadButton_SignupFirst';
 import PDFDownloadButton from '../../components/PDFDownloadButton';
 import StabilizerText from '../../components/StabilizerText';
 import NotificationIcon from '../../components/NotificationIcon';
 import MusescoreEmbed from '../../components/MusescoreEmbed';
-import { getFingerprint } from '../../utils/fingerprint';
 import TablaturePlaceholder from '../../components/TablaturePlaceholder';
 
 const verifyUserSession = (req) => {
@@ -65,45 +63,25 @@ export default function Song({ userId, ip, threadData, songData }) {
 	  logPageVisit();
 	}, [userId, ip]);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      if (userId) {
-        try {
-          const response = await fetch(`/api/active_membership-verify?userId=${userId}`);
-          if (response.status === 200) {
-            setCanAccess(true);
-            return;
-          }
-        } catch (error) {
-          console.error('Error verifying active membership:', error);
-        }
-      }
+	useEffect(() => {
+		const fetchData = async () => {
+			if (userId) {
+				try {
+					const response = await fetch(`/api/active_membership-verify?userId=${userId}`);
+					if (response.status === 200) {
+						setCanAccess(true);
+						return;
+					}
+					setCanAccess(false); // Set access to false if the status is not 200
+				} catch (error) {
+					console.error('Error verifying active membership:', error);
+					setCanAccess(false);
+				}
+			}
+		};
 
-      try {
-        const fp = await getFingerprint();
-				setFingerprint(fp);
-        const response = await fetch('/api/check_visitor_access', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({ ip, fingerprint: fp, pageId: songData.id }),
-        });
-
-        if (response.status === 200) {
-          setCanAccess(true);
-        } else {
-          setCanAccess(false);
-        }
-      } catch (error) {
-        console.error('Error checking visitor access:', error);
-        setCanAccess(false);
-      }
-    };
-
-    fetchData();
-  }, [userId, ip, songData.id]);
-
+		fetchData(); // Call the fetchData function
+	}, [userId, songData.id]); // Dependencies are correct
 
   useEffect(() => {
     const loadButton = () => {
@@ -170,7 +148,7 @@ export default function Song({ userId, ip, threadData, songData }) {
 													canAccess={true}
 											/>
 									) : (
-											<TablaturePlaceholder />
+											<TablaturePlaceholder songName={songData.name} />
 									)}
                 </div>
                 <h2 id="ii">ii) Slow-downer / pitch-shifter</h2>

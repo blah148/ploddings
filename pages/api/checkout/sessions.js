@@ -22,7 +22,7 @@ export default async function handler(req, res) {
         ],
         mode: 'subscription',
         success_url: `${req.headers.origin}/login?session_id={CHECKOUT_SESSION_ID}`,
-        cancel_url: `${req.headers.origin}/create-user`,
+        cancel_url: `${req.headers.origin}/activate-user-account`,
         metadata: {}, // Add any metadata if needed
       };
 

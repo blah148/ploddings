@@ -126,9 +126,9 @@ export default function CreateAccount({ userId, ip, songCount }) {
   return (
     <div className="bodyA">
       <SEO
-        title="Create User"
+        title="Activate User Account"
         description="The tablature & slow-downer tools can be accessed by choosing between 3 pricing options. All payments are controlled by the non-profit fund, the Mt. Zion Memorial Fund."
-        slug="/create-user"
+        slug="/activate-user-account"
       />
       <Sidebar userId={userId} ip={ip} />
       <div className="mainFeedAll">
@@ -144,7 +144,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
             </div>
             <div className="narrowedFeedBody">
               <StabilizerText />
-              <h1>Create user</h1>
+              <h1>Activate user account</h1>
             </div>
             <div className={styles.pricingTable}>
 							<div className={styles.gridHeader}>
@@ -204,7 +204,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
 									<h3>$10</h3>
 									<SubscribeTextJoin
 										email={email} // Ensure 'email' is managed in the parent component
-										text="Billing cycle: 1-month"
+										text="Every 1-month"
 										priceId="price_1QXs1rKC15IuzqSckNOuTt9O" // Replace with your actual Price ID for 1-Month
 									/>
 								</div>
@@ -212,7 +212,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
 									<h3>$20</h3>
 									<SubscribeTextJoin
 										email={email}
-										text="Billing cycle: 3-months"
+										text="Every 3-months"
 										priceId="price_1QXs5lKC15IuzqScPLDE65OS" // Replace with your actual Price ID for 3-Months
 									/>
 								</div>
@@ -220,7 +220,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
 									<h3>$60</h3>
 									<SubscribeTextJoin
 										email={email}
-										text="Billing cycle: 12-months"
+										text="Every 12-months"
 										priceId="price_1QXs6SKC15IuzqScog1wQiQV" // Replace with your actual Price ID for 12-Months
 									/>
 								</div>
@@ -233,11 +233,11 @@ export default function CreateAccount({ userId, ip, songCount }) {
 							</div>
 							<div className={styles.disclaimerRow}>
 								<div>
-                  As of March 2024, Ploddings has assigned the{' '}
+                  As of March 2024, Ploddings has selected the {' '}
                     <a href="https://mtzionmemorialfund.com/" target="_blank" rel="noopener noreferrer">
                       Mt. Zion Memorial Fund
                     </a>{' '}
-                  as the Stripe recipient of all website revenue. This means that 100% of the earnings are attempted to be recycled into preservation efforts spearheaded by this IRS-recognized charity. The administrative costs of Ploddings site are paid out-of-pocket by the site custodian, blah148.
+                  as the charitable recipient of all website revenue. The Mt. Zion Memorial Fund has been established since 1989; its namesake project was erecting a tombstone for Robert Johnson at the Little Zion church, near Leflore County, Mississippi. Other projects  by this IRS-recognized charity have included tombstones for Bo Carter, Charley Patton, Elmore James, Memphis Minnie, Mississippi Fred McDowell, and Tommy Johnson, including a scope of work outside of gravesite memorials, such as the Mississippi John Hurt museum. Part of the official partnership with the Mt. Zion Memorial Fund includes a provision for active users to contact the Mt. Zion Memorial Fund via the organization's website to verify receipts of contributions made as a Ploddings user.
 								</div>
 							</div>
 						</div>
