@@ -204,7 +204,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
 									<h3>$10</h3>
 									<SubscribeTextJoin
 										email={email} // Ensure 'email' is managed in the parent component
-										text="Every 1-month"
+										text="7-day free trial"
 										priceId="price_1QXs1rKC15IuzqSckNOuTt9O" // Replace with your actual Price ID for 1-Month
 									/>
 								</div>
@@ -212,7 +212,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
 									<h3>$20</h3>
 									<SubscribeTextJoin
 										email={email}
-										text="Every 3-months"
+										text="7-day free trial"
 										priceId="price_1QXs5lKC15IuzqScPLDE65OS" // Replace with your actual Price ID for 3-Months
 									/>
 								</div>
@@ -220,7 +220,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
 									<h3>$60</h3>
 									<SubscribeTextJoin
 										email={email}
-										text="Every 12-months"
+										text="7-day free trial"
 										priceId="price_1QXs6SKC15IuzqScog1wQiQV" // Replace with your actual Price ID for 12-Months
 									/>
 								</div>
