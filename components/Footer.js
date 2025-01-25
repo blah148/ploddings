@@ -22,18 +22,6 @@ export default function Footer ({ userId = null  }) {
 				</div>
 				<div className="footer_column">
 					<h2>Usage</h2>
-					{!userId && (
-						<>
-							<Link href="/contribute" className="footer_link-Item" passHref>Full access</Link>
-							<Link href="/login" className="footer_link-item" passHref>Login</Link>
-						</>
-					)}
-					{userId && (
-						<>
-							<Link href="/account" className="footer_link-item" passHref>Account</Link>
-							<a onClick={handleLogout} className="footer_link-item" style={{cursor: 'pointer'}}>Logout</a>
-						</>
-					)}
 					<Link href="/contact" className="footer_link-item" passHref>Contact</Link>
 				</div>
 				<div className="footer_column">

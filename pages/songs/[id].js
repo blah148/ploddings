@@ -136,10 +136,6 @@ export default function Song({ userId, ip, threadData, songData }) {
               <div className={styles.primaryColumn}>
                 <h2 id="i">i) Sheet music</h2>
                 <div style={{ position: "relative" }}>
-									{canAccess && (
-											<PDFDownloadButton userId={userId} pdfUrl={songData.pdf_download} songName={songData.name} />
-									)}
-									{canAccess ? (
 											<MusescoreEmbed
 													pageId={songData.id}
 													userId={userId}
@@ -147,12 +143,9 @@ export default function Song({ userId, ip, threadData, songData }) {
 													embed_link={songData.link_3}
 													canAccess={true}
 											/>
-									) : (
-											<TablaturePlaceholder songName={songData.name} />
-									)}
                 </div>
                 <h2 id="ii">ii) Slow-downer / pitch-shifter</h2>
-                  <SlowDownerComponent isUnlocked={canAccess} dropbox_mp3_link={songData.link_1} />
+                  <SlowDownerComponent isUnlocked={true} dropbox_mp3_link={songData.link_1} />
                 <h2 id="iii">iii) More info</h2>
                 {(songData.body_text || songData.lyrics || songData.tuning) && (
                   <TabsComponent extra_notes={songData.body_text} song_lyrics={songData.lyrics} youtube_link={songData.link_2} />

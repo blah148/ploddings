@@ -311,8 +311,12 @@ div.led.unlocked {
 	box-shadow: 0 0 6px 1px rgba(25, 124, 35, 0.88);
 }
 div.led.locked {
-	background-color: #ffcb51;
-	box-shadow: 0 0 6px 1px rgba(181, 125, 66, 0.88);
+  /* background-color: #ffcb51; */
+  /* box-shadow: 0 0 6px 1px rgba(181, 125, 66, 0.88); */
+
+  /* Temporarily using the same color and shadow as the unlocked state */
+  background-color: #2ac64f; /* Green background (same as unlocked) */
+  box-shadow: 0 0 6px 1px rgba(25, 124, 35, 0.88); /* Green glow effect (same as unlocked) */
 }
 div.threadsLed {
 	background-color: #f08e25;
