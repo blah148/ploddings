@@ -4,8 +4,16 @@ module.exports = {
       { hostname: 'ploddings-threads.s3.us-east-005.backblazeb2.com' },
       { hostname: 'f005.backblazeb2.com' },
       { hostname: 'bmvuqgfxczoytjwjpvcn.supabase.co' },
-      { hostname: 'th.bing.com' }  // Add this line to include th.bing.com
+      { hostname: 'th.bing.com' }  // This line includes th.bing.com for image optimization
     ],
   },
+  async redirects() {
+    return [
+      {
+        source: '/join-ploddings',
+        destination: '/about',
+        permanent: true, // This makes it a 301 redirect
+      },
+    ]
+  },
 };
-

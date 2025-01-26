@@ -34,7 +34,7 @@ export default function About({ userId, ip }) {
   return (
     <div className="bodyA">
       <SEO
-        title="About | Ploddings"
+        title="About - Ploddings"
         description="To persist your: (i) visit history, (ii) starred guitar tablature, and (iii) access the pitch-shifter and slow-downer, create an account on Ploddings with an email"
         slug="/subscribe"
       />
