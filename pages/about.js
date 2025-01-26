@@ -54,7 +54,7 @@ export default function About({ userId, ip }) {
 							<StabilizerText />
               <h1>About</h1>
 							<div>
-                <p>Ploddings (est. 2018) is a non-profit educational resource, focused on American early blues & folk styles for stringed-instruments. Up to January of 2025, it has incentivised membership fees, where <b>100% of proceeds</b> have been alotted to & managed by the Mt. Zion Memorial Fund For Blues & Justice.</p>
+                <p>Ploddings (est. 2018) is a non-profit educational resource, focused on American early blues & folk styles for stringed-instruments.</p>
                 <h2>i) Partnership with Mt. Zion Memorial Fund</h2>
                 <p>Since 2023, Ploddings remainds proudly partnered with the Mt. Zion Memorial Fund, led by Dr. T. DeWayne Moore. However, in the interest of opening the transcription tablature to the public, membership fees at this time are not being collected. Instead, the Ploddings site at this time is testing whether it can be of more effective service in the long-run by prioritizing awareness over funds for blues preservation efforts, motivating this modification in direction. In this spirit, those who wish to donate to the Ploddings site are encouraged to instead donate directly to the Mt. Zion Memorial Fund through their website.</p>
                 <p>The work of the Mt. Zion Memorial Fund includes: (i) the erection of tombstones for musicians such as Belton Sutherland, Bo Carter, Sonny Boy Williamson II, Mississippi Fred McDowell, Memphis Minnie, Sam Chatmon, Elmore James, Charley Patton, and Frank Stokes; (ii) the preservation of historical sites; and (iii) the creation of memorials such as the Mississippi John Hurt museum.</p>
