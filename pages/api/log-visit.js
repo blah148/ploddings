@@ -2,9 +2,21 @@
 import { supabase } from '../../utils/supabase';
 
 export default async function handler(req, res) {
-  if (req.method !== 'POST') {
-    return res.status(405).end('Method not allowed');
-  }
+
+    // Set CORS headers
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+
+    if (req.method === 'OPTIONS') {
+        // Handle preflight requests
+        return res.status(200).end();
+    }
+
+    if (req.method !== 'POST') {
+        return res.status(405).send('Method Not Allowed');
+    }
+
 
   // Extract the page visit details and isAuthenticated flag from the request body
   const { ip, page_id, userId } = req.body;
