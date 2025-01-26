@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { supabase } from '../utils/supabase';
-import SEO from '../components/SEO';
+import { supabase } from '../../utils/supabase';
+import SEO from '../../components/SEO';
 
 const YoutubeArchiveTable = () => {
   const [data, setData] = useState([]);
