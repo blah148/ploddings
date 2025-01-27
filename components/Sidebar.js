@@ -17,7 +17,6 @@ export default function Sidebar({ userId, ip }) {
     beingWatched,
     fetchAndSetVisitHistory,
     fetchAndSetBeingWatched,
-    fetchAndSetStarred,
     groupMax,
   } = useStore();
 
@@ -27,7 +26,7 @@ export default function Sidebar({ userId, ip }) {
     (async () => {
       try {
         await fetchAndSetVisitHistory(userId, ip, 4);
-        await fetchAndSetBeingWatched(userId, ip, 4);
+        await fetchAndSetBeingWatched(userId, ip, 7);
       } catch (error) {
         console.error("An error occurred during data fetching:", error);
       } finally {
@@ -37,11 +36,6 @@ export default function Sidebar({ userId, ip }) {
     // Empty dependency array to ensure this runs only once on component mount
   }, []);
 
-  // Separate effect for fetching starred data to allow updates within the page session
-  useEffect(() => {
-    fetchAndSetStarred(userId, 3, ip);
-  }, [userId, fetchAndSetStarred, groupMax, ip]);
-
 	return (
 		<div className={styles.sidebarContainer}>
 			<div className={styles.sidebarHeader}>
@@ -50,26 +44,6 @@ export default function Sidebar({ userId, ip }) {
 				</Link>
 			</div>
 			<div className={styles.sidebarItems}>
-				{starred && (
-					<div>
-						<h2>Starred</h2>
-						<ul>
-							{starred.map((star, index) => (
-								<li className={styles.listElement} key={star.id}>
-									<LoadingLink className={styles.listLink} href={`/${star.page_type}/${star.slug}`} passHref>
-										<Image width={40} height={40} 
-											className={styles.sidebarThumbnail}
-											src={star.thumbnail_200x200 ? star.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
-											alt={star.featured_img_alt_text}
-										/>
-										<div className={styles.sidebarName}>{star.name.length > 22 ? star.name.slice(0, 22) + '...' : star.name}</div>
-										<div className={`led ${star.user_active_membership ? 'unlocked' : 'locked'}`}></div>
-									</LoadingLink>
-								</li>
-							))}
-						</ul>
-					</div>
-				)}
 				{visitHistory && (<div>
 					<h2>History</h2>
 					<ul>
