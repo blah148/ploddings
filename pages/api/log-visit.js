@@ -1,13 +1,5 @@
-import NextCors from 'nextjs-cors';
 
 export default async function handler(req, res) {
-    // Run the CORS middleware
-    await NextCors(req, res, {
-        // Options
-        methods: ['GET', 'POST', 'HEAD'],
-        origin: '*',
-        optionsSuccessStatus: 200,
-    });
 
     console.log("Incoming Request Method:", req.method);
 
