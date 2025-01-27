@@ -57,17 +57,26 @@ export default function Blog({ threadData, blogData, ip, userId }) {
     setUpdatedHtmlContent(newHtmlContent);
   };
 
-	const logPageVisit = async () => {
-		try {
-			await axios.post('/api/log-visit', {
-				page_id: blogData.id,
-				userId,
-				ip: !userId ? ip : null,
-			});
-		} catch (error) {
-			console.error('Failed to log page visit:', error);
-		}
-	};
+  // Function to log the page visit directly to the database
+  const logPageVisit = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('visit_history')
+        .insert([
+          {
+            ip: ip,
+            page_id: blogData.id,
+            visited_at: new Date()
+          }
+        ]);
+
+      if (error) {
+        throw error;
+      }
+    } catch (error) {
+      console.error('Failed to log page visit:', error.message);
+    }
+  };
 
 	useEffect(() => {
 		logPageVisit();
@@ -131,7 +140,7 @@ return (
 
 // Export the function for use in other modules
 export async function getServerSideProps({ params, req }) {
-  const userSession = verifyUserSession(req);
+  //const userSession = verifyUserSession(req);
 
   const forwardedFor = req.headers['x-forwarded-for'];
  	const ip = forwardedFor ? forwardedFor.split(',')[0] : req.connection.remoteAddress;
@@ -148,7 +157,7 @@ export async function getServerSideProps({ params, req }) {
       blogData,
 			threadData,
 			ip,
-      userId: userSession?.id || null,
+      //userId: userSession?.id || null,
     },
   };
 }

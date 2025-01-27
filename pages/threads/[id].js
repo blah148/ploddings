@@ -34,20 +34,29 @@ const verifyUserSession = (req) => {
   }
 };
 
-export default function Thread({ userId, ip, threadData }) {
+export default function Thread({ userId=null, ip, threadData }) {
 
 	const { isLoading, startLoading, stopLoading } = useLoading();
 	const [parsedContent, setParsedContent] = useState({ firstPTag: '', remainingPTags: '' });
 
+  // Function to log the page visit directly to the database
   const logPageVisit = async () => {
     try {
-      await axios.post('/api/log-visit', {
-        page_id: threadData.id,
-				userId,
-				ip: !userId ? ip : null,
-      });
+      const { data, error } = await supabase
+        .from('visit_history')
+        .insert([
+          {
+            ip: ip,
+            page_id: threadData.id,
+            visited_at: new Date()
+          }
+        ]);
+
+      if (error) {
+        throw error;
+      }
     } catch (error) {
-      console.error('Failed to log page visit:', error);
+      console.error('Failed to log page visit:', error.message);
     }
   };
 
@@ -105,7 +114,7 @@ export default function Thread({ userId, ip, threadData }) {
 } 
 
 export async function getServerSideProps({ params, req }) {
-  const userSession = verifyUserSession(req);
+  // const userSession = verifyUserSession(req);
   const threadData = await fetchThreadData(params.id);
   
 	const forwardedFor = req.headers['x-forwarded-for'];
@@ -114,7 +123,7 @@ export async function getServerSideProps({ params, req }) {
   const props = {
     threadData, 
     ip,
-    userId: userSession?.id || null, 
+    // userId: userSession?.id || null, 
   };
 
   return { props };
