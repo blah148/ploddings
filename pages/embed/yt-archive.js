@@ -3,13 +3,14 @@ import axios from 'axios';
 import { supabase } from '../../utils/supabase';
 import SEO from '../../components/SEO';
 
-const YoutubeArchiveTable = () => {
+const YoutubeArchiveTable = ({ ip }) => {  // Ensure `ip` is received as a prop if it's being used.
   const [data, setData] = useState([]);
   const [sortConfig, setSortConfig] = useState({ key: 'thread', direction: 'asc' });
 
   useEffect(() => {
     fetchData();
-  }, [sortConfig]);
+    console.log("this is the ip: ", ip);
+  }, [sortConfig, ip]);  // Include `ip` if its changes should also trigger this effect.
 
   const fetchData = async () => {
     let { data: youtubeArchive, error } = await supabase
@@ -28,19 +29,19 @@ const YoutubeArchiveTable = () => {
     }));
   };
 
-  // Truncation function for tablature links
   const truncateLink1 = (link) => {
-    return link && link.length > 25 ? `${link.substring(0, 25)}...` : link;  };
+    return link && link.length > 25 ? `${link.substring(0, 25)}...` : link;  
+  };
 
   const truncateLink2 = (link) => {
-    return link && link.length > 20 ? `${link.substring(0, 20)}...` : link;  };
-
+    return link && link.length > 20 ? `${link.substring(0, 20)}...` : link;  
+  };
 
   return (
     <>
       <SEO
         title="YT archive - Ploddings"
-        slug="/yt-archive"
+        slug="/embed/yt-archive"
         nofollow={true}
       />
       <div style={{ margin: '20px', overflowX: 'auto' }}>
@@ -80,4 +81,14 @@ const YoutubeArchiveTable = () => {
 };
 
 export default YoutubeArchiveTable;
+
+export async function getServerSideProps({ req }) {
+  const forwardedFor = req.headers['x-forwarded-for'];
+  const ip = forwardedFor ? forwardedFor.split(',')[0] : req.connection.remoteAddress;
+  return {
+    props: {
+      ip,
+    },
+  };
+}
 

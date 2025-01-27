@@ -1,51 +1,54 @@
-// Next.js API route: /api/log-visit
-import { supabase } from '../../utils/supabase';
+import NextCors from 'nextjs-cors';
 
 export default async function handler(req, res) {
+    // Run the CORS middleware
+    await NextCors(req, res, {
+        // Options
+        methods: ['GET', 'POST', 'HEAD'],
+        origin: '*',
+        optionsSuccessStatus: 200,
+    });
 
-    // Set CORS headers
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
-    res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+    console.log("Incoming Request Method:", req.method);
 
     if (req.method === 'OPTIONS') {
-        // Handle preflight requests
-        return res.status(200).end();
+        res.status(200).end();
+        return;
     }
 
     if (req.method !== 'POST') {
-        return res.status(405).send('Method Not Allowed');
+        return res.status(405).json({ error: 'Method not allowed' });
     }
 
+    const { ip, page_id } = req.body;
+    console.log("Logging visit - IP:", ip, "Page ID:", page_id);
 
-  // Extract the page visit details and isAuthenticated flag from the request body
-  const { ip, page_id, userId } = req.body;
-
-  try {
-    // Prepare an object for the visit_history record
-    const visitRecord = {
-      page_id,
-      ...(userId ? { user_id: userId } : { ip }),
-      visited_at: new Date() // Assuming you have a visited_at column to update with the current timestamp
-    };
-
-    // Perform the upsert into the visit_history table
-    const { error: upsertError } = await supabase
-      .from('visit_history')
-      .upsert([visitRecord], {
-        onConflict: userId ? 'user_id, page_id' : 'ip, page_id',
-        returning: 'minimal', // Optional: Don't return data for the upsert operation
-      });
-
-    if (upsertError) {
-      throw upsertError;
+    if (!ip || !page_id) {
+        return res.status(400).json({ error: 'IP and Page ID are required' });
     }
 
-    // Respond with success if the visit is logged successfully
-    res.status(200).json({ message: userId ? 'Visit logged or updated successfully' : 'Visit logged or updated for non-authenticated user' });
-  } catch (error) {
-    console.error('Error logging visit:', error);
-    res.status(500).json({ error: 'Error logging visit' });
-  }
+    try {
+        const visitRecord = {
+            ip,
+            page_id,
+            visited_at: new Date(),
+        };
+
+        const { error: upsertError } = await supabase
+            .from('visit_history')
+            .upsert([visitRecord], {
+                returning: 'minimal',
+            });
+
+        if (upsertError) {
+            console.error('Supabase Upsert Error:', upsertError);
+            throw upsertError;
+        }
+
+        res.status(200).json({ message: 'Visit logged or updated successfully' });
+    } catch (error) {
+        console.error('Error logging visit:', error);
+        res.status(500).json({ error: 'Failed to log visit' });
+    }
 }
 

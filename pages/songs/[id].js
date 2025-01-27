@@ -39,25 +39,38 @@ const verifyUserSession = (req) => {
   }
 };
 
-export default function Song({ userId, ip, threadData, songData }) {
+export default function Song({ userId = null, ip, threadData, songData }) {
 
   const { isLoading, startLoading, stopLoading } = useLoading();
   const [relatedContentLength, setRelatedContentLength] = useState(null);
   const [buttonLoaded, setButtonLoaded] = useState(false);
   const [canAccess, setCanAccess] = useState(null);
-	const [fingerprint, setFingerprint] = useState(null);
 
+  // Function to log the page visit directly to the database
   const logPageVisit = async () => {
+    console.log("Logging visit with IP:", ip, "and Page ID:", songData.id);
     try {
-      await axios.post('/api/log-visit', {
-        page_id: songData.id,
-				userId,
-				ip: !userId ? ip : null,
-      });
+      const { data, error } = await supabase
+        .from('visit_history')
+        .insert([
+          {
+            ip: ip,
+            page_id: songData.id,
+            visited_at: new Date()
+          }
+        ]);
+
+      if (error) {
+        throw error;
+      }
+
+      console.log("Visit logged successfully:", data);
     } catch (error) {
-      console.error('Failed to log page visit:', error);
+      console.error('Failed to log page visit:', error.message);
     }
   };
+
+
 
 	useEffect(() => {
 	  logPageVisit();
@@ -172,9 +185,10 @@ export default function Song({ userId, ip, threadData, songData }) {
 }
 
 export async function getServerSideProps({ params, req }) {
-  const userSession = verifyUserSession(req);
+  // const userSession = verifyUserSession(req);
   const songData = await fetchSongData(params.id);
   const threadData = await getParentObject(songData.thread_id);
+
   const forwardedFor = req.headers['x-forwarded-for'];
   const ip = forwardedFor ? forwardedFor.split(',')[0] : req.connection.remoteAddress;
 
@@ -183,7 +197,7 @@ export async function getServerSideProps({ params, req }) {
       songData,
       threadData,
       ip,
-      userId: userSession?.id || null,
+      // userId: userSession?.id || null,
     },
   };
 }
