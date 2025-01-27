@@ -4,7 +4,6 @@ import Image from 'next/image';
 import React, { useEffect, useState, createContext, useContext } from 'react';
 import TableDataFetcher from '../../utils/TableDataFetcher';
 import Sidebar from '../../components/Sidebar';
-import FavoriteButton from '../../components/songFavorite';
 import { supabase } from '../../utils/supabase'; // Adjust the import path as needed
 import ChatWithGPT from '../../components/ChatWithGPT.js';
 import jwt from 'jsonwebtoken';
@@ -92,7 +91,6 @@ export default function Thread({ userId=null, ip, threadData }) {
 								<div className={styles.rightColumn}>
 									<div className={styles.songNameContainer}>
 										<h1>{threadData.name}</h1>
-										<FavoriteButton userId={userId} id={threadData.id} ip={ip} />
 									</div>
 									{threadData.lyrics && (<div className={styles.lifeAndDeath}>{threadData.lyrics}</div>)}
 									<div className={styles.iconContainer}>

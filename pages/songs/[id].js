@@ -4,7 +4,6 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import useStore from '../../zustandStore';
 import Sidebar from '../../components/Sidebar';
-import FavoriteButton from '../../components/songFavorite';
 import { supabase } from '../../utils/supabase'; // Adjust the import path as needed
 import { fetchSongData, getParentObject } from '../../db-utilities';
 import jwt from 'jsonwebtoken'; 
@@ -48,7 +47,6 @@ export default function Song({ userId = null, ip, threadData, songData }) {
 
   // Function to log the page visit directly to the database
   const logPageVisit = async () => {
-    console.log("Logging visit with IP:", ip, "and Page ID:", songData.id);
     try {
       const { data, error } = await supabase
         .from('visit_history')
@@ -63,14 +61,10 @@ export default function Song({ userId = null, ip, threadData, songData }) {
       if (error) {
         throw error;
       }
-
-      console.log("Visit logged successfully:", data);
     } catch (error) {
       console.error('Failed to log page visit:', error.message);
     }
   };
-
-
 
 	useEffect(() => {
 	  logPageVisit();
@@ -140,7 +134,6 @@ export default function Song({ userId = null, ip, threadData, songData }) {
             <StabilizerText />
             <div className={styles.songNameContainer}>
               <h1>{songData.name}</h1>
-              <FavoriteButton userId={userId} id={songData.id} ip={ip} />
             </div>
             <ParentInfoLink threadData={threadData} fallBack='/' />
             <TuningDetails tuning_id={songData.tuning} />

@@ -8,7 +8,6 @@ import ChatWithGPT from '../../components/ChatWithGPT.js';
 import { fetchBlogData, getParentObject } from '../../db-utilities';
 import { useLoading } from '../../context/LoadingContext';
 import Loader from '../../components/Loader';
-import FavoriteButton from '../../components/songFavorite';
 import Sidebar from '../../components/Sidebar';
 import IpodMenuLink from '../../components/ParentBackLink';
 import ParentInfoLink from '../../components/ParentInfoLink';
@@ -50,7 +49,6 @@ export default function Blog({ threadData, blogData, ip, userId }) {
 
 	const { isLoading, startLoading, stopLoading } = useLoading();
   const router = useRouter();
-	const [isFavorite, setIsFavorite] = useState(false);
   const [updatedHtmlContent, setUpdatedHtmlContent] = useState(blogData.body_text);
 
   const handleContentUpdate = (newHtmlContent) => {
@@ -112,7 +110,6 @@ return (
 					<StabilizerText />
           <div className={styles.songNameContainer}>
             <h1>{blogData.name}</h1>
-            <FavoriteButton userId={userId} id={blogData.id} ip={ip} />
           </div>
           <ParentInfoLink threadData={threadData} fallBack='blog' fallBackTitle='Guitar blog' />
           <Dropdown id={blogData.id} />
