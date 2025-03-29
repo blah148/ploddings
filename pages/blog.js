@@ -10,7 +10,6 @@ import Sidebar from '../components/Sidebar';
 import Image from 'next/image';
 import Link from 'next/link';
 import SEO from '../components/SEO';
-import NotificationIcon from '../components/NotificationIcon';
 import StabilizerText from '../components/StabilizerText';
 
 const verifyUserSession = (req) => {
@@ -86,7 +85,6 @@ export default function Blog({ userId, ip }) {
             <div className="topRow">
               <IpodMenuLink fallBack='' />
 							<div style={{display: "flex"}}>
-								<NotificationIcon userId={userId} />
                 <Menu userId={userId} />
 							</div>
             </div>

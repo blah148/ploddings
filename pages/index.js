@@ -10,7 +10,6 @@ import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 import SEO from '../components/SEO';
 import LoadingLink from '../components/LoadingLink';
-import NotificationIcon from '../components/NotificationIcon';
 import StabilizerText from '../components/StabilizerText';
 
 const verifyUserSession = (req) => {
@@ -122,7 +121,6 @@ export default function Home({ userId, ip }) {
                 <div className="homeText">Home</div>
               </Link>
               <div style={{ display: 'flex', marginLeft: 'auto' }}>
-                <NotificationIcon userId={userId} />
                 <Menu userId={userId} />
               </div>
             </div>

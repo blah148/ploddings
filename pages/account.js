@@ -14,7 +14,6 @@ import CreateAccountForm from '../components/createAccount';
 import { useLoading } from '../context/LoadingContext';
 import Loader from '../components/Loader';
 import SEO from '../components/SEO';
-import NotificationIcon from '../components/NotificationIcon';
 import StabilizerText from '../components/StabilizerText';
 import UserTokenDashboard from '../components/UserTokenDashboard';
 import VisitorTokenDashboard from '../components/VisitorTokenDashboard';
@@ -68,7 +67,6 @@ export default function Account({ ip, userId }) {
 										<div className="topRow">
 												<IpodMenuLink fallBack='' />
 												<div style={{display: "flex"}}>
-													<NotificationIcon userId={userId} />
 													<Menu userId={userId} />
 												</div>
 										</div>

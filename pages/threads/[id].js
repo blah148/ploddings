@@ -18,7 +18,6 @@ import VictrolaIcon from '../../components/VictrolaIcon';
 import WikipediaIcon from '../../components/WikipediaIcon';
 import SEO from '../../components/SEO';
 import StabilizerText from '../../components/StabilizerText';
-import NotificationIcon from '../../components/NotificationIcon';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -80,7 +79,6 @@ export default function Thread({ userId=null, ip, threadData }) {
 						<div className="topRow">
 							<IpodMenuLink fallBack='' />
 							<div style={{display: "flex"}}>
-								<NotificationIcon userId={userId} />
                 <Menu userId={userId} />
 							</div>
             </div>

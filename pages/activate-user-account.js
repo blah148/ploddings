@@ -9,7 +9,6 @@ import Menu from '../components/Menu';
 import jwt from 'jsonwebtoken';
 import IpodMenuLink from '../components/ParentBackLink';
 import SEO from '../components/SEO';
-import NotificationIcon from '../components/NotificationIcon';
 import StabilizerText from '../components/StabilizerText';
 import SubscribeTextJoin from '../components/StripeSubscriptionText_join';
 import Link from 'next/link';
@@ -138,7 +137,6 @@ export default function CreateAccount({ userId, ip, songCount }) {
             <div className="topRow">
               <IpodMenuLink fallBack='' />
               <div style={{display: "flex"}}>
-                <NotificationIcon userId={userId} />
                 <Menu userId={userId} />
               </div>
             </div>

@@ -9,7 +9,6 @@ import Menu from '../components/Menu';
 import Footer from '../components/Footer';
 import Sidebar from '../components/Sidebar';
 import SEO from '../components/SEO';
-import NotificationIcon from '../components/NotificationIcon';
 import StabilizerText from '../components/StabilizerText';
 
 const verifyUserSession = (req) => {
@@ -93,7 +92,6 @@ export default function Login({ userId, ip }) {
             <div className="topRow">
               <IpodMenuLink fallBack='' />
               <div style={{ display: "flex" }}>
-                <NotificationIcon userId={userId} />
                 <Menu userId={userId} />
               </div>
             </div>

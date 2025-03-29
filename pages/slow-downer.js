@@ -10,7 +10,6 @@ import IpodMenuLink from '../components/ParentBackLink';
 import { uploadSong } from '../utils/uploadSong';
 import SEO from '../components/SEO';
 import UnlockAudioButton from '../components/UnlockAudioButton';
-import NotificationIcon from '../components/NotificationIcon';
 import StabilizerText from '../components/StabilizerText';
 import VideoComponent from '../components/CustomYoutubePlayer';
 
@@ -96,7 +95,6 @@ const handleFileChange = (e) => {
 						<div className="topRow">
 							<IpodMenuLink fallBack='' />
 							<div style={{display: "flex"}}>
-								<NotificationIcon userId={userId} />
                 <Menu userId={userId} />
 							</div>
 						</div>

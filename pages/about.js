@@ -6,7 +6,6 @@ import Loader from '../components/Loader';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
 import Menu from '../components/Menu';
-import NotificationIcon from '../components/NotificationIcon';
 import jwt from 'jsonwebtoken';
 import IpodMenuLink from '../components/ParentBackLink';
 import SEO from '../components/SEO';
@@ -46,7 +45,6 @@ export default function About({ userId, ip }) {
             <div className="topRow">
               <IpodMenuLink fallBack='' />
 							<div style={{display: "flex"}}>
-								<NotificationIcon userId={userId} />
                 <Menu userId={userId} />
 							</div>
             </div>

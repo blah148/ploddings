@@ -21,7 +21,6 @@ import Footer from '../../components/Footer';
 import SEO from '../../components/SEO';
 import PDFDownloadButton from '../../components/PDFDownloadButton';
 import StabilizerText from '../../components/StabilizerText';
-import NotificationIcon from '../../components/NotificationIcon';
 import MusescoreEmbed from '../../components/MusescoreEmbed';
 import TablaturePlaceholder from '../../components/TablaturePlaceholder';
 
@@ -127,7 +126,6 @@ export default function Song({ userId = null, ip, threadData, songData }) {
             <div className="topRow">
               <IpodMenuLink threadData={threadData} fallBack='/' />
               <div style={{display: "flex"}}>
-                <NotificationIcon userId={userId} />
                 <Menu userId={userId} />
               </div>
             </div>
