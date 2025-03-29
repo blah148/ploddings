@@ -127,10 +127,9 @@ export default function ContactForm ({ userId, ip  }) {
 									onChange={handleChange}
 								>
 									<option value="">Please select an option</option>
-									<option value="General Question">General question/message</option>
-									<option value="Content Suggestion">Content suggestion/request</option>
-									<option value="Bug Report">Report a bug</option>
-									<option value="Account Info">Account & login information</option>
+									<option value="General question">General question/message</option>
+									<option value="Content suggestion">Content suggestion/request</option>
+									<option value="Bug report">Report a bug</option>
 								</select>
 								<label htmlFor="message">Message <span style={{ color: 'red' }}>*</span>:</label>
 								<textarea

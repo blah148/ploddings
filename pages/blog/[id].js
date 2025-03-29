@@ -22,6 +22,7 @@ import Menu from '../../components/Menu';
 import styles from '../../styles/songs.module.css';
 import SEO from '../../components/SEO';
 import StabilizerText from '../../components/StabilizerText';
+import BeingWatchedMobile from '../../components/BeingWatchedMobile.js';
 
 // Verify the user's session using the JWT token
 const verifyUserSession = (req) => {
@@ -125,6 +126,7 @@ return (
               <TableOfContents htmlContent={blogData.body_text} onUpdate={handleContentUpdate} />
 						</div>
           </div>
+					<BeingWatchedMobile />
         </div>
       </div>
 			<Footer userId={userId} />

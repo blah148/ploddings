@@ -18,6 +18,7 @@ import VictrolaIcon from '../../components/VictrolaIcon';
 import WikipediaIcon from '../../components/WikipediaIcon';
 import SEO from '../../components/SEO';
 import StabilizerText from '../../components/StabilizerText';
+import BeingWatchedMobile from '../../components/BeingWatchedMobile.js';	
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -101,6 +102,7 @@ export default function Thread({ userId=null, ip, threadData }) {
 							<h2>MuseScore tabs</h2>
 							<TableDataFetcher threadId={threadData.id} userId={userId} />
 						</div>
+						<BeingWatchedMobile />
 					</div>
 				</div>
 				<Footer userId={userId} />

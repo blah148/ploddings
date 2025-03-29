@@ -23,6 +23,7 @@ import PDFDownloadButton from '../../components/PDFDownloadButton';
 import StabilizerText from '../../components/StabilizerText';
 import MusescoreEmbed from '../../components/MusescoreEmbed';
 import TablaturePlaceholder from '../../components/TablaturePlaceholder';
+import BeingWatchedMobile from '../../components/BeingWatchedMobile.js';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -167,6 +168,7 @@ export default function Song({ userId = null, ip, threadData, songData }) {
                 </div>
               </div>
             </div>
+						<BeingWatchedMobile />
           </div>
         </div>
         <Footer userId={userId} />

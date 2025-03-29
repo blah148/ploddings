@@ -1,0 +1,293 @@
+/* SongContainer.module.css */
+.upLevel:hover {
+    filter: saturate(1.3);
+}
+.songNameContainer {
+    display: flex;
+    align-items: center;
+}
+@media (max-width: 768px) {
+    .songNameContainer {
+        margin: 0 0 18px 0;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .songNameContainer h1 {
+        margin: 12px 0 6px 0;
+        line-height: 40px;
+    }
+    .songNameContainer svg {
+        margin: 0;
+        height: 22px;
+    }
+}
+@media (min-width: 769px) {
+    .songNameContainer svg {
+        height: 18px;
+        margin: 0 0 2px 12px;
+    }
+    .headerContainer .songNameContainer svg {
+        margin: 0 0 0 10px;
+    }
+}
+.songNameContainer svg:hover path {
+    fill: orange;
+}
+.parentInfoLinkContainer {
+    display: inline-block;
+}
+.parentInfoLinkContainer:hover {
+    opacity: 0.7;
+}
+.parentInfoLinkContents {
+    display: flex;
+    align-items: center;
+}
+.parentInfoLinkContents div {
+    font-size: 18px;
+}
+.parentInfoLinkContainer img {
+    height: 60px;
+    width: 60px;
+    border-radius: 100px;
+    margin-right: 13px;
+    box-shadow: 0 0 6px 1px rgba(217, 217, 217, 0.88);
+}
+.tuningButton {
+    display: inline-block;
+    width: 24ch;
+    background-color: orange;
+    color: white;
+    margin: 18px 0;
+    border-radius: 20px;
+    font-size: 14px;
+}
+.tuningButton div {
+    width: 100%;
+    text-align: center;
+}
+.tuningButton:hover {
+    opacity: 0.7;
+}
+.chevronChapters {
+    fill: black;
+}
+.dropdownButton svg {
+    width: 16px;
+    margin-left: 4px;
+    align-self: center;
+}
+.dropdownButton {
+    display: flex;
+    font-size: 12px;
+    align-content: center;
+    margin: 12px 0 18px 0;
+}
+.dropdownContainer {
+    display: flex;
+    flexDirection: column;
+    position: absolute;
+    backgroundColor: #fff;
+    padding: 6px 4px;
+    borderRadius: 8px;
+    boxShadow: 0px 8px 25px hsla(255, 24%, 91%, 1);
+}
+.dropdownContainer a {
+    padding: 4px 8px;
+    borderRadius: 5px;
+    fontSize: 16px;
+}
+.dropdownContainer a:hover {
+    backgroundColor: #ddd;
+}
+.dropdownContainer .boldLink {
+    fontWeight: 600;
+}
+.bottomBorder {
+    borderBottom: 1px solid #d2d2d2;
+    margin: 16px 8px 12px 8px;
+}
+.componentsContainer {
+    display: flex;
+    marginBottom: 22px;
+}
+@media screen and (max-width: 1200px) {
+    .componentsContainer {
+        flexDirection: column;
+    }
+    .tocContainer {
+        order: 0;
+        padding: 0;
+        borderLeft: none;
+        margin: 0;
+    }
+    .primaryColumn {
+        order: 1;
+    }
+}
+@media (min-width: 1201px) {
+    .primaryColumn {
+        minWidth: 650px;
+    }
+}
+.primaryColumn {
+    marginTop: 4px;
+    width: 100%;
+}
+.blogBodyText figure {
+    margin: 12px 0;
+}
+.blogBodyText img {
+    maxHeight: 310px;
+    maxWidth: 100%;
+    borderRadius: 7px;
+    boxShadow: 0px 8px 25px hsla(255, 24%, 91%, 1);
+}
+.blogBodyText figcaption {
+    textAlign: left;
+    fontSize: 13px;
+    opacity: 0.9;
+}
+.blogBodyText figure {
+    padding: 0 !important;
+}
+.blogBodyText iframe {
+    width: 100%;
+    minHeight: 300px;
+}
+.tocContainer {
+    maxWidth: 40vw;
+    padding: 0 12px 0 22px;
+    borderLeft: 1px solid #d2d2d2;
+    margin: 0 14px 18px 18px;
+}
+.tableOfContents {
+    position: sticky;
+    display: flex;
+    flexDirection: column;
+    top: 8px;
+}
+.tableOfContents h2 {
+    fontWeight: 600;
+    fontSize: 20px;
+    marginBottom: 10px;
+}
+.tableOfContents a {
+    fontWeight: 300;
+    fontSize: 17px;
+    margin: 0 0 5px 0;
+}
+.tableOfContents a:hover {
+    opacity: 0.7;
+}
+.tabButton {
+    marginRight: 12px;
+}
+.tabButton.active {
+    fontWeight: 500;
+}
+.tabPane {
+    padding: 8px 0px;
+    margin: 8px 0;
+    fontWeight: 400;
+    overflow: hidden;
+}
+.paginationBlock {
+    display: flex;
+    justifyContent: space-between;
+}
+.paginationContainer {
+    display: flex;
+    justifyContent: space-between;
+    margin: 18px 0 24px 0;
+    width: 100%;
+}
+.paginationBlog a {
+    display: flex;
+    alignItems: center;
+}
+.paginationBlog.previous {
+    marginRight: auto;
+}
+.paginationBlog.next {
+    marginLeft: auto;
+}
+.paginationBlog svg {
+    height: 16px;
+    marginLeft: 8px;
+}
+.paginationBlog.previous svg {
+    height: 12px;
+    marginRight: 8px;
+}
+.headerContainer {
+    display: flex;
+    margin: 12px 0 0 0;
+}
+@media (max-width: 1200px) {
+    .headerContainer {
+        flexDirection: column;
+    }
+    .headerContainer img {
+        borderRadius: 8px;
+        height: 300px;
+        width: 300px;
+    }
+}
+@media (min-width: 1201px) {
+    .headerContainer img {
+        maxHeight: 240px;
+        borderRadius: 8px;
+        marginRight: 16px;
+    }
+}
+.headerContainer .rightColumn {
+    display: flex;
+    flexDirection: column;
+    justifyContent: space-between;
+}
+.lifeAndDeath {
+    margin: 0 0 16px 0;
+    fontWeight: 300;
+}
+.headerContainer svg {
+    width: 26px;
+    margin: 0 22px 0 0;
+}
+.headerContainer svg:hover {
+    opacity: 0.75;
+}
+svg.victrola {
+    width: 20px;
+}
+.storyText {
+    fontSize: 15px;
+    margin: 12px 0 0 0;
+}
+.endingStory {
+    marginBottom: 32px;
+}
+.endingStory p {
+    marginBottom: 12px;
+}
+.threadFeed {
+    marginBottom: 28px;
+}
+.threadFeed ul {
+    padding: 0;
+    margin: 0;
+}
+.contentFeedItem {
+    listStyle: none;
+}
+.LoadingLinkContainer {
+    display: flex;
+    width: 100%;
+    alignItems: center;
+    paddingRight: 16px;
+    borderBottom: 1px solid #ddd;
+}
+.contentFeedItem img {
+    width: 50px;
+    height:
+}

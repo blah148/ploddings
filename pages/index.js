@@ -11,6 +11,7 @@ import Sidebar from '../components/Sidebar';
 import SEO from '../components/SEO';
 import LoadingLink from '../components/LoadingLink';
 import StabilizerText from '../components/StabilizerText';
+import BeingWatchedMobile from '../components/BeingWatchedMobile.js';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -192,6 +193,7 @@ export default function Home({ userId, ip }) {
                   <p></p>
                 )}
               </div>
+							<BeingWatchedMobile />
             </div>
           </div>
         </div>
