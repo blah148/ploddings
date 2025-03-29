@@ -21,27 +21,31 @@ const BeingWatchedMobile = ({ userId, ip }) => {
     return null; // Render nothing while isLoading is true
   }
 
-  return (
-    <div className="categoryGroup mobileOnly">
-      <h2>Being watched</h2>
-      <ul>
-        {beingWatched.length > 0 ? beingWatched.map((watch, index) => (
-          <li key={watch.id} className={styles.listElement}>
-            <LoadingLink className={styles.listLink} href={`/${watch.page_type}/${watch.slug}`} passHref>
-              <Image 
-                width={40} 
-                height={40} 
-                src={watch.thumbnail_200x200 ? watch.thumbnail_200x200 : 'https://example.com/default_thumbnail.webp'}
-                alt={watch.featured_img_alt_text} 
-              />
-              <div className={styles.sidebarName}>{watch.name.length > 22 ? watch.name.slice(0, 22) + '...' : watch.name}</div>
-              <div className={`led ${watch.user_active_membership ? 'unlocked' : 'locked'}`}></div>
-            </LoadingLink>
-          </li>
-        )) : <p>No data found</p>}
-      </ul>
-    </div>
-  );
+  if (beingWatched.length > 0) {
+    return (
+      <div className="categoryGroup mobileOnly">
+        <h2>Being watched</h2>
+        <ul>
+          {beingWatched.map((watch, index) => (
+            <li key={watch.id} className={styles.listElement}>
+              <LoadingLink className={styles.listLink} href={`/${watch.page_type}/${watch.slug}`} passHref>
+                <Image 
+                  width={40} 
+                  height={40} 
+                  src={watch.thumbnail_200x200 ? watch.thumbnail_200x200 : 'https://example.com/default_thumbnail.webp'}
+                  alt={watch.featured_img_alt_text} 
+                />
+                <div className={styles.sidebarName}>{watch.name.length > 22 ? watch.name.slice(0, 22) + '...' : watch.name}</div>
+                <div className={`led ${watch.user_active_membership ? 'unlocked' : 'locked'}`}></div>
+              </LoadingLink>
+            </li>
+          ))}
+        </ul>
+      </div>
+    );
+  } else {
+    return null; // Or return a message indicating no items are being watched
+  }
 };
 
 export default BeingWatchedMobile;
