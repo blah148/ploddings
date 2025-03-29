@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import Image from 'next/image';
 import useStore from '../zustandStore'; // Adjust the path as needed
 import { useLoading } from '../context/LoadingContext';
@@ -8,14 +8,22 @@ import LoadingLink from '../components/LoadingLink';
 const BeingWatchedMobile = ({ userId, ip }) => {
   const { beingWatched, fetchAndSetBeingWatched } = useStore();
   const { startLoading, stopLoading } = useLoading();
+  const [isDataLoaded, setDataLoaded] = useState(false);  // State to track data loading status
 
   useEffect(() => {
     startLoading();
     fetchAndSetBeingWatched(userId, ip)
-      .catch(error => console.error('Error fetching being watched data:', error))
+      .then(() => setDataLoaded(true))  // Set data loaded true on successful fetch
+      .catch(error => {
+        console.error('Error fetching being watched data:', error);
+      })
       .finally(stopLoading);
     // Empty dependency array ensures it runs only once on component mount
   }, [userId, ip, fetchAndSetBeingWatched, startLoading, stopLoading]);
+
+  if (!isDataLoaded) {
+    return null; // Render nothing while data is not yet loaded
+  }
 
   return (
     <div className="categoryGroup mobileOnly">
@@ -34,7 +42,7 @@ const BeingWatchedMobile = ({ userId, ip }) => {
               <div className={`led ${watch.user_active_membership ? 'unlocked' : 'locked'}`}></div>
             </LoadingLink>
           </li>
-        )) : <p>Loading...</p>}
+        )) : <div></div>}
       </ul>
     </div>
   );
