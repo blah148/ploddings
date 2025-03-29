@@ -42,7 +42,7 @@ const BeingWatchedMobile = ({ userId, ip }) => {
               <div className={`led ${watch.user_active_membership ? 'unlocked' : 'locked'}`}></div>
             </LoadingLink>
           </li>
-        )) : <div></div>}
+        )) : <p>No data found</p>}
       </ul>
     </div>
   );
