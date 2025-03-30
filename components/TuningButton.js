@@ -35,7 +35,7 @@ const TuningDetails = ({ tuning_id }) => {
   }, []);
 
   if (!tuningDetails) {
-    return <div>No tuning details found.</div>;
+    return ;
   }
 
   return (
