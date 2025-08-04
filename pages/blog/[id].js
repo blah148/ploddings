@@ -23,6 +23,7 @@ import styles from '../../styles/songs.module.css';
 import SEO from '../../components/SEO';
 import StabilizerText from '../../components/StabilizerText';
 import BeingWatchedMobile from '../../components/BeingWatchedMobile.js';
+import ArtistWidget from '../../components/ArtistWidget.js';
 
 // Verify the user's session using the JWT token
 const verifyUserSession = (req) => {
@@ -117,6 +118,7 @@ return (
           <div className={styles.componentsContainer}>
             <div className={styles.primaryColumn}>
               <div className={styles.blogBodyText} dangerouslySetInnerHTML={{ __html: updatedHtmlContent }} />
+							<ArtistWidget />
 							<div className={styles.paginationBlock}>
                 {blogData.sibling_previous && (<Pagination sibling_previous={blogData.sibling_previous} />)}
                 {blogData.sibling_next && (<Pagination sibling_next={blogData.sibling_next} />)}
