@@ -62,7 +62,7 @@ export default function About({ userId, ip }) {
 								</p>
                 <p>The work of the Mt. Zion Memorial Fund includes: (i) the erection of tombstones for musicians such as Belton Sutherland, Bo Carter, Sonny Boy Williamson II, Mississippi Fred McDowell, Memphis Minnie, Sam Chatmon, Elmore James, Charley Patton, and Frank Stokes; (ii) the preservation of historical sites; and (iii) the creation of memorials such as the Mississippi John Hurt museum.</p>
                 <h2>ii) More Information</h2>
-                <p>In case questions remain, please reach out via the Ploddings <Link href="/contact">contact page</Link>. The custodian & builder of Ploddings is "blah"/Blah148. To learn more about the Mt. Zion Memorial Fund, its current endeavors, how to volunteer, or its relationship with Ploddings, please get in touch via <a href="https://mtzionmemorialfund.com/" target="_blank">their website</a>.</p>
+                <p>In case questions remain, please reach out via the Ploddings <Link href="/contact">contact page</Link>. The custodian & builder of Ploddings is blah148. To learn more about the Mt. Zion Memorial Fund, its current endeavors, how to volunteer, or its relationship with Ploddings, please get in touch via <a href="https://mtzionmemorialfund.com/" target="_blank">their website</a>.</p>
 
 							</div>
             </div>
