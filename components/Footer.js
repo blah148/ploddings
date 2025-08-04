@@ -32,7 +32,7 @@ export default function Footer ({ userId = null  }) {
 			</div>
 			<div className="footer_lower-row">
 				<div className="footerTagline">
-					<Link href="/about">Support the Mt. Zion Memorial Fund</Link>
+					<Link href="/about">Supporting the Mt. Zion Memorial Fund</Link>
 				</div>
 				<div className="classFooterLinks">
 				  <Link href="/privacy-policy" className="footer_lower-item" passHref>Privacy policy</Link>
