@@ -26,7 +26,7 @@ export default function ArtistWidget({ pageType }) {
         <a href="https://www.blah148.com" target="_blank" rel="noopener">
           <strong>blah148</strong>
         </a>{' '}
-        – an Albertan musician, who has been an enthusiast of pre-war blues music since at least 2010.
+        – an Albertan musician, who has been posting about acoustic blues music since 2006.
       </>
     ),
   };
