@@ -118,7 +118,7 @@ return (
           <div className={styles.componentsContainer}>
             <div className={styles.primaryColumn}>
               <div className={styles.blogBodyText} dangerouslySetInnerHTML={{ __html: updatedHtmlContent }} />
-							<ArtistWidget />
+							<ArtistWidget pageType="blog" />
 							<div className={styles.paginationBlock}>
                 {blogData.sibling_previous && (<Pagination sibling_previous={blogData.sibling_previous} />)}
                 {blogData.sibling_next && (<Pagination sibling_next={blogData.sibling_next} />)}

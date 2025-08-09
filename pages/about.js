@@ -13,6 +13,7 @@ import Link from 'next/link';
 import SubscribeButton from '../components/StripeSubscription';
 import OneTimePaymentButton from '../components/StripeOneTime';
 import StabilizerText from '../components/StabilizerText';
+import ArtistWidget from '../components/ArtistWidget';
 
 const verifyUserSession = (req) => {
   const token = req.cookies['auth_token'];
@@ -65,6 +66,7 @@ export default function About({ userId, ip }) {
                 <p>In case questions remain, please reach out via the Ploddings <Link href="/contact">contact page</Link>. The custodian & builder of Ploddings is blah148. To learn more about the Mt. Zion Memorial Fund, its current endeavors, how to volunteer, or its relationship with Ploddings, please get in touch via <a href="https://mtzionmemorialfund.com/" target="_blank">their website</a>.</p>
 
 							</div>
+							<ArtistWidget pageType="about" />
             </div>
           </div>
         </div>
