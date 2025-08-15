@@ -16,6 +16,11 @@ module.exports = {
         destination: '/about',
         permanent: true, // Makes this a 301 redirect
       },
+      {
+        source: '/blog/an-archive-of-blues-and-other-style-song-walk-throughs',
+        destination: '/blog/youtube-video-and-tab-directory',
+        permanent: true,
+      },
     ];
   },
   async headers() {
