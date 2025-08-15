@@ -139,7 +139,7 @@ export default function Song({ userId = null, ip, threadData, songData }) {
             <div className={styles.bottomBorder}></div>
             <div className={styles.componentsContainer}>
               <div className={styles.primaryColumn}>
-                <h2 id="i">i) Sheet music</h2>
+                <h2 id="i">i) Guitar tablature</h2>
                 <div style={{ position: "relative" }}>
 											<MusescoreEmbed
 													pageId={songData.id}
@@ -161,7 +161,7 @@ export default function Song({ userId = null, ip, threadData, songData }) {
               <div className={styles.tocContainer}>
                 <div className={styles.tableOfContents}>
                   <h2>Table of contents:</h2>
-                  <a href="#i" className={styles.songTocItem}>i) Sheet music</a>
+                  <a href="#i" className={styles.songTocItem}>i) Guitar tabs</a>
                   <a href="#ii" className={styles.songTocItem}>ii) Slow-downer</a>
                   <a href="#iii" className={styles.songTocItem}>iii) More info</a>
                   {relatedContentLength && (<a href="#iv" className={styles.songTocItem}>iv) Related content</a>)}  
