@@ -113,7 +113,7 @@ export default function Song({ userId = null, ip, threadData, songData }) {
   return (
     <div className="bodyA">
       <SEO
-        title={songData.name}
+        title=Learn to play {songData.name} by {threadData.name} with tablature
         image={threadData.link_3}
         page_type="songs"
         slug={songData.slug}

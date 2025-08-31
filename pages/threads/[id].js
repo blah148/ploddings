@@ -66,7 +66,7 @@ export default function Thread({ userId=null, ip, threadData }) {
   return (
     <div className="bodyA">
        <SEO
-				 title={threadData.name}
+				 title=Learn {threadData.name} songs with tablature
 				 image={threadData.link_3}
 				 page_type="threads"
 				 slug={threadData.slug}
