@@ -113,7 +113,7 @@ export default function Song({ userId = null, ip, threadData, songData }) {
   return (
     <div className="bodyA">
       <SEO
-        title={`Exact guitar tabs for ${songData.name} by ${threadData.name}`}
+        title={`Playble guitar tabs for ${songData.name} by ${threadData.name}`}
         image={threadData.link_3}
         page_type="songs"
         slug={songData.slug}
