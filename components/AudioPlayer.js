@@ -3,17 +3,18 @@ import React, { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
 import { supabase } from '../utils/supabase'; // adjust path if needed
 import styles from './AudioPlayer.module.css';
+import { FaSpotify, FaApple, FaYoutube, FaBandcamp } from 'react-icons/fa';
 
 export default function AudioPlayer() {
   const waveformRef = useRef(null);
   const wavesurfer = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [recording, setRecording] = useState(null);
+  const [showStreaming, setShowStreaming] = useState(false);
 
   // Fetch a random recording from Supabase
   useEffect(() => {
     const fetchRandomRecording = async () => {
-      console.log('Fetching row count from recordings…');
       const { count, error: countError } = await supabase
         .from('recordings')
         .select('*', { count: 'exact', head: true });
@@ -23,11 +24,8 @@ export default function AudioPlayer() {
         return;
       }
 
-      console.log('Row count:', count);
-
       if (count && count > 0) {
         const randomIndex = Math.floor(Math.random() * count);
-        console.log('Random index chosen:', randomIndex);
 
         const { data, error } = await supabase
           .from('recordings')
@@ -39,16 +37,9 @@ export default function AudioPlayer() {
           return;
         }
 
-        console.log('Fetched recording data:', data);
-
         if (data && data.length > 0) {
-          console.log('Loaded random recording:', data[0]);
           setRecording(data[0]);
-        } else {
-          console.warn('No data returned from Supabase query.');
         }
-      } else {
-        console.warn('No rows found in recordings table.');
       }
     };
 
@@ -59,9 +50,6 @@ export default function AudioPlayer() {
   useEffect(() => {
     if (!recording || !waveformRef.current) return;
 
-    console.log('Initializing WaveSurfer for recording:', recording);
-
-    // Destroy old instance if exists
     if (wavesurfer.current) {
       wavesurfer.current.destroy();
     }
@@ -77,18 +65,9 @@ export default function AudioPlayer() {
 
     wavesurfer.current.load(recording.recording_link);
 
-    wavesurfer.current.on('ready', () => {
-      console.log('WaveSurfer ready, duration:', wavesurfer.current.getDuration());
-    });
-
-    wavesurfer.current.on('error', (err) => {
-      console.error('WaveSurfer error:', err);
-    });
-
     return () => {
       if (wavesurfer.current) {
         wavesurfer.current.destroy();
-        console.log('WaveSurfer destroyed.');
       }
     };
   }, [recording]);
@@ -97,7 +76,6 @@ export default function AudioPlayer() {
     if (wavesurfer.current) {
       wavesurfer.current.playPause();
       setIsPlaying(wavesurfer.current.isPlaying());
-      console.log('Toggled play. Now playing:', wavesurfer.current.isPlaying());
     }
   };
 
@@ -105,18 +83,63 @@ export default function AudioPlayer() {
 
   return (
     <div className={styles.playerContainer}>
+      <div className={styles.songTitle}>
+        <span className={styles.demoLabel}>Demo:</span> {recording.name}
+      </div>
+
       <div ref={waveformRef} className={styles.waveform}></div>
 
-      <div className={styles.controls}>
-        <button onClick={togglePlay} className={styles.playButton}>
-          {isPlaying ? 'Pause ⏸' : 'Play ▶️'}
-        </button>
+      <button onClick={togglePlay} className={styles.playButton}>
+        {isPlaying ? 'Pause' : 'Sample/play'}
+      </button>
+
+      <div
+        className={styles.songAlbum}
+        onClick={() => setShowStreaming(!showStreaming)}
+      >
+        From the album:{' '}
+        <span className={styles.albumClickable}>
+          {recording.album}{' '}
+          ({recording.release_date ? new Date(recording.release_date).getFullYear() : ''})
+        </span>
       </div>
 
-      <div className={styles.songTitle}>{recording.name}</div>
-      <div className={styles.songArtist}>
-        {recording.credits || 'Unknown Artist'}
-      </div>
+      {showStreaming && (
+        <div className={styles.streamingIcons}>
+          <a
+            href="https://www.youtube.com/blah148"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${styles.icon} ${styles.youtube}`}
+          >
+            <FaYoutube />
+          </a>
+          <a
+            href="https://open.spotify.com/artist/5CfmXejuAGqUn3pK18xqV1"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${styles.icon} ${styles.spotify}`}
+          >
+            <FaSpotify />
+          </a>
+          <a
+            href="https://music.apple.com/artist/1738712630"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${styles.icon} ${styles.apple}`}
+          >
+            <FaApple />
+          </a>
+          <a
+            href="https://blah148.bandcamp.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`${styles.icon} ${styles.bandcamp}`}
+          >
+            <FaBandcamp />
+          </a>
+        </div>
+      )}
     </div>
   );
 }
