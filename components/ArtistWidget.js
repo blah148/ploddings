@@ -17,7 +17,7 @@ export default function ArtistWidget({ pageType }) {
   const bioTexts = {
     blog: <>This blog is written by <strong>blah148</strong> – an Albertan musician who has been posting about acoustic blues music since 2006. A sample recording is shown below from a recent release.</>,
     about: <>The person who built this site, as well as its transcriptions, is <strong>blah148</strong> – an Albertan musician, with a long-time interest in pre-war blues. A sample recording is below from a recent release.</>,
-    songs: <>This transcription / guitar tablature was notated by <strong>blah148</strong>, who is a pre-war blues enthusiast, hailing from Alberta, Canada. A sample recording is below from a recent release.</>,
+    songs: <>This transcription / guitar tablature was notated by <strong>blah148</strong>, who is a pre-war blues enthusiast, hailing from Alberta, Canada. A sample home recording is below from a recent release.</>,
   };
 
   const platformRows = [
