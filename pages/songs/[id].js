@@ -4,7 +4,7 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import useStore from '../../zustandStore';
 import Sidebar from '../../components/Sidebar';
-import { supabase } from '../../utils/supabase'; // Adjust the import path as needed
+import { supabase } from '../../utils/supabase'; 
 import { fetchSongData, getParentObject } from '../../db-utilities';
 import jwt from 'jsonwebtoken'; 
 import { useLoading } from '../../context/LoadingContext';
@@ -22,28 +22,15 @@ import SEO from '../../components/SEO';
 import PDFDownloadButton from '../../components/PDFDownloadButton';
 import StabilizerText from '../../components/StabilizerText';
 import MusescoreEmbed from '../../components/MusescoreEmbed';
-import TablaturePlaceholder from '../../components/TablaturePlaceholder';
 import BeingWatchedMobile from '../../components/BeingWatchedMobile.js';
-
-const verifyUserSession = (req) => {
-  const token = req.cookies['auth_token'];
-  if (!token) {
-    return null; // No session
-  }
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return decoded; // Session valid
-  } catch (error) {
-    return null; // Session invalid
-  }
-};
+import Head from 'next/head';
+import GTM from '../../components/GTM.js';
 
 export default function Song({ userId = null, ip, threadData, songData }) {
 
   const { isLoading, startLoading, stopLoading } = useLoading();
   const [relatedContentLength, setRelatedContentLength] = useState(null);
   const [buttonLoaded, setButtonLoaded] = useState(false);
-  const [canAccess, setCanAccess] = useState(null);
 
   // Function to log the page visit directly to the database
   const logPageVisit = async () => {
@@ -67,53 +54,20 @@ export default function Song({ userId = null, ip, threadData, songData }) {
   };
 
 	useEffect(() => {
-	  logPageVisit();
+		if (!songData?.paid_traffic) {   // run only if not true
+			logPageVisit();
+		}
 	}, [userId, ip]);
-
-	useEffect(() => {
-		const fetchData = async () => {
-			if (userId) {
-				try {
-					const response = await fetch(`/api/active_membership-verify?userId=${userId}`);
-					if (response.status === 200) {
-						setCanAccess(true);
-						return;
-					}
-					setCanAccess(false); // Set access to false if the status is not 200
-				} catch (error) {
-					console.error('Error verifying active membership:', error);
-					setCanAccess(false);
-				}
-			}
-		};
-
-		fetchData(); // Call the fetchData function
-	}, [userId, songData.id]); // Dependencies are correct
-
-  useEffect(() => {
-    const loadButton = () => {
-     // console.log("Iframe loaded, setting buttonLoaded to true.");
-      setButtonLoaded(true);
-    };
-
-    const iframeElement = document.getElementById('musescoreIframe');
-    if (iframeElement) {
-      iframeElement.addEventListener('load', loadButton);
-    } else {
-     // console.log("Iframe element not found.");
-    }
-
-    return () => {
-      if (iframeElement) {
-        iframeElement.removeEventListener('load', loadButton);
-      }
-    };
-  }, []);
 
   return (
     <div className="bodyA">
+      {songData?.paid_traffic && (
+				<>
+				  <GTM />
+				</>
+      )}
       <SEO
-        title={`Playble guitar tabs for ${songData.name} by ${threadData.name}`}
+        title={`Playable guitar tabs for ${songData.name} by ${threadData.name}`}
         image={threadData.link_3}
         page_type="songs"
         slug={songData.slug}
