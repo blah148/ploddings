@@ -75,3 +75,14 @@
     justify-content: flex-start;
   }
 }
+@media (max-width: 768px) {
+  .playerContainer {
+    display: flex;
+    flex-direction: column;
+    text-align: center; /* center text content */
+  }
+
+  .streamingIcons {
+    justify-content: center;
+  }
+}

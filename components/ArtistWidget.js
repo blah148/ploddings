@@ -11,13 +11,13 @@ export default function ArtistWidget({ pageType }) {
   const headings = {
     blog: 'About the Author',
     about: 'About blah148',
-    songs: 'About the Artist',
+    songs: 'Who wrote the tabs?',
   };
 
   const bioTexts = {
-    blog: <>This blog is written by <strong>blah148</strong> – an Albertan musician who has been posting about acoustic blues music since 2006.</>,
-    about: <>The person who built this site, as well as its transcriptions, is <strong>blah148</strong> – an Albertan musician.</>,
-    songs: <>These songs are performed and transcribed by <strong>blah148</strong> – an Albertan guitarist and singer dedicated to acoustic blues and folk music.</>,
+    blog: <>This blog is written by <strong>blah148</strong> – an Albertan musician who has been posting about acoustic blues music since 2006. A sample recording is shown below from a recent release.</>,
+    about: <>The person who built this site, as well as its transcriptions, is <strong>blah148</strong> – an Albertan musician, with a long-time interest in pre-war blues. A sample recording is below from a recent release.</>,
+    songs: <>This transcription / guitar tablature was notated by <strong>blah148</strong>, who is a pre-war blues enthusiast, hailing from Alberta, Canada. A sample recording is below from a recent release.</>,
   };
 
   const platformRows = [
@@ -67,8 +67,8 @@ export default function ArtistWidget({ pageType }) {
           <Image
             src="https://f005.backblazeb2.com/file/blah148/profile-images/profile-image_blah148_200x200.jpeg"
             alt="blah148 profile"
-            width={120}
-            height={120}
+            width={100}
+            height={100}
             className={styles.profileImage}
           />
         </div>
