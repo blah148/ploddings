@@ -124,12 +124,7 @@ export default function Song({ userId = null, ip, threadData, songData }) {
               </div>
             </div>
 
-{songData?.paid_traffic && (
-  <>
-     <ArtistWidget pageType="songs" />
-  </>
-)}
-
+            <ArtistWidget pageType="songs" />
 
 						<BeingWatchedMobile />
           </div>
