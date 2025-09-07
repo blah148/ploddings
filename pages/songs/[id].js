@@ -113,11 +113,11 @@ export default function Song({ userId = null, ip, threadData, songData }) {
   return (
     <div className="bodyA">
       <SEO
-        title={`Guitar tabs for ${songData.name} by ${threadData.name}`}
+        title={`Exact guitar tabs for ${songData.name} by ${threadData.name}`}
         image={threadData.link_3}
         page_type="songs"
         slug={songData.slug}
-        description={songData.meta_description}
+				description={`Click play to listen to interactive guitar tablature for ${songData.name} by ${threadData.name}.`}
       />
       <Sidebar userId={userId} ip={ip} />
       <div className="mainFeedAll">
