@@ -39,6 +39,7 @@
     "stripe": "^14.23.0",
     "three": "^0.163.0",
     "typed.js": "^2.1.0",
+    "wavesurfer.js": "^7.10.1",
     "youtube-dl-exec": "^2.5.7",
     "ytdl-core": "^4.11.5",
     "zustand": "^4.5.0"

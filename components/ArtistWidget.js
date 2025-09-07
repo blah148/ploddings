@@ -3,11 +3,18 @@ import React from 'react';
 import Image from 'next/image';
 import styles from './ArtistWidget.module.css';
 import { FaSpotify, FaApple, FaYoutube, FaGlobe } from 'react-icons/fa';
+import dynamic from 'next/dynamic';
+
+// Dynamically import the AudioPlayer with SSR disabled
+const AudioPlayer = dynamic(() => import('./AudioPlayer'), {
+  ssr: false,
+});
 
 export default function ArtistWidget({ pageType }) {
   const headings = {
     blog: 'About the Author',
     about: 'About blah148',
+    songs: 'About the Artist',
   };
 
   const bioTexts = {
@@ -27,6 +34,16 @@ export default function ArtistWidget({ pageType }) {
           <strong>blah148</strong>
         </a>{' '}
         – an Albertan musician, who has been posting about acoustic blues music since 2006.
+      </>
+    ),
+    songs: (
+      <>
+        These songs are performed and transcribed by{' '}
+        <a href="https://www.blah148.com" target="_blank" rel="noopener">
+          <strong>blah148</strong>
+        </a>{' '}
+        – an Albertan guitarist and singer dedicated to acoustic blues and folk music.
+        Each piece is notated with care so you can learn and play along.
       </>
     ),
   };
@@ -50,6 +67,14 @@ export default function ArtistWidget({ pageType }) {
           <p className={styles.bio}>
             {bioTexts[pageType] || bioTexts.blog}
           </p>
+
+          {/* Show AudioPlayer only on Songs page */}
+          {pageType === 'songs' && (
+            <div style={{ marginTop: '20px' }}>
+              <AudioPlayer />
+            </div>
+          )}
+
           <div className={styles.linksContainer}>
             <a
               href="https://www.youtube.com/blah148"
