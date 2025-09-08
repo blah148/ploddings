@@ -90,7 +90,7 @@ export default function AudioPlayer() {
       <div ref={waveformRef} className={styles.waveform}></div>
 
       <button onClick={togglePlay} className={styles.playButton}>
-        {isPlaying ? 'Pause' : 'Sample/play'}
+        {isPlaying ? 'Pause' : 'Listen/play'}
       </button>
 
       <div

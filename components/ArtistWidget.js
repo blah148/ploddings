@@ -16,9 +16,9 @@ export default function ArtistWidget({ pageType }) {
   };
 
   const bioTexts = {
-    blog: <>This blog is written by <strong>blah148</strong>, who is an Albertan musician. A Youtube channel, started in 2006 by blah148, contains an array of in-depth guitar tutorials for pre-war blues music, to learn more. Also, a sample recording is shown below, from a separate album project.</>,
-    about: <>The person who built this site, and its transcriptions, is <strong>blah148</strong>; musician from Alberta, Canada, with a long-time love for pre-war blues. To hear a music sample by blah148, a recording from a related album project.</>,
-    songs: <>This guitar tablature was notated by <strong>blah148</strong>; a pre-war blues enthusiast, from Alberta, Canada. To hear some music by blah148, a recording is below from a recent musical project.</>,
+    blog: <>The author, <strong>blah148</strong>, is an Albertan musician, whose been struck with a curiosity for acoustic blues music since initially posting on Youtube in 2006. A first album was released by blah, in 2025, largely after incorporating the library of guitar tablature, which comprises the bulk of this Ploddings pre-war blues project. The author would be greatly indebted to the reader, who may spare some precious minutes, in listening to one of the recent releases, shown below :) Also, in case of any interest to learn the pre-war blues style, on the guitar, the Youtube channel can be visited, for long-form pre-war blues video tutorials, livestreams of the note-for-note transcription of original recordings, and more.</>,
+    about: <>The person who built this site, and its transcriptions, is <strong>blah148</strong>; musician from Alberta, Canada, with a long-time love for pre-war blues. A sample recording, from a recently released album, is shown below, and particularly fit for a patient listener, who may not mind in sparing some valuable minutes of the day.</>,
+    songs: <>The author, <strong>blah148</strong>, is a pre-war blues enthusiast, from Alberta, Canada. A first album was released by blah, in 2025, in large part by incorporating learnings from the transcriptions/tabs on this site. To the like-minded blues enthusiast who may be viewing this, blah would be quite indebted if a patient ear may be lent to one of the released recordings :) Also, please feel welcome to subscribe to the Youtube channel for long-form pre-war blues video tutorials, livestreams where guitar tabs (like the one above) are written out in real-time, and more. </>,
   };
 
   const platformRows = [
@@ -58,16 +58,16 @@ export default function ArtistWidget({ pageType }) {
 
   return (
     <div className={styles.widgetContainer}>
-      <h2 className={styles.header}>
-        <strong>{headings[pageType] || headings.blog}</strong>
-      </h2>
-
       <div className={styles.contentRow}>
         {/* Artist image */}
         <div className={styles.leftColumn}>
 					<YoutubeSubscribe />
         </div>
 			</div>
+      <h2 className={styles.header}>
+        <strong>{headings[pageType] || headings.blog}</strong>
+      </h2>
+
 			<div className={styles.contentRow}>
         <div className={styles.rightColumn}>
           <p className={styles.bio}>{bioTexts[pageType] || bioTexts.blog}</p>
