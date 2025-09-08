@@ -54,7 +54,7 @@ export default function About({ userId, ip }) {
 							<StabilizerText />
               <h1>About</h1>
 							<div>
-                <p>Ploddings (est. 2018) is a not-for-profit music transcription & analysis project, focused on African-American early blues & folk styles for stringed-instruments.</p>
+                <p>Ploddings (est. 2018) is a not-for-profit music transcription & analysis project, focused on African-American early blues & folk styles for stringed-instruments. Having said that, please note that the site administrator of the Ploddings project is of a different ethnicity, and any cultural observations about these predominantly African music styles, expounded here, should be qualified accordingly.</p>
                 <h2>i) the Ploddings site in partnership with Mt. Zion Memorial Fund</h2>
 								<p>
 									Since May 2022, the Ploddings project has been proudly partnered with the Mt. Zion Memorial Fund (MZMF), led by Dr. T. DeWayne Moore, aiming to raise awareness of their blues preservation efforts. To paraphrase Quincy Jones, to the path ahead, it can help to recall the path behind. In that spirit, the Ploddings project aims to recall, and shed light on the artistry, of that preceding path. In noticing that the MZMF has demonstrated a like-minded sentiment, it helps to make the partnership feel natural.</p>
@@ -77,7 +77,7 @@ export default function About({ userId, ip }) {
 								
                 <p>The work of the Mt. Zion Memorial Fund includes: (i) the erection of tombstones for musicians such as Belton Sutherland, Bo Carter, Sonny Boy Williamson II, Mississippi Fred McDowell, Memphis Minnie, Sam Chatmon, Elmore James, Charley Patton, and Frank Stokes; (ii) the preservation of historical sites; and (iii) the creation of memorials such as the Mississippi John Hurt museum.</p>
                 <h2>ii) More Information</h2>
-                <p>In case questions remain, please reach out via the Ploddings <Link href="/contact">contact page</Link>. The custodian & builder of Ploddings is blah148. To learn more about the Mt. Zion Memorial Fund, its current endeavors, how to volunteer, or its relationship with Ploddings, please get in touch via <a href="https://mtzionmemorialfund.com/" target="_blank">their website</a>.</p>
+                <p>In case questions remain, please reach out via the Ploddings <Link href="/contact">contact page</Link>. The custodian & builder of Ploddings is <strong>blah148</strong>. To learn more about the Mt. Zion Memorial Fund, its current endeavors, how to volunteer, or its relationship with Ploddings, please contact them directly via <a href="https://mtzionmemorialfund.com/" target="_blank">their website</a>.</p>
 
 							</div>
 							<ArtistWidget pageType="about" />
