@@ -10,15 +10,15 @@ export default function ArtistWidget({ pageType }) {
   const [showLinks, setShowLinks] = useState(false);
 
   const headings = {
-    blog: 'About the Author',
+    blog: 'About the author',
     about: 'About blah148',
-    songs: 'Who wrote the tabs?',
+    songs: 'About the author',
   };
 
   const bioTexts = {
-    blog: <>This blog is written by <strong>blah148</strong> – an Albertan musician who has been posting about acoustic blues music since 2006. A Youtube channel, started in 2006, by the author, contains an array of in-depth guitar tutorials for pre-war blues music. A sample recording is shown below from a recent release from a separate album project.</>,
-    about: <>The person who built this site, as well as its transcriptions, is <strong>blah148</strong> – an Albertan musician, with a long-time interest in pre-war blues. A Youtube channel, by the site administrator, contains in-depth guitar tutorials for acoustic blues style music. A sample recording from a related album project is below.</>,
-    songs: <>This transcription / guitar tablature was notated by <strong>blah148</strong>, who is a pre-war blues enthusiast, hailing from Alberta, Canada. A Youtube channel by blah148 contains an array of in-depth acoustic blues song tutorials. A sample home recording is below from a recent release, related to these transcriptions.</>,
+    blog: <>This blog is written by <strong>blah148</strong>, who is an Albertan musician. A Youtube channel, started in 2006 by blah148, contains an array of in-depth guitar tutorials for pre-war blues music, to learn more. Also, a sample recording is shown below, from a separate album project.</>,
+    about: <>The person who built this site, and its transcriptions, is <strong>blah148</strong>; musician from Alberta, Canada, with a long-time love for pre-war blues. To hear a music sample by blah148, a recording from a related album project.</>,
+    songs: <>This guitar tablature was notated by <strong>blah148</strong>; a pre-war blues enthusiast, from Alberta, Canada. To hear some music by blah148, a recording is below from a recent musical project.</>,
   };
 
   const platformRows = [
