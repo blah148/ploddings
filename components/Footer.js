@@ -17,12 +17,12 @@ export default function Footer ({ userId = null  }) {
 			<div className="footer_higher-row">
 				<div className="footer_column">
 					<h2 className="footer_header">Content</h2> 
-					<Link href="/" className="footer_link-item" passHref>Home</Link>
+					<Link href="/" className="footer_link-item" passHref>All guitar tabs</Link>
 		  		<Link href="/blog" className="footer_link-item" passHref>Blog</Link>
 				</div>
 				<div className="footer_column">
-					<h2>Usage</h2>
-					<Link href="/contact" className="footer_link-item" passHref>Contact</Link>
+					<h2>Contact</h2>
+					<Link href="/contact" className="footer_link-item" passHref>Send a message</Link>
 				</div>
 				<div className="footer_column">
 					<h2 className="footer_header">Project</h2> 
@@ -32,7 +32,7 @@ export default function Footer ({ userId = null  }) {
 			</div>
 			<div className="footer_lower-row">
 				<div className="footerTagline">
-					<Link href="/about">Supporting the Mt. Zion Memorial Fund</Link>
+					<Link href="/">Ploddings: A Vault of Pre-War Blues Guitar Tablature</Link>
 				</div>
 				<div className="classFooterLinks">
 				  <Link href="/privacy-policy" className="footer_lower-item" passHref>Privacy policy</Link>

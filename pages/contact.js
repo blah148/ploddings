@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import Loader from '../components/Loader';
 import Sidebar from '../components/Sidebar';
 import Footer from '../components/Footer';
@@ -22,142 +21,55 @@ const verifyUserSession = (req) => {
   }
 };
 
-export default function ContactForm ({ userId, ip  }) {
+export default function ContactForm({ userId, ip }) {
+  const { isLoading } = useLoading();
 
-  const { isLoading, startLoading, stopLoading } = useLoading();
-  const [formData, setFormData] = useState({
-    fname: '',
-    email: '',
-    subject: '',
-    message: '',
-  });
-
-  const { fname, email, subject, message } = formData;
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!email || !subject || !message) {
-      alert('Please fill in all required fields.');
-      return;
-    }
-		
-		startLoading();
-
-    try {
-      const response = await fetch('/api/sendContactForm', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData),
-      });
-
-      if (response.ok) {
-        setFormData({
-          fname: '',
-          email: '',
-          subject: '',
-          message: '',
-        });
-        alert('Form submitted successfully!');
-				stopLoading();
-      } else {
-				stopLoading();
-        const error = await response.json();
-        alert(`Error: ${error.message}`);
-      }
-    } catch (error) {
-      console.error('Submission error:', error);
-      alert('An error occurred while submitting the form.');
-    }
-  };
-
-	return (
-		<div className="bodyA">
-       <SEO
-				 title="Contact"
-         description="For anything Ploddings-related where you need a hand from the other-side, from suggesting songs to help with your account, one can reach out by contacting"
-         slug="/contact"
-       />
-			<Sidebar userId={userId} ip={ip} />
-			<div className="mainFeedAll">
-				<div className="feedContainer">
-					<Loader isLoading={isLoading} />
-					<div className="mainFeed">
-						<div className="topRow">
-							<IpodMenuLink fallBack="" />
-							<div style={{display: "flex"}}>
+  return (
+    <div className="bodyA">
+      <SEO
+        title="Contact"
+        description="For anything Ploddings-related where you need a hand from the other-side, from suggesting songs to help with your account, one can reach out by contacting"
+        slug="/contact"
+      />
+      <Sidebar userId={userId} ip={ip} />
+      <div className="mainFeedAll">
+        <div className="feedContainer">
+          <Loader isLoading={isLoading} />
+          <div className="mainFeed">
+            <div className="topRow">
+              <IpodMenuLink fallBack="" />
+              <div style={{ display: 'flex' }}>
                 <Menu userId={userId} />
-							</div>
-						</div>
-						<div className="narrowedFeedBody">
-							<StabilizerText />
-							<h1>Contact</h1>
-							<form onSubmit={handleSubmit}>
-								<label htmlFor="name">Name: (optional)</label>
-								<input
-									className="formRow"
-									type="text"
-									id="fname"
-									name="fname"
-									value={formData.fname}
-									onChange={handleChange}
-								/>								
-								<label htmlFor="email">Email <span style={{ color: 'red' }}>*</span>:</label>
-								<input
-									className="formRow"
-									type="email"
-									id="email"
-									name="email"
-									value={email}
-									required
-									onChange={handleChange}
-								/>
-								<label htmlFor="subject">Subject <span style={{ color: 'red' }}>*</span>:</label>
-								<select
-									className="formRow"
-									id="subject"
-									name="subject"
-									value={subject}
-									required
-									onChange={handleChange}
-								>
-									<option value="">Please select an option</option>
-									<option value="General question">General question/message</option>
-									<option value="Content suggestion">Content suggestion/request</option>
-									<option value="Bug report">Report a bug</option>
-								</select>
-								<label htmlFor="message">Message <span style={{ color: 'red' }}>*</span>:</label>
-								<textarea
-									className="formRow"
-									id="message"
-									name="message"
-									required
-									value={message}
-									onChange={handleChange}
-								></textarea>
-								<button type="submit" value="Submit">Submit</button>
-							</form>
-						</div>
-					</div>
-				</div>
-				<Footer userId={userId} />
-			</div>
-		</div>
-	);
+              </div>
+            </div>
+            <div className="narrowedFeedBody">
+              <StabilizerText />
+              <h1>Contact</h1>
 
-};
+              {/* 
+              <form onSubmit={handleSubmit}>
+                ...
+              </form>
+              */}
+
+              <p>
+                Please send messages/inquiries to:{' '}
+                <a href="mailto:info@ploddings.com">info@ploddings.com</a>. Thank you.
+              </p>
+            </div>
+          </div>
+        </div>
+        <Footer userId={userId} />
+      </div>
+    </div>
+  );
+}
 
 export async function getServerSideProps({ params, req }) {
-
   const userSession = verifyUserSession(req);
   const forwardedFor = req.headers['x-forwarded-for'];
   const ip = forwardedFor ? forwardedFor.split(',')[0] : req.connection.remoteAddress;
-  
+
   return {
     props: {
       ip,

@@ -99,7 +99,7 @@ export default function Thread({ userId=null, ip, threadData }) {
 									<div className={styles.storyText}>{threadData.body_text}</div>
 								</div>
 							</div>
-							<h2>MuseScore tabs</h2>
+							<h2>Guitar tabs</h2>
 							<TableDataFetcher threadId={threadData.id} userId={userId} />
 						</div>
 						<BeingWatchedMobile />
