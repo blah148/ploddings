@@ -18,7 +18,7 @@ export default function ArtistWidget({ pageType }) {
   const bioTexts = {
     blog: <>The author, <strong>blah148</strong>, is a Korean who tries to play the bluesi, from Alberta, Canada. For a sampling of what foreign, blues-infused sounds, with guitar and vocals, may sound like, any daring and willing subject my click the listen button below.</>,
     about: <>The person who built this site, and its tabs/transcriptions, is <strong>blah148</strong>; musician from Alberta, Canada, with a long-time love for pre-war blues. A sample recording, from a recently released album, is shown below, and particularly fit for a patient listener, who may not mind in sparing some valuable minutes of the day.</>,
-    songs: <>The maker of these tabs is, <strong>blah148</strong>; a Korean who tries to play the blues, from Alberta, Canada. For some foreign, though possibly blues infused sounds, with guitar and vocals, any masochist may click to listen below. </>,
+    songs: <>The maker of these tabs is, <strong>blah148</strong>; a Korean who tries to play the blues, from Alberta, Canada. For some foreign, though possibly blues infused sounds, with guitar and vocals, any willing subject may click to listen below. </>,
   };
 
   const platformRows = [
