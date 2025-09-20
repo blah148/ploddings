@@ -17,7 +17,7 @@ export default function Footer ({ userId = null  }) {
 			<div className="footer_higher-row">
 				<div className="footer_column">
 					<h2 className="footer_header">Content</h2> 
-					<Link href="/" className="footer_link-item" passHref>All guitar tabs</Link>
+					<Link href="/" className="footer_link-item" passHref>View guitar tabs</Link>
 		  		<Link href="/blog" className="footer_link-item" passHref>Blog</Link>
 				</div>
 				<div className="footer_column">
@@ -32,7 +32,7 @@ export default function Footer ({ userId = null  }) {
 			</div>
 			<div className="footer_lower-row">
 				<div className="footerTagline">
-					<Link href="/">Ploddings: A Vault of Pre-War Blues Guitar Tablature</Link>
+					<Link href="/">Ploddings: A Pre-War Blues Learning Tool</Link>
 				</div>
 				<div className="classFooterLinks">
 				  <Link href="/privacy-policy" className="footer_lower-item" passHref>Privacy policy</Link>

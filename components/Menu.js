@@ -37,6 +37,7 @@ export default function Menu({ userId = null }) {
         onClick={toggleMenu}
         viewBox="0 0 448 512"
         aria-hidden="true"
+				style={{ marginLeft: 'auto' }}
         focusable="false"
       >
         <path
