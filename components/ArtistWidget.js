@@ -16,9 +16,10 @@ export default function ArtistWidget({ pageType }) {
   };
 
   const bioTexts = {
-    blog: <>The author, <strong>blah148</strong>, is a Korean who tries to play the bluesi, from Alberta, Canada. For a sampling of what foreign, blues-infused sounds, with guitar and vocals, may sound like, any daring and willing subject my click the listen button below.</>,
+blog: <>The author of this, as well as the builder of the site's blues & folk tabs, is <strong>blah148</strong>; an enthusiast of these styles of music. Here is a sample recording, trying to amalgamate some of these learnings.</>,
     about: <>The person who built this site, and its tabs/transcriptions, is <strong>blah148</strong>; musician from Alberta, Canada, with a long-time love for pre-war blues. A sample recording, from a recently released album, is shown below, and particularly fit for a patient listener, who may not mind in sparing some valuable minutes of the day.</>,
-    songs: <>The maker of these tabs is, <strong>blah148</strong>; a Korean who tries to play the blues, from Alberta, Canada. For some foreign, though possibly blues infused sounds, with guitar and vocals, any willing subject may click to listen below. </>,
+songs: <>The builder of this site's blues & folk tabs is <strong>blah148</strong>; an enthusiast of these going-the-way-of-the-dodo styles of music. This manner of (at least shooting for) note-for-note tablature, or notation, is part of the endeavor of 'transcribing'. Part of the reason for this library of transcriptions is the feeble hope of <strong>blah148</strong> that the sound of these recordings will start to rub off, maybe by the 111th or 327th one; in some ways, the number is like a measure of desperation and clawing. It's a way that is recommended to others, though may not necessarily replace hearing these sounds up close & in-person. Here is a sample recording, trying to amalgamate some of these learnings.</>,
+
   };
 
   const platformRows = [
