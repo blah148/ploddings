@@ -105,6 +105,17 @@ export default function Song({ userId = null, ip, threadData, songData }) {
             </div>
             <ParentInfoLink threadData={threadData} fallBack='/' />
             <TuningDetails tuning_id={songData.tuning} />
+{songData.published_date && (
+  <div>
+    Date posted:{' '}
+    {new Intl.DateTimeFormat('en-GB', {
+      day: '2-digit',
+      month: 'long',
+      year: 'numeric',
+    }).format(new Date(songData.published_date))}
+  </div>
+)}
+
             <div className={styles.bottomBorder}></div>
             <div className={styles.componentsContainer}>
               <div className={styles.primaryColumn}>
