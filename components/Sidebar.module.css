@@ -6,7 +6,7 @@ div.sidebarContainer {
   background-image: linear-gradient(165deg, #26d6c4 0%, #10b1d3 100%);
 	overflow-y: auto;
 }
-@media screen and (max-width: 1024px) {
+@media screen and (max-width: 1624px) {
 	div.sidebarContainer {
 		display: none;
 	}

@@ -1,82 +1,24 @@
-/* PDFDownloadButton.module.css */
-
-@media (min-width: 1773px){
+@media (min-width: 768px) {
 	.button {
 		font-family: 'Inter', sans-serif;
 		font-size: 14px;
 		width: 100px;
 		height: 40px;
 		background: #2e68c0;
-		box-shadow: none;
 		display: inline-flex;
 		align-items: center;
 		justify-content: center;
 		border: none;
 		color: white;
-		position: absolute;
+		position: relative; /* ✅ in document flow */
 		border-radius: 6px;
-		right: 119px;
-		top: 6px;
-	}
-}
-
-@media (min-width: 1723px) and (max-width: 1772) {
-	.button {
-		font-family: 'Inter', sans-serif;
-		font-size: 14px;
-		width: 100px;
-		height: 40px;
-		background: #2e68c0;
-		box-shadow: none;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		border: none;
-		color: white;
-		position: absolute;
-		border-radius: 6px;
-		right: 119px;
-		top: 1px;
-	}
-}
-
-@media (min-width: 1589px) and (max-width: 1722px) {
-	.button {
-		font-family: 'Inter', sans-serif;
-		font-size: 14px;
-		width: 100px;
-		height: 40px;
-		background: #2e68c0;
-		box-shadow: none;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		border: none;
-		color: white;
-		position: absolute;
-		border-radius: 6px;
-		right: 89px;
-		top: 1px;
-	}
-}
-
-@media (max-width: 1588px) {
-	.button {
-		font-family: 'Inter', sans-serif;
-		font-size: 14px;
-		width: 98px;
-		height: 32px;
-		background: #2e68c0;
-		box-shadow: none;
-		display: inline-flex;
-		align-items: center;
-		justify-content: center;
-		border: none;
-		color: white;
-		position: absolute;
-		border-radius: 6px;
-		right: 89px;
-		top: 5px;
+		margin-left: auto; /* ✅ aligns right */
+		margin-right: 119px;
+		margin-top: 6px;
+		z-index: 10;
+		cursor: pointer;
+		top: -801px;
+		left: 258px;
 	}
 }
 
@@ -86,20 +28,24 @@
 	width: 68px;
 	height: 32px;
 	background: #2e68c0;
-	box-shadow: none;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	border: none;
 	color: white;
-	position: absolute;
+	position: relative;
 	border-radius: 6px;
-	left: 113px;
-	bottom: 17px;
+	margin-left: 113px;
+	margin-bottom: 17px;
+	z-index: 10;
+	cursor: pointer;
+	top: -63px;
+	left: 10px;
+	box-shadow: none;
 }
 
 .buttonMobile, .button {
-	z-index: 50;
+	z-index: 10;
 }
 
 .button:hover {
@@ -107,9 +53,9 @@
 }
 
 .svgIcon {
-  display: none;
-  width: 25px;
-  margin-right: 6px;
-  margin-top: -3px;
+	display: none;
+	width: 25px;
+	margin-right: 6px;
+	margin-top: -3px;
 }
 

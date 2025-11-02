@@ -129,6 +129,8 @@ export default function Song({ userId = null, ip, threadData, songData }) {
 													canAccess={true}
 											/>
                 </div>
+	
+								<PDFDownloadButton pdfUrl={songData.pdf_download} songName={songData.name}/>
                 <h2 id="ii">ii) Slow-downer playalong</h2>
                   <SlowDownerComponent isUnlocked={true} dropbox_mp3_link={songData.link_1} />
                 <h2 id="iii">iii) More info</h2>

@@ -58,7 +58,7 @@ songs: <>The builder of this site's blues & folk tabs is <strong>blah148</strong
   ];
 
   return (
-    <div className={styles.widgetContainer}>
+    <div id="pdf" className={styles.widgetContainer}>
       <div className={styles.contentRow}>
         {/* Artist image */}
         <div className={styles.leftColumn}>
