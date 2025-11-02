@@ -68,11 +68,11 @@ export default function Song({ userId = null, ip, threadData, songData }) {
 				</>
       )}
       <SEO
-        title={`Playable guitar tabs for ${songData.name} by ${threadData.name}`}
+        title={`Guitar Tabs for ${songData.name} by ${threadData.name}`}
         image={threadData.link_3}
         page_type="songs"
         slug={songData.slug}
-				description={`Click play to listen to interactive guitar tablature for ${songData.name} by ${threadData.name}.`}
+				description={`Click 'play' to listen to interactive guitar tablature for ${songData.name} by ${threadData.name}.`}
       />
       <Sidebar userId={userId} ip={ip} />
       <div className="mainFeedAll">
@@ -94,7 +94,22 @@ export default function Song({ userId = null, ip, threadData, songData }) {
               <h1>{songData.name}</h1>
             </div>
             <ParentInfoLink threadData={threadData} fallBack='/' />
-            <TuningDetails tuning_id={songData.tuning} />
+						<TuningDetails tuning_id={songData.tuning} />
+							{songData.published_date && (
+								<div  
+									style={{
+										marginTop: '6px',
+										marginBottom: '0px',
+									}}
+								>
+									Date posted:{' '}
+									{new Intl.DateTimeFormat('en-GB', {
+										day: '2-digit',
+										month: 'long',
+										year: 'numeric',
+									}).format(new Date(songData.published_date))}
+								</div>
+					  )}
             <div className={styles.bottomBorder}></div>
             <div className={styles.componentsContainer}>
               <div className={styles.primaryColumn}>
