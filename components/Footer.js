@@ -17,7 +17,7 @@ export default function Footer ({ userId = null  }) {
 			<div className="footer_higher-row">
 				<div className="footer_column">
 					<h2 className="footer_header">Content</h2> 
-					<Link href="/" className="footer_link-item" passHref>View guitar tabs</Link>
+					<Link href="/" className="footer_link-item" passHref>View tabs (Home)</Link>
 		  		<Link href="/blog" className="footer_link-item" passHref>Blog</Link>
 				</div>
 				<div className="footer_column">

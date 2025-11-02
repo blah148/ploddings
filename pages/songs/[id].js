@@ -72,7 +72,7 @@ export default function Song({ userId = null, ip, threadData, songData }) {
         image={threadData.link_3}
         page_type="songs"
         slug={songData.slug}
-				description={`Click 'play' to listen to interactive guitar tablature for ${songData.name} by ${threadData.name}.`}
+				description={`Click play to listen to interactive guitar tablature for ${songData.name} by ${threadData.name}.`}
       />
       <Sidebar userId={userId} ip={ip} />
       <div className="mainFeedAll">
@@ -80,40 +80,35 @@ export default function Song({ userId = null, ip, threadData, songData }) {
           <Loader isLoading={isLoading} />
           <div className="mainFeed">
             <div className="topRow">
-              <Link className="homeButton mobileOnly" href="/" passHref>
-                <svg role="img" height="22" width="22" aria-hidden="true" viewBox="0 0 24 24" data-encore-id="icon">
-                  <path d="M13.5 1.515a3 3 0 0 0-3 0L3 5.845a2 2 0 0 0-1 1.732V21a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1v-6h4v6a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V7.577a2 2 0 0 0-1-1.732l-7.5-4.33z"></path>
-                </svg>
-                <div className="homeText">Back to Pre-War Blues Tabs</div>              </Link>
-              <div style={{display: "flex"}}>
-                <Menu userId={userId} />
-              </div>
+<Link className="homeButton mobileOnly" href="/" passHref>
+  <img
+    src="https://f005.backblazeb2.com/file/ploddings-images/site_images/ploddings_logo-on-transparent.png"
+    alt="Ploddings logo"
+    style={{
+      width: '60px',
+      height: '60px',
+      borderRadius: '50%',
+      objectFit: 'cover',
+      marginRight: '8px',
+      display: 'inline-block',
+      verticalAlign: 'middle',
+    }}
+  />
+  <div className="homeText" style={{ display: 'inline-block', verticalAlign: 'middle', margin: 'auto' }}>
+    (Back to All Pre-War Blues Tabs)
+  </div>
+</Link>
+
             </div>
-            <StabilizerText />
             <div className={styles.songNameContainer}>
               <h1>{songData.name}</h1>
             </div>
             <ParentInfoLink threadData={threadData} fallBack='/' />
-						<TuningDetails tuning_id={songData.tuning} />
-							{songData.published_date && (
-								<div  
-									style={{
-										marginTop: '6px',
-										marginBottom: '0px',
-									}}
-								>
-									Date posted:{' '}
-									{new Intl.DateTimeFormat('en-GB', {
-										day: '2-digit',
-										month: 'long',
-										year: 'numeric',
-									}).format(new Date(songData.published_date))}
-								</div>
-					  )}
+            <TuningDetails tuning_id={songData.tuning} />
             <div className={styles.bottomBorder}></div>
             <div className={styles.componentsContainer}>
               <div className={styles.primaryColumn}>
-                <h2 id="i">i) Guitar tablature</h2>
+                <h2 id="i">i) Guitar tablature / sheet music</h2>
                 <div style={{ position: "relative" }}>
 											<MusescoreEmbed
 													pageId={songData.id}
@@ -123,7 +118,7 @@ export default function Song({ userId = null, ip, threadData, songData }) {
 													canAccess={true}
 											/>
                 </div>
-                <h2 id="ii">ii) Slow-downer / pitch-shifter</h2>
+                <h2 id="ii">ii) Slow-downer playalong</h2>
                   <SlowDownerComponent isUnlocked={true} dropbox_mp3_link={songData.link_1} />
                 <h2 id="iii">iii) More info</h2>
                 {(songData.body_text || songData.lyrics || songData.tuning) && (

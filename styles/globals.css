@@ -230,6 +230,9 @@ a {
 }
 /*********************
 **********************/
+div.ploddings h1 {
+	font-size: 26px;
+}
 div.ploddings h2 {
 	margin: 26px 0 12px 0;
 	font-size: 20px;
@@ -780,6 +783,10 @@ div.classFooterLinks {
 	.footer_lower-row {
 		margin: 8px auto 22px auto;
 	}
+div.topRow {
+	padding: 8px 0 12px 0;
+}
+
 }
 .footerTagline:hover {
 	opacity: 0.75;

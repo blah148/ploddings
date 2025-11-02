@@ -66,7 +66,7 @@ export default function Thread({ userId=null, ip, threadData }) {
   return (
     <div className="bodyA">
        <SEO
-         title={`A vault of ${threadData.name} songs, with playable guitar tablature.`}
+         title={`${threadData.name} - Interactive Guitar Tabs`}
 				 image={threadData.link_3}
 				 page_type="threads"
 				 slug={threadData.slug}
@@ -84,7 +84,6 @@ export default function Thread({ userId=null, ip, threadData }) {
 							</div>
             </div>
 						<div className="narrowedFeedBody">
-							<StabilizerText />
 							<div className={styles.headerContainer}>		
 								<Image width={300} height={300} alt={threadData.featured_img_alt_text ? threadData.featured_img_alt_text : `${threadData.name} guitar portrait`} src={threadData.link_3 || 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_550px/default_550px.webp'} />
 								<div className={styles.rightColumn}>
@@ -99,7 +98,7 @@ export default function Thread({ userId=null, ip, threadData }) {
 									<div className={styles.storyText}>{threadData.body_text}</div>
 								</div>
 							</div>
-							<h2>Guitar tabs</h2>
+							<h2>Guitar tabs / sheet music</h2>
 							<TableDataFetcher threadId={threadData.id} userId={userId} />
 						</div>
 						<BeingWatchedMobile />

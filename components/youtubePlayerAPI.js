@@ -3,37 +3,66 @@ import YouTube from 'react-youtube';
 import { useLoading } from '../context/LoadingContext';
 
 const YouTubeVideo = ({ videoId }) => {
-	const { isLoading, startLoading, stopLoading } = useLoading();
+  const { isLoading, startLoading, stopLoading } = useLoading();
+  const [isMobile, setIsMobile] = useState(false);
 
-  // Check if the videoId contains "youtube.com"
-  const isYouTubeLink = videoId.includes("youtube.com");
-	
-	var slicedLink = videoId.substring("https://www.youtube.com/watch?v=".length);
-	var finishedLink = slicedLink.split('&')[0];
+  useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth <= 768);
+    handleResize(); // Run on mount
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
+  // Check if the videoId is a full YouTube link
+  const isYouTubeLink = videoId.includes('youtube.com');
+  const slicedLink = videoId.replace('https://www.youtube.com/watch?v=', '');
+  const finishedLink = slicedLink.split('&')[0];
+
+  // ✅ Dynamic sizes
   const opts = {
-    height: '390',
-    width: '640',
+    width: '100%', // force full width of container
+    height: isMobile ? '220' : '390', // smaller height for mobile
     playerVars: {
       autoplay: 0,
     },
   };
 
-	useEffect(() => {
-		if (isYouTubeLink) {
-			startLoading(); // Set isLoading to true only if it's a YouTube video
-		}
-	}, [isYouTubeLink]);
+  useEffect(() => {
+    if (isYouTubeLink) {
+      startLoading();
+    }
+  }, [isYouTubeLink]);
 
-  const onReady = (event) => {
-    // Access to player in all event handlers via event.target
+  const onReady = () => {
     stopLoading();
   };
 
   return (
-    <div>
+    <div
+      style={{
+        position: 'relative',
+        width: '100%',
+        maxWidth: '100%',
+        overflow: 'hidden',
+        borderRadius: '8px',
+        backgroundColor: '#000',
+        aspectRatio: '16/9', // ✅ ensures no overflow and perfect scaling
+      }}
+    >
       {isYouTubeLink ? (
-        <YouTube videoId={finishedLink} opts={opts} onReady={onReady} />
+        <YouTube
+          videoId={finishedLink}
+          opts={opts}
+          onReady={onReady}
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+          }}
+          iframeClassName="youtube-iframe"
+        />
       ) : (
         <div dangerouslySetInnerHTML={{ __html: videoId }} />
       )}
