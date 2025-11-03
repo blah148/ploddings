@@ -1,11 +1,11 @@
 // components/AudioPlayer.js
 import React, { useEffect, useRef, useState } from 'react';
 import WaveSurfer from 'wavesurfer.js';
-import { supabase } from '../utils/supabase'; // adjust path if needed
+import { supabase } from '../utils/supabase';
 import styles from './AudioPlayer.module.css';
 import { FaSpotify, FaApple, FaYoutube, FaBandcamp } from 'react-icons/fa';
 
-export default function AudioPlayer() {
+export default function AudioPlayer({ time, remaining }) {
   const waveformRef = useRef(null);
   const wavesurfer = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
@@ -50,6 +50,7 @@ export default function AudioPlayer() {
   useEffect(() => {
     if (!recording || !waveformRef.current) return;
 
+    // Destroy previous instance if exists
     if (wavesurfer.current) {
       wavesurfer.current.destroy();
     }
@@ -64,6 +65,24 @@ export default function AudioPlayer() {
     });
 
     wavesurfer.current.load(recording.recording_link);
+
+    // ✅ Emit progress updates every frame
+    wavesurfer.current.on('audioprocess', (currentTime) => {
+      window.dispatchEvent(
+        new CustomEvent('waveSurfer-progress', {
+          detail: { currentTime },
+        })
+      );
+    });
+
+    // ✅ Also emit play/pause events
+    wavesurfer.current.on('play', () => {
+      window.dispatchEvent(new Event('waveSurfer-play'));
+    });
+
+    wavesurfer.current.on('pause', () => {
+      window.dispatchEvent(new Event('waveSurfer-pause'));
+    });
 
     return () => {
       if (wavesurfer.current) {
@@ -84,7 +103,12 @@ export default function AudioPlayer() {
   return (
     <div className={styles.playerContainer}>
       <div className={styles.songTitle}>
-        <span className={styles.demoLabel}>Demo:</span> {recording.name}
+<span className={styles.demoLabel}>
+  <strong>Step 1:</strong> Listen to at least{' '}
+  <span style={{ textDecoration: 'underline' }}>{remaining}</span> seconds of
+</span>{' '}
+{recording.name}
+
       </div>
 
       <div ref={waveformRef} className={styles.waveform}></div>
@@ -100,7 +124,9 @@ export default function AudioPlayer() {
         From the album:{' '}
         <span className={styles.albumClickable}>
           {recording.album}{' '}
-          ({recording.release_date ? new Date(recording.release_date).getFullYear() : ''})
+          {recording.release_date
+            ? `(${new Date(recording.release_date).getFullYear()})`
+            : ''}
         </span>
       </div>
 

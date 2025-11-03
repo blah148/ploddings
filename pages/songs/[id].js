@@ -25,7 +25,7 @@ import MusescoreEmbed from '../../components/MusescoreEmbed';
 import BeingWatchedMobile from '../../components/BeingWatchedMobile.js';
 import Head from 'next/head';
 import GTM from '../../components/GTM.js';
-import ArtistWidget from '../../components/ArtistWidget.js';
+import ArtistWidget_Downloader from '../../components/ArtistWidget_Downloader.js';
 
 export default function Song({ userId = null, ip, threadData, songData }) {
 
@@ -150,8 +150,12 @@ export default function Song({ userId = null, ip, threadData, songData }) {
                 </div>
               </div>
             </div>
+<ArtistWidget_Downloader
+	artistName={threadData.name}
+  songName={songData.name}
+  pdfUrl={songData.pdf_download}
+/>
 
-            <ArtistWidget pageType="songs" />
 
 						<BeingWatchedMobile />
           </div>
