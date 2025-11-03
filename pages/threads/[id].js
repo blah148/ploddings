@@ -9,6 +9,7 @@ import ChatWithGPT from '../../components/ChatWithGPT.js';
 import jwt from 'jsonwebtoken';
 const { fetchThreadData } = require('../../db-utilities');
 import { useLoading } from '../../context/LoadingContext';
+import Link from 'next/link';
 import Loader from '../../components/Loader';
 import styles from '../../styles/songs.module.css';
 import Footer from '../../components/Footer';
@@ -78,10 +79,25 @@ export default function Thread({ userId=null, ip, threadData }) {
 					<Loader isLoading={isLoading} />
 			    <div className="mainFeed">
 						<div className="topRow">
-							<IpodMenuLink fallBack='' />
-							<div style={{display: "flex"}}>
-                <Menu userId={userId} />
-							</div>
+<Link className="homeButton mobileOnly" href="/" passHref>
+  <img
+    src="https://f005.backblazeb2.com/file/ploddings-images/site_images/ploddings_logo-on-transparent.png"
+    alt="Ploddings logo"
+    style={{
+      width: '60px',
+      height: '60px',
+      borderRadius: '50%',
+      objectFit: 'cover',
+      marginRight: '8px',
+      display: 'inline-block',
+      verticalAlign: 'middle',
+    }}
+  />
+  <div className="homeText" style={{ display: 'inline-block', verticalAlign: 'middle', margin: 'auto' }}>
+    (Back to All Pre-War Blues Tabs)
+  </div>
+</Link>
+
             </div>
 						<div className="narrowedFeedBody">
 							<div className={styles.headerContainer}>		
