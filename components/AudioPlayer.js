@@ -103,20 +103,23 @@ export default function AudioPlayer({ time, remaining }) {
   return (
     <div className={styles.playerContainer}>
       <div className={styles.songTitle}>
-<span className={styles.demoLabel}>
-  <strong>Step 1:</strong> Listen to at least{' '}
-  <span style={{ textDecoration: 'underline' }}>{remaining}</span> seconds of
-</span>{' '}
-{recording.name}
-
+    <span className={styles.demoLabel}>
+      <strong style={{ textDecoration: 'underline' }}>Step 1:</strong>
+      <br />
+      Tap on the 'Listen/play' button below this line, so that at least{' '}
+      <span>{remaining}</span> seconds of{' '}
+      <span style={{ fontWeight: '800' }}>{recording.name}</span> elapses in play-time.
+    </span>
+    <br />
+    <span style={{ fontSize: '14px', color: 'grey', fontStyle: 'italic', fontWeight: 'normal' }}>
+      Note: After that, the “Download PDF”, with a direct link to the guitar tablature, which is shown below the orange waveform, will become clickable.
+    </span>
       </div>
-
-      <div ref={waveformRef} className={styles.waveform}></div>
-
       <button onClick={togglePlay} className={styles.playButton}>
         {isPlaying ? 'Pause' : 'Listen/play'}
       </button>
 
+      <div ref={waveformRef} className={styles.waveform}></div>
       <div
         className={styles.songAlbum}
         onClick={() => setShowStreaming(!showStreaming)}

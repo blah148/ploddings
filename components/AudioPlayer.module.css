@@ -24,6 +24,7 @@
 .songTitle {
 	margin: 18px 0 0px 0;
 	font-size: 14px;
+	text-align: left;
 	font-weight: 600;
 	font-size: 16px;
 }

@@ -130,7 +130,6 @@ export default function Home({ userId, ip }) {
     }}
   />
   <div className="homeText" style={{ display: 'inline-block', verticalAlign: 'middle', margin: 'auto' }}>
-    Home
   </div>
 </Link>
 
