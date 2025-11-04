@@ -154,6 +154,8 @@ export default function Song({ userId = null, ip, threadData, songData }) {
 	artistName={threadData.name}
   songName={songData.name}
   pdfUrl={songData.pdf_download}
+	ip={ip}
+	songId={songData.id}
 />
 
 

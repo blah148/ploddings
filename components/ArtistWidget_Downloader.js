@@ -3,13 +3,32 @@ import styles from './ArtistWidget.module.css';
 import AudioPlayer from './AudioPlayer.js';
 import { FaFileDownload } from 'react-icons/fa';
 import YoutubeSubscribe from './YoutubeSubscribe.js';
+import { supabase } from '../utils/supabase.js';
 
-export default function ArtistWidget_Downloader({ artistName, songName, pdfUrl }) {
-  const LISTEN_THRESHOLD = 120; // seconds required to unlock
+export default function ArtistWidget_Downloader({ artistName, songName, pdfUrl, songId, ip }) {
+  const LISTEN_THRESHOLD = 90; // seconds required to unlock
   const [playedSeconds, setPlayedSeconds] = useState(0);
   const [ready, setReady] = useState(false);
   const listenedSecondsRef = useRef(new Set());
   const isPlayingRef = useRef(false);
+  const hasLoggedRef = useRef(false);
+  const storageKey = `listen_progress_${songId}`;
+
+  // Load saved progress from localStorage
+  useEffect(() => {
+    const stored = parseInt(localStorage.getItem(storageKey) || '0');
+    if (stored > 0) {
+      for (let i = 0; i < stored; i++) listenedSecondsRef.current.add(i);
+      setPlayedSeconds(stored);
+    }
+  }, [storageKey]);
+
+useEffect(() => {
+  return () => {
+    localStorage.removeItem(storageKey);
+  };
+}, [songId]);
+
 
   // Track WaveSurfer playback events
   useEffect(() => {
@@ -38,19 +57,65 @@ export default function ArtistWidget_Downloader({ artistName, songName, pdfUrl }
     };
   }, []);
 
-  // Unlock after threshold reached
+  // Save progress in localStorage
   useEffect(() => {
-    if (playedSeconds >= LISTEN_THRESHOLD) setReady(true);
+    localStorage.setItem(storageKey, playedSeconds);
+  }, [playedSeconds, storageKey]);
+
+  // Unlock after threshold reached + log event
+  useEffect(() => {
+    if (playedSeconds >= LISTEN_THRESHOLD && !hasLoggedRef.current) {
+      setReady(true);
+      hasLoggedRef.current = true;
+      logListenUnlock(songId, playedSeconds, ip);
+    }
   }, [playedSeconds]);
 
   const remaining = Math.max(LISTEN_THRESHOLD - playedSeconds, 0);
 
+  // Log unlock to Supabase (using passed-in IP)
+  const logListenUnlock = async (songId, seconds_listened, ip) => {
+    if (!ip) {
+      console.warn('No IP provided — skipping unlock log.');
+      return;
+    }
+
+    try {
+      // Prevent duplicate logs (same IP + song)
+      const { data: existing, error: selectError } = await supabase
+        .from('listen_unlocks')
+        .select('id')
+        .eq('song_id', songId)
+        .eq('ip', ip)
+        .maybeSingle();
+
+      if (selectError) throw selectError;
+      if (existing) {
+        console.log('Unlock already logged for this IP/song.');
+        return;
+      }
+
+      const { error: insertError } = await supabase.from('listen_unlocks').insert([
+        {
+          song_id: songId,
+          seconds_listened,
+          unlocked: true,
+          ip,
+        },
+      ]);
+
+      if (insertError) throw insertError;
+      // console.log('✅ Listen unlock logged successfully.');
+    } catch (error) {
+      // console.error('Error logging listen unlock:', error.message);
+    }
+  };
+
+  // Prevent clicking before unlock
   const handleFakeClick = (e) => {
     if (!ready) {
       e.preventDefault();
-      alert(
-        `Please listen for ${remaining} more second${remaining !== 1 ? 's' : ''}.`
-      );
+      alert(`Please listen for ${remaining} more second${remaining !== 1 ? 's' : ''}.`);
     }
   };
 
@@ -74,14 +139,27 @@ export default function ArtistWidget_Downloader({ artistName, songName, pdfUrl }
       >
         For: {songName} by {artistName}
       </a>
-			<p>To obtain a PDF version of the tabs (shown above on this page), there's but one kind favor that <strong>blah148</strong> asks of you.</p>
+
+      <p>
+        To obtain a PDF version of the tabs (shown above on this page), there’s
+        but one kind favor that <strong>blah148</strong> asks of you.
+      </p>
+
       {/* YouTube Subscribe button */}
       <div className={styles.contentRow}>
         <div className={styles.leftColumn}>
           <YoutubeSubscribe />
         </div>
       </div>
-			<p>It is to sample music that <strong>blah148</strong> made from 2024 to 2025, in large part with the inspiration from the players transcribed for this project. Though, having said this, an imposition isn't meant; if it's preferred not to listen, then that is okay! - the on-site, embedded tablature is still available above to use.</p>
+
+      <p>
+        It is to sample music that <strong>blah148</strong> made from 2024 to
+        2025, in large part with inspiration from the players transcribed for
+        this project. Though, having said this, an imposition isn’t meant; if
+        it’s preferred not to listen, that’s okay — the on-site tablature above
+        remains available.
+      </p>
+
       <div className={styles.contentRow}>
         <AudioPlayer time={LISTEN_THRESHOLD} remaining={remaining} />
       </div>
@@ -90,6 +168,8 @@ export default function ArtistWidget_Downloader({ artistName, songName, pdfUrl }
         className={styles.contentRow}
         style={{
           marginTop: '20px',
+          flexDirection: 'column',
+          alignItems: 'flex-start',
         }}
       >
         <strong
@@ -97,17 +177,23 @@ export default function ArtistWidget_Downloader({ artistName, songName, pdfUrl }
             fontSize: '16px',
             color: 'black',
             textDecoration: 'underline',
+            marginBottom: '5px',
           }}
         >
           Step 2:
         </strong>
-        <span>Once the play-back time has elapsed, as part of Step 1, then click on the 'un-greyed out' version of the button that will appear below, which will open a new tab with the downloadable PDF version of the guitar tablature.</span>
-        {/* ✅ Download button area pinned to bottom left */}
+        <span style={{ marginBottom: '10px' }}>
+          Once the playback time has elapsed (as part of Step 1), click the
+          un-greyed-out button below to open a new tab with the downloadable PDF
+          version of the tablature.
+        </span>
+
         <div
           style={{
             display: 'flex',
             justifyContent: 'flex-start',
             width: '100%',
+            marginTop: '5px',
           }}
         >
           {ready ? (
