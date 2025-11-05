@@ -88,3 +88,273 @@
     justify-content: center;
   }
 }
+
+
+
+/* --- Card container --- */
+.widgetContainer {
+  padding: 24px 24px 12px 24px;
+  box-shadow: 0px 8px 25px rgba(0, 0, 0, 0.12), 0 0 0 2px rgba(0, 0, 0, 0.01);
+  display: flex;
+  border-radius: 5px;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  min-height: 60px;
+  margin-bottom: 26px;
+  max-width: 960px;
+  margin-right: auto;
+  margin-left: 0;          /* ✅ left-aligned by default (desktop) */
+  background-color: #f9f9f9;
+  font-family: 'Baloo2-Regular';
+  margin-top: 24px;
+}
+
+/* --- Header --- */
+.header {
+  text-align: left;
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 14px;
+}
+
+h2.header {
+	margin: 14px 0 6px 0 !important;
+}
+
+/* --- Layout --- */
+.contentRow {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.leftColumn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Album artwork */
+.albumArt {
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  margin-bottom: 0.75rem;
+}
+
+.profileImage {
+  border-radius: 50%;
+  object-fit: cover;
+  margin-bottom: 0.75rem;
+}
+
+.rightColumn {
+  margin: auto 0;
+}
+
+/* --- Bio --- */
+.bio {
+  font-size: 0.95rem;
+  color: #444;
+  margin: 6px 0 12px 0;
+}
+
+/* --- AudioPlayer placement --- */
+.audioPlayerRow {
+  width: 100%;
+  margin-top: 1.5rem;
+  display: block;
+}
+
+/* --- Legacy links (icons row) --- */
+.linksContainer {
+  display: flex;
+  gap: 1rem;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.linksContainer a {
+  font-size: 1.5rem;
+  transition: opacity 0.2s;
+  display: flex;
+  align-items: center;
+  color: inherit;
+}
+
+.linksContainer a:hover {
+  opacity: 0.7;
+}
+
+/* Social link brand colors */
+.linksContainer a[aria-label="Spotify"] {
+  color: #1DB954;
+}
+.linksContainer a[aria-label="Apple Music"] {
+  color: #000;
+}
+.linksContainer a[aria-label="Website"] {
+  color: #0073e6;
+}
+.linksContainer a[aria-label="YouTube"] {
+  color: #FF0000;
+}
+
+/* --- Streaming platform section --- */
+.platformSection {
+  margin-top: 16px;
+}
+
+.platformTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.platformRow {
+  border-bottom: 1px solid rgba(128, 152, 190, 0.18);
+}
+
+.logoCell,
+.actionCell {
+  padding: 12px 4px;
+  vertical-align: middle;
+}
+
+.logoWrap {
+  display: inline-grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: #111823;
+  border: 1px solid rgba(128, 152, 190, 0.16);
+  box-shadow: 0 6px 18px rgba(10, 15, 22, 0.45),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.logoIcon {
+  width: 18px;
+  height: 18px;
+  color: #fff; /* keep icons white on brand backgrounds */
+}
+
+.platformLabel {
+  font-size: 1rem;
+  margin-left: 0.5rem;
+}
+/* --- Play buttons (brand-colored) --- */
+.playBtn {
+  display: inline-block;
+  padding: 10px 18px;
+  font-weight: 700;
+  text-decoration: none;
+  color: #fff;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+}
+.btnDownload {
+	box-shadow: none !important;
+	padding: 12px 0 18px 0;
+}
+.playBtn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.6);
+}
+
+/* Brand-specific colors */
+.logoIcon.youtube {
+  color: #ff0000;
+}
+
+.logoIcon.spotify {
+  color: #1db954;
+}
+
+.logoIcon.apple {
+  color: #000000;
+}
+
+.logoIcon.bandcamp {
+  color: #629aa9;
+}
+
+/* Brand variants */
+.btnYoutube {
+  background: #ff0000;
+}
+.btnSpotify {
+  background: #1db954;
+}
+.btnApple {
+  background: #000000;
+}
+.btnBandcamp {
+  background: #629aa9;
+}
+
+.albumToggle {
+  text-align: center;
+  cursor: pointer;
+  margin-top: 1.5rem;
+}
+
+.albumArt {
+  border-radius: 8px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+  margin-bottom: 0.5rem;
+}
+
+.toggleText {
+  font-size: 0.95rem;
+  color: #333;
+  font-weight: 500;
+}
+.toggleText:hover {
+  text-decoration: underline;
+}
+
+/* Keep platform section at bottom */
+.platformSection {
+  margin-top: 1rem;
+}
+
+/* --- Responsive --- */
+@media (max-width: 768px) {
+  .widgetContainer {
+    margin-left: auto;     /* ✅ re-center on mobile */
+    margin-right: auto;    /* keep centered */
+  }
+
+  .contentRow {
+    flex-direction: column;
+		align-items: flex-start;
+    gap: 0;
+  }
+
+  .rightColumn {
+    max-width: 100%;
+    text-align: center;
+  }
+
+  .linksContainer {
+    justify-content: center;
+  }
+
+  .header {
+    padding-left: 0;
+  }
+}
+
+
+.playButton {
+  padding: 8px 16px;
+  min-width: 100px;       /* consistent width */
+  text-align: center;     /* center label */
+  font-size: 14px;        /* consistent font size */
+	margin: 8px auto auto auto;
+}
+
+

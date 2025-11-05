@@ -255,3 +255,104 @@ h2.header {
   }
 }
 
+
+.playButton {
+  padding: 8px 16px;
+  min-width: 100px;       /* consistent width */
+  text-align: center;     /* center label */
+  font-size: 14px;        /* consistent font size */
+	margin: 8px auto auto auto;
+}
+
+
+.playerContainer {
+	width: 100%;
+}
+
+
+.streamingIcons {
+  display: flex;
+  justify-content: center;
+  gap: 1.25rem;
+  margin-top: 1rem;
+	background: #efefeb;
+	padding: 6px 12px;
+	border-radius: 8px;
+}
+
+.playButton {
+  padding: 8px 16px;
+  min-width: 100px;       /* consistent width */
+  text-align: center;     /* center label */
+  font-size: 14px;        /* consistent font size */
+	margin: 8px auto auto auto;
+}
+
+.songTitle {
+	margin: 18px 0 0px 0;
+	font-size: 14px;
+	text-align: left;
+	font-weight: 600;
+	font-size: 16px;
+}
+
+.demoLabel {
+  font-weight: 400; /* ensure "Demo:" text uses normal weight */
+  margin-right: 0.14rem;
+}
+
+.songAlbum {
+  font-size: 12px;
+  color: #444;
+  margin: 16px 0 0 0;
+  cursor: pointer; /* make clickable */
+}
+
+.albumClickable {
+  text-decoration: underline; /* underline album name */
+}
+
+
+.icon {
+  font-size: 24px;
+  transition: transform 0.2s, opacity 0.2s;
+  background: transparent; /* transparent background */
+}
+
+.icon:hover {
+  transform: scale(1.15);
+  opacity: 0.85;
+}
+
+/* Brand colors */
+.youtube {
+  color: #ff0000;
+}
+.spotify {
+  color: #1db954;
+}
+.apple {
+  color: #000000;
+}
+.bandcamp {
+  color: #629aa9;
+}
+
+/* ✅ Desktop override: left align */
+@media (min-width: 1024px) {
+  .streamingIcons {
+    justify-content: flex-start;
+  }
+}
+@media (max-width: 768px) {
+  .playerContainer {
+    display: flex;
+    flex-direction: column;
+    text-align: center; /* center text content */
+  }
+
+  .streamingIcons {
+    justify-content: center;
+  }
+}
+
