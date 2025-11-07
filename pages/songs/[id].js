@@ -26,6 +26,7 @@ import BeingWatchedMobile from '../../components/BeingWatchedMobile.js';
 import Head from 'next/head';
 import GTM from '../../components/GTM.js';
 import ArtistWidget_Downloader from '../../components/ArtistWidget_Downloader.js';
+import LiveStreamBanner from '../../components/LiveStreamBanner.js';
 
 export default function Song({ userId = null, ip, threadData, songData }) {
 
@@ -76,6 +77,7 @@ export default function Song({ userId = null, ip, threadData, songData }) {
       />
       <Sidebar userId={userId} ip={ip} />
       <div className="mainFeedAll">
+				<LiveStreamBanner />
         <div className="feedContainer">
           <Loader isLoading={isLoading} />
           <div className="mainFeed">

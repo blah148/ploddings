@@ -1,0 +1,88 @@
+.banner {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* centers main content */
+  position: relative;
+  background: #f5f5f5; /* subtle light gray */
+  color: #111;
+  padding: 10px 20px;
+  font-family: Inter, sans-serif;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08); /* subtle bottom shadow */
+  animation: fadeIn 0.3s ease-in;
+}
+
+/* flashing red dot */
+.flash {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: red;
+  animation: pulse 2s infinite; /* slower, subtle blink */
+  flex-shrink: 0;
+}
+
+/* container that holds the dot + text, centered horizontally */
+.content {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* center horizontally */
+  gap: 10px;
+  text-align: center;
+}
+
+/* YouTube red icon */
+.icon {
+  color: #ff0000;
+  font-size: 1.3rem;
+}
+
+/* clickable livestream text */
+.text {
+  font-size: 17.5px;
+  color: #111;
+  text-decoration: none;
+  transition: text-decoration 0.2s, color 0.2s;
+  cursor: pointer;
+}
+
+.text:hover {
+  text-decoration: underline;
+  color: #000;
+}
+
+/* X button pinned to far right, vertically centered */
+.closeButton {
+  position: absolute;
+  right: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #555;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: color 0.2s, transform 0.15s ease;
+}
+
+.closeButton:hover {
+  color: #000;
+  transform: translateY(-50%) scale(1.1);
+}
+
+/* gentle blink and fade animations */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.3; }
+  100% { opacity: 1; }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
