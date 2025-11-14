@@ -40,13 +40,6 @@ const YouTubeVideo = ({ videoId }) => {
   return (
     <div
       style={{
-        position: 'relative',
-        width: '100%',
-        maxWidth: '100%',
-        overflow: 'hidden',
-        borderRadius: '8px',
-        backgroundColor: '#000',
-        aspectRatio: '16/9', // ✅ ensures no overflow and perfect scaling
       }}
     >
       {isYouTubeLink ? (
@@ -55,11 +48,8 @@ const YouTubeVideo = ({ videoId }) => {
           opts={opts}
           onReady={onReady}
           style={{
-            position: 'absolute',
             top: 0,
             left: 0,
-            width: '100%',
-            height: '100%',
           }}
           iframeClassName="youtube-iframe"
         />

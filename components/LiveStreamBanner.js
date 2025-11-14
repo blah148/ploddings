@@ -56,23 +56,25 @@ export default function LiveStreamBanner() {
 
   return (
     <div className={styles.banner}>
-      <div className={styles.flash}></div>
+			<div></div>
+			<div className={styles.bannerContainer}>
+				<div className={styles.flash}></div>
 
-      <div className={styles.content}>
-        <FaYoutube className={styles.icon} />
-        <a
-          href={stream.youtube_url}
-          target="_blank"
-          rel="noopener noreferrer"
-          className={styles.text}
-        >
-          <strong>
-            LIVESTREAM ({stream.stream_type || 'Performance'}):
-          </strong>{' '}
-          {stream.title}
-        </a>
+				<div className={styles.content}>
+					<FaYoutube className={styles.icon} />
+					<a
+						href={stream.youtube_url}
+						target="_blank"
+						rel="noopener noreferrer"
+						className={styles.text}
+					>
+						<strong>
+							LIVESTREAM:
+						</strong>{' '}
+						{stream.title}
+					</a>
+				</div>
       </div>
-
       <button className={styles.closeButton} onClick={handleDismiss}>
         <FaTimes />
       </button>

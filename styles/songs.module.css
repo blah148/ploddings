@@ -46,10 +46,16 @@ div.bodyA {
 .youtubeContainer {
   position: relative;
   width: 100%;
+	aspect-ratio: 16/9;
   max-width: 100%;
   overflow: hidden;
-  padding-top: 56.25%; /* 16:9 aspect ratio */
   border-radius: 8px;
+}
+
+@media (min-width: 1625px) {
+  .youtubeContainer {
+		max-width: 60%;
+  }
 }
 
 .youtubeContainer iframe {

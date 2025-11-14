@@ -68,7 +68,7 @@ async function fetchSongData(slug) {
   try {
     const { data, error } = await supabase
       .from('content')
-      .select('id, published_date, meta_description, pdf_download, lyrics, name, featured_img_alt_text, capo_position, tuning, link_1, link_2, link_3, thread_id, body_text, paid_traffic') 
+      .select('id, published_date, meta_description, pdf_download, lyrics, name, featured_img_alt_text, capo_position, tuning, link_1, link_2, link_3, thread_id, body_text, paid_traffic, video_lesson') 
       .eq('slug', slug)
       .single();
     

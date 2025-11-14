@@ -79,7 +79,7 @@ export default function Thread({ userId=null, ip, threadData }) {
 					<Loader isLoading={isLoading} />
 			    <div className="mainFeed">
 						<div className="topRow">
-<Link className="homeButton mobileOnly" href="/" passHref>
+<Link className="homeButton" href="/" passHref>
   <img
     src="https://f005.backblazeb2.com/file/ploddings-images/site_images/ploddings_logo-on-transparent.png"
     alt="Ploddings logo"
