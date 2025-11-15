@@ -21,19 +21,6 @@ import SEO from '../../components/SEO';
 import StabilizerText from '../../components/StabilizerText';
 import BeingWatchedMobile from '../../components/BeingWatchedMobile.js';	
 
-const verifyUserSession = (req) => {
-  const token = req.cookies['auth_token'];
-  if (!token) {
-    return null; // No session
-  }
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    return decoded; // Session valid
-  } catch (error) {
-    return null; // Session invalid
-  }
-};
-
 export default function Thread({ userId=null, ip, threadData }) {
 
 	const { isLoading, startLoading, stopLoading } = useLoading();
@@ -72,6 +59,7 @@ export default function Thread({ userId=null, ip, threadData }) {
 				 page_type="threads"
 				 slug={threadData.slug}
          description={threadData.meta_description}
+				 noTitleTag={true}
        />
 			<Sidebar userId={userId} ip={ip} />
 			<div className="mainFeedAll">
@@ -107,11 +95,6 @@ export default function Thread({ userId=null, ip, threadData }) {
 										<h1>{threadData.name}</h1>
 									</div>
 									{threadData.lyrics && (<div className={styles.lifeAndDeath}>{threadData.lyrics}</div>)}
-									<div className={styles.iconContainer}>
-										{threadData.link_1 && (<WikipediaIcon link={threadData.link_1} />)}
-										{threadData.link_2 && (<VictrolaIcon link={threadData.link_2} />)}
-									</div>
-									<div className={styles.storyText}>{threadData.body_text}</div>
 								</div>
 							</div>
 							<h2>Guitar tabs / sheet music</h2>

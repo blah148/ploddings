@@ -277,13 +277,12 @@ div.bodyA {
 	}
 	.headerContainer img {
 		border-radius: 8px;		
-		height: 300px;
-		width: 300px;
+		height: 250px;
+		width: 250px;
 	}
 }
 @media (min-width: 1201px) {
 	.headerContainer img {
-	  max-height: 240px;
 	  border-radius: 8px;
 	  margin-right: 16px;	
 	}
@@ -291,10 +290,9 @@ div.bodyA {
 .headerContainer .rightColumn {
 	display: flex;
 	flex-direction: column;
-	justify-content: space-between;
 }
 .lifeAndDeath {
-	margin: 0 0 16px 0;
+	margin: -12px 0 0 0;
 	font-weight: 300;
 }
 .headerContainer svg {
