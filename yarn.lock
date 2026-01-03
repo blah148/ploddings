@@ -1284,6 +1284,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@babel/runtime@npm:^7.28.4":
+  version: 7.28.4
+  resolution: "@babel/runtime@npm:7.28.4"
+  checksum: 10c0/792ce7af9750fb9b93879cc9d1db175701c4689da890e6ced242ea0207c9da411ccf16dc04e689cc01158b28d7898c40d75598f4559109f761c12ce01e959bf7
+  languageName: node
+  linkType: hard
+
 "@babel/runtime@npm:^7.8.4":
   version: 7.23.9
   resolution: "@babel/runtime@npm:7.23.9"
@@ -3456,6 +3463,7 @@ __metadata:
     "@babel/core": "npm:^7.23.9"
     "@babel/plugin-transform-modules-commonjs": "npm:^7.23.3"
     "@babel/preset-env": "npm:^7.23.9"
+    "@babel/runtime": "npm:^7.28.4"
     "@google/model-viewer": "npm:^3.4.0"
     "@sendgrid/mail": "npm:^8.1.0"
     "@stripe/stripe-js": "npm:^3.2.0"
