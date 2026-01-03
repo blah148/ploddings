@@ -135,10 +135,6 @@ h2.header {
   width: 34px;
   height: 34px;
   border-radius: 8px;
-  background: #111823;
-  border: 1px solid rgba(128, 152, 190, 0.16);
-  box-shadow: 0 6px 18px rgba(10, 15, 22, 0.45),
-    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 .logoIcon {
@@ -151,17 +147,36 @@ h2.header {
   font-size: 1rem;
   margin-left: 0.5rem;
 }
-/* --- Play buttons (brand-colored) --- */
-.playBtn {
-  display: inline-block;
-  padding: 10px 18px;
-  font-weight: 700;
+
+.listenNowLink {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2e68c0;
   text-decoration: none;
-  color: #fff;
-  border-radius: 12px;
-  border: 1px solid transparent;
-  transition: transform 120ms ease, box-shadow 120ms ease;
+  padding: 6px 0;
 }
+
+.listenNowLink:hover,
+.listenNowLink:focus-visible {
+  text-decoration: underline;
+  outline: none;
+}
+
+
+.listenNowLink {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #2e68c0;
+  text-decoration: none;
+  padding: 6px 0;
+}
+
+.listenNowLink:hover,
+.listenNowLink:focus-visible {
+  text-decoration: underline;
+  outline: none;
+}
+
 .btnDownload {
 	box-shadow: none !important;
 	padding: 12px 0 18px 0;
@@ -354,5 +369,69 @@ h2.header {
   .streamingIcons {
     justify-content: center;
   }
+}
+.downloadBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 6px;
+  background: #2e68c0;
+  color: #ffffff;
+  font-weight: 700;
+  text-decoration: none;
+  cursor: pointer;
+  transition: background 120ms ease, transform 120ms ease, box-shadow 120ms ease;
+}
+
+.downloadBtn:hover,
+.downloadBtn:focus-visible {
+  background: #2456a6;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.25);
+  outline: none;
+}
+.downloadBtnLocked {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 10px 18px;
+  border-radius: 6px;
+  background: #cfcfcf;
+  color: #777;
+  font-weight: 700;
+  cursor: not-allowed;
+  user-select: none;
+}
+
+/* Subtle hover cue that it’s unavailable */
+.downloadBtnLocked:hover {
+  background: #c7c7c7;
+}
+/* Tooltip */
+.tooltip {
+  position: absolute;
+  bottom: 120%;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #111;
+  color: #fff;
+  padding: 8px 10px;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 120ms ease, transform 120ms ease;
+  z-index: 10;
+}
+
+.unlockError {
+  margin-top: 8px;
+  font-size: 0.85rem;
+  color: #b00020; /* error red */
+  font-style: italic;
+  font-weight: 500;
 }
 

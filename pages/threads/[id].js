@@ -95,11 +95,29 @@ export default function Thread({ userId=null, ip, threadData }) {
 										<h1>{threadData.name}</h1>
 									</div>
 									{threadData.lyrics && (<div className={styles.lifeAndDeath}>{threadData.lyrics}</div>)}
+{threadData.body_text && (
+  <div className={styles.aboutDesktopOnly}>
+    <div
+      className={styles.aboutSection}
+      dangerouslySetInnerHTML={{ __html: threadData.body_text }}
+    />
+  </div>
+)}
+
 								</div>
 							</div>
 							<h2>Guitar tabs / sheet music</h2>
 							<TableDataFetcher threadId={threadData.id} userId={userId} />
 						</div>
+              {threadData.body_text && (
+                <div className={styles.aboutMobileOnly}>
+                  <h2>About</h2>
+                  <div
+                    className={styles.aboutSection}
+                    dangerouslySetInnerHTML={{ __html: threadData.body_text }}
+                  />
+                </div>
+              )}
 						<BeingWatchedMobile />
 					</div>
 				</div>

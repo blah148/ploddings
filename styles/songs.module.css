@@ -340,3 +340,24 @@ svg.victrola {
 	margin: auto 0 auto 13px;
 }
 
+
+.aboutDesktopOnly {
+  display: block;
+  margin: 18px 0 0 0;
+}
+
+.aboutMobileOnly {
+  display: none;
+}
+@media (max-width: 768px) {
+  .aboutDesktopOnly {
+    display: none;
+  }
+  .aboutMobileOnly {
+    display: block;
+    margin: 0 0 22px 0;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
+}
+
