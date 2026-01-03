@@ -657,7 +657,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@babel/plugin-transform-modules-commonjs@npm:^7.23.3, @babel/plugin-transform-modules-commonjs@npm:^7.27.1":
+"@babel/plugin-transform-modules-commonjs@npm:^7.27.1":
   version: 7.27.1
   resolution: "@babel/plugin-transform-modules-commonjs@npm:7.27.1"
   dependencies:
@@ -1080,13 +1080,6 @@ __metadata:
   peerDependencies:
     "@babel/core": ^7.0.0-0 || ^8.0.0-0 <8.0.0
   checksum: 10c0/9d02f70d7052446c5f3a4fb39e6b632695fb6801e46d31d7f7c5001f7c18d31d1ea8369212331ca7ad4e7877b73231f470b0d559162624128f1b80fe591409e6
-  languageName: node
-  linkType: hard
-
-"@babel/runtime@npm:^7.28.4":
-  version: 7.28.4
-  resolution: "@babel/runtime@npm:7.28.4"
-  checksum: 10c0/792ce7af9750fb9b93879cc9d1db175701c4689da890e6ced242ea0207c9da411ccf16dc04e689cc01158b28d7898c40d75598f4559109f761c12ce01e959bf7
   languageName: node
   linkType: hard
 
@@ -2245,13 +2238,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fingerprintjs2@npm:^2.1.4":
-  version: 2.1.4
-  resolution: "fingerprintjs2@npm:2.1.4"
-  checksum: 10c0/282977d2e53125f0cb43ea50e190e010708160894c9c69a2b731ed18898015f39829115f70b9400975da66e0e90b80bc7380cb6a1bc381de753013d09ffacc0b
-  languageName: node
-  linkType: hard
-
 "fluent-ffmpeg@npm:^2.1.2":
   version: 2.1.3
   resolution: "fluent-ffmpeg@npm:2.1.3"
@@ -3221,10 +3207,8 @@ __metadata:
   resolution: "ploddings@workspace:."
   dependencies:
     "@babel/core": "npm:^7.23.9"
-    "@babel/plugin-transform-modules-commonjs": "npm:^7.23.3"
     "@babel/plugin-transform-runtime": "npm:^7.28.5"
     "@babel/preset-env": "npm:^7.23.9"
-    "@babel/runtime": "npm:^7.28.4"
     "@google/model-viewer": "npm:^3.4.0"
     "@sendgrid/mail": "npm:^8.1.0"
     "@stripe/stripe-js": "npm:^3.2.0"
@@ -3232,7 +3216,6 @@ __metadata:
     axios: "npm:^1.6.7"
     cookie: "npm:^0.6.0"
     dotenv: "npm:^16.4.1"
-    fingerprintjs2: "npm:^2.1.4"
     fluent-ffmpeg: "npm:^2.1.2"
     formidable: "npm:^3.5.1"
     jsonwebtoken: "npm:^9.0.2"
