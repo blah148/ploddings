@@ -1,3 +1,7 @@
+
+"use client";
+
+
 import { supabase } from '../utils/supabase';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';

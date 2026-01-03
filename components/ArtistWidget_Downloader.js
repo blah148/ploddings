@@ -179,7 +179,7 @@ Anyone making stuff nowadays (music, writing, and so on) may share a feeling tha
 To 'unlock' the Download PDF button (in Step 2), click one of the "Full Recording" text links below can be clicked. 
 </div>
 
-<i>Note: sorry for the hoop, but hey the tabs are free</i>
+<i>Note: sorry for the hoop.</i>
 
 
 {rows.length > 0 && (
