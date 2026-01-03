@@ -47,6 +47,7 @@
   },
   "devDependencies": {
     "@babel/core": "^7.23.9",
+    "@babel/plugin-transform-runtime": "^7.28.5",
     "@babel/preset-env": "^7.23.9",
     "supabase": "^1.136.3"
   }
