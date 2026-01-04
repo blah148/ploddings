@@ -1,5 +1,4 @@
 import React, { useEffect, useState, useRef } from 'react';
-import Link from 'next/link';
 import styles from './ArtistWidget.module.css';
 import { FaFileDownload, FaSpotify, FaApple, FaYoutube } from 'react-icons/fa';
 import YoutubeSubscribe from './YoutubeSubscribe.js';
@@ -18,22 +17,20 @@ export default function ArtistWidget_Downloader({
   const [unlocked, setUnlocked] = useState(false);
   const [showUnlockError, setShowUnlockError] = useState(false);
 
-
   const waveformRef = useRef(null);
   const wavesurferRef = useRef(null);
   const hasLoggedRef = useRef(false);
 
   /* ----------------------------------------
-     STEP 1 — Fetch ONE random recording
+     RESET ERROR WHEN UNLOCKED
   ---------------------------------------- */
+  useEffect(() => {
+    if (unlocked) setShowUnlockError(false);
+  }, [unlocked]);
 
-useEffect(() => {
-  if (unlocked) {
-    setShowUnlockError(false);
-  }
-}, [unlocked]);
-
-
+  /* ----------------------------------------
+     STEP 1 — Fetch random recording
+  ---------------------------------------- */
   useEffect(() => {
     const fetchRandomRecording = async () => {
       const { count, error: countError } = await supabase
@@ -63,9 +60,7 @@ useEffect(() => {
   useEffect(() => {
     if (!recording || !waveformRef.current) return;
 
-    if (wavesurferRef.current) {
-      wavesurferRef.current.destroy();
-    }
+    wavesurferRef.current?.destroy();
 
     wavesurferRef.current = WaveSurfer.create({
       container: waveformRef.current,
@@ -77,7 +72,6 @@ useEffect(() => {
     });
 
     wavesurferRef.current.load(recording.recording_link);
-
     wavesurferRef.current.on('play', () => setIsPlaying(true));
     wavesurferRef.current.on('pause', () => setIsPlaying(false));
 
@@ -88,35 +82,41 @@ useEffect(() => {
   }, [recording]);
 
   const togglePlay = () => {
-    if (wavesurferRef.current) {
-      wavesurferRef.current.playPause();
-    }
+    wavesurferRef.current?.playPause();
   };
 
   /* ----------------------------------------
      STEP 3 — Unlock on streaming click
   ---------------------------------------- */
   const handleStreamingClick = async (platform) => {
-    if (!unlocked) {
-      setUnlocked(true);
+    if (unlocked) return;
 
-      if (ip && !hasLoggedRef.current) {
-        hasLoggedRef.current = true;
+    setUnlocked(true);
 
-        await supabase.from('listen_unlocks').insert([
-          {
-            song_id: songId,
-            unlocked: true,
-            platform_clicked: platform,
-            ip,
-          },
-        ]);
-      }
+    if (ip && !hasLoggedRef.current) {
+      hasLoggedRef.current = true;
+
+      await supabase.from('listen_unlocks').insert([
+        {
+          song_id: songId,
+          unlocked: true,
+          platform_clicked: platform,
+          ip,
+        },
+      ]);
     }
   };
 
   /* ----------------------------------------
-     STEP 4 — Build streaming table rows
+     FAKE CLICK (OLD BEHAVIOR)
+  ---------------------------------------- */
+  const handleFakeClick = (e) => {
+    e.preventDefault();
+    setShowUnlockError(true);
+  };
+
+  /* ----------------------------------------
+     BUILD STREAMING ROWS
   ---------------------------------------- */
   const rows = recording
     ? [
@@ -125,21 +125,18 @@ useEffect(() => {
           label: 'Spotify',
           href: recording.spotify_link,
           Icon: FaSpotify,
-          iconClass: styles.spotify,
         },
         recording.applemusic_link && {
           key: 'apple',
           label: 'Apple Music',
           href: recording.applemusic_link,
           Icon: FaApple,
-          iconClass: styles.apple,
         },
         recording.youtubemusic_link && {
           key: 'youtube',
           label: 'YouTube Music',
           href: recording.youtubemusic_link,
           Icon: FaYoutube,
-          iconClass: styles.youtube,
         },
       ].filter(Boolean)
     : [];
@@ -149,111 +146,173 @@ useEffect(() => {
       <h2 className={styles.header}>
         <strong>A Link to Download the PDF Tablature</strong>
       </h2>
-<YoutubeSubscribe />
+
+
+      <a
+        href="#i"
+        style={{
+          color: 'grey',
+          fontSize: '0.9rem',
+          textDecoration: 'none',
+          fontStyle: 'italic',
+          display: 'block',
+          marginTop: '0px',
+          opacity: 0.9,
+        }}
+      >
+        Tap to return (up) to the embedded tabs for {songName} by {artistName}
+      </a>
+
       <p>
-Anyone making stuff nowadays (music, writing, and so on) may share a feeling that it's practically like pinching an eyedropper into the sea when releasing things. In any case, for those who wish to have a PDF of the above transcription, by clicking on one of the "Full Recording" streaming links (below) the Download PDF button (further below) will unlock, linked to the downloadable PDF sheet music at no cost.. well, other than the time to load the up the album. Once getting there, a 30-second stream would indirectly help this transcription project.
+        To obtain a PDF version of the tabs (shown above on this page), there’s but one
+        kind favor that <strong>blah</strong> asks of you.
       </p>
-<img
-  src="https://f005.backblazeb2.com/file/blah148/albums/albums_the-bell-it-shines-like-gold-blah148_500x500.png"
-  alt="The Bell It Shines Like Gold — album artwork by blah148"
+
+      <YoutubeSubscribe />
+
+      <p>
+        It is to sample music that <strong>blah148</strong> (this site's builder) made from 2024 to 2025, in
+        large part with inspiration from the players transcribed for this project. Though,
+        having said this, an imposition isn’t meant; if it’s preferred not to listen,
+        that’s okay — the on-site tablature above remains available.
+      </p>
+
+
+      <img
+        src="https://f005.backblazeb2.com/file/blah148/albums/albums_the-bell-it-shines-like-gold-blah148_500x500.png"
+        alt="The Bell It Shines Like Gold — album artwork by blah148"
+        style={{
+          width: '100%',
+          maxWidth: '220px',
+          aspectRatio: '1 / 1',
+          borderRadius: '12px',
+          boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
+          display: 'block',
+          margin: '16px 0 -12px 0',
+        }}
+        loading="lazy"
+      />
+
+      <div className={styles.songTitle}>
+        <strong>Song: {recording?.name ?? 'Loading…'}</strong>
+      </div>
+
+<br />
+
+<strong
   style={{
-    width: '100%',
-    maxWidth: '220px',
-    aspectRatio: '1 / 1',
-    borderRadius: '12px',
-    boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
+    margin: '24px 0 0 0',
+    textDecoration: 'underline',
     display: 'block',
-    margin: '16px 0 -12px 0',
   }}
-  loading="lazy"
-  decoding="async"
-/>
+>
+  Step 1:
+</strong>
 
-<div className={styles.songTitle}>
-  <strong>Song: {recording?.name ?? 'Loading…'}</strong>
-</div>
-
-
-<h3><strong>Step 1. </strong>Select one of the "Full Recording buttons"</h3>
 <div>
-To 'unlock' the Download PDF button (in Step 2), click one of the "Full Recording" text links below can be clicked. 
+  Tap one of the “Full Recording” buttons below. It’s a recording of{' '}
+  <strong>{recording?.name ?? 'this track'}</strong> from the album{' '}
+  <em>The Bell It Shines Like Gold (2025)</em>.
 </div>
 
-<i>Note: sorry for the hoop.</i>
+              <span
+                style={{
+                  fontSize: '14px',
+                  color: 'grey',
+                  fontStyle: 'italic',
+                  opacity: 0.9,
+                  display: 'block',
+                  marginTop: '4px',
+                }}
+              >
+                After that, the “Download PDF” button unlocks.
+              </span>
 
+      {rows.length > 0 && (
+        <table className={styles.platformTable}>
+          <tbody>
+            {rows.map(({ key, label, href, Icon }) => (
+              <tr key={key} className={styles.platformRow}>
+                <td className={styles.logoCell}>
+                  <span className={styles.logoWrap}>
+                    <Icon className={`${styles.logoIcon} ${styles[key]}`} />
+                  </span>
+                  <span className={styles.platformLabel}>{label}</span>
+                </td>
+                <td className={styles.actionCell}>
+                  <a
+                    href={href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={() => handleStreamingClick(key)}
+                    className={styles.listenNowLink}
+                  >
+                    Full recording
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      )}
 
-{rows.length > 0 && (
-  <table className={styles.platformTable}>
-    <tbody>
-      {rows.map(({ key, label, href, Icon }) => (
-        <tr key={key} className={styles.platformRow}>
-          {/* Left: icon + label (NOT a link) */}
-          <td className={styles.logoCell}>
-            <span className={styles.logoWrap}>
-              <Icon className={`${styles.logoIcon} ${styles[key]}`} />
-            </span>
-            <span className={styles.platformLabel}>{label}</span>
-          </td>
+        <strong
+          style={{
+            fontSize: '16px',
+            color: 'black',
+            textDecoration: 'underline',
+            margin: '18px 0 5px 0',
+          }}
+        >
+          Step 2:
+        </strong>
 
-          {/* Right: Listen now (ONLY link) */}
-          <td className={styles.actionCell}>
-            <a
-              href={href}
-              target="_blank"
-              rel="noopener noreferrer"
-              onClick={() => handleStreamingClick(key)}
-              className={styles.listenNowLink}
-            >
-              Full recording
-            </a>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-)
-}
-<h3>Step 2. Obtain the PDF sheet music</h3>
-<div>
-Once Step 1 is complete, then the below Download PDF button will be clickable, and you'll be able to view and save the tablature/sheet music.
-</div>
+        <span style={{ marginBottom: '10px' }}>
+          Once the link is clicked, click the unlocked version of the button below.
+        </span>
 
-<div style={{ margin: '0 0 12px 0' }}>
-</div>
-
-
-<div className={styles.downloadWrapper}>
+<div >
   {unlocked ? (
     <a
       href={pdfUrl}
       target="_blank"
       rel="noopener noreferrer"
-      className={styles.downloadBtn}
+      style={{
+        background: '#2e68c0',
+        color: 'white',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '8px',
+        padding: '10px 16px',
+        borderRadius: '6px',
+        textDecoration: 'none',
+      }}
     >
-      Download PDF
+      <FaFileDownload /> Download PDF
     </a>
   ) : (
-    <>
-      <span
-        className={styles.downloadBtnLocked}
-        aria-disabled="true"
-        onClick={() => setShowUnlockError(true)}
-      >
-        Download PDF
-        <span className={styles.tooltip}>
-          Please click one of the “Full Recording” buttons to unlock
-        </span>
-      </span>
-
-      {showUnlockError && (
-        <div className={styles.unlockError}>
-          Please click one of the <strong>“Full Recording”</strong> buttons above to unlock the PDF.
-        </div>
-      )}
-    </>
+    <button
+      onClick={handleFakeClick}
+      disabled
+      style={{
+        background: '#bfbfbf',
+        color: 'white',
+        display: 'inline-flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        gap: '8px',
+        padding: '10px 16px',
+        borderRadius: '6px',
+        opacity: 0.8,
+        cursor: 'not-allowed',
+        border: 'none',
+      }}
+    >
+      <FaFileDownload /> Download PDF
+    </button>
   )}
 </div>
-
 
 
     </div>
