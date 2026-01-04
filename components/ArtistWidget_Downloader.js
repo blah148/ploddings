@@ -268,7 +268,7 @@ export default function ArtistWidget_Downloader({
         </strong>
 
         <span style={{ marginBottom: '10px' }}>
-          Once the link is clicked, click the unlocked version of the button below.
+          Once the text link is selected, click the unlocked version of the button below.
         </span>
 
 <div >
