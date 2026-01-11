@@ -7,7 +7,7 @@ import Sidebar from '../../components/Sidebar';
 import { supabase } from '../../utils/supabase'; // Adjust the import path as needed
 import ChatWithGPT from '../../components/ChatWithGPT.js';
 import jwt from 'jsonwebtoken';
-const { fetchThreadData } = require('../../db-utilities');
+import { fetchThreadData } from '../../db-utilities';
 import { useLoading } from '../../context/LoadingContext';
 import Link from 'next/link';
 import Loader from '../../components/Loader';
