@@ -16,21 +16,16 @@ export default function ArtistWidget_Downloader({
   const [isPlaying, setIsPlaying] = useState(false);
   const [unlocked, setUnlocked] = useState(false);
   const [showUnlockError, setShowUnlockError] = useState(false);
+  const [isGeneratingDownload, setIsGeneratingDownload] = useState(false);
 
   const waveformRef = useRef(null);
   const wavesurferRef = useRef(null);
   const hasLoggedRef = useRef(false);
 
-  /* ----------------------------------------
-     RESET ERROR WHEN UNLOCKED
-  ---------------------------------------- */
   useEffect(() => {
     if (unlocked) setShowUnlockError(false);
   }, [unlocked]);
 
-  /* ----------------------------------------
-     STEP 1 — Fetch random recording
-  ---------------------------------------- */
   useEffect(() => {
     const fetchRandomRecording = async () => {
       const { count, error: countError } = await supabase
@@ -54,9 +49,6 @@ export default function ArtistWidget_Downloader({
     fetchRandomRecording();
   }, []);
 
-  /* ----------------------------------------
-     STEP 2 — WaveSurfer setup
-  ---------------------------------------- */
   useEffect(() => {
     if (!recording || !waveformRef.current) return;
 
@@ -85,9 +77,6 @@ export default function ArtistWidget_Downloader({
     wavesurferRef.current?.playPause();
   };
 
-  /* ----------------------------------------
-     STEP 3 — Unlock on streaming click
-  ---------------------------------------- */
   const handleStreamingClick = async (platform) => {
     if (unlocked) return;
 
@@ -107,17 +96,44 @@ export default function ArtistWidget_Downloader({
     }
   };
 
-  /* ----------------------------------------
-     FAKE CLICK (OLD BEHAVIOR)
-  ---------------------------------------- */
   const handleFakeClick = (e) => {
     e.preventDefault();
     setShowUnlockError(true);
   };
 
-  /* ----------------------------------------
-     BUILD STREAMING ROWS
-  ---------------------------------------- */
+  const handleDownloadClick = async () => {
+    if (!unlocked || !pdfUrl || isGeneratingDownload) {
+      return;
+    }
+
+    try {
+      setIsGeneratingDownload(true);
+
+      const response = await fetch('/api/get-pdf-download-url', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          fileName: pdfUrl,
+        }),
+      });
+
+      const payload = await response.json();
+
+      if (!response.ok) {
+        throw new Error(payload.error || 'Failed to generate download link.');
+      }
+
+      window.open(payload.downloadUrl, '_blank', 'noopener,noreferrer');
+    } catch (error) {
+      console.error('PDF download error:', error);
+      alert('Unable to generate the PDF download link right now.');
+    } finally {
+      setIsGeneratingDownload(false);
+    }
+  };
+
   const rows = recording
     ? [
         recording.spotify_link && {
@@ -146,7 +162,6 @@ export default function ArtistWidget_Downloader({
       <h2 className={styles.header}>
         <strong>A Link to Download the PDF Tablature</strong>
       </h2>
-
 
       <a
         href="#i"
@@ -177,7 +192,6 @@ export default function ArtistWidget_Downloader({
         that’s okay — the on-site tablature above remains available.
       </p>
 
-
       <img
         src="https://f005.backblazeb2.com/file/blah148/albums/albums_the-bell-it-shines-like-gold-blah148_500x500.png"
         alt="The Bell It Shines Like Gold — album artwork by blah148"
@@ -197,36 +211,36 @@ export default function ArtistWidget_Downloader({
         <strong>Song: {recording?.name ?? 'Loading…'}</strong>
       </div>
 
-<br />
+      <br />
 
-<strong
-  style={{
-    margin: '24px 0 0 0',
-    textDecoration: 'underline',
-    display: 'block',
-  }}
->
-  Step 1:
-</strong>
+      <strong
+        style={{
+          margin: '24px 0 0 0',
+          textDecoration: 'underline',
+          display: 'block',
+        }}
+      >
+        Step 1:
+      </strong>
 
-<div>
-  Tap one of the “Full Recording” buttons below. It’s a recording of{' '}
-  <strong>{recording?.name ?? 'this track'}</strong> from the album{' '}
-  <em>The Bell It Shines Like Gold (2025)</em>.
-</div>
+      <div>
+        Tap one of the “Full Recording” buttons below. It’s a recording of{' '}
+        <strong>{recording?.name ?? 'this track'}</strong> from the album{' '}
+        <em>The Bell It Shines Like Gold (2025)</em>.
+      </div>
 
-              <span
-                style={{
-                  fontSize: '14px',
-                  color: 'grey',
-                  fontStyle: 'italic',
-                  opacity: 0.9,
-                  display: 'block',
-                  marginTop: '4px',
-                }}
-              >
-                After that, the “Download PDF” button unlocks.
-              </span>
+      <span
+        style={{
+          fontSize: '14px',
+          color: 'grey',
+          fontStyle: 'italic',
+          opacity: 0.9,
+          display: 'block',
+          marginTop: '4px',
+        }}
+      >
+        After that, the “Download PDF” button unlocks.
+      </span>
 
       {rows.length > 0 && (
         <table className={styles.platformTable}>
@@ -256,66 +270,66 @@ export default function ArtistWidget_Downloader({
         </table>
       )}
 
-        <strong
-          style={{
-            fontSize: '16px',
-            color: 'black',
-            textDecoration: 'underline',
-            margin: '18px 0 5px 0',
-          }}
-        >
-          Step 2:
-        </strong>
+      <strong
+        style={{
+          fontSize: '16px',
+          color: 'black',
+          textDecoration: 'underline',
+          margin: '18px 0 5px 0',
+        }}
+      >
+        Step 2:
+      </strong>
 
-        <span style={{ marginBottom: '10px' }}>
-          Once the text link is selected, click the unlocked version of the button below.
-        </span>
+      <span style={{ marginBottom: '10px' }}>
+        Once the text link is selected, click the unlocked version of the button below.
+      </span>
 
-<div >
-  {unlocked ? (
-    <a
-      href={pdfUrl}
-      target="_blank"
-      rel="noopener noreferrer"
-      style={{
-        background: '#2e68c0',
-        color: 'white',
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '8px',
-        padding: '10px 16px',
-        borderRadius: '6px',
-        textDecoration: 'none',
-      }}
-    >
-      <FaFileDownload /> Download PDF
-    </a>
-  ) : (
-    <button
-      onClick={handleFakeClick}
-      disabled
-      style={{
-        background: '#bfbfbf',
-        color: 'white',
-        display: 'inline-flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        gap: '8px',
-        padding: '10px 16px',
-        borderRadius: '6px',
-        opacity: 0.8,
-        cursor: 'not-allowed',
-        border: 'none',
-      }}
-    >
-      <FaFileDownload /> Download PDF
-    </button>
-  )}
-</div>
-
-
+      <div>
+        {unlocked ? (
+          <button
+            onClick={handleDownloadClick}
+            disabled={isGeneratingDownload}
+            style={{
+              background: '#2e68c0',
+              color: 'white',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              padding: '10px 16px',
+              borderRadius: '6px',
+              textDecoration: 'none',
+              border: 'none',
+              cursor: isGeneratingDownload ? 'wait' : 'pointer',
+              opacity: isGeneratingDownload ? 0.85 : 1,
+            }}
+          >
+            <FaFileDownload />
+            {isGeneratingDownload ? 'Preparing PDF...' : 'Download PDF'}
+          </button>
+        ) : (
+          <button
+            onClick={handleFakeClick}
+            disabled
+            style={{
+              background: '#bfbfbf',
+              color: 'white',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: '8px',
+              padding: '10px 16px',
+              borderRadius: '6px',
+              opacity: 0.8,
+              cursor: 'not-allowed',
+              border: 'none',
+            }}
+          >
+            <FaFileDownload /> Download PDF
+          </button>
+        )}
+      </div>
     </div>
   );
 }
-

@@ -129,6 +129,7 @@ export default function Song({ userId = null, ip, threadData, songData }) {
 													embed_link={songData.link_3}
 													canAccess={true}
 											/>
+
                 </div>
 	
 								<PDFDownloadButton pdfUrl={songData.pdf_download} songName={songData.name}/>
