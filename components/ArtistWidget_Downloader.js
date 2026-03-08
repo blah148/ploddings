@@ -158,7 +158,7 @@ export default function ArtistWidget_Downloader({
     : [];
 
   return (
-    <div className={styles.widgetContainer}>
+    <div id="pdf" className={styles.widgetContainer}>
       <h2 className={styles.header}>
         <strong>A Link to Download the PDF Tablature</strong>
       </h2>
