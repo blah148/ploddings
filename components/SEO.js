@@ -29,10 +29,10 @@ export default function SEO({
   const canonicalUrl = alternativeUrl || pageUrl;
 
   const ogType =
-    page_type === ‘blog’    ? ‘article’    :
-    page_type === ‘threads’ ? ‘profile’    :
-    page_type === ‘songs’   ? ‘music.song’ :
-    ‘website’;
+    page_type === 'blog'    ? 'article'    :
+    page_type === 'threads' ? 'profile'    :
+    page_type === 'songs'   ? 'music.song' :
+    'website';
 
   return (
     <Head>
@@ -42,7 +42,7 @@ export default function SEO({
       <meta property="og:site_name" content="Ploddings | Guitar for Blues, Jazz, and Folk" />
       <meta property="og:type" content={ogType} />
 
-      {/* OG Title should NOT append " - Ploddings" unless it’s in siteTitle */}
+      {/* OG Title should NOT append " - Ploddings" unless it's in siteTitle */}
       <meta property="og:title" content={title || siteTitle} />
 
       <meta property="og:description" content={description} />
