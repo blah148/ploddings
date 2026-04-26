@@ -22,7 +22,7 @@ const verifyUserSession = (req) => {
 const Cancel = ({ userId, ip }) => {
   return (
     <div className="bodyA">
-      <SEO title="Payment Canceled" description="Payment was not completed." slug="/cancel" />
+      <SEO title="Payment Canceled" description="Payment was not completed." slug="/cancel" nofollow={true} />
       <Sidebar userId={userId} ip={ip} />
       <div className="mainFeedAll">
         <div className="feedContainer">

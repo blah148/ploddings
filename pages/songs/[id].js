@@ -75,6 +75,36 @@ export default function Song({ userId = null, ip, threadData, songData }) {
         slug={songData.slug}
 				description={`Click play to listen to interactive guitar tablature for ${songData.name} by ${threadData.name}.`}
       />
+      <Head>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'MusicRecording',
+            name: songData.name,
+            byArtist: {
+              '@type': 'Person',
+              name: threadData.name,
+            },
+            url: `https://www.ploddings.com/songs/${songData.slug}`,
+            datePublished: songData.published_date || undefined,
+            image: threadData.link_3 || undefined,
+            description: songData.meta_description || undefined,
+          })}}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify({
+            '@context': 'https://schema.org',
+            '@type': 'BreadcrumbList',
+            itemListElement: [
+              { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.ploddings.com' },
+              { '@type': 'ListItem', position: 2, name: threadData.name, item: `https://www.ploddings.com/threads/${threadData.slug}` },
+              { '@type': 'ListItem', position: 3, name: songData.name, item: `https://www.ploddings.com/songs/${songData.slug}` },
+            ],
+          })}}
+        />
+      </Head>
       <Sidebar userId={userId} ip={ip} />
       <div className="mainFeedAll">
         <div className="feedContainer">

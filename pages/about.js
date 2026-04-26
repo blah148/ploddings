@@ -35,7 +35,7 @@ export default function About({ userId, ip }) {
   return (
     <div className="bodyA">
       <SEO
-        title="About - Ploddings"
+        title="About"
         description="The back-story of Ploddings; a place to learn more about how to play pre-war blues & roots music, mainly for guitar players."
         slug="/about"
       />

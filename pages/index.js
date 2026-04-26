@@ -106,6 +106,7 @@ export default function Home({ userId, ip }) {
   return (
     <div className="bodyA">
       <SEO
+        title="Acoustic Blues Guitar Tabs"
         description="A transcription repository & practice platform for pre-war blues style guitar, such as Charley Patton, Elizabeth Cotten, Etta Baker, Reverend Gary Davis, and John Fahey."
         slug="/"
       />

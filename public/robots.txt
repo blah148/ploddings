@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+Disallow: /api/
+Disallow: /account
+Disallow: /login
+Disallow: /activate-user-account
+Disallow: /cancel
+Disallow: /slow-downer
+
+Sitemap: https://www.ploddings.com/sitemap.xml

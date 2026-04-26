@@ -58,6 +58,7 @@ export default function Account({ ip, userId }) {
 				 title="Account"
          description="Manage your Ploddings guitar account, toggling between light-and-dark mode, and checking back into your: (i) visit-history and (ii) starred guitar tablature"
          slug="/account"
+         nofollow={true}
        />
 				<Sidebar userId={userId} ip={ip} />
 				<div className="mainFeedAll">

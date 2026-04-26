@@ -28,12 +28,19 @@ export default function SEO({
 
   const canonicalUrl = alternativeUrl || pageUrl;
 
+  const ogType =
+    page_type === ‘blog’    ? ‘article’    :
+    page_type === ‘threads’ ? ‘profile’    :
+    page_type === ‘songs’   ? ‘music.song’ :
+    ‘website’;
+
   return (
     <Head>
       <title>{siteTitle}</title>
 
       <meta name="description" content={description} />
       <meta property="og:site_name" content="Ploddings | Guitar for Blues, Jazz, and Folk" />
+      <meta property="og:type" content={ogType} />
 
       {/* OG Title should NOT append " - Ploddings" unless it’s in siteTitle */}
       <meta property="og:title" content={title || siteTitle} />

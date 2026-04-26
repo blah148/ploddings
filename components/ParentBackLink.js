@@ -34,7 +34,7 @@ export default function IpodMenuLink({ threadData, fallBack }) {
   }, []); // Empty dependency array to only run effect once
 
   return (
-    <Link href={href} passHref>
+    <Link href={href} passHref aria-label="Go back">
       <div className={styles.upLevel}>
         <div className="previousButton">
           <svg role="img" height="16" width="16" aria-hidden="true" className="Svg-sc-yt k21e-0 leya-dW IYDlXmBmmUKHveMzIPCF" viewBox="0 0 16 16" data-encore-id="icon" style={{ marginBottom: 0 }}>

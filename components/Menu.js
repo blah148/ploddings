@@ -47,6 +47,12 @@ export default function Menu({ userId = null }) {
       </svg>
 
       <div ref={menuRef} className={`menu ${showMenu ? 'show' : ''}`}>
+        <Link className="menuItem" href="/" passHref>
+          <p className="menuLabel">Home</p>
+        </Link>
+        <Link className="menuItem" href="/blog" passHref>
+          <p className="menuLabel">Blog</p>
+        </Link>
         <Link className="menuItem" href="/about" passHref>
 				<svg
 					id="icon"
@@ -76,6 +82,9 @@ export default function Menu({ userId = null }) {
 					/>
 				</svg>
           <p className="menuLabel">About</p>
+        </Link>
+        <Link className="menuItem" href="/contact" passHref>
+          <p className="menuLabel">Contact</p>
         </Link>
       </div>
     </>

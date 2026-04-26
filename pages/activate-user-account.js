@@ -128,6 +128,7 @@ export default function CreateAccount({ userId, ip, songCount }) {
         title="Activate User Account"
         description="The tablature & slow-downer tools can be accessed by choosing between 3 pricing options. All payments are controlled by the non-profit fund, the Mt. Zion Memorial Fund."
         slug="/activate-user-account"
+        nofollow={true}
       />
       <Sidebar userId={userId} ip={ip} />
       <div className="mainFeedAll">

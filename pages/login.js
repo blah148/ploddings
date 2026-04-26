@@ -83,7 +83,7 @@ export default function Login({ userId, ip }) {
 
   return (
     <div className="bodyA">
-      <SEO title="Login" description="To revisit your: (i) visit history, (ii) starred tablature, and (iii) use the pitch-shifter/slow-downer, login to your Ploddings account with an email address" slug="/login" />
+      <SEO title="Login" description="To revisit your: (i) visit history, (ii) starred tablature, and (iii) use the pitch-shifter/slow-downer, login to your Ploddings account with an email address" slug="/login" nofollow={true} />
       <Sidebar userId={userId} ip={ip} />
       <div className="mainFeedAll">
         <div className="feedContainer">

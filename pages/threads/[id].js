@@ -18,6 +18,7 @@ import IpodMenuLink from '../../components/ParentBackLink';
 import VictrolaIcon from '../../components/VictrolaIcon';
 import WikipediaIcon from '../../components/WikipediaIcon';
 import SEO from '../../components/SEO';
+import Head from 'next/head';
 import StabilizerText from '../../components/StabilizerText';
 import BeingWatchedMobile from '../../components/BeingWatchedMobile.js';	
 
@@ -61,6 +62,31 @@ export default function Thread({ userId=null, ip, threadData }) {
          description={threadData.meta_description}
 				 noTitleTag={true}
        />
+       <Head>
+         <script
+           type="application/ld+json"
+           dangerouslySetInnerHTML={{ __html: JSON.stringify({
+             '@context': 'https://schema.org',
+             '@type': 'Person',
+             name: threadData.name,
+             url: `https://www.ploddings.com/threads/${threadData.slug}`,
+             image: threadData.link_3 || undefined,
+             description: threadData.meta_description || undefined,
+             sameAs: threadData.wikipedia_link ? [threadData.wikipedia_link] : undefined,
+           })}}
+         />
+         <script
+           type="application/ld+json"
+           dangerouslySetInnerHTML={{ __html: JSON.stringify({
+             '@context': 'https://schema.org',
+             '@type': 'BreadcrumbList',
+             itemListElement: [
+               { '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.ploddings.com' },
+               { '@type': 'ListItem', position: 2, name: threadData.name, item: `https://www.ploddings.com/threads/${threadData.slug}` },
+             ],
+           })}}
+         />
+       </Head>
 			<Sidebar userId={userId} ip={ip} />
 			<div className="mainFeedAll">
 				<div className="feedContainer">

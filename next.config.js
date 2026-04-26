@@ -9,6 +9,14 @@ module.exports = {
       { hostname: 'th.bing.com' } // Includes th.bing.com for image optimization
     ],
   },
+  async rewrites() {
+    return [
+      {
+        source: '/sitemap.xml',
+        destination: '/api/sitemap.xml',
+      },
+    ];
+  },
   async redirects() {
     return [
       {
@@ -30,7 +38,7 @@ module.exports = {
         headers: [
           {
             key: 'Content-Security-Policy',
-            value: "frame-ancestors 'self' https://yoursite.com", // Ensure to replace 'https://yoursite.com' with your actual domain
+            value: "frame-ancestors 'self'",
           },
         ],
       },

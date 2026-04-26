@@ -21,6 +21,7 @@ import Footer from '../../components/Footer';
 import Menu from '../../components/Menu';
 import styles from '../../styles/songs.module.css';
 import SEO from '../../components/SEO';
+import Head from 'next/head';
 import StabilizerText from '../../components/StabilizerText';
 import BeingWatchedMobile from '../../components/BeingWatchedMobile.js';
 import ArtistWidget from '../../components/ArtistWidget.js';
@@ -86,6 +87,11 @@ export default function Blog({ threadData, blogData, ip, userId }) {
 		return { __html: htmlString };
 	};
 		
+  const blogDescription = blogData.meta_description || (() => {
+    const plain = (blogData.body_text || '').replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim();
+    return plain.length > 155 ? plain.slice(0, 152) + '...' : plain;
+  })();
+
 return (
   <div className="bodyA">
 		<SEO
@@ -94,8 +100,46 @@ return (
 			page_type="blog"
 			published_date={blogData.published_date}
 			slug={blogData.slug}
-			author="blah148"
+			author="Blahnok"
+			description={blogDescription}
 		/>
+		<Head>
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: JSON.stringify({
+					'@context': 'https://schema.org',
+					'@type': 'BlogPosting',
+					headline: blogData.name,
+					image: blogData.thumbnail_200x200 || undefined,
+					datePublished: blogData.published_date || undefined,
+					description: blogDescription || undefined,
+					url: `https://www.ploddings.com/blog/${blogData.slug}`,
+					author: {
+						'@type': 'Person',
+						name: 'Blahnok',
+					},
+					publisher: {
+						'@type': 'Organization',
+						name: 'Ploddings',
+						logo: {
+							'@type': 'ImageObject',
+							url: 'https://www.ploddings.com/favicon.png',
+						},
+					},
+				})}}
+			/>
+			<script
+				type="application/ld+json"
+				dangerouslySetInnerHTML={{ __html: JSON.stringify({
+					'@context': 'https://schema.org',
+					'@type': 'BreadcrumbList',
+					itemListElement: [
+						{ '@type': 'ListItem', position: 1, name: 'Home', item: 'https://www.ploddings.com' },
+						{ '@type': 'ListItem', position: 2, name: blogData.name, item: `https://www.ploddings.com/blog/${blogData.slug}` },
+					],
+				})}}
+			/>
+		</Head>
     <Sidebar userId={userId} ip={ip} />
     <div className="mainFeedAll">
       <div className="feedContainer">
