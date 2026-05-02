@@ -73,10 +73,8 @@ export default function SlowDowner({ isUnlocked, mp3 }) {
 
       // Load mp3
       try {
-        const resp = await fetch(mp3);
-        console.log('MP3 fetch status:', resp.status, 'content-type:', resp.headers.get('content-type'), 'url:', resp.url);
-        const raw  = await resp.arrayBuffer();
-        console.log('MP3 buffer byteLength:', raw.byteLength);
+        const resp   = await fetch(mp3);
+        const raw    = await resp.arrayBuffer();
         const buffer = await ctx.decodeAudioData(raw);
         if (cancelled) return;
         audioBufferRef.current  = buffer;

@@ -5,7 +5,6 @@ export default function Document() {
     <Html lang="en">
       <Head>
         <meta charSet="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1" />
         <link rel="dns-prefetch" href="//f005.backblazeb2.com" />
         <link rel="dns-prefetch" href="//ploddings-threads.s3.us-east-005.backblazeb2.com" />
         <link rel="dns-prefetch" href="//bmvuqgfxczoytjwjpvcn.supabase.co" />
