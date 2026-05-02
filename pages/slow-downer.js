@@ -45,7 +45,6 @@ const handleFileChange = (e) => {
     e.target.value = ''; // Reset the file input
     // Any additional error handling logic here
   };
-  console.log('file-type', file.type);
   // Check for file type validity
   if (!validTypes.includes(file.type)) {
     errorHandler('Invalid file type.');

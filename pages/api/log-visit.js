@@ -1,8 +1,6 @@
 
 export default async function handler(req, res) {
 
-    console.log("Incoming Request Method:", req.method);
-
     if (req.method === 'OPTIONS') {
         res.status(200).end();
         return;
@@ -13,7 +11,6 @@ export default async function handler(req, res) {
     }
 
     const { ip, page_id } = req.body;
-    console.log("Logging visit - IP:", ip, "Page ID:", page_id);
 
     if (!ip || !page_id) {
         return res.status(400).json({ error: 'IP and Page ID are required' });

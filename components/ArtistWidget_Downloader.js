@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
+import Image from 'next/image';
 import styles from './ArtistWidget.module.css';
 import { FaFileDownload, FaSpotify, FaApple, FaYoutube } from 'react-icons/fa';
 import YoutubeSubscribe from './YoutubeSubscribe.js';
@@ -192,19 +193,20 @@ export default function ArtistWidget_Downloader({
         that’s okay — the on-site tablature above remains available.
       </p>
 
-      <img
+      <Image
         src="https://f005.backblazeb2.com/file/blah148/albums/albums_the-bell-it-shines-like-gold-blah148_500x500.png"
         alt="The Bell It Shines Like Gold — album artwork by blah148"
+        width={500}
+        height={500}
         style={{
           width: '100%',
           maxWidth: '220px',
-          aspectRatio: '1 / 1',
+          height: 'auto',
           borderRadius: '12px',
           boxShadow: '0 8px 24px rgba(0,0,0,0.25)',
           display: 'block',
           margin: '16px 0 -12px 0',
         }}
-        loading="lazy"
       />
 
       <div className={styles.songTitle}>

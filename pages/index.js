@@ -117,18 +117,19 @@ export default function Home({ userId, ip }) {
           <div className="mainFeed">
             <div className="topRow">
 <Link className="homeButton mobileOnly" href="/" passHref>
-  <img
+  <Image
     src="https://f005.backblazeb2.com/file/ploddings-images/site_images/ploddings_logo-on-transparent.png"
     alt="Ploddings logo"
+    width={60}
+    height={60}
     style={{
-      width: '60px',
-      height: '60px',
       borderRadius: '50%',
       objectFit: 'cover',
       marginRight: '8px',
       display: 'inline-block',
       verticalAlign: 'middle',
     }}
+    priority
   />
   <div className="homeText" style={{ display: 'inline-block', verticalAlign: 'middle', margin: 'auto' }}>
   </div>

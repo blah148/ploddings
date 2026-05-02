@@ -5,7 +5,6 @@ import React, { useEffect, useState, createContext, useContext } from 'react';
 import TableDataFetcher from '../../utils/TableDataFetcher';
 import Sidebar from '../../components/Sidebar';
 import { supabase } from '../../utils/supabase'; // Adjust the import path as needed
-import ChatWithGPT from '../../components/ChatWithGPT.js';
 import jwt from 'jsonwebtoken';
 import { fetchThreadData } from '../../db-utilities';
 import { useLoading } from '../../context/LoadingContext';
@@ -94,18 +93,19 @@ export default function Thread({ userId=null, ip, threadData }) {
 			    <div className="mainFeed">
 						<div className="topRow">
 <Link className="homeButton" href="/" passHref>
-  <img
+  <Image
     src="https://f005.backblazeb2.com/file/ploddings-images/site_images/ploddings_logo-on-transparent.png"
     alt="Ploddings logo"
+    width={60}
+    height={60}
     style={{
-      width: '60px',
-      height: '60px',
       borderRadius: '50%',
       objectFit: 'cover',
       marginRight: '8px',
       display: 'inline-block',
       verticalAlign: 'middle',
     }}
+    priority
   />
   <div className="homeText" style={{ display: 'inline-block', verticalAlign: 'middle', margin: 'auto' }}>
     (Back to All Pre-War Blues Tabs)

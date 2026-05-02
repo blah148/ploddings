@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { useLoading } from '../context/LoadingContext';
 import styles from '../styles/songs.module.css';
 import Link from 'next/link';
+import Image from 'next/image';
 
 function RelatedContent({ id, setRelatedContentLength }) {
   const [relatedContent, setRelatedContent] = useState([]);
@@ -42,10 +43,12 @@ function RelatedContent({ id, setRelatedContentLength }) {
 					{relatedContent.map((item) => (
 						<li key={item.content.id}>
 							<Link className="listLink" href={`/${item.content.page_type}/${item.content.slug}`} passHref>
-								<img
+								<Image
 									className="sidebarThumbnail"
+									width={200}
+									height={200}
 									src={item.content.thumbnail_200x200 ? item.content.thumbnail_200x200 : 'https://f005.backblazeb2.com/file/ploddings-threads/featured_img_200px/ploddings_default_200x200.webp'}
-									alt={item.content.featured_img_alt_text}
+									alt={item.content.featured_img_alt_text || ''}
 								/>
 								<div className="sidebarName">{item.content.name.length > 39 ? item.content.name.slice(0, 39) + '...' : item.content.name}</div>
 								<div className="led"></div>
