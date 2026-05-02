@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState, useCallback } from 'react';
-import { createRubberBandNode } from 'rubberband-web';
+import { SoundTouchNode } from '@soundtouchjs/audio-worklet';
 import { useRouter } from 'next/router';
 import styles from './SlowDowner.module.css';
 import PlayIcon from './PlayIcon';
@@ -11,42 +11,42 @@ import RightChevron from './RightChevron';
 export default function SlowDowner({ isUnlocked, mp3 }) {
   const router = useRouter();
 
-  // Audio graph refs — don't trigger re-renders
+  // Audio graph refs
   const audioCtxRef    = useRef(null);
   const gainNodeRef    = useRef(null);
-  const rbNodeRef      = useRef(null);
-  const sourceNodeRef  = useRef(null);
+  const stNodeRef      = useRef(null);   // SoundTouchNode — created once
+  const sourceNodeRef  = useRef(null);   // AudioBufferSourceNode — recreated per play
   const audioBufferRef = useRef(null);
 
-  // Playback position tracking refs
-  const isPlayingRef        = useRef(false);
-  const startCtxTimeRef     = useRef(0);
-  const startOffsetRef      = useRef(0);
-  const currentSpeedRef     = useRef(100);
-  const currentTimeARef     = useRef(0);
-  const currentTimeBRef     = useRef(0);
-  const rafRef              = useRef(null);
+  // Playback tracking refs
+  const isPlayingRef       = useRef(false);
+  const startCtxTimeRef    = useRef(0);
+  const startOffsetRef     = useRef(0);
+  const currentSpeedRef    = useRef(100);
+  const currentTimeARef    = useRef(0);
+  const currentTimeBRef    = useRef(0);
+  const rafRef             = useRef(null);
 
   // UI state
-  const [isPlaying,     setIsPlaying]     = useState(false);
-  const [duration,      setDuration]      = useState(0);
-  const [playingAt,     setPlayingAt]     = useState(0);
-  const [timeA,         setTimeA]         = useState(0);
-  const [timeB,         setTimeB]         = useState(0);
-  const [playSpeed,     setPlaySpeed]     = useState(100);
+  const [isPlaying,      setIsPlaying]      = useState(false);
+  const [duration,       setDuration]       = useState(0);
+  const [playingAt,      setPlayingAt]      = useState(0);
+  const [timeA,          setTimeA]          = useState(0);
+  const [timeB,          setTimeB]          = useState(0);
+  const [playSpeed,      setPlaySpeed]      = useState(100);
   const [playPitchCents, setPlayPitchCents] = useState(0);
-  const [rbReady,       setRbReady]       = useState(false);
-  const [loadError,     setLoadError]     = useState(false);
+  const [stReady,        setStReady]        = useState(false);
+  const [loadError,      setLoadError]      = useState(false);
 
   const formatTime = (secs) => {
-    const s = Math.max(0, secs);
+    const s  = Math.max(0, secs);
     const m  = Math.floor(s / 60);
     const ss = Math.floor(s % 60);
     const ms = Math.floor((s - Math.floor(s)) * 10);
     return `${String(m).padStart(2,'0')}:${String(ss).padStart(2,'0')}.${ms}`;
   };
 
-  // Initialise audio context + RubberBand node once on mount
+  // Init audio context + SoundTouchNode once
   useEffect(() => {
     let cancelled = false;
 
@@ -54,19 +54,21 @@ export default function SlowDowner({ isUnlocked, mp3 }) {
       window.AudioContext = window.AudioContext || window.webkitAudioContext;
       const ctx  = new window.AudioContext();
       const gain = ctx.createGain();
-      audioCtxRef.current  = ctx;
-      gainNodeRef.current  = gain;
+      audioCtxRef.current = ctx;
+      gainNodeRef.current = gain;
 
       try {
-        const rb = await createRubberBandNode(ctx, '/rubberband-processor.js');
+        await SoundTouchNode.register(ctx, '/soundtouch-processor.js');
         if (cancelled) return;
-        rb.connect(gain);
+        const st = new SoundTouchNode(ctx);
+        st.connect(gain);
         gain.connect(ctx.destination);
-        rbNodeRef.current = rb;
-        setRbReady(true);
+        stNodeRef.current = st;
+        setStReady(true);
       } catch (err) {
-        console.error('RubberBand init failed:', err?.message, err?.stack, err);
+        console.error('SoundTouch init failed:', err?.message, err);
         setLoadError(true);
+        return;
       }
 
       // Load mp3
@@ -75,8 +77,8 @@ export default function SlowDowner({ isUnlocked, mp3 }) {
         const raw    = await resp.arrayBuffer();
         const buffer = await ctx.decodeAudioData(raw);
         if (cancelled) return;
-        audioBufferRef.current   = buffer;
-        currentTimeBRef.current  = buffer.duration;
+        audioBufferRef.current  = buffer;
+        currentTimeBRef.current = buffer.duration;
         setDuration(buffer.duration);
         setTimeB(buffer.duration);
       } catch (err) {
@@ -93,18 +95,17 @@ export default function SlowDowner({ isUnlocked, mp3 }) {
         try { sourceNodeRef.current.stop(); } catch (_) {}
         sourceNodeRef.current.disconnect();
       }
-      if (rbNodeRef.current)   rbNodeRef.current.disconnect();
+      if (stNodeRef.current)   stNodeRef.current.disconnect();
       if (gainNodeRef.current) gainNodeRef.current.disconnect();
       if (audioCtxRef.current) audioCtxRef.current.close();
     };
   }, [mp3]);
 
-  // Keep refs in sync with state so callbacks always see latest values
-  useEffect(() => { currentSpeedRef.current = playSpeed; },  [playSpeed]);
-  useEffect(() => { currentTimeARef.current = timeA; },      [timeA]);
-  useEffect(() => { currentTimeBRef.current = timeB; },      [timeB]);
+  // Keep refs in sync with state
+  useEffect(() => { currentSpeedRef.current = playSpeed; }, [playSpeed]);
+  useEffect(() => { currentTimeARef.current = timeA; },     [timeA]);
+  useEffect(() => { currentTimeBRef.current = timeB; },     [timeB]);
 
-  // rAF position tracker
   const startTracker = useCallback(() => {
     cancelAnimationFrame(rafRef.current);
     const tick = () => {
@@ -137,20 +138,28 @@ export default function SlowDowner({ isUnlocked, mp3 }) {
   }, []);
 
   const startSource = useCallback((offset, tA, tB) => {
-    if (!audioBufferRef.current || !rbNodeRef.current || !audioCtxRef.current) return;
+    if (!audioBufferRef.current || !stNodeRef.current || !audioCtxRef.current) return;
     stopSource();
 
     if (audioCtxRef.current.state === 'suspended') audioCtxRef.current.resume();
 
-    const src = audioCtxRef.current.createBufferSource();
-    src.buffer     = audioBufferRef.current;
-    src.loop       = true;
-    src.loopStart  = tA;
-    src.loopEnd    = tB;
-    src.connect(rbNodeRef.current);
+    const tempo = currentSpeedRef.current / 100;
+    const pitch = currentTimeBRef.current; // unused — use stNode directly
 
-    startCtxTimeRef.current  = audioCtxRef.current.currentTime;
-    startOffsetRef.current   = offset;
+    const src = audioCtxRef.current.createBufferSource();
+    src.buffer             = audioBufferRef.current;
+    src.loop               = true;
+    src.loopStart          = tA;
+    src.loopEnd            = tB;
+    src.playbackRate.value = tempo; // drive tempo via playback rate
+    src.connect(stNodeRef.current);
+
+    // Tell SoundTouch the source rate so it compensates pitch correctly
+    stNodeRef.current.playbackRate.value = tempo;
+    stNodeRef.current.pitch.value        = Math.pow(2, playPitchCentsRef.current / 100 / 12);
+
+    startCtxTimeRef.current = audioCtxRef.current.currentTime;
+    startOffsetRef.current  = offset;
 
     src.start(0, offset);
     sourceNodeRef.current = src;
@@ -159,14 +168,17 @@ export default function SlowDowner({ isUnlocked, mp3 }) {
     startTracker();
   }, [stopSource, startTracker]);
 
+  // Need a ref for pitchCents too so startSource closure sees latest value
+  const playPitchCentsRef = useRef(0);
+  useEffect(() => { playPitchCentsRef.current = playPitchCents; }, [playPitchCents]);
+
   const handlePlay = async () => {
     if (!isUnlocked) {
       alert('The slow-downer tool is only available for active users');
       router.push('/activate-user-account');
       return;
     }
-    if (!audioBufferRef.current || !rbNodeRef.current) return;
-
+    if (!audioBufferRef.current || !stNodeRef.current) return;
     if (audioCtxRef.current.state === 'suspended') await audioCtxRef.current.resume();
 
     if (isPlayingRef.current) {
@@ -186,19 +198,21 @@ export default function SlowDowner({ isUnlocked, mp3 }) {
   const handleSpeedChange = (e) => {
     const speed = Number(e.target.value);
     setPlaySpeed(speed);
-    if (rbNodeRef.current) {
-      // Reset tracking origin so position doesn't jump
+    const tempo = speed / 100;
+    if (sourceNodeRef.current) {
+      sourceNodeRef.current.playbackRate.value = tempo;
+      stNodeRef.current.playbackRate.value     = tempo;
+      // Reset tracking so position doesn't drift
       startOffsetRef.current  = playingAt;
       startCtxTimeRef.current = audioCtxRef.current.currentTime;
-      rbNodeRef.current.setTempo(speed / 100);
     }
   };
 
   const handlePitchChange = (e) => {
     const cents = Number(e.target.value);
     setPlayPitchCents(cents);
-    if (rbNodeRef.current) {
-      rbNodeRef.current.setPitch(Math.pow(2, cents / 100 / 12));
+    if (stNodeRef.current) {
+      stNodeRef.current.pitch.value = Math.pow(2, cents / 100 / 12);
     }
   };
 
@@ -208,7 +222,6 @@ export default function SlowDowner({ isUnlocked, mp3 }) {
     if (isPlayingRef.current) startSource(val, timeA, timeB);
   };
 
-  // Live A/B update — no restart needed, just update loop points
   const handleSetA = () => {
     const newA = playingAt;
     setTimeA(newA);
@@ -222,14 +235,12 @@ export default function SlowDowner({ isUnlocked, mp3 }) {
     if (sourceNodeRef.current) sourceNodeRef.current.loopEnd = newB;
   };
 
-  const handleTimeASlider = (e) => {
-    const val = Number(e.target.value);
+  const handleTimeASlider = (val) => {
     setTimeA(val);
     if (sourceNodeRef.current) sourceNodeRef.current.loopStart = val;
   };
 
-  const handleTimeBSlider = (e) => {
-    const val = Number(e.target.value);
+  const handleTimeBSlider = (val) => {
     setTimeB(val);
     if (sourceNodeRef.current) sourceNodeRef.current.loopEnd = val;
   };
@@ -237,7 +248,7 @@ export default function SlowDowner({ isUnlocked, mp3 }) {
   const componentStyle = { opacity: isUnlocked ? 1 : 0.5 };
 
   if (loadError) {
-    return <div className={styles.App}>Failed to load audio player.</div>;
+    return <div className={styles.App}>Audio player failed to initialise.</div>;
   }
 
   return (
@@ -254,7 +265,8 @@ export default function SlowDowner({ isUnlocked, mp3 }) {
       <div className={styles.slowDownerRow}>
         <h3>Pitch</h3>
         <center>
-          <input type="range" name="pitchSliderCents" min="-100" max="100" value={playPitchCents} onChange={handlePitchChange} />
+          <input type="range" name="pitchSliderCents" min="-100" max="100"
+            value={playPitchCents} onChange={handlePitchChange} />
         </center>
         <label className={styles.numberLabel}>{(playPitchCents / 100).toFixed(2)}</label>
       </div>
@@ -265,13 +277,14 @@ export default function SlowDowner({ isUnlocked, mp3 }) {
         <h3>Start</h3>
         <center>
           <input type="range" className={styles.sliderRoom} step="0.5" min="0"
-            max={duration} value={timeA} onChange={handleTimeASlider} />
+            max={duration} value={timeA}
+            onChange={e => handleTimeASlider(Number(e.target.value))} />
         </center>
         <label className={styles.numberLabel}>{formatTime(timeA)}</label>
-        <button onClick={() => handleTimeASlider({ target: { value: Math.max(timeA - 0.5, 0) } })}
+        <button onClick={() => handleTimeASlider(Math.max(timeA - 0.5, 0))}
           className={`${styles.incrementButton} ${styles.left}`} aria-label="Decrease"><LeftChevron /></button>
         <button onClick={handleSetA}>Set A</button>
-        <button onClick={() => handleTimeASlider({ target: { value: Math.min(timeA + 0.5, duration) } })}
+        <button onClick={() => handleTimeASlider(Math.min(timeA + 0.5, duration))}
           className={`${styles.incrementButton} ${styles.right}`} aria-label="Increase"><RightChevron /></button>
       </div>
 
@@ -279,13 +292,14 @@ export default function SlowDowner({ isUnlocked, mp3 }) {
         <h3>End</h3>
         <center>
           <input type="range" className={styles.sliderRoom} step="0.5" min="0"
-            max={duration} value={timeB} onChange={handleTimeBSlider} />
+            max={duration} value={timeB}
+            onChange={e => handleTimeBSlider(Number(e.target.value))} />
         </center>
         <label className={styles.numberLabel}>{formatTime(timeB)}</label>
-        <button onClick={() => handleTimeBSlider({ target: { value: Math.max(timeB - 0.5, 0) } })}
+        <button onClick={() => handleTimeBSlider(Math.max(timeB - 0.5, 0))}
           className={`${styles.incrementButton} ${styles.left}`} aria-label="Decrease"><LeftChevron /></button>
         <button onClick={handleSetB}>Set B</button>
-        <button onClick={() => handleTimeBSlider({ target: { value: Math.min(timeB + 0.5, duration) } })}
+        <button onClick={() => handleTimeBSlider(Math.min(timeB + 0.5, duration))}
           className={`${styles.incrementButton} ${styles.right}`} aria-label="Increase"><RightChevron /></button>
       </div>
 
@@ -304,7 +318,9 @@ export default function SlowDowner({ isUnlocked, mp3 }) {
         <button className={styles.buttonRewind} onClick={handleRewind}>
           <RewindIcon />
         </button>
-        <button className={styles.buttonPlay} disabled={!rbReady || !audioBufferRef.current} onClick={handlePlay}>
+        <button className={styles.buttonPlay}
+          disabled={!stReady || !audioBufferRef.current}
+          onClick={handlePlay}>
           {isPlaying ? <PauseIcon /> : <PlayIcon />}
         </button>
       </div>
