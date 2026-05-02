@@ -105,6 +105,7 @@ async function fetchBlogData(slug) {
 }
 
 async function getParentObject(threadId) {
+  if (!threadId) return null;
   try {
     const { data, error } = await supabase
       .from('content')
