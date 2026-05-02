@@ -4,7 +4,7 @@ import { supabase } from '../utils/supabase';
 import styles from "./AlternativeMusescoreEmbed.module.css";
 import PDFDownloadButton_SignupFirst from "./PDFDownloadButton_SignupFirst";
 
-const AlternativeMusescoreEmbed = ({ ip, fingerprint, songId, currentSongName }) => {
+const AlternativeMusescoreEmbed = ({ ip, songId, currentSongName }) => {
   const [contentData, setContentData] = useState(null);
 
   useEffect(() => {
@@ -14,7 +14,7 @@ const AlternativeMusescoreEmbed = ({ ip, fingerprint, songId, currentSongName })
         let { data: visitor, error } = await supabase
           .from('visitors')
           .select('free_visit_page_id')
-          .or(`ip.eq.${ip},fingerprint.eq.${fingerprint}`)
+          .eq('ip', ip)
           .order('timestamp_column', { ascending: false })
           .limit(1)
           .single();
@@ -46,7 +46,7 @@ const AlternativeMusescoreEmbed = ({ ip, fingerprint, songId, currentSongName })
     };
 
     checkAccessAndFetchLink();
-  }, [ip, fingerprint, songId]);
+  }, [ip, songId]);
 
   if (!contentData) {
     return <div>Loading...</div>;

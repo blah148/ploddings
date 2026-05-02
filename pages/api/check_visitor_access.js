@@ -1,16 +1,14 @@
 import { supabase } from '../../utils/supabase';
 
 export default async function handler(req, res) {
-  const { fingerprint, ip, pageId } = req.body;
-
-  console.log("Variables received:", { fingerprint, ip, pageId });
+  const { ip, pageId } = req.body;
 
   try {
     // Check if there are matching rows in the visitors table
     const { data: matchingRows, error: queryError } = await supabase
       .from('visitors')
       .select('*')
-      .or(`fingerprint.eq.${fingerprint},ip.eq.${ip}`);
+      .eq('ip', ip);
 
     if (queryError) {
       console.error('Error querying visitors:', queryError.message);
@@ -23,7 +21,7 @@ export default async function handler(req, res) {
       // No matching rows, add a new row
       const { data: newVisitor, error: addError } = await supabase
         .from('visitors')
-        .insert([{ ip, fingerprint, free_visit_page_id: pageId }])
+        .insert([{ ip, free_visit_page_id: pageId }])
         .select(); // Ensure that the inserted row is returned
 
       if (addError) {
