@@ -19,9 +19,7 @@ import TuningDetails from '../../components/TuningButton';
 import Menu from '../../components/Menu';
 import Footer from '../../components/Footer';
 import SEO from '../../components/SEO';
-import PDFDownloadButton from '../../components/PDFDownloadButton';
 import StabilizerText from '../../components/StabilizerText';
-import MusescoreEmbed from '../../components/MusescoreEmbed';
 import PloddingsScoreEmbed from '../../components/PloddingsScoreEmbed';
 import BeingWatchedMobile from '../../components/BeingWatchedMobile.js';
 import Head from 'next/head';
@@ -152,7 +150,7 @@ export default function Song({ userId = null, ip, threadData, songData }) {
             <div className={styles.bottomBorder}></div>
             <div className={styles.componentsContainer}>
               <div className={styles.primaryColumn}>
-                <h2 id="i">i) Guitar tablature / sheet music</h2>
+                <h2 id="i">i) Sheet music / guitar tablature</h2>
                 {songData.musicXML && (
                   <div style={{ position: "relative", marginBottom: "16px" }}>
                     <PloddingsScoreEmbed
@@ -165,18 +163,7 @@ export default function Song({ userId = null, ip, threadData, songData }) {
                     />
                   </div>
                 )}
-                <div style={{ position: "relative" }}>
-											<MusescoreEmbed
-													pageId={songData.id}
-													userId={userId}
-													ip={ip}
-													embed_link={songData.link_3}
-													canAccess={true}
-											/>
 
-                </div>
-	
-								<PDFDownloadButton pdfUrl={songData.pdf_download} songName={songData.name}/>
                 <h2 id="ii">ii) Slow-downer playalong</h2>
                   <SlowDownerComponent isUnlocked={true} dropbox_mp3_link={songData.link_1} />
                 <h2 id="iii">iii) More info</h2>

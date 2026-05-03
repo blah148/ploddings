@@ -237,10 +237,11 @@ function osmdNoteToTone(note) {
   } catch { return null; }
 }
 
-const BASE = 'https://raw.githubusercontent.com/gleitz/midi-js-soundfonts/gh-pages/FluidR3_GM/';
+// Self-hosted sample bank — see /public/samples/
+const BASE = '/samples/';
 const GUITAR_NOTES = ['A2','C3','Eb3','Gb3','A3','C4','Eb4','Gb4','A4','C5','Eb5'];
 const SAMPLE_BASES = {
-  steel: { inst: 'acoustic_guitar_steel-mp3', notes: GUITAR_NOTES },
+  steel: { inst: 'acoustic_guitar_steel', notes: GUITAR_NOTES },
 };
 
 function buildSamplerSynth(Tone, type, onReady) {
@@ -986,11 +987,16 @@ export default function PloddingsScoreEmbed({
   }
 
   function handleDisplayToggle(mode) {
-    if (mode === displayMode) return;
+    // Locked tab attempt: open upgrade modal but DON'T change displayMode.
+    // The switch position is bound to (isTab || showUpgrade) so it animates over
+    // to the Tab side as a teaser; closing the modal animates it back.
     if (mode === 'tab' && !hasTabAccess) {
       setShowUpgrade(true);
       return;
     }
+    // Any successful toggle also dismisses the upgrade modal if it was teasing
+    setShowUpgrade(false);
+    if (mode === displayMode) return;
     setDisplayMode(mode);
     if (mode === 'standard') setPreviewMode(false);
     writeDisplayPref(mode);
@@ -1011,9 +1017,11 @@ export default function PloddingsScoreEmbed({
   const embedCode = `<iframe src="https://www.ploddings.com/embed/${SONG_SLUG}" width="100%" height="600" frameborder="0" allowfullscreen></iframe>`;
 
   const btnStyle = {
-    background: 'none', border: '1px solid #444', color: '#ccc',
-    cursor: 'pointer', borderRadius: '3px', padding: '2px 8px',
-    fontSize: '14px', lineHeight: 1.4,
+    background: 'none', border: '1px solid #555', color: '#e8e8e8',
+    cursor: 'pointer', borderRadius: '6px',
+    minWidth: '36px', minHeight: '36px',
+    padding: '6px 14px', fontSize: '18px', lineHeight: 1, fontWeight: 500,
+    display: 'inline-flex', alignItems: 'center', justifyContent: 'center',
   };
 
   if (!MUSICXML_URL && !musicXMLText) return null;
@@ -1022,18 +1030,21 @@ export default function PloddingsScoreEmbed({
       <style jsx global>{`
         @font-face {
           font-family: 'Edwin';
-          src: url('https://cdn.jsdelivr.net/gh/MuseScorefonts/Edwin@main/Edwin-Roman.otf') format('opentype');
+          src: url('/fonts/edwin/Edwin-Roman.otf') format('opentype');
           font-weight: normal; font-style: normal;
+          font-display: swap;
         }
         @font-face {
           font-family: 'Edwin';
-          src: url('https://cdn.jsdelivr.net/gh/MuseScorefonts/Edwin@main/Edwin-Bold.otf') format('opentype');
+          src: url('/fonts/edwin/Edwin-Bold.otf') format('opentype');
           font-weight: bold; font-style: normal;
+          font-display: swap;
         }
         @font-face {
           font-family: 'Edwin';
-          src: url('https://cdn.jsdelivr.net/gh/MuseScorefonts/Edwin@main/Edwin-Italic.otf') format('opentype');
+          src: url('/fonts/edwin/Edwin-Italic.otf') format('opentype');
           font-weight: normal; font-style: italic;
+          font-display: swap;
         }
         @keyframes ploddings-shimmer {
           0%   { background-position: -200% 0; }
@@ -1052,13 +1063,115 @@ export default function PloddingsScoreEmbed({
           border-radius: 4px;
           opacity: 0.7;
         }
+        /* Extend hit area beyond visible button bounds via invisible pseudo-element */
+        .ploddings-pbtn {
+          position: relative;
+        }
+        .ploddings-pbtn::before {
+          content: '';
+          position: absolute;
+          inset: -8px;
+          border-radius: inherit;
+        }
+        /* ---- Mobile optimizations ---- */
+        @media (max-width: 700px) {
+          .pl-toolbar {
+            flex-wrap: wrap !important;
+            row-gap: 8px !important;
+            padding: 8px 12px !important;
+          }
+          .pl-progress {
+            flex-basis: 100% !important;
+            order: 99;
+          }
+          .pl-card {
+            max-width: 100% !important;
+            box-shadow: none !important;
+            border: none !important;
+          }
+          .pl-score-wrap {
+            max-height: none !important;
+            overflow-y: visible !important;
+            padding: 0 6px !important;
+          }
+          .pl-title {
+            font-size: 22px !important;
+          }
+          .pl-title-row {
+            padding: 14px 12px 4px !important;
+            gap: 8px !important;
+          }
+          .pl-toggle-row {
+            padding: 8px 12px 10px !important;
+            gap: 10px !important;
+          }
+          .pl-share-row {
+            padding: 10px 12px 12px !important;
+          }
+          .pl-footer {
+            padding: 8px 12px !important;
+          }
+        }
+        /* Hide the desktop "Press Play" hint on touch devices */
+        @media (hover: none) {
+          .pl-play-hint { display: none !important; }
+        }
       `}</style>
 
-      <div style={{
-        background: '#1f1f23',
-        padding: '0',
-        fontFamily: 'sans-serif',
-      }}>
+      <div style={{ fontFamily: 'sans-serif', marginBottom: '36px' }}>
+      {/* Notation/Tab switch lives ABOVE the player as its own prominent control —
+          standard iOS-style switch with labels on either side of a sliding knob */}
+      {(() => {
+        const isTab = displayMode === 'tab';
+        const tabLocked = !hasTabAccess;
+        // Visual position: also animate over when the upgrade modal is open as a teaser.
+        // When the modal closes (without conversion), this reverts and the knob slides back.
+        const showAsTab = isTab || showUpgrade;
+        const labelStyle = (active) => ({
+          background: 'none', border: 'none', cursor: 'pointer',
+          fontSize: '16px', fontWeight: active ? 700 : 500,
+          color: active ? '#222' : '#888',
+          padding: '4px 0',
+          transition: 'color 0.2s, font-weight 0.2s',
+          boxShadow: 'none',
+        });
+        return (
+          <div className="pl-toggle-row" style={{
+            padding: '12px 16px 16px',
+            display: 'flex', alignItems: 'center', gap: '12px',
+          }}>
+            <button onClick={() => handleDisplayToggle('standard')} style={labelStyle(!showAsTab)}>
+              Notation
+            </button>
+            <button
+              onClick={() => handleDisplayToggle(showAsTab ? 'standard' : 'tab')}
+              title={tabLocked ? 'Tablature requires a subscription' : 'Toggle between notation and tablature'}
+              style={{
+                position: 'relative',
+                width: '52px', height: '28px',
+                background: showAsTab ? '#f07820' : '#bbb',
+                border: 'none', borderRadius: '14px',
+                cursor: 'pointer', padding: 0,
+                transition: 'background 0.2s',
+                flexShrink: 0,
+              }}
+            >
+              <span style={{
+                position: 'absolute',
+                top: '3px',
+                left: showAsTab ? '27px' : '3px',
+                width: '22px', height: '22px',
+                background: '#fff',
+                borderRadius: '50%',
+                transition: 'left 0.2s',
+              }} />
+            </button>
+            <button onClick={() => handleDisplayToggle('tab')} style={labelStyle(showAsTab)}>
+              Tab+
+            </button>
+          </div>
+        );
+      })()}
       <div style={{
         margin: '0',
         background: '#2a2a30',
@@ -1084,7 +1197,7 @@ export default function PloddingsScoreEmbed({
         )}
 
         {!status && !error && (
-          <div style={{
+          <div className="pl-toolbar" style={{
             background: '#1a1a2e', padding: '10px 16px',
             display: 'flex', alignItems: 'center', gap: '12px',
             position: 'sticky', top: 0, zIndex: 100,
@@ -1092,6 +1205,7 @@ export default function PloddingsScoreEmbed({
           }}>
             {showPlayHint && (
               <div
+                className="pl-play-hint"
                 onClick={() => { setPlayHintFade(false); setTimeout(() => setShowPlayHint(false), 400); }}
                 style={{
                   position: 'absolute', top: '54px', left: '42px',
@@ -1116,62 +1230,44 @@ export default function PloddingsScoreEmbed({
                 Press <strong>Play</strong> to hear this score
               </div>
             )}
-            <button onClick={handleRestart} style={{ background: 'none', border: 'none', color: '#fff', cursor: 'pointer', fontSize: '16px' }}>⏮</button>
+            <button
+              onClick={handleRestart}
+              className="ploddings-pbtn"
+              style={{
+                background: 'none', border: 'none', color: '#fff',
+                cursor: 'pointer', fontSize: '20px',
+                width: '44px', height: '44px',
+                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                padding: 0, flexShrink: 0,
+              }}
+            >⏮</button>
             <button
               onClick={playing ? handlePause : handlePlay}
+              className="ploddings-pbtn"
               style={{
                 background: '#f07820', border: 'none', borderRadius: '50%',
-                width: '36px', height: '36px', color: '#fff', cursor: 'pointer',
-                fontSize: '16px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                width: '44px', height: '44px', color: '#fff', cursor: 'pointer',
+                fontSize: '20px', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0,
+                padding: 0,
               }}
             >
               {playing ? '⏸' : '▶'}
             </button>
-            <span style={{ color: '#aaa', fontSize: '12px', minWidth: '80px' }}>
+            <span style={{ color: '#e8e8e8', fontSize: '14px', minWidth: '92px', fontWeight: 500 }}>
               {fmt(currentTime)} / {fmt(totalDuration)}
             </span>
-            <div style={{ flex: 1, height: '4px', background: '#333', borderRadius: '2px', overflow: 'hidden' }}>
+            <div className="pl-progress" style={{ flex: '1 1 320px', minWidth: '120px', height: '5px', background: '#333', borderRadius: '3px', overflow: 'hidden' }}>
               <div style={{
                 height: '100%', background: '#f07820', borderRadius: '2px',
                 width: totalDuration ? `${(currentTime / totalDuration) * 100}%` : '0%',
                 transition: 'width 0.1s linear',
               }} />
             </div>
-            {/* Display mode toggle switch */}
-            <div style={{
-              display: 'flex', alignItems: 'center', gap: 0, flexShrink: 0,
-              background: '#0d0d1a', borderRadius: '14px', padding: '2px',
-              border: '1px solid #444',
-            }}>
-              {['standard', 'tab'].map((m) => {
-                const active = displayMode === m;
-                const locked = m === 'tab' && !hasTabAccess;
-                return (
-                  <button
-                    key={m}
-                    onClick={() => handleDisplayToggle(m)}
-                    title={locked ? 'Tablature requires a subscription' : (m === 'tab' ? 'Show tablature' : 'Show standard notation')}
-                    style={{
-                      background: active ? '#f07820' : 'transparent',
-                      color: active ? '#fff' : '#aaa',
-                      border: 'none', borderRadius: '12px',
-                      padding: '4px 12px', fontSize: '11px',
-                      fontWeight: 600, cursor: 'pointer',
-                      transition: 'background 0.15s, color 0.15s',
-                      display: 'flex', alignItems: 'center', gap: '4px',
-                    }}
-                  >
-                    {m === 'tab' ? 'Tab' : 'Notation'}
-                    {locked && <span style={{ fontSize: '9px', opacity: 0.7 }}>🔒</span>}
-                  </button>
-                );
-              })}
-            </div>
             {/* Tempo controls */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
-              <button onClick={() => handleTempoChange(-5)} style={btnStyle}>−</button>
-              <span style={{ color: '#aaa', fontSize: '11px', minWidth: '54px', textAlign: 'center' }}>{tempo} BPM</span>
-              <button onClick={() => handleTempoChange(+5)} style={btnStyle}>+</button>
+              <button onClick={() => handleTempoChange(-5)} className="ploddings-pbtn" style={btnStyle}>−</button>
+              <span style={{ color: '#e8e8e8', fontSize: '13px', minWidth: '64px', textAlign: 'center', fontWeight: 500 }}>{tempo} BPM</span>
+              <button onClick={() => handleTempoChange(+5)} className="ploddings-pbtn" style={btnStyle}>+</button>
             </div>
           </div>
         )}
@@ -1179,7 +1275,7 @@ export default function PloddingsScoreEmbed({
         {/* Dark "page" area with white score card centered inside, MuseScore-style.
             Always mounted so OSMD has a valid containerRef even during loading. */}
         <div style={{ background: '#2a2a30', padding: '32px 16px' }}>
-        <div style={{
+        <div className="pl-card" style={{
           position: 'relative',
           maxWidth: '1040px', margin: '0 auto',
           background: '#fff', overflow: 'hidden',
@@ -1188,7 +1284,7 @@ export default function PloddingsScoreEmbed({
           // Reserve space for the skeleton during load so the overlay isn't clipped to a tiny card
           minHeight: (status || error) ? '560px' : undefined,
         }}>
-          <div style={{
+          <div className="pl-title-row" style={{
             display: 'grid', gridTemplateColumns: '1fr 2fr 1fr',
             alignItems: 'end', gap: '16px',
             padding: '20px 24px 8px',
@@ -1196,14 +1292,14 @@ export default function PloddingsScoreEmbed({
           }}>
             <div /> {/* left column reserved for future annotations (tuning, instrument) */}
             <div style={{ textAlign: 'center' }}>
-              <div style={{ fontSize: '34px', fontWeight: 'bold', lineHeight: 1.1 }}>{SONG_NAME}</div>
+              <div className="pl-title" style={{ fontSize: '38px', fontWeight: 400, lineHeight: 1.1 }}>{SONG_NAME}</div>
               {subtitle && (
                 <div style={{ fontSize: '14px', color: '#444', marginTop: '6px' }}>{subtitle}</div>
               )}
             </div>
             <div style={{ textAlign: 'right', fontSize: '14px', color: '#222' }}>{composerOverride || ARTIST_NAME}</div>
           </div>
-          <div ref={scoreWrapperRef} style={{ position: 'relative', maxHeight: '700px', overflowY: 'auto', padding: '0 28px' }}>
+          <div ref={scoreWrapperRef} className="pl-score-wrap" style={{ position: 'relative', maxHeight: '700px', overflowY: 'auto', padding: '0 28px' }}>
             <div ref={containerRef} style={{ padding: '0 0 16px', pointerEvents: 'none' }} />
             {vibratoMarks.map(({ id, left, top, width, height }) => (
               <div key={`vib-${id}`} style={{
@@ -1313,7 +1409,7 @@ export default function PloddingsScoreEmbed({
         </div>
 
         {/* Footer: song info + Powered by Ploddings */}
-        <div style={{
+        <div className="pl-footer" style={{
           padding: '10px 16px', background: '#f5f5f5',
           borderTop: '1px solid #000',
           display: 'flex', justifyContent: 'space-between', alignItems: 'center',
@@ -1330,13 +1426,13 @@ export default function PloddingsScoreEmbed({
         </div>
 
         {/* Share / embed section */}
-        <div style={{
+        <div className="pl-share-row" style={{
           padding: '12px 16px 16px',
           background: '#f9f9f9',
           borderTop: '1px solid #ddd',
         }}>
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-            <span style={{ fontSize: '13px', fontWeight: 600, color: '#444' }}>Embed this tab on your site</span>
+            <span style={{ fontSize: '13px', fontWeight: 600, color: '#444' }}>Embed this sheet music on your site</span>
             <button
               onClick={handleCopy}
               style={{
@@ -1372,8 +1468,8 @@ export default function PloddingsScoreEmbed({
             <div
               onClick={(e) => e.stopPropagation()}
               style={{
-                background: '#fff', borderRadius: '8px', padding: '28px 32px',
-                maxWidth: '380px', width: '90%', textAlign: 'center',
+                background: '#fff', borderRadius: '12px', padding: '40px 48px',
+                maxWidth: '560px', width: '92%', textAlign: 'center',
                 boxShadow: '0 20px 60px rgba(0,0,0,0.4)', position: 'relative',
               }}
             >
@@ -1381,43 +1477,43 @@ export default function PloddingsScoreEmbed({
                 onClick={() => setShowUpgrade(false)}
                 aria-label="Close"
                 style={{
-                  position: 'absolute', top: '8px', right: '12px',
-                  background: 'none', border: 'none', fontSize: '20px',
+                  position: 'absolute', top: '12px', right: '18px',
+                  background: 'none', border: 'none', fontSize: '28px',
                   color: '#999', cursor: 'pointer', lineHeight: 1,
                 }}
               >×</button>
-              <div style={{ fontSize: '36px', marginBottom: '8px' }}>🔒</div>
-              <div style={{ fontFamily: 'Edwin, "Times New Roman", serif', fontSize: '20px', fontWeight: 'bold', marginBottom: '8px' }}>
+              <div style={{ fontSize: '56px', marginBottom: '12px' }}>🔒</div>
+              <div style={{ fontFamily: 'Edwin, "Times New Roman", serif', fontSize: '28px', fontWeight: 'bold', marginBottom: '14px' }}>
                 Tablature is a Plus feature
               </div>
-              <div style={{ fontSize: '13px', color: '#555', marginBottom: '20px', lineHeight: 1.5 }}>
+              <div style={{ fontSize: '16px', color: '#555', marginBottom: '28px', lineHeight: 1.55 }}>
                 Standard notation is free. Upgrade to view fingering-accurate tablature with playback for every transcription on Ploddings.
               </div>
               <a
                 href="/pricing"
                 style={{
                   display: 'inline-block', background: '#f07820',
-                  color: '#fff', padding: '10px 24px',
-                  borderRadius: '6px', textDecoration: 'none',
-                  fontWeight: 600, fontSize: '14px',
+                  color: '#fff', padding: '14px 34px',
+                  borderRadius: '8px', textDecoration: 'none',
+                  fontWeight: 600, fontSize: '17px',
                 }}
               >
                 Upgrade to Plus
               </a>
-              <div style={{ marginTop: '14px' }}>
+              <div style={{ marginTop: '20px' }}>
                 <button
                   onClick={handleStartPreview}
                   style={{
                     background: 'none', border: 'none',
                     color: '#444', textDecoration: 'underline',
-                    cursor: 'pointer', fontSize: '13px', padding: 0,
+                    cursor: 'pointer', fontSize: '15px', padding: 0,
                   }}
                 >
                   Preview the first {PREVIEW_BARS} bars free
                 </button>
               </div>
-              <div style={{ marginTop: '8px' }}>
-                <a href="/login" style={{ fontSize: '12px', color: '#1a6ef5', textDecoration: 'none' }}>
+              <div style={{ marginTop: '12px' }}>
+                <a href="/login" style={{ fontSize: '14px', color: '#1a6ef5', textDecoration: 'none' }}>
                   Already a subscriber? Sign in
                 </a>
               </div>
