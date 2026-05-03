@@ -22,6 +22,7 @@ import SEO from '../../components/SEO';
 import PDFDownloadButton from '../../components/PDFDownloadButton';
 import StabilizerText from '../../components/StabilizerText';
 import MusescoreEmbed from '../../components/MusescoreEmbed';
+import PloddingsScoreEmbed from '../../components/PloddingsScoreEmbed';
 import BeingWatchedMobile from '../../components/BeingWatchedMobile.js';
 import Head from 'next/head';
 import GTM from '../../components/GTM.js';
@@ -152,6 +153,18 @@ export default function Song({ userId = null, ip, threadData, songData }) {
             <div className={styles.componentsContainer}>
               <div className={styles.primaryColumn}>
                 <h2 id="i">i) Guitar tablature / sheet music</h2>
+                {songData.musicXML && (
+                  <div style={{ position: "relative", marginBottom: "16px" }}>
+                    <PloddingsScoreEmbed
+                      musicXMLUrl={songData.musicXML}
+                      songName={songData.name}
+                      artistName={threadData?.name || ''}
+                      songSlug={songData.slug}
+                      hasTabAccess={!!userId}
+                      verifiedByEar={true}
+                    />
+                  </div>
+                )}
                 <div style={{ position: "relative" }}>
 											<MusescoreEmbed
 													pageId={songData.id}
