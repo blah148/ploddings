@@ -167,19 +167,17 @@ function applyCustomSwing(alphaTab, score, ratio, debug) {
               }
             });
           });
-          // Third pass — close any rhythmic gap that the cross-voice shift opened. If beat N ends before
-          // beat N+1 starts, extend beat N's playbackDuration to fill. Without this, the listener hears
-          // a silent gap and the rhythm reads "straight" between the gap and the next beat.
+          // Third pass — make every beat's duration match the gap to the next beat exactly. This both
+          // closes positive gaps (silence the listener would hear as "straight") AND trims negative gaps
+          // (where a cross-voice shift bumped a beat's start backwards into the previous beat's tail,
+          // creating a brief overlap that the soundfont may render as a doubled note).
           bar.voices.forEach((voice) => {
             const beats = voice.beats || [];
             for (let i = 0; i < beats.length - 1; i++) {
               const cur = beats[i];
               const next = beats[i + 1];
-              const curEnd = (cur.playbackStart || 0) + (cur.playbackDuration || 0);
-              const nextStart = next.playbackStart || 0;
-              if (nextStart > curEnd) {
-                cur.playbackDuration = nextStart - (cur.playbackStart || 0);
-              }
+              const fitted = (next.playbackStart || 0) - (cur.playbackStart || 0);
+              if (fitted > 0) cur.playbackDuration = fitted;
             }
           });
         }
