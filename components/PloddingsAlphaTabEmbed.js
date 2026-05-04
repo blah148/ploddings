@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
+import UnlockAudioButton from './UnlockAudioButton';
 
 // Walk the raw MusicXML to collect articulations alphaTab's importer drops on the floor:
 //   <scoop>   = slide up INTO a note (upward scoop)
@@ -174,8 +175,10 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
             staveProfile: 'default',
             // Mobile shrinks the whole engraving (notes, tabs, stems, etc.) so it's less dominant in a small viewport.
             scale: isMobile ? 0.8 : 1.0,
-            // Honor source-file system breaks instead of letting alphaTab decide where to wrap.
-            systemsLayoutMode: 'useModelLayout',
+            // Mobile caps systems at 2 bars and ignores source-file system breaks. Desktop honours model layout.
+            ...(isMobile
+              ? { systemsLayoutMode: 'automatic', barsPerRow: 2 }
+              : { systemsLayoutMode: 'useModelLayout' }),
             // Stretch any non-full system (last one included) to full width.
             justifyLastSystem: true,
             resources: {
@@ -263,7 +266,6 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
           // Apply scoop/plop/doit/falloff articulations the importer skips. Only meaningful for uncompressed .musicxml.
           if (xmlText) {
             try { applyScoops(alphaTab, score, xmlText); } catch (_) {}
-            try { applySwing(alphaTab, score, xmlText); } catch (_) {}
           }
           collectRestBeatVoices(score);
           if (touched) api.render();
@@ -301,7 +303,17 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
           if (cancelled || !containerRef.current) return;
           setLoading(false);
           // Notify parent (e.g. /songs/[id].js iframe wrapper) that the score is ready, so its page-level loader can stop.
-          try { window.parent?.postMessage({ type: 'ploddings-score-ready' }, '*'); } catch (_) {}
+          // Report rendered height so the parent (/songs/[id]) can size the iframe to the score's actual height.
+          // Measure the score card's bottom edge — body.scrollHeight is bounded below by the iframe's outer
+          // height, so we'd report ~1400px even if the score is taller.
+          try {
+            const card = root.closest('.ploddings-at-card') || root;
+            const rect = card.getBoundingClientRect();
+            const h = Math.ceil(rect.bottom + (window.scrollY || 0));
+            window.parent?.postMessage({ type: 'ploddings-score-ready', height: h }, '*');
+          } catch (_) {
+            try { window.parent?.postMessage({ type: 'ploddings-score-ready' }, '*'); } catch (__) {}
+          }
           const root = containerRef.current;
           const allText = root.querySelectorAll('text');
           const svgs = root.querySelectorAll('svg');
@@ -494,6 +506,9 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
         .ploddings-at .at-surface > div:not(:first-child),
         .ploddings-at .at-surface > div:not(:first-child) * { cursor: pointer !important; }
         .ploddings-at-card .ploddings-at-area { overflow-x: auto; -webkit-overflow-scrolling: touch; position: relative; }
+        /* UnlockAudioButton is mobile-only — desktop doesn't gate AudioContext on user gesture. */
+        .ploddings-at-unlock-audio { margin: 8px 0; }
+        @media (min-width: 641px) { .ploddings-at-unlock-audio { display: none !important; } }
         /* Shimmer loading state — covers the score area until the first postRenderFinished fires.
            space-evenly distributes rows to fill the full height; align-items:center horizontally centers them. */
         .ploddings-at-shimmer {
@@ -521,7 +536,7 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
           .ploddings-at-toolbar .ploddings-at-tempo { order: 2; margin-left: auto !important; }
           .ploddings-at-toolbar .ploddings-at-play { width: 88px !important; padding: 10px 0 !important; }
           .ploddings-at-toolbar .ploddings-at-tempo input[type="range"] { width: 100px !important; }
-          .ploddings-at-area { padding: 8px !important; min-height: 320px !important; }
+          .ploddings-at-area { padding: 8px 4px !important; min-height: 320px !important; }
         }
       ` }} />
       {error && (
@@ -529,6 +544,11 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
           ✗ {error}
         </div>
       )}
+      {/* Same UnlockAudioButton the slow-downer uses — satisfies iOS user-gesture requirement.
+          Rendered ABOVE the score card (not inside it) and hidden on desktop via CSS. */}
+      <div className="ploddings-at-unlock-audio">
+        <UnlockAudioButton />
+      </div>
       <div
         className="ploddings-at-card"
         style={{ background: '#fff', border: '1px solid #ddd', borderRadius: '4px', marginTop: '12px', overflow: 'clip' }}

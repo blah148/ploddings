@@ -29,13 +29,22 @@ export default function Song({ userId = null, ip, threadData, songData }) {
   const { isLoading, startLoading, stopLoading } = useLoading();
   const [relatedContentLength, setRelatedContentLength] = useState(null);
   const [buttonLoaded, setButtonLoaded] = useState(false);
+  // Iframe height tracks the score's rendered height (mobile in particular needs to be tall enough
+  // to encompass all systems with 2-bars-per-row layout). Initial 1400 is a generous fallback.
+  const [iframeHeight, setIframeHeight] = useState(1400);
 
   // Drive the site-wide Loader animation while the score-embed iframe is loading.
   useEffect(() => {
     if (!songData?.musicXML) return;
     startLoading();
     const onMessage = (e) => {
-      if (e.data && e.data.type === 'ploddings-score-ready') stopLoading();
+      if (!e.data || e.data.type !== 'ploddings-score-ready') return;
+      stopLoading();
+      // Apply reported height (clamped to a sensible range) so the iframe fits the whole score —
+      // mobile especially needs this since 2 bars per system makes the score much taller.
+      if (typeof e.data.height === 'number' && e.data.height >= 400 && e.data.height <= 10000) {
+        setIframeHeight(Math.ceil(e.data.height));
+      }
     };
     window.addEventListener('message', onMessage);
     const fallback = setTimeout(() => stopLoading(), 20000);
@@ -180,9 +189,10 @@ export default function Song({ userId = null, ip, threadData, songData }) {
                       scrolling="no"
                       style={{
                         width: '100%',
-                        height: '1400px',
+                        height: `${iframeHeight}px`,
                         border: 'none',
                         display: 'block',
+                        transition: 'height 0.2s ease',
                       }}
                     />
                     <PloddingsScoreFooter songSlug={songData.slug} />

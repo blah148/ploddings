@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 
 /**
  * Footer that sits beneath the score embed: attribution row + embed-snippet helper.
@@ -9,17 +9,38 @@ import { useState } from 'react';
  */
 export default function PloddingsScoreFooter({ songSlug }) {
   const [copied, setCopied] = useState(false);
+  const snippetRef = useRef(null);
 
   const embedSnippet = songSlug
     ? `<iframe src="https://www.ploddings.com/embed/${songSlug}" width="100%" height="800" frameborder="0" scrolling="no"></iframe>`
     : '';
 
+  // Mobile Safari often disallows navigator.clipboard.writeText outside HTTPS or specific gesture
+  // contexts; fall back to selecting the textarea and using document.execCommand('copy').
   function handleCopy() {
-    if (!embedSnippet || typeof navigator === 'undefined' || !navigator.clipboard) return;
-    navigator.clipboard.writeText(embedSnippet).then(() => {
+    if (!embedSnippet) return;
+    const flash = () => {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
-    }).catch(() => {});
+    };
+    const fallback = () => {
+      const el = snippetRef.current;
+      if (!el) return false;
+      try {
+        el.focus();
+        el.setSelectionRange(0, el.value.length);
+        const ok = document.execCommand('copy');
+        if (ok) flash();
+        return ok;
+      } catch (_) {
+        return false;
+      }
+    };
+    if (typeof navigator !== 'undefined' && navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(embedSnippet).then(flash).catch(fallback);
+    } else {
+      fallback();
+    }
   }
 
   return (
@@ -97,18 +118,25 @@ export default function PloddingsScoreFooter({ songSlug }) {
           padding: 12px 12px;
           font-family: 'SFMono-Regular', Menlo, Consolas, monospace;
           font-size: 12px;
+          line-height: 1.4;
           color: #333;
           background: #fff;
           border: 1px solid #d8d8d8;
           border-radius: 4px;
           box-sizing: border-box;
           outline: none;
+          resize: none;
+          overflow: auto;
+          white-space: pre-wrap;
+          word-break: break-all;
           transition: border-color 0.15s ease;
         }
         .ploddings-footer-snippet:focus { border-color: #888; }
         @media (max-width: 540px) {
           .ploddings-footer-attrib { padding: 14px 0; }
           .ploddings-footer-attrib a { font-size: 12px; }
+          /* Mobile shows more rows so the whole iframe snippet is visible without horizontal cutoff. */
+          .ploddings-footer-snippet { min-height: 84px; }
         }
       ` }} />
       <div className="ploddings-footer">
@@ -134,11 +162,13 @@ export default function PloddingsScoreFooter({ songSlug }) {
                 {copied ? 'Copied!' : 'Copy'}
               </button>
             </div>
-            <input
+            <textarea
+              ref={snippetRef}
               className="ploddings-footer-snippet"
-              type="text"
               value={embedSnippet}
               readOnly
+              rows={2}
+              wrap="soft"
               onFocus={(e) => e.target.select()}
             />
           </div>
