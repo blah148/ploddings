@@ -131,6 +131,8 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
   useEffect(() => {
     let api;
     let cancelled = false;
+    // Mobile detection used by alphaTab settings (scale) and post-render header layout (stack vs side-by-side).
+    const isMobile = typeof window !== 'undefined' && window.matchMedia?.('(max-width: 640px)').matches;
 
     async function init() {
       try {
@@ -170,7 +172,8 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
           display: {
             layoutMode: 'page',
             staveProfile: 'default',
-            scale: 1.0,
+            // Mobile shrinks the whole engraving (notes, tabs, stems, etc.) so it's less dominant in a small viewport.
+            scale: isMobile ? 0.8 : 1.0,
             // Honor source-file system breaks instead of letting alphaTab decide where to wrap.
             systemsLayoutMode: 'useModelLayout',
             // Stretch any non-full system (last one included) to full width.
@@ -324,18 +327,22 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
             });
             centered.sort((a, b) => a.y - b.y);
             const subRows = centered.slice(1).filter((r) => !r.el.classList.contains('header-relayout'));
+            const STACK_GAP = isMobile ? 16 : 22;
             if (subRows.length > 0) {
               const svgWidth = parseInt(titleSvg.getAttribute('width'), 10) || 1200;
               newY = subRows[0].y + HEADER_TOP_MARGIN;
+              // Each subtitle/composer line on its own row, centered. Mobile additionally shrinks the title and sub-row text.
+              if (isMobile && centered[0]) centered[0].el.style.fontSize = '24px';
               subRows.forEach((r, idx) => {
-                r.el.setAttribute('y', String(newY));
-                if (idx === subRows.length - 1 && subRows.length > 1) {
-                  r.el.setAttribute('x', String(svgWidth - HEADER_RIGHT_PAD));
-                  r.el.setAttribute('text-anchor', 'end');
-                }
+                if (isMobile) r.el.style.fontSize = '13px';
+                r.el.setAttribute('y', String(newY + idx * STACK_GAP));
+                r.el.setAttribute('x', String(svgWidth / 2));
+                r.el.setAttribute('text-anchor', 'middle');
                 r.el.classList.add('header-relayout');
               });
             }
+            // Tuning sits BELOW the stacked sub-rows on its own row.
+            const subRowsBottomY = (newY ?? 0) + Math.max(0, subRows.length - 1) * STACK_GAP + STACK_GAP;
             // Tuning lives in a separate placeholder SVG. Find by SMuFL guitarString0..5 codepoints
             // (E834..E83F) and translate it up so its center sits on the subtitle/artist Y row.
             let tuningSvg = null;
@@ -357,27 +364,48 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
               if (placeholder) {
                 const currentTop = parseFloat(placeholder.style.top) || 0;
                 const titleTop = parseFloat(titleSvg.parentElement?.style.top) || 0;
-                const tuningHeight = parseFloat(tuningSvg.getAttribute('height')) || 51;
-                const subtitleAbsoluteY = titleTop + newY;
-                // Top-align the tuning block to the subtitle/artist Y row so it sits a bit lower on the page,
-                // leaving clearance below long titles instead of riding up next to them.
-                const targetTop = Math.max(0, subtitleAbsoluteY);
-                // translateY rather than `top` — alphaTab rewrites placeholder.style.top on every partial render.
+                // Tuning gets its own row below the stacked subtitle/composer rows, horizontally centered.
+                const targetTop = Math.max(0, titleTop + subRowsBottomY);
                 const dy = targetTop - currentTop;
-                placeholder.style.transform = `translateY(${dy}px)`;
+                // Measure tuning content's actual horizontal span and translate so its midpoint lands at the container center.
+                let minX = Infinity, maxX = -Infinity;
+                tuningSvg.querySelectorAll('text').forEach((t) => {
+                  const x = parseFloat(t.getAttribute('x'));
+                  if (!Number.isFinite(x)) return;
+                  if (x < minX) minX = x;
+                  if (x > maxX) maxX = x;
+                });
+                const SCALE = isMobile ? 0.78 : 1;
+                const contentLeft = Number.isFinite(minX) ? minX : 0;
+                const contentRight = Number.isFinite(maxX) ? maxX + 30 : contentLeft + 100;
+                const contentMidScaled = ((contentLeft + contentRight) / 2) * SCALE;
+                const containerWidth = containerRef.current?.offsetWidth || 1200;
+                const dx = (containerWidth / 2) - contentMidScaled;
+                // translateY/translateX rather than `top`/`left` — alphaTab rewrites those on every partial render.
+                placeholder.style.transform = `translate(${dx}px, ${dy}px) scale(${SCALE})`;
+                placeholder.style.transformOrigin = 'top left';
               }
             }
           }
 
           // ── Tone down "rendered by alphaTab" attribution (kept per their license terms) ──
+          // Also remove instructional tuning-text directions (e.g. "Guitar Tune down 1 step",
+          // "Tuning: Drop D", "Capo 3") that duplicate the per-string tuning panel.
+          const TUNING_INSTRUCTION_RE = /\btun(e|ing)\b|\bdrop\s*[a-g]\b|\bcapo\s*\d/i;
           allText.forEach((t) => {
-            if ((t.textContent || '').trim() !== 'rendered by alphaTab') return;
-            t.style.opacity = '0.15';
-            t.style.fontWeight = 'normal';
-            const existing = t.getAttribute('transform') || '';
-            if (!existing.includes('attr-shift')) {
-              t.setAttribute('transform', `translate(0, 24) ${existing}`.trim());
-              t.classList.add('attr-shift');
+            const s = (t.textContent || '').trim();
+            if (s === 'rendered by alphaTab') {
+              t.style.opacity = '0.15';
+              t.style.fontWeight = 'normal';
+              const existing = t.getAttribute('transform') || '';
+              if (!existing.includes('attr-shift')) {
+                t.setAttribute('transform', `translate(0, 24) ${existing}`.trim());
+                t.classList.add('attr-shift');
+              }
+              return;
+            }
+            if (TUNING_INSTRUCTION_RE.test(s)) {
+              t.remove();
             }
           });
 
