@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react';
+import PloddingsScoreFooter from './PloddingsScoreFooter';
 
 function buildMeasureOrder(repetitions, totalMeasures) {
   const realReps = (repetitions || []).filter(r => !r.virtualOverallRepetition);
@@ -169,6 +170,18 @@ function stripInstrumentLabel(xmlText) {
       if (isInstrumentLabel(txt) || isTuningLabel(txt)) cw.closest('credit')?.remove();
     });
     doc.querySelectorAll('metronome').forEach(m => m.remove());
+    // Strip MuseScore's hardcoded system-distance / page-layout instructions.
+    // Keep the <print new-system="yes"> / <print new-page="yes"> attributes (so line breaks survive),
+    // but remove their <system-layout>, <page-layout>, <staff-layout> children that hardcode big gaps.
+    doc.querySelectorAll('print').forEach(p => {
+      const newSystem = p.getAttribute('new-system');
+      const newPage = p.getAttribute('new-page');
+      if (newSystem === 'yes' || newPage === 'yes') {
+        Array.from(p.children).forEach(child => p.removeChild(child));
+      } else {
+        p.remove(); // print element with no break info — purely layout, drop it
+      }
+    });
     return new XMLSerializer().serializeToString(doc);
   } catch (_) {
     return xmlText;
@@ -315,14 +328,12 @@ export default function PloddingsScoreEmbed({
   const [currentTime, setCurrentTime] = useState(0);
   const [totalDuration, setTotalDuration] = useState(0);
   const [tempo, setTempo] = useState(80);
-  const [copied, setCopied] = useState(false);
-  const [displayMode, setDisplayMode] = useState('standard'); // 'tab' | 'standard' — standard is the free default
+  // Toggle removed — always render the file in its native format (tab or notation as authored).
+  // 'tab' is the no-conversion code path (raw XML straight to OSMD).
+  const [displayMode] = useState('tab');
   const [subtitle, setSubtitle] = useState('');
   const [composerOverride, setComposerOverride] = useState(''); // overrides artistName when XML has a composer credit
   const verifiedByEar = verifiedByEarProp;
-  const [showUpgrade, setShowUpgrade] = useState(false);
-  const [previewMode, setPreviewMode] = useState(false); // 4-bar tab teaser for free users
-  const PREVIEW_BARS = 4; // experiment knob — number of free bars to show in tab preview
   const [showPlayHint, setShowPlayHint] = useState(false);
   const [playHintFade, setPlayHintFade] = useState(false);
   const playStartedRef = useRef(false);
@@ -423,28 +434,24 @@ export default function PloddingsScoreEmbed({
     setTempo(newTempo);
   }, []);
 
-  // One-time sampler init — independent of displayMode so toggling tab/notation doesn't rebuild audio
-  useEffect(() => {
-    let disposed = false;
-    let synth;
-    samplerReadyRef.current = (async () => {
-      const Tone = await import('tone');
-      if (disposed) return;
-      await Promise.race([
-        new Promise((resolve) => {
-          synth = buildSamplerSynth(Tone, 'steel', resolve);
-          if (!disposed) synthRef.current = synth;
-        }),
-        new Promise((resolve) => setTimeout(resolve, 8000)),
-      ]);
-    })();
-    return () => {
-      disposed = true;
-      synth?.dispose();
-      synthRef.current = null;
-      samplerReadyRef.current = null;
-    };
-  }, []);
+  const audioInitializedRef = useRef(false);
+
+  // Lazy audio init — called on first user interaction (play / restart / measure click / tempo change).
+  // Tone.js (~250KB) and the sample bank (~205KB) are NOT loaded on page mount, only on demand.
+  // Does NOT touch the main `status` state — the score-loading skeleton is reserved for initial render only.
+  const ensureAudioReady = useCallback(async () => {
+    if (audioInitializedRef.current) return await import('tone');
+    const Tone = await import('tone');
+    await Promise.race([
+      new Promise((resolve) => {
+        synthRef.current = buildSamplerSynth(Tone, 'steel', resolve);
+      }),
+      new Promise((resolve) => setTimeout(resolve, 8000)),
+    ]);
+    scheduleAtTempo(currentTempoRef.current, Tone);
+    audioInitializedRef.current = true;
+    return Tone;
+  }, [scheduleAtTempo]);
 
   useEffect(() => {
     let osmd;
@@ -466,7 +473,8 @@ export default function PloddingsScoreEmbed({
         const OSMDLib = await import('opensheetmusicdisplay');
         const { OpenSheetMusicDisplay, ArticulationEnum } = OSMDLib;
 
-        // Force VexFlow TabNotes to render stems (OSMD doesn't expose this)
+        // Force VexFlow TabNotes to render stems (OSMD doesn't expose this).
+        // Stem direction by voice: voice 1 (treble) → up, voice 2+ (bass) → down.
         const VFC = OSMDLib.VexFlowConverter || OSMDLib.default?.VexFlowConverter;
         if (VFC && !VFC._patchedForStems) {
           const orig = VFC.CreateTabNote.bind(VFC);
@@ -474,7 +482,10 @@ export default function PloddingsScoreEmbed({
             const tn = orig(gve);
             try {
               tn.render_options = { ...(tn.render_options || {}), draw_stem: true, draw_dots: true };
-              tn.setStemDirection?.(1);
+              const ve = gve?.parentVoiceEntry;
+              const voice = ve?.parentVoice || ve?.ParentVoice;
+              const voiceId = voice?.voiceId ?? voice?.VoiceId ?? 1;
+              tn.setStemDirection?.(voiceId >= 2 ? -1 : 1);
             } catch (_) {}
             return tn;
           };
@@ -494,41 +505,18 @@ export default function PloddingsScoreEmbed({
           defaultFontFamily: 'Edwin, "Times New Roman", serif',
         });
 
-        const proxied = MUSICXML_URL ? `/api/proxy-musicxml?url=${encodeURIComponent(MUSICXML_URL)}` : null;
-
-        // Cached metadata is mode-independent — fetch + parse + cursor walk only on first run
+        // Cached metadata is mode-independent — fetch + parse + cursor walk only on first run.
+        // The musicXMLUrl prop is fetched as-is (no client-side proxy wrapping). The parent
+        // is responsible for passing a fetch-ready URL — typically `/api/score/[slug]` which
+        // unwraps .mxl files server-side and never leaks the underlying B2 URL.
         let xmlText;
         if (parsedDataRef.current) {
           xmlText = parsedDataRef.current.xmlText;
         } else if (musicXMLText) {
           xmlText = stripInstrumentLabel(musicXMLText);
         } else {
-          const isMxl = /\.mxl(\?|$)/i.test(MUSICXML_URL);
-          if (isMxl) {
-            // .mxl is a zip container — pull the inner score XML out via JSZip
-            const buf = await fetch(proxied).then(r => r.arrayBuffer());
-            const JSZipMod = await import('jszip');
-            const JSZip = JSZipMod.default || JSZipMod;
-            const zip = await JSZip.loadAsync(buf);
-            // Container metadata points to the main score file; fall back to first .xml/.musicxml at root
-            let xmlPath;
-            const container = zip.file('META-INF/container.xml');
-            if (container) {
-              const cText = await container.async('text');
-              const cDoc = new DOMParser().parseFromString(cText, 'text/xml');
-              xmlPath = cDoc.querySelector('rootfile')?.getAttribute('full-path');
-            }
-            if (!xmlPath) {
-              xmlPath = Object.keys(zip.files).find(
-                f => /\.(musicxml|xml)$/i.test(f) && !f.startsWith('META-INF/')
-              );
-            }
-            const rawXml = xmlPath ? await zip.file(xmlPath).async('text') : '';
-            xmlText = stripInstrumentLabel(rawXml);
-          } else {
-            const xmlTextRaw = await fetch(proxied).then(r => r.text());
-            xmlText = stripInstrumentLabel(xmlTextRaw);
-          }
+          const xmlTextRaw = await fetch(MUSICXML_URL).then(r => r.text());
+          xmlText = stripInstrumentLabel(xmlTextRaw);
         }
 
         const xmlForRender = displayMode === 'standard' ? convertToStandardNotation(xmlText) : xmlText;
@@ -547,18 +535,21 @@ export default function PloddingsScoreEmbed({
         osmd.EngravingRules.SystemRightMargin = 0;
         osmd.EngravingRules.MeasureLeftMargin = 0;
         osmd.EngravingRules.MeasureRightMargin = 0;
+        // Tighten vertical spacing between systems / staves so systems don't feel adrift
+        osmd.EngravingRules.MinSkyBottomDistBetweenSystems = 4;
+        osmd.EngravingRules.BetweenStaffDistance = 4;
+        osmd.EngravingRules.SystemComposerDistance = 4;
+        osmd.EngravingRules.MinimumDistanceBetweenSystems = 1;
+        // Compact secondary text so dynamics + rehearsal marks don't push systems apart
+        osmd.EngravingRules.DynamicTextFontSize = 11;
+        osmd.EngravingRules.RehearsalMarkFontSize = 10;
+        // Yield once to let any pending browser work paint before the heavy render() call
+        await new Promise((r) => setTimeout(r, 0));
         osmd.render();
         osmd.cursor.show();
         osmd.cursor.reset();
         osmdRef.current = osmd;
 
-        setStatus('Preparing audio…');
-        const Tone = await import('tone');
-        // Sampler is built once on mount; wait for it to be ready (resolves immediately on subsequent re-renders)
-        if (samplerReadyRef.current) {
-          setStatus('Loading samples…');
-          await samplerReadyRef.current;
-        }
 
         let tempo;
         let articulations;
@@ -800,19 +791,51 @@ export default function PloddingsScoreEmbed({
           setTimeout(computeOverlays, 600);
         });
 
-        // Initial scheduling
-        scheduleAtTempo(tempo, Tone);
+        // Compute total duration for the toolbar timer without loading Tone yet.
+        // Audio (Tone + samples + actual scheduling) is deferred until the first user interaction.
+        {
+          let totalDur = 0;
+          for (let i = 0; i < measureOrderRef.current.length; i++) {
+            const mIdx = measureOrderRef.current[i];
+            const bpm = baseTempoMapRef.current.get(mIdx) ?? baseTempoRef.current;
+            totalDur += measureDurWNRef.current[mIdx] * (60 / bpm) * 4;
+          }
+          setTotalDuration(totalDur);
+          currentTempoRef.current = baseTempoRef.current;
+          setTempo(baseTempoRef.current);
+        }
         setStatus(null);
+        // Tell the parent (if iframed) that the score has finished loading,
+        // so the host page can stop its loader animation.
+        if (typeof window !== 'undefined' && window.parent !== window) {
+          try { window.parent.postMessage({ type: 'ploddings-score-ready' }, '*'); } catch (_) {}
+        }
       } catch (err) {
         console.error('embed-test init error:', err);
         setError('Failed to load: ' + err.message);
         setStatus(null);
+        if (typeof window !== 'undefined' && window.parent !== window) {
+          try { window.parent.postMessage({ type: 'ploddings-score-ready', error: true }, '*'); } catch (_) {}
+        }
       }
     }
 
-    init();
+    // Defer init until the browser has finished painting the rest of the page.
+    // OSMD's render() is synchronous and blocks the main thread for hundreds of ms;
+    // running it immediately would freeze the sidebar/footer/etc. paint.
+    let idleHandle;
+    let timeoutHandle;
+    if (typeof window !== 'undefined' && typeof window.requestIdleCallback === 'function') {
+      idleHandle = window.requestIdleCallback(() => init(), { timeout: 1500 });
+    } else {
+      timeoutHandle = setTimeout(init, 100);
+    }
 
     return () => {
+      if (idleHandle != null && typeof window !== 'undefined' && typeof window.cancelIdleCallback === 'function') {
+        window.cancelIdleCallback(idleHandle);
+      }
+      if (timeoutHandle != null) clearTimeout(timeoutHandle);
       cancelAnimationFrame(rafRef.current);
       import('tone').then((Tone) => { Tone.getTransport().stop(); Tone.getTransport().cancel(); });
       if (osmd) osmd.clear();
@@ -833,13 +856,6 @@ export default function PloddingsScoreEmbed({
     return () => { clearTimeout(showTimer); clearTimeout(hideTimer); };
   }, []);
 
-  // Hydrate displayMode from cross-page cookie (only if user has access for that mode)
-  useEffect(() => {
-    const pref = readDisplayPref();
-    if (pref && (pref !== 'tab' || hasTabAccess)) {
-      setDisplayMode(pref);
-    }
-  }, []);
 
   // Spacebar toggles play/pause
   useEffect(() => {
@@ -878,8 +894,24 @@ export default function PloddingsScoreEmbed({
   }, []);
 
   async function handleTempoChange(delta) {
-    const Tone = await import('tone');
     const newTempo = Math.max(40, Math.min(240, currentTempoRef.current + delta));
+    // If audio hasn't been initialized yet, just update the displayed tempo and recompute total duration —
+    // no Tone load needed. Audio will pick this up on first play.
+    if (!audioInitializedRef.current) {
+      currentTempoRef.current = newTempo;
+      setTempo(newTempo);
+      // Recompute total duration with the new tempo scale
+      const scale = newTempo / baseTempoRef.current;
+      let totalDur = 0;
+      for (let i = 0; i < measureOrderRef.current.length; i++) {
+        const mIdx = measureOrderRef.current[i];
+        const bpm = (baseTempoMapRef.current.get(mIdx) ?? baseTempoRef.current) * scale;
+        totalDur += measureDurWNRef.current[mIdx] * (60 / bpm) * 4;
+      }
+      setTotalDuration(totalDur);
+      return;
+    }
+    const Tone = await import('tone');
     // Piecewise tempo: scale is uniform so ratio of seconds preserves musical position
     const oldTempo = currentTempoRef.current;
     const oldSeconds = Tone.getTransport().seconds;
@@ -901,7 +933,7 @@ export default function PloddingsScoreEmbed({
   }
 
   async function handleMeasureClick(measureIdx) {
-    const Tone = await import('tone');
+    const Tone = await ensureAudioReady();
     const sync = playbackSyncRef.current;
     if (!sync.length) return;
 
@@ -952,7 +984,7 @@ export default function PloddingsScoreEmbed({
     playStartedRef.current = true;
     setPlayHintFade(false);
     setShowPlayHint(false);
-    const Tone = await import('tone');
+    const Tone = await ensureAudioReady();
     await Tone.start();
     Tone.getTransport().start();
     setPlayingSync(true);
@@ -960,6 +992,7 @@ export default function PloddingsScoreEmbed({
   }
 
   async function handlePause() {
+    if (!audioInitializedRef.current) return;
     const Tone = await import('tone');
     Tone.getTransport().pause();
     setPlayingSync(false);
@@ -967,7 +1000,7 @@ export default function PloddingsScoreEmbed({
   }
 
   async function handleRestart() {
-    const Tone = await import('tone');
+    const Tone = await ensureAudioReady();
     const osmd = osmdRef.current;
     cancelAnimationFrame(rafRef.current);
     Tone.getTransport().stop();
@@ -986,35 +1019,6 @@ export default function PloddingsScoreEmbed({
     return `${Math.floor(s / 60)}:${Math.floor(s % 60).toString().padStart(2, '0')}`;
   }
 
-  function handleDisplayToggle(mode) {
-    // Locked tab attempt: open upgrade modal but DON'T change displayMode.
-    // The switch position is bound to (isTab || showUpgrade) so it animates over
-    // to the Tab side as a teaser; closing the modal animates it back.
-    if (mode === 'tab' && !hasTabAccess) {
-      setShowUpgrade(true);
-      return;
-    }
-    // Any successful toggle also dismisses the upgrade modal if it was teasing
-    setShowUpgrade(false);
-    if (mode === displayMode) return;
-    setDisplayMode(mode);
-    if (mode === 'standard') setPreviewMode(false);
-    writeDisplayPref(mode);
-  }
-
-  function handleStartPreview() {
-    setPreviewMode(true);
-    setDisplayMode('tab');
-    setShowUpgrade(false);
-  }
-
-  function handleCopy() {
-    navigator.clipboard.writeText(embedCode);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  }
-
-  const embedCode = `<iframe src="https://www.ploddings.com/embed/${SONG_SLUG}" width="100%" height="600" frameborder="0" allowfullscreen></iframe>`;
 
   const btnStyle = {
     background: 'none', border: '1px solid #555', color: '#e8e8e8',
@@ -1118,66 +1122,11 @@ export default function PloddingsScoreEmbed({
         }
       `}</style>
 
-      <div style={{ fontFamily: 'sans-serif', marginBottom: '36px' }}>
-      {/* Notation/Tab switch lives ABOVE the player as its own prominent control —
-          standard iOS-style switch with labels on either side of a sliding knob */}
-      {(() => {
-        const isTab = displayMode === 'tab';
-        const tabLocked = !hasTabAccess;
-        // Visual position: also animate over when the upgrade modal is open as a teaser.
-        // When the modal closes (without conversion), this reverts and the knob slides back.
-        const showAsTab = isTab || showUpgrade;
-        const labelStyle = (active) => ({
-          background: 'none', border: 'none', cursor: 'pointer',
-          fontSize: '16px', fontWeight: active ? 700 : 500,
-          color: active ? '#222' : '#888',
-          padding: '4px 0',
-          transition: 'color 0.2s, font-weight 0.2s',
-          boxShadow: 'none',
-        });
-        return (
-          <div className="pl-toggle-row" style={{
-            padding: '12px 16px 16px',
-            display: 'flex', alignItems: 'center', gap: '12px',
-          }}>
-            <button onClick={() => handleDisplayToggle('standard')} style={labelStyle(!showAsTab)}>
-              Notation
-            </button>
-            <button
-              onClick={() => handleDisplayToggle(showAsTab ? 'standard' : 'tab')}
-              title={tabLocked ? 'Tablature requires a subscription' : 'Toggle between notation and tablature'}
-              style={{
-                position: 'relative',
-                width: '52px', height: '28px',
-                background: showAsTab ? '#f07820' : '#bbb',
-                border: 'none', borderRadius: '14px',
-                cursor: 'pointer', padding: 0,
-                transition: 'background 0.2s',
-                flexShrink: 0,
-              }}
-            >
-              <span style={{
-                position: 'absolute',
-                top: '3px',
-                left: showAsTab ? '27px' : '3px',
-                width: '22px', height: '22px',
-                background: '#fff',
-                borderRadius: '50%',
-                transition: 'left 0.2s',
-              }} />
-            </button>
-            <button onClick={() => handleDisplayToggle('tab')} style={labelStyle(showAsTab)}>
-              Tab+
-            </button>
-          </div>
-        );
-      })()}
+      <div style={{ fontFamily: 'sans-serif' }}>
       <div style={{
         margin: '0',
         background: '#2a2a30',
         boxShadow: '0 4px 24px rgba(0,0,0,0.5)',
-        // Note: no overflow:hidden, no border-radius, no max-width, no border —
-        // so the sticky toolbar can stick to the viewport top and span edge-to-edge
       }}>
 
         {/* Toolbar shell with shimmer placeholders while loading (real toolbar mounts after) */}
@@ -1299,7 +1248,7 @@ export default function PloddingsScoreEmbed({
             </div>
             <div style={{ textAlign: 'right', fontSize: '14px', color: '#222' }}>{composerOverride || ARTIST_NAME}</div>
           </div>
-          <div ref={scoreWrapperRef} className="pl-score-wrap" style={{ position: 'relative', maxHeight: '700px', overflowY: 'auto', padding: '0 28px' }}>
+          <div ref={scoreWrapperRef} className="pl-score-wrap" style={{ position: 'relative', maxHeight: '900px', overflowY: 'auto', padding: '0 28px' }}>
             <div ref={containerRef} style={{ padding: '0 0 16px', pointerEvents: 'none' }} />
             {vibratoMarks.map(({ id, left, top, width, height }) => (
               <div key={`vib-${id}`} style={{
@@ -1310,65 +1259,22 @@ export default function PloddingsScoreEmbed({
                 letterSpacing: '-2px',
               }}>〜</div>
             ))}
-            {overlays.map(({ measureIdx, left, top, width, height }) => {
-              const isLockedPreview = previewMode && displayMode === 'tab' && measureIdx >= PREVIEW_BARS;
-              return (
-                <div
-                  key={measureIdx}
-                  onClick={() => isLockedPreview ? setShowUpgrade(true) : handleMeasureClick(measureIdx)}
-                  onMouseEnter={() => setHoveredMeasure(measureIdx)}
-                  onMouseLeave={() => setHoveredMeasure(null)}
-                  style={{
-                    position: 'absolute', left, top, width, height,
-                    zIndex: 10,
-                    background: hoveredMeasure === measureIdx
-                      ? (isLockedPreview ? 'rgba(120,120,120,0.18)' : 'rgba(240,120,32,0.18)')
-                      : 'transparent',
-                    border: `2px solid ${hoveredMeasure === measureIdx
-                      ? (isLockedPreview ? 'rgba(120,120,120,0.5)' : 'rgba(240,120,32,0.6)')
-                      : 'transparent'}`,
-                    cursor: 'pointer', boxSizing: 'border-box', borderRadius: '2px',
-                    transition: 'background 0.1s, border-color 0.1s',
-                  }}
-                />
-              );
-            })}
-            {/* Preview-mode blur over locked bars */}
-            {previewMode && displayMode === 'tab' && overlays.filter(o => o.measureIdx >= PREVIEW_BARS).map(o => (
+            {overlays.map(({ measureIdx, left, top, width, height }) => (
               <div
-                key={`lock-${o.measureIdx}`}
+                key={measureIdx}
+                onClick={() => handleMeasureClick(measureIdx)}
+                onMouseEnter={() => setHoveredMeasure(measureIdx)}
+                onMouseLeave={() => setHoveredMeasure(null)}
                 style={{
-                  position: 'absolute',
-                  left: o.left, top: o.top - 4, width: o.width, height: o.height + 8,
-                  background: 'rgba(255,255,255,0.55)',
-                  backdropFilter: 'blur(3px)',
-                  WebkitBackdropFilter: 'blur(3px)',
-                  pointerEvents: 'none', zIndex: 15,
+                  position: 'absolute', left, top, width, height,
+                  zIndex: 10,
+                  background: hoveredMeasure === measureIdx ? 'rgba(240,120,32,0.18)' : 'transparent',
+                  border: `2px solid ${hoveredMeasure === measureIdx ? 'rgba(240,120,32,0.6)' : 'transparent'}`,
+                  cursor: 'pointer', boxSizing: 'border-box', borderRadius: '2px',
+                  transition: 'background 0.1s, border-color 0.1s',
                 }}
               />
             ))}
-            {/* Single CTA banner anchored over the first locked bar */}
-            {previewMode && displayMode === 'tab' && (() => {
-              const first = overlays.find(o => o.measureIdx === PREVIEW_BARS);
-              if (!first) return null;
-              return (
-                <div
-                  onClick={() => setShowUpgrade(true)}
-                  style={{
-                    position: 'absolute',
-                    left: first.left, top: first.top + first.height / 2 - 22,
-                    padding: '8px 14px',
-                    background: '#1a1a2e', color: '#fff',
-                    borderRadius: '6px', fontSize: '12px', fontWeight: 600,
-                    boxShadow: '0 4px 12px rgba(0,0,0,0.35)',
-                    cursor: 'pointer', zIndex: 25,
-                    whiteSpace: 'nowrap',
-                  }}
-                >
-                  🔒 Unlock the full tab →
-                </div>
-              );
-            })()}
           </div>
           {/* Loading skeleton overlay — sits on top of the real card so OSMD can render underneath at full size */}
           {(status || error) && (
@@ -1408,118 +1314,7 @@ export default function PloddingsScoreEmbed({
         </div>
         </div>
 
-        {/* Footer: song info + Powered by Ploddings */}
-        <div className="pl-footer" style={{
-          padding: '10px 16px', background: '#f5f5f5',
-          borderTop: '1px solid #000',
-          display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-          fontSize: '12px', color: '#777',
-        }}>
-          <a href="https://www.ploddings.com" target="_blank" rel="noopener noreferrer"
-            style={{ color: '#999', textDecoration: 'none' }}>
-            Powered by <strong style={{ color: '#f07820' }}>Ploddings</strong>
-          </a>
-          <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            Transcribed by <a href="https://www.ploddings.com" target="_blank" rel="noopener noreferrer"
-              style={{ color: '#f07820', textDecoration: 'none', fontWeight: 600 }}>Blahnok</a>
-          </span>
-        </div>
-
-        {/* Share / embed section */}
-        <div className="pl-share-row" style={{
-          padding: '12px 16px 16px',
-          background: '#f9f9f9',
-          borderTop: '1px solid #ddd',
-        }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-            <span style={{ fontSize: '13px', fontWeight: 600, color: '#444' }}>Embed this sheet music on your site</span>
-            <button
-              onClick={handleCopy}
-              style={{
-                fontSize: '11px', padding: '3px 10px',
-                border: '1px solid #ccc', borderRadius: '4px',
-                background: copied ? '#e8f5e9' : '#fff',
-                color: copied ? '#2e7d32' : '#555',
-                cursor: 'pointer', transition: 'background 0.2s',
-              }}
-            >
-              {copied ? 'Copied!' : 'Copy'}
-            </button>
-          </div>
-          <textarea
-            readOnly value={embedCode} onClick={(e) => e.target.select()}
-            style={{
-              width: '100%', padding: '8px', fontFamily: 'monospace', fontSize: '11px',
-              border: '1px solid #ddd', borderRadius: '4px', background: '#fff',
-              resize: 'none', height: '50px', boxSizing: 'border-box', color: '#444',
-            }}
-          />
-        </div>
-
-        {showUpgrade && (
-          <div
-            onClick={() => setShowUpgrade(false)}
-            style={{
-              position: 'fixed', inset: 0, background: 'rgba(0,0,0,0.55)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              zIndex: 200,
-            }}
-          >
-            <div
-              onClick={(e) => e.stopPropagation()}
-              style={{
-                background: '#fff', borderRadius: '12px', padding: '40px 48px',
-                maxWidth: '560px', width: '92%', textAlign: 'center',
-                boxShadow: '0 20px 60px rgba(0,0,0,0.4)', position: 'relative',
-              }}
-            >
-              <button
-                onClick={() => setShowUpgrade(false)}
-                aria-label="Close"
-                style={{
-                  position: 'absolute', top: '12px', right: '18px',
-                  background: 'none', border: 'none', fontSize: '28px',
-                  color: '#999', cursor: 'pointer', lineHeight: 1,
-                }}
-              >×</button>
-              <div style={{ fontSize: '56px', marginBottom: '12px' }}>🔒</div>
-              <div style={{ fontFamily: 'Edwin, "Times New Roman", serif', fontSize: '28px', fontWeight: 'bold', marginBottom: '14px' }}>
-                Tablature is a Plus feature
-              </div>
-              <div style={{ fontSize: '16px', color: '#555', marginBottom: '28px', lineHeight: 1.55 }}>
-                Standard notation is free. Upgrade to view fingering-accurate tablature with playback for every transcription on Ploddings.
-              </div>
-              <a
-                href="/pricing"
-                style={{
-                  display: 'inline-block', background: '#f07820',
-                  color: '#fff', padding: '14px 34px',
-                  borderRadius: '8px', textDecoration: 'none',
-                  fontWeight: 600, fontSize: '17px',
-                }}
-              >
-                Upgrade to Plus
-              </a>
-              <div style={{ marginTop: '20px' }}>
-                <button
-                  onClick={handleStartPreview}
-                  style={{
-                    background: 'none', border: 'none',
-                    color: '#444', textDecoration: 'underline',
-                    cursor: 'pointer', fontSize: '15px', padding: 0,
-                  }}
-                >
-                  Preview the first {PREVIEW_BARS} bars free
-                </button>
-              </div>
-              <div style={{ marginTop: '12px' }}>
-                <a href="/login" style={{ fontSize: '14px', color: '#1a6ef5', textDecoration: 'none' }}>
-                  Already a subscriber? Sign in
-                </a>
-              </div>
-            </div>
-          </div>
-        )}
+        <PloddingsScoreFooter songSlug={SONG_SLUG} />
 
       </div>
       </div>

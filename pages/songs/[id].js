@@ -24,13 +24,28 @@ import PloddingsScoreEmbed from '../../components/PloddingsScoreEmbed';
 import BeingWatchedMobile from '../../components/BeingWatchedMobile.js';
 import Head from 'next/head';
 import GTM from '../../components/GTM.js';
-import ArtistWidget_Downloader from '../../components/ArtistWidget_Downloader.js';
 
 export default function Song({ userId = null, ip, threadData, songData }) {
 
   const { isLoading, startLoading, stopLoading } = useLoading();
   const [relatedContentLength, setRelatedContentLength] = useState(null);
   const [buttonLoaded, setButtonLoaded] = useState(false);
+
+  // Drive the site-wide Loader animation while the score-embed iframe is loading.
+  useEffect(() => {
+    if (!songData?.musicXML) return;
+    startLoading();
+    const onMessage = (e) => {
+      if (e.data && e.data.type === 'ploddings-score-ready') stopLoading();
+    };
+    window.addEventListener('message', onMessage);
+    const fallback = setTimeout(() => stopLoading(), 20000);
+    return () => {
+      window.removeEventListener('message', onMessage);
+      clearTimeout(fallback);
+      stopLoading();
+    };
+  }, [songData?.musicXML, startLoading, stopLoading]);
 
   // Function to log the page visit directly to the database
   const logPageVisit = async () => {
@@ -75,6 +90,10 @@ export default function Song({ userId = null, ip, threadData, songData }) {
 				description={`Click play to listen to interactive guitar tablature for ${songData.name} by ${threadData.name}.`}
       />
       <Head>
+        {/* Preload the MusicXML so the score downloads in parallel with JS bundles
+            instead of waiting until the embed component mounts and starts fetching. */}
+        {/* Preload removed: the embed lives inside an iframe, which has its own preload tag —
+            cross-frame preload from the parent doesn't share with the iframe context. */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify({
@@ -153,13 +172,19 @@ export default function Song({ userId = null, ip, threadData, songData }) {
                 <h2 id="i">i) Sheet music / guitar tablature</h2>
                 {songData.musicXML && (
                   <div style={{ position: "relative", marginBottom: "16px" }}>
-                    <PloddingsScoreEmbed
-                      musicXMLUrl={songData.musicXML}
-                      songName={songData.name}
-                      artistName={threadData?.name || ''}
-                      songSlug={songData.slug}
-                      hasTabAccess={!!userId}
-                      verifiedByEar={true}
+                    {/* Iframed so the heavy OSMD/Tone load happens in its own document
+                        and doesn't block the rest of the song page from painting. */}
+                    <iframe
+                      src={`/embed/${songData.slug}`}
+                      title={`${songData.name} — interactive score`}
+                      loading="lazy"
+                      scrolling="no"
+                      style={{
+                        width: '100%',
+                        height: '1400px',
+                        border: 'none',
+                        display: 'block',
+                      }}
                     />
                   </div>
                 )}
@@ -183,13 +208,6 @@ export default function Song({ userId = null, ip, threadData, songData }) {
                 </div>
               </div>
             </div>
-<ArtistWidget_Downloader
-	artistName={threadData.name}
-  songName={songData.name}
-  pdfUrl={songData.pdf_download}
-	ip={ip}
-	songId={songData.id}
-/>
 
 
 						<BeingWatchedMobile />

@@ -1,6 +1,16 @@
 // next.config.js
 
+const { AlphaTabWebPackPlugin } = require('@coderline/alphatab-webpack');
+
 module.exports = {
+  webpack: (config, { isServer }) => {
+    // alphaTab is browser-only; only wire the plugin into the client bundle.
+    // assetOutputDir:false — we already serve fonts + soundfont from /public/alphatab/.
+    if (!isServer) {
+      config.plugins.push(new AlphaTabWebPackPlugin({ assetOutputDir: false }));
+    }
+    return config;
+  },
   images: {
     remotePatterns: [
       { hostname: 'ploddings-threads.s3.us-east-005.backblazeb2.com' },
