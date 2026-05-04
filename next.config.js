@@ -44,7 +44,20 @@ module.exports = {
   async headers() {
     return [
       {
-        source: '/:path*', // Apply headers to all routes
+        // /embed/* is meant to be iframed externally — allow framing from any origin.
+        source: '/embed/:path*',
+        headers: [
+          {
+            key: 'Content-Security-Policy',
+            value: 'frame-ancestors *',
+          },
+        ],
+      },
+      {
+        // Everything else stays restricted to same-origin framing for clickjacking protection.
+        // Negative-lookahead source so this rule does NOT apply to /embed/* (avoids two conflicting
+        // CSP headers being merged restrictively by the browser).
+        source: '/((?!embed/).*)',
         headers: [
           {
             key: 'Content-Security-Policy',

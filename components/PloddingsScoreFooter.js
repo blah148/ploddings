@@ -1,65 +1,148 @@
 import { useState } from 'react';
 
-// Footer + share/embed CTA for the PloddingsScoreEmbed.
-// Extracted into its own component so the attribution row, Blahnok credit,
-// and "Embed this sheet music" CTA can be styled / iterated independently.
-export default function PloddingsScoreFooter({ songSlug = '' }) {
+/**
+ * Footer that sits beneath the score embed: attribution row + embed-snippet helper.
+ * Pure CSS-in-JS via a scoped <style> block so flex alignment and hover/focus states behave consistently.
+ *
+ * Props:
+ *   songSlug — the song's slug, used to build the embed URL.
+ */
+export default function PloddingsScoreFooter({ songSlug }) {
   const [copied, setCopied] = useState(false);
-  const embedCode = `<iframe src="https://www.ploddings.com/embed/${songSlug}" width="100%" height="600" frameborder="0" allowfullscreen></iframe>`;
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(embedCode);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
-  };
+  const embedSnippet = songSlug
+    ? `<iframe src="https://www.ploddings.com/embed/${songSlug}" width="100%" height="800" frameborder="0" scrolling="no"></iframe>`
+    : '';
+
+  function handleCopy() {
+    if (!embedSnippet || typeof navigator === 'undefined' || !navigator.clipboard) return;
+    navigator.clipboard.writeText(embedSnippet).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    }).catch(() => {});
+  }
 
   return (
     <>
-      {/* Attribution row: Powered by Ploddings (links home) + Transcribed by Blahnok */}
-      <div className="pl-footer" style={{
-        padding: '10px 16px', background: '#f5f5f5',
-        borderTop: '1px solid #000',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center',
-        fontSize: '12px', color: '#777',
-      }}>
-        <a href="/" style={{ color: '#999', textDecoration: 'none' }}>
-          Powered by <strong style={{ color: '#f07820' }}>Ploddings</strong>
-        </a>
-        <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          Transcribed by <a href="https://blahnok.com" target="_blank" rel="noopener noreferrer"
-            style={{ color: '#f07820', textDecoration: 'none', fontWeight: 600 }}>Blahnok</a>
-        </span>
-      </div>
-
-      {/* Share / embed CTA */}
-      <div className="pl-share-row" style={{
-        padding: '12px 16px 16px',
-        background: '#f9f9f9',
-        borderTop: '1px solid #ddd',
-      }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '8px' }}>
-          <span style={{ fontSize: '13px', fontWeight: 600, color: '#444' }}>Embed this sheet music on your site</span>
-          <button
-            onClick={handleCopy}
-            style={{
-              fontSize: '11px', padding: '3px 10px',
-              border: '1px solid #ccc', borderRadius: '4px',
-              background: copied ? '#e8f5e9' : '#fff',
-              color: copied ? '#2e7d32' : '#555',
-              cursor: 'pointer', transition: 'background 0.2s',
-            }}
-          >
-            {copied ? 'Copied!' : 'Copy'}
-          </button>
+      <style dangerouslySetInnerHTML={{ __html: `
+        .ploddings-footer {
+          background: #fafafa;
+          border: 1px solid #e3e3e3;
+          border-top: none;
+          border-radius: 0 0 4px 4px;
+          padding: 0 16px;
+          font-family: sans-serif;
+          color: #555;
+          margin-top: -1px;
+        }
+        .ploddings-footer-attrib {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 8px;
+          padding: 16px 0;
+          font-size: 12px;
+          font-weight: 400;
+          line-height: 1;
+        }
+        .ploddings-footer-attrib a {
+          color: #555;
+          text-decoration: none;
+          transition: color 0.15s ease;
+        }
+        .ploddings-footer-attrib a:hover { color: #222; }
+        .ploddings-footer-attrib a .accent { color: #f07820; }
+        .ploddings-footer-embed {
+          padding: 16px 0 18px;
+          border-top: 1px solid rgba(0, 0, 0, 0.06);
+        }
+        .ploddings-footer-embed-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          margin-bottom: 10px;
+        }
+        .ploddings-footer-embed-label {
+          font-size: 12px;
+          color: #555;
+          line-height: 1;
+        }
+        .ploddings-footer-copy {
+          appearance: none;
+          -webkit-appearance: none;
+          background: #ececec;
+          color: #333;
+          border: 1px solid #d8d8d8;
+          margin: 0;
+          padding: 6px 12px;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          line-height: 1;
+          border-radius: 4px;
+          font-size: 12px;
+          font-weight: 500;
+          cursor: pointer;
+          box-shadow: none;
+          font-family: inherit;
+          transition: background 0.15s ease, border-color 0.15s ease;
+        }
+        .ploddings-footer-copy:hover { background: #e0e0e0; border-color: #c8c8c8; }
+        .ploddings-footer-copy.copied {
+          background: #2ac64f; color: #fff; border-color: #25b347;
+        }
+        .ploddings-footer-snippet {
+          width: 100%;
+          padding: 12px 12px;
+          font-family: 'SFMono-Regular', Menlo, Consolas, monospace;
+          font-size: 12px;
+          color: #333;
+          background: #fff;
+          border: 1px solid #d8d8d8;
+          border-radius: 4px;
+          box-sizing: border-box;
+          outline: none;
+          transition: border-color 0.15s ease;
+        }
+        .ploddings-footer-snippet:focus { border-color: #888; }
+        @media (max-width: 540px) {
+          .ploddings-footer-attrib { padding: 14px 0; }
+          .ploddings-footer-attrib a { font-size: 12px; }
+        }
+      ` }} />
+      <div className="ploddings-footer">
+        {/* Row 1 — attribution */}
+        <div className="ploddings-footer-attrib">
+          <a href="/">
+            Powered by <span className="accent">Ploddings</span>
+          </a>
+          <a href="https://blahnok.com" target="_blank" rel="noopener noreferrer">
+            Transcribed by <span className="accent">Blahnok</span>
+          </a>
         </div>
-        <textarea
-          readOnly value={embedCode} onClick={(e) => e.target.select()}
-          style={{
-            width: '100%', padding: '8px', fontFamily: 'monospace', fontSize: '11px',
-            border: '1px solid #ddd', borderRadius: '4px', background: '#fff',
-            resize: 'none', height: '50px', boxSizing: 'border-box', color: '#444',
-          }}
-        />
+        {/* Row 2 — embed CTA + snippet */}
+        {songSlug && (
+          <div className="ploddings-footer-embed">
+            <div className="ploddings-footer-embed-row">
+              <span className="ploddings-footer-embed-label">Embed this sheet music on your site</span>
+              <button
+                type="button"
+                onClick={handleCopy}
+                className={`ploddings-footer-copy${copied ? ' copied' : ''}`}
+              >
+                {copied ? 'Copied!' : 'Copy'}
+              </button>
+            </div>
+            <input
+              className="ploddings-footer-snippet"
+              type="text"
+              value={embedSnippet}
+              readOnly
+              onFocus={(e) => e.target.select()}
+            />
+          </div>
+        )}
       </div>
     </>
   );

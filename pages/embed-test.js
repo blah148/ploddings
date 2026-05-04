@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import PloddingsScoreEmbed from '../components/PloddingsScoreEmbed';
+import PloddingsAlphaTabEmbed from '../components/PloddingsAlphaTabEmbed';
 
 const MUSICXML_URL = 'https://f005.backblazeb2.com/file/ploddings-songs/spoonful-blues_charley-patton.musicxml';
 const SONG_SLUG = 'spoonful-blues-charley-patton';
@@ -33,11 +33,8 @@ export default function EmbedTest() {
         <meta name="twitter:description" content={desc} />
         <meta name="twitter:image"       content={ogUrl} />
       </Head>
-      <PloddingsScoreEmbed
-        musicXMLUrl={MUSICXML_URL}
-        songName={SONG_NAME}
-        artistName={ARTIST_NAME}
-        songSlug={SONG_SLUG}
+      <PloddingsAlphaTabEmbed
+        musicXMLUrl={`/api/proxy-musicxml?url=${encodeURIComponent(MUSICXML_URL)}`}
       />
     </>
   );

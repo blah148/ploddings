@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import { useLoading } from '../context/LoadingContext';
 import Loader from '../components/Loader';
 import { useRouter } from 'next/router'; // Import useRouter for accessing the URL query
@@ -41,8 +40,9 @@ export default function Login({ userId, ip }) {
 
   const verifyPaymentSession = async (sessionId) => {
     try {
-      const response = await axios.get(`/api/verify-payment?session_id=${sessionId}`);
-      if (response.data.success) {
+      const res = await fetch(`/api/verify-payment?session_id=${sessionId}`);
+      const data = await res.json();
+      if (data.success) {
         setMessage('Payment successful! Please log in to access your account.');
       } else {
         setMessage('Payment verification failed. Please try your payment again.');
@@ -57,10 +57,12 @@ export default function Login({ userId, ip }) {
     e.preventDefault();
     startLoading();
     try {
-      const response = await axios.post('/api/send-code', { email });
-      if (response.status === 200) {
-        alert('Check your email for the verification code');
-      }
+      const res = await fetch('/api/send-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      if (res.ok) alert('Check your email for the verification code');
     } catch (error) {
       console.error('Error sending verification code:', error);
     }
@@ -71,10 +73,12 @@ export default function Login({ userId, ip }) {
     e.preventDefault();
     startLoading();
     try {
-      const response = await axios.post('/api/verify-code', { email, code });
-      if (response.status === 200) {
-        window.location.href = '/';
-      }
+      const res = await fetch('/api/verify-code', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email, code }),
+      });
+      if (res.ok) window.location.href = '/';
     } catch (error) {
       console.error('Error verifying code:', error);
     }

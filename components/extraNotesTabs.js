@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
 import TuningEmbed from './TuningEmbed';
 import styles from '../styles/songs.module.css';
-import YoutubeVideo from './youtubePlayerAPI';
+// react-youtube is heavy and only needed when the user opens the YouTube tab.
+const YoutubeVideo = dynamic(() => import('./youtubePlayerAPI'), { ssr: false });
 
 export default function TabsComponent({ extra_notes = null, song_lyrics = null, youtube_link = null, lesson_link = null }) {
   const [selectedTab, setSelectedTab] = useState(null);

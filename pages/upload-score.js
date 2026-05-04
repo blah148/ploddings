@@ -1,21 +1,23 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Head from 'next/head';
-import PloddingsScoreEmbed from '../components/PloddingsScoreEmbed';
+import PloddingsAlphaTabEmbed from '../components/PloddingsAlphaTabEmbed';
 
 export default function UploadScore() {
-  const [xmlText, setXmlText] = useState(null);
+  const [blobUrl, setBlobUrl] = useState(null);
   const [uploadName, setUploadName] = useState(null);
 
   function handleFileUpload(e) {
     const file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (ev) => {
-      setUploadName(file.name);
-      setXmlText(ev.target.result);
-    };
-    reader.readAsText(file);
+    setUploadName(file.name);
+    // Build a blob URL from the file so the embed (which only accepts a URL) can fetch it locally.
+    setBlobUrl((prev) => {
+      if (prev) URL.revokeObjectURL(prev);
+      return URL.createObjectURL(file);
+    });
   }
+
+  useEffect(() => () => { if (blobUrl) URL.revokeObjectURL(blobUrl); }, [blobUrl]);
 
   return (
     <>
@@ -31,24 +33,21 @@ export default function UploadScore() {
             color: '#ccc', borderRadius: '4px', cursor: 'pointer', fontSize: '13px',
           }}>
             Upload MusicXML
-            <input type="file" accept=".musicxml,.xml" onChange={handleFileUpload}
+            <input type="file" accept=".musicxml,.xml,.mxl" onChange={handleFileUpload}
               style={{ display: 'none' }} />
           </label>
           <span style={{ fontSize: '12px', color: '#666' }}>
-            {uploadName || 'Pick a .musicxml or .xml file to preview it through the Ploddings player'}
+            {uploadName || 'Pick a .musicxml, .xml, or .mxl file to preview it through the Ploddings player'}
           </span>
         </div>
-      </div>
 
-      {xmlText && (
-        <PloddingsScoreEmbed
-          key={uploadName /* re-init the player whenever a new file is loaded */}
-          musicXMLText={xmlText}
-          songName="Uploaded Score"
-          artistName=""
-          songSlug="upload-preview"
-        />
-      )}
+        {blobUrl && (
+          <PloddingsAlphaTabEmbed
+            key={uploadName /* re-init the player whenever a new file is loaded */}
+            musicXMLUrl={blobUrl}
+          />
+        )}
+      </div>
     </>
   );
 }

@@ -1,5 +1,4 @@
 // pages/threads/[id]
-import axios from 'axios';
 import Image from 'next/image';
 import React, { useEffect, useState, createContext, useContext } from 'react';
 import TableDataFetcher from '../../utils/TableDataFetcher';

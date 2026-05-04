@@ -1,4 +1,3 @@
-import axios from 'axios';
 import Link from 'next/link';
 import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
@@ -20,7 +19,7 @@ import Menu from '../../components/Menu';
 import Footer from '../../components/Footer';
 import SEO from '../../components/SEO';
 import StabilizerText from '../../components/StabilizerText';
-import PloddingsScoreEmbed from '../../components/PloddingsScoreEmbed';
+import PloddingsScoreFooter from '../../components/PloddingsScoreFooter';
 import BeingWatchedMobile from '../../components/BeingWatchedMobile.js';
 import Head from 'next/head';
 import GTM from '../../components/GTM.js';
@@ -172,7 +171,7 @@ export default function Song({ userId = null, ip, threadData, songData }) {
                 <h2 id="i">i) Sheet music / guitar tablature</h2>
                 {songData.musicXML && (
                   <div style={{ position: "relative", marginBottom: "16px" }}>
-                    {/* Iframed so the heavy OSMD/Tone load happens in its own document
+                    {/* Iframed so the heavy alphaTab load happens in its own document
                         and doesn't block the rest of the song page from painting. */}
                     <iframe
                       src={`/embed/${songData.slug}`}
@@ -186,6 +185,7 @@ export default function Song({ userId = null, ip, threadData, songData }) {
                         display: 'block',
                       }}
                     />
+                    <PloddingsScoreFooter songSlug={songData.slug} />
                   </div>
                 )}
 

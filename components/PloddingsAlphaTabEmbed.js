@@ -63,6 +63,41 @@ function applyScoops(alphaTab, score, xmlText) {
   return applied;
 }
 
+// Read MusicXML <swing> ratios that alphaTab's importer doesn't recognize (anything other than 2:1, 3:1, 1:3)
+// and snap to the closest TripletFeel bucket. MuseScore's "Light Swing" 60/40 and "Custom" 52/48 etc. fall here.
+// Only runs against uncompressed .musicxml — for .mxl we'd need to unzip first.
+function applySwing(alphaTab, score, xmlText) {
+  if (!xmlText) return false;
+  const TF = alphaTab.model?.TripletFeel;
+  if (!TF) return false;
+  const doc = new DOMParser().parseFromString(xmlText, 'application/xml');
+  if (doc.querySelector('parsererror')) return false;
+  const swing = doc.querySelector('swing');
+  if (!swing) return false;
+  if (swing.querySelector('straight')) return false; // already-straight, importer handled it
+  const first = parseInt(swing.querySelector('first')?.textContent || '0', 10);
+  const second = parseInt(swing.querySelector('second')?.textContent || '0', 10);
+  if (first <= 0 || second <= 0) return false;
+  const isSixteenth = (swing.querySelector('swing-type')?.textContent || '').trim().toLowerCase().includes('16');
+  const percent = first / (first + second);
+  // Most MuseScore swing values fall between 52% and 67% — those should all apply triplet swing.
+  // Threshold tuned so 52% (light swing) triggers and only ratios essentially at 50/50 stay straight.
+  // ≤51% → straight (no change). 51–70% → triplet swing. >70% → hard shuffle (dotted).
+  let target;
+  if (percent <= 0.51) return false;
+  if (percent < 0.70) target = isSixteenth ? TF.Triplet16th : TF.Triplet8th;
+  else target = isSixteenth ? TF.Dotted16th : TF.Dotted8th;
+  let applied = 0;
+  (score.masterBars || []).forEach((mb) => {
+    // Only fill in where alphaTab's importer left it at the default — never override a value it already mapped.
+    if (mb.tripletFeel == null || mb.tripletFeel === TF.NoTripletFeel) {
+      mb.tripletFeel = target;
+      applied++;
+    }
+  });
+  return applied > 0;
+}
+
 function formatTime(ms) {
   if (!Number.isFinite(ms) || ms < 0) ms = 0;
   const total = Math.floor(ms / 1000);
@@ -83,8 +118,8 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
   const containerRef = useRef(null);
   const apiRef = useRef(null);
   const scrubbingRef = useRef(false);
-  const [status, setStatus] = useState('Initializing…');
   const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true);
   const [playing, setPlaying] = useState(false);
   const [audioReady, setAudioReady] = useState(false);
   const [tempo, setTempo] = useState(1.0);
@@ -103,16 +138,18 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
         const alphaTab = await import('@coderline/alphatab');
         if (cancelled) return;
 
-        setStatus('Fetching score…');
         const buf = await fetch(musicXMLUrl).then((r) => {
           if (!r.ok) throw new Error(`Score fetch failed (${r.status})`);
           return r.arrayBuffer();
         });
         if (cancelled) return;
-        // Text copy for post-load articulation extraction. Only valid for uncompressed .musicxml — .mxl yields garbage
-        // and applyScoops returns 0 silently; that's fine.
-        const xmlText = new TextDecoder('utf-8').decode(buf);
-        setStatus('Initializing alphaTab…');
+        // Detect compressed (.mxl) bytes by zip magic so we skip the DOMParser pass — calling parseFromString
+        // on zip bytes succeeds in returning a parsererror doc but Firefox still logs the failure to the console
+        // ("XML Parsing Error: not well-formed at 1:3" — the \x03 in the PK header). For .mxl we'd need to unzip
+        // before scoop extraction; that's optional, so just skip.
+        const u8 = new Uint8Array(buf);
+        const isZip = u8.length >= 4 && u8[0] === 0x50 && u8[1] === 0x4B && u8[2] === 0x03 && u8[3] === 0x04;
+        const xmlText = isZip ? '' : new TextDecoder('utf-8').decode(buf);
 
         const settings = {
           core: {
@@ -157,9 +194,11 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
               scoreMusic: false,
               scoreWordsAndMusic: false,
               guitarTuning: true,
-              // Hide MusicXML rehearsal marks / direction text.
+              // Hide rehearsal marks (the bold-line letter boxes), but keep direction text + tempo
+              // markers visible — that's where ritardandos and new tempo annotations render.
               effectMarker: false,
-              effectDirections: false,
+              effectDirections: true,
+              effectTempo: true,
               effectText: false,
             },
           },
@@ -182,7 +221,6 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
 
         api.scoreLoaded.on((score) => {
           if (cancelled) return;
-          setStatus(null);
           // Bar numbers only at the first bar of each system.
           try {
             const BND = alphaTab.model?.BarNumberDisplay;
@@ -205,8 +243,25 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
               if (actual > 0 && actual < expected) mb.isAnacrusis = true;
             });
           } catch (_) {}
-          // Apply scoop/plop/doit/falloff articulations the importer skips.
-          try { applyScoops(alphaTab, score, xmlText); } catch (_) {}
+          // MusicXML import sets fermata.type but leaves fermata.length=0 (no MXL standard for stretch).
+          // Set sensible defaults so playback actually holds: short=1.2x, medium=1.7x, long=2.2x.
+          try {
+            const FT = alphaTab.model?.FermataType;
+            (score.masterBars || []).forEach((mb) => {
+              if (!mb.fermata || typeof mb.fermata.forEach !== 'function') return;
+              mb.fermata.forEach((fermata) => {
+                if (!fermata || fermata.length > 0) return;
+                if (FT && fermata.type === FT.Long) fermata.length = 2.2;
+                else if (FT && fermata.type === FT.Medium) fermata.length = 1.7;
+                else fermata.length = 1.2;
+              });
+            });
+          } catch (_) {}
+          // Apply scoop/plop/doit/falloff articulations the importer skips. Only meaningful for uncompressed .musicxml.
+          if (xmlText) {
+            try { applyScoops(alphaTab, score, xmlText); } catch (_) {}
+            try { applySwing(alphaTab, score, xmlText); } catch (_) {}
+          }
           collectRestBeatVoices(score);
           if (touched) api.render();
         });
@@ -241,6 +296,9 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
         // postRenderFinished fires after alphaTab injects every system's SVG into the DOM.
         api.postRenderFinished.on(() => {
           if (cancelled || !containerRef.current) return;
+          setLoading(false);
+          // Notify parent (e.g. /songs/[id].js iframe wrapper) that the score is ready, so its page-level loader can stop.
+          try { window.parent?.postMessage({ type: 'ploddings-score-ready' }, '*'); } catch (_) {}
           const root = containerRef.current;
           const allText = root.querySelectorAll('text');
           const svgs = root.querySelectorAll('svg');
@@ -301,7 +359,9 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
                 const titleTop = parseFloat(titleSvg.parentElement?.style.top) || 0;
                 const tuningHeight = parseFloat(tuningSvg.getAttribute('height')) || 51;
                 const subtitleAbsoluteY = titleTop + newY;
-                const targetTop = Math.max(0, subtitleAbsoluteY - tuningHeight / 2);
+                // Top-align the tuning block to the subtitle/artist Y row so it sits a bit lower on the page,
+                // leaving clearance below long titles instead of riding up next to them.
+                const targetTop = Math.max(0, subtitleAbsoluteY);
                 // translateY rather than `top` — alphaTab rewrites placeholder.style.top on every partial render.
                 const dy = targetTop - currentTop;
                 placeholder.style.transform = `translateY(${dy}px)`;
@@ -405,7 +465,28 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
         .ploddings-at .at-selection div { background: rgba(240, 120, 32, 0.08); cursor: pointer; }
         .ploddings-at .at-surface > div:not(:first-child),
         .ploddings-at .at-surface > div:not(:first-child) * { cursor: pointer !important; }
-        .ploddings-at-card .ploddings-at-area { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+        .ploddings-at-card .ploddings-at-area { overflow-x: auto; -webkit-overflow-scrolling: touch; position: relative; }
+        /* Shimmer loading state — covers the score area until the first postRenderFinished fires.
+           space-evenly distributes rows to fill the full height; align-items:center horizontally centers them. */
+        .ploddings-at-shimmer {
+          position: absolute; inset: 12px;
+          display: flex; flex-direction: column;
+          justify-content: space-evenly; align-items: center;
+          pointer-events: none;
+        }
+        .ploddings-at-shimmer-row {
+          height: 36px; border-radius: 4px;
+          background: linear-gradient(90deg, #eee 0%, #f5f5f5 40%, #ddd 50%, #f5f5f5 60%, #eee 100%);
+          background-size: 200% 100%;
+          animation: ploddings-at-shimmer 1.4s ease-in-out infinite;
+        }
+        .ploddings-at-shimmer-row.head { width: 40%; height: 24px; }
+        .ploddings-at-shimmer-row.full { width: 92%; }
+        .ploddings-at-shimmer-row.short { width: 70%; }
+        @keyframes ploddings-at-shimmer {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
         @media (max-width: 640px) {
           .ploddings-at-toolbar { flex-wrap: wrap !important; gap: 8px !important; padding: 8px !important; row-gap: 8px !important; }
           .ploddings-at-toolbar .ploddings-at-progress { order: 3; flex-basis: 100% !important; margin: 0 !important; }
@@ -415,11 +496,6 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
           .ploddings-at-area { padding: 8px !important; min-height: 320px !important; }
         }
       ` }} />
-      {status && (
-        <div style={{ padding: '20px', textAlign: 'center', color: '#888', background: '#f5f5f5', borderRadius: '4px' }}>
-          {status}
-        </div>
-      )}
       {error && (
         <div style={{ padding: '20px', color: '#c00', background: '#fee', borderRadius: '4px', whiteSpace: 'pre-wrap' }}>
           ✗ {error}
@@ -427,7 +503,7 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
       )}
       <div
         className="ploddings-at-card"
-        style={{ background: '#fff', border: '1px solid #ddd', borderRadius: '4px', marginTop: '12px', overflow: 'hidden' }}
+        style={{ background: '#fff', border: '1px solid #ddd', borderRadius: '4px', marginTop: '12px', overflow: 'clip' }}
       >
         <div
           className="ploddings-at-toolbar"
@@ -490,7 +566,21 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
             </span>
           </label>
         </div>
-        <div ref={containerRef} className="ploddings-at-area ploddings-at" style={{ padding: '12px', minHeight: '500px' }} />
+        <div className="ploddings-at-area ploddings-at" style={{ padding: '12px', minHeight: loading ? '700px' : '500px', position: 'relative', background: '#2a2a2e' }}>
+          <div ref={containerRef} style={{ maxWidth: '980px', margin: '0 auto', background: '#fff' }} />
+          {loading && (
+            <div className="ploddings-at-shimmer" aria-hidden="true">
+              <div className="ploddings-at-shimmer-row head" />
+              <div className="ploddings-at-shimmer-row full" />
+              <div className="ploddings-at-shimmer-row full" />
+              <div className="ploddings-at-shimmer-row full" />
+              <div className="ploddings-at-shimmer-row full" />
+              <div className="ploddings-at-shimmer-row full" />
+              <div className="ploddings-at-shimmer-row full" />
+              <div className="ploddings-at-shimmer-row short" />
+            </div>
+          )}
+        </div>
       </div>
     </>
   );

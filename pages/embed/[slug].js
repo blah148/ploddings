@@ -1,5 +1,5 @@
 import Head from 'next/head';
-import PloddingsScoreEmbed from '../../components/PloddingsScoreEmbed';
+import PloddingsAlphaTabEmbed from '../../components/PloddingsAlphaTabEmbed';
 import { fetchSongData, getParentObject } from '../../db-utilities';
 
 export default function EmbedPage({ songData, threadData }) {
@@ -61,15 +61,8 @@ export default function EmbedPage({ songData, threadData }) {
           html, body { margin: 0; padding: 0; background: #f9f9f9; }
         `}</style>
       </Head>
-      {/* No surrounding chrome — the iframe IS the embed */}
-      <PloddingsScoreEmbed
-        musicXMLUrl={`/api/score/${SONG_SLUG}`}
-        songName={SONG_NAME}
-        artistName={ARTIST_NAME}
-        songSlug={SONG_SLUG}
-        hasTabAccess={false}
-        verifiedByEar={true}
-      />
+      {/* No surrounding chrome — the iframe IS the embed; the footer renders on the parent /songs page below the iframe. */}
+      <PloddingsAlphaTabEmbed musicXMLUrl={`/api/score/${SONG_SLUG}`} />
     </>
   );
 }
