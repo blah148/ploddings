@@ -99,6 +99,96 @@ function applySwing(alphaTab, score, xmlText) {
   return applied > 0;
 }
 
+// Custom fractional swing — alphaTab's TripletFeel enum only offers discrete buckets (Triplet8th = 66.67%,
+// Dotted8th = 75%). For a 60% (or any other) swing we directly mutate Beat.playbackStart/playbackDuration
+// of every consecutive same-duration pair (eighth-eighth, sixteenth-sixteenth) within a voice: the first
+// note absorbs `ratio` of the combined playback duration, the second absorbs the remainder. Visual layout
+// (displayStart/displayDuration) is left untouched so the score still draws as straight notes.
+//
+// To keep voices in sync, we collect the (oldStart → newStart) shift across every voice in a bar first,
+// then in a second pass propagate that shift to any beat in any other voice that originally aligned with
+// the swung second-of-pair (e.g. a bass quarter that landed on the second eighth of a treble pair).
+function applyCustomSwing(alphaTab, score, ratio, debug) {
+  if (!ratio || ratio === 0.5) { debug && debug.push(`early-return ratio=${ratio}`); return 0; }
+  const Duration = alphaTab.model?.Duration;
+  if (!Duration) { debug && debug.push('no Duration enum'); return 0; }
+  const isSwingableDuration = (d) => d === Duration.Eighth || d === Duration.Sixteenth;
+  // alphaTab defaults tupletNumerator/Denominator to -1 for non-tuplets and uses `hasTuplet` to expose the real
+  // boolean. Anything else gets a false positive — that was the bug stopping every eighth pair from matching.
+  const isPlainTuplet = (beat) => !beat || !beat.hasTuplet;
+  let pairs = 0;
+  if (debug) debug.push(`Duration.Eighth=${Duration.Eighth}, Sixteenth=${Duration.Sixteenth}, tracks=${score.tracks?.length}`);
+
+  score.tracks.forEach((track, tIdx) => {
+    track.staves.forEach((staff, sIdx) => {
+      staff.bars.forEach((bar, bIdx) => {
+        // First pass — find eighth/sixteenth pairs in every voice and apply the swing.
+        // Track (oldStart → newStart) so the second pass can sync other voices.
+        const shifts = new Map();
+        bar.voices.forEach((voice, vIdx) => {
+          const beats = voice.beats || [];
+          if (debug && tIdx === 0 && sIdx === 0 && bIdx <= 1) {
+            debug.push(`t${tIdx}s${sIdx}b${bIdx}v${vIdx}: beats.length=${beats.length}`);
+          }
+          for (let i = 0; i < beats.length - 1; i++) {
+            const a = beats[i];
+            const b = beats[i + 1];
+            if (debug && tIdx === 0 && sIdx === 0 && bIdx === 0 && vIdx === 0) {
+              debug.push(`  pair@i=${i}: a.dur=${a?.duration}(swing=${isSwingableDuration(a?.duration)}), b.dur=${b?.duration}, eq=${a?.duration === b?.duration}, plainTupA=${isPlainTuplet(a)}, plainTupB=${isPlainTuplet(b)}, plDurs=${a?.playbackDuration}+${b?.playbackDuration}`);
+            }
+            if (!isSwingableDuration(a.duration) || a.duration !== b.duration) continue;
+            if (!isPlainTuplet(a) || !isPlainTuplet(b)) continue;
+            const pairTicks = (a.playbackDuration || 0) + (b.playbackDuration || 0);
+            if (pairTicks <= 0) continue;
+            // A swing pair is (downbeat note, offbeat note). The downbeat sits on a multiple of pairTicks
+            // (e.g. eighth pair = 960 ticks → starts at 0, 960, 1920, ...). Pairing two consecutive eighths
+            // that span a beat boundary (offbeat + next-downbeat) shifts the downbeat off-grid and warps the
+            // pulse, so skip those.
+            if ((a.playbackStart || 0) % pairTicks !== 0) continue;
+            const newA = Math.round(pairTicks * ratio);
+            const oldBStart = b.playbackStart;
+            const newBStart = (a.playbackStart || 0) + newA;
+            a.playbackDuration = newA;
+            b.playbackStart = newBStart;
+            b.playbackDuration = pairTicks - newA;
+            shifts.set(oldBStart, newBStart);
+            pairs++;
+            i++;
+          }
+        });
+
+        // Second pass — propagate shifts to any other voice's beat that originally landed on a swung second-of-pair start.
+        if (shifts.size > 0) {
+          bar.voices.forEach((voice) => {
+            (voice.beats || []).forEach((beat) => {
+              const newStart = shifts.get(beat.playbackStart);
+              if (newStart != null && beat.playbackStart !== newStart) {
+                beat.playbackStart = newStart;
+              }
+            });
+          });
+          // Third pass — close any rhythmic gap that the cross-voice shift opened. If beat N ends before
+          // beat N+1 starts, extend beat N's playbackDuration to fill. Without this, the listener hears
+          // a silent gap and the rhythm reads "straight" between the gap and the next beat.
+          bar.voices.forEach((voice) => {
+            const beats = voice.beats || [];
+            for (let i = 0; i < beats.length - 1; i++) {
+              const cur = beats[i];
+              const next = beats[i + 1];
+              const curEnd = (cur.playbackStart || 0) + (cur.playbackDuration || 0);
+              const nextStart = next.playbackStart || 0;
+              if (nextStart > curEnd) {
+                cur.playbackDuration = nextStart - (cur.playbackStart || 0);
+              }
+            }
+          });
+        }
+      });
+    });
+  });
+  return pairs;
+}
+
 function formatTime(ms) {
   if (!Number.isFinite(ms) || ms < 0) ms = 0;
   const total = Math.floor(ms / 1000);
@@ -115,15 +205,18 @@ function formatTime(ms) {
  *   musicXMLUrl  — URL to fetch the score from. Should return raw .musicxml or .mxl bytes.
  *                  (For Backblaze sources, wrap with /api/proxy-musicxml; for songs pages, use /api/score/[slug].)
  */
-export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
+export default function PloddingsAlphaTabEmbed({ musicXMLUrl, swingRatio }) {
   const containerRef = useRef(null);
   const apiRef = useRef(null);
   const scrubbingRef = useRef(false);
+  const bufRef = useRef(null);
+  const swingRef = useRef(typeof swingRatio === 'number' ? swingRatio : null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [playing, setPlaying] = useState(false);
   const [audioReady, setAudioReady] = useState(false);
   const [tempo, setTempo] = useState(1.0);
+  const [swing, setSwing] = useState(typeof swingRatio === 'number' ? swingRatio : null);
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
   // eslint-disable-next-line no-unused-vars
@@ -146,6 +239,7 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
           return r.arrayBuffer();
         });
         if (cancelled) return;
+        bufRef.current = buf;
         // Detect compressed (.mxl) bytes by zip magic so we skip the DOMParser pass — calling parseFromString
         // on zip bytes succeeds in returning a parsererror doc but Firefox still logs the failure to the console
         // ("XML Parsing Error: not well-formed at 1:3" — the \x03 in the PK header). For .mxl we'd need to unzip
@@ -169,6 +263,10 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
             enableUserInteraction: true,
             soundFont: '/alphatab/soundfont/sonivox.sf2',
             scrollElement: containerRef.current?.parentElement,
+            // When a swing override is supplied, disable alphaTab's built-in TripletFeel playback so the MIDI
+            // generator uses our raw beat.playbackStart values instead of overriding them with the importer-detected
+            // Triplet8th/Dotted8th bucket. Without this, MuseScore's <swing> ratio in the file wins.
+            playTripletFeel: typeof swingRatio === 'number' ? false : true,
           },
           display: {
             layoutMode: 'page',
@@ -266,6 +364,68 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
           // Apply scoop/plop/doit/falloff articulations the importer skips. Only meaningful for uncompressed .musicxml.
           if (xmlText) {
             try { applyScoops(alphaTab, score, xmlText); } catch (_) {}
+          }
+          // Custom fractional swing override (e.g. 0.6 for a 60% blues feel) — runs regardless of file format
+          // since it works on the parsed alphaTab Score model, not the raw XML. Reads swingRef so a slider
+          // change can drive a fresh load with the new ratio without re-mounting the component.
+          const liveSwing = swingRef.current;
+          if (typeof liveSwing === 'number') {
+            // ── Diagnostics: capture state before/after swing application so we can pinpoint why audio doesn't change ──
+            const sample = (label) => {
+              const beats = [];
+              outer: for (const t of score.tracks) {
+                for (const s of t.staves) {
+                  for (const b of s.bars) {
+                    for (const v of b.voices) {
+                      for (const bt of v.beats || []) {
+                        beats.push({
+                          where: `bar${b.index}.v${v.index}.b${beats.length}`,
+                          dur: bt.duration,
+                          start: bt.playbackStart,
+                          plDur: bt.playbackDuration,
+                        });
+                        if (beats.length >= 8) break outer;
+                      }
+                    }
+                  }
+                }
+              }
+              return { label, beats };
+            };
+            const before = sample('before');
+            let pairs = 0;
+            let mutateError = null;
+            const debugTrace = [];
+            try {
+              pairs = applyCustomSwing(alphaTab, score, liveSwing, debugTrace);
+            } catch (e) { mutateError = e?.message || String(e); }
+            const after = sample('after');
+            const tripletFeels = (score.masterBars || []).slice(0, 4).map((mb) => ({ idx: mb.index, tf: mb.tripletFeel }));
+            const apiHasMethod = typeof api?.loadMidiForScore === 'function';
+            try {
+              fetch('/api/debug-log?tag=swing-diag', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                  liveSwing,
+                  pairs,
+                  mutateError,
+                  apiHasLoadMidiForScore: apiHasMethod,
+                  playTripletFeelSetting: api?.settings?.player?.playTripletFeel,
+                  durationEnumEighth: alphaTab.model?.Duration?.Eighth,
+                  durationEnumSixteenth: alphaTab.model?.Duration?.Sixteenth,
+                  tripletFeelOnFirstBars: tripletFeels,
+                  beatsBefore: before.beats,
+                  beatsAfter: after.beats,
+                  trace: debugTrace,
+                }),
+                keepalive: true,
+              }).catch(() => {});
+            } catch (_) {}
+            if (pairs > 0) {
+              touched = true;
+              try { api.loadMidiForScore?.(); } catch (_) {}
+            }
           }
           collectRestBeatVoices(score);
           if (touched) api.render();
@@ -487,6 +647,19 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
     setTempo(v);
     if (apiRef.current) apiRef.current.playbackSpeed = v;
   }
+
+  function handleSwingChange(e) {
+    const v = parseFloat(e.target.value);
+    setSwing(v);
+    swingRef.current = v;
+    // Reload the score from the cached buffer so alphaTab regenerates MIDI with the new beat timings —
+    // mutating Beat.playbackStart/playbackDuration alone doesn't propagate to already-generated MIDI.
+    const api = apiRef.current;
+    const buf = bufRef.current;
+    if (api && buf) {
+      try { api.load(new Uint8Array(buf)); } catch (_) {}
+    }
+  }
   function handleScrubStart() { scrubbingRef.current = true; setScrubbing(true); }
   function handleScrubChange(e) { setPosition(parseFloat(e.target.value)); }
   function handleScrubEnd(e) {
@@ -613,6 +786,24 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl }) {
               {Math.round(tempo * 100)}%
             </span>
           </label>
+          {swing != null && (
+            <label className="ploddings-at-swing" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#fff', marginLeft: '8px' }}>
+              <span>Swing</span>
+              <input
+                type="range"
+                min="0.5"
+                max="0.7"
+                step="0.01"
+                value={swing}
+                onChange={handleSwingChange}
+                disabled={!audioReady}
+                style={{ width: '110px', accentColor: '#f07820' }}
+              />
+              <span style={{ width: '38px', textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>
+                {Math.round(swing * 100)}%
+              </span>
+            </label>
+          )}
         </div>
         <div className="ploddings-at-area ploddings-at" style={{ padding: '12px', minHeight: loading ? '700px' : '500px', position: 'relative', background: '#2a2a2e' }}>
           <div ref={containerRef} style={{ maxWidth: '980px', margin: '0 auto', background: '#fff' }} />
