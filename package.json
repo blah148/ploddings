@@ -8,6 +8,9 @@
     "start": "next start",
     "lint": "next lint"
   },
+  "engines": {
+    "node": ">=20.19.0"
+  },
   "dependencies": {
     "@coderline/alphatab": "^1.8.2",
     "@coderline/alphatab-webpack": "^1.8.2",
