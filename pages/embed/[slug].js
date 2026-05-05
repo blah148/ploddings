@@ -35,6 +35,11 @@ export default function EmbedPage({ songData, threadData }) {
       <Head>
         <title>{SONG_NAME} — {ARTIST_NAME} | Ploddings</title>
         <meta name="viewport" content="width=device-width, initial-scale=1" />
+        {/* Embed pages exist for iframing/sharing — search engines should index the parent songs page,
+            not this one. `follow` lets crawlers still trace any outbound links from the embed. The
+            canonical points back at the songs page so any signal accrued here consolidates there. */}
+        <meta name="robots" content="noindex, follow" />
+        <link rel="canonical" href={`https://www.ploddings.com/songs/${SONG_SLUG}`} />
         {songData.musicXML && (
           <link
             rel="preload"
