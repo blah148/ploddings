@@ -108,34 +108,27 @@ function applySwing(alphaTab, score, xmlText) {
 // To keep voices in sync, we collect the (oldStart → newStart) shift across every voice in a bar first,
 // then in a second pass propagate that shift to any beat in any other voice that originally aligned with
 // the swung second-of-pair (e.g. a bass quarter that landed on the second eighth of a treble pair).
-function applyCustomSwing(alphaTab, score, ratio, debug) {
-  if (!ratio || ratio === 0.5) { debug && debug.push(`early-return ratio=${ratio}`); return 0; }
+function applyCustomSwing(alphaTab, score, ratio) {
+  if (!ratio || ratio === 0.5) return 0;
   const Duration = alphaTab.model?.Duration;
-  if (!Duration) { debug && debug.push('no Duration enum'); return 0; }
+  if (!Duration) return 0;
   const isSwingableDuration = (d) => d === Duration.Eighth || d === Duration.Sixteenth;
-  // alphaTab defaults tupletNumerator/Denominator to -1 for non-tuplets and uses `hasTuplet` to expose the real
-  // boolean. Anything else gets a false positive — that was the bug stopping every eighth pair from matching.
+  // alphaTab defaults tupletNumerator/Denominator to -1 for non-tuplets and exposes the real boolean
+  // via the `hasTuplet` getter; anything based on -1 vs 1 gives false positives.
   const isPlainTuplet = (beat) => !beat || !beat.hasTuplet;
   let pairs = 0;
-  if (debug) debug.push(`Duration.Eighth=${Duration.Eighth}, Sixteenth=${Duration.Sixteenth}, tracks=${score.tracks?.length}`);
 
-  score.tracks.forEach((track, tIdx) => {
-    track.staves.forEach((staff, sIdx) => {
-      staff.bars.forEach((bar, bIdx) => {
+  score.tracks.forEach((track) => {
+    track.staves.forEach((staff) => {
+      staff.bars.forEach((bar) => {
         // First pass — find eighth/sixteenth pairs in every voice and apply the swing.
         // Track (oldStart → newStart) so the second pass can sync other voices.
         const shifts = new Map();
-        bar.voices.forEach((voice, vIdx) => {
+        bar.voices.forEach((voice) => {
           const beats = voice.beats || [];
-          if (debug && tIdx === 0 && sIdx === 0 && bIdx <= 1) {
-            debug.push(`t${tIdx}s${sIdx}b${bIdx}v${vIdx}: beats.length=${beats.length}`);
-          }
           for (let i = 0; i < beats.length - 1; i++) {
             const a = beats[i];
             const b = beats[i + 1];
-            if (debug && tIdx === 0 && sIdx === 0 && bIdx === 0 && vIdx === 0) {
-              debug.push(`  pair@i=${i}: a.dur=${a?.duration}(swing=${isSwingableDuration(a?.duration)}), b.dur=${b?.duration}, eq=${a?.duration === b?.duration}, plainTupA=${isPlainTuplet(a)}, plainTupB=${isPlainTuplet(b)}, plDurs=${a?.playbackDuration}+${b?.playbackDuration}`);
-            }
             if (!isSwingableDuration(a.duration) || a.duration !== b.duration) continue;
             if (!isPlainTuplet(a) || !isPlainTuplet(b)) continue;
             const pairTicks = (a.playbackDuration || 0) + (b.playbackDuration || 0);
@@ -207,14 +200,11 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl, swingRatio }) {
   const containerRef = useRef(null);
   const apiRef = useRef(null);
   const scrubbingRef = useRef(false);
-  const bufRef = useRef(null);
-  const swingRef = useRef(typeof swingRatio === 'number' ? swingRatio : null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const [playing, setPlaying] = useState(false);
   const [audioReady, setAudioReady] = useState(false);
   const [tempo, setTempo] = useState(1.0);
-  const [swing, setSwing] = useState(typeof swingRatio === 'number' ? swingRatio : null);
   const [position, setPosition] = useState(0);
   const [duration, setDuration] = useState(0);
   // eslint-disable-next-line no-unused-vars
@@ -237,7 +227,6 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl, swingRatio }) {
           return r.arrayBuffer();
         });
         if (cancelled) return;
-        bufRef.current = buf;
         // Detect compressed (.mxl) bytes by zip magic so we skip the DOMParser pass — calling parseFromString
         // on zip bytes succeeds in returning a parsererror doc but Firefox still logs the failure to the console
         // ("XML Parsing Error: not well-formed at 1:3" — the \x03 in the PK header). For .mxl we'd need to unzip
@@ -363,67 +352,19 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl, swingRatio }) {
           if (xmlText) {
             try { applyScoops(alphaTab, score, xmlText); } catch (_) {}
           }
-          // Custom fractional swing override (e.g. 0.6 for a 60% blues feel) — runs regardless of file format
-          // since it works on the parsed alphaTab Score model, not the raw XML. Reads swingRef so a slider
-          // change can drive a fresh load with the new ratio without re-mounting the component.
-          const liveSwing = swingRef.current;
-          if (typeof liveSwing === 'number') {
-            // ── Diagnostics: capture state before/after swing application so we can pinpoint why audio doesn't change ──
-            const sample = (label) => {
-              const beats = [];
-              outer: for (const t of score.tracks) {
-                for (const s of t.staves) {
-                  for (const b of s.bars) {
-                    for (const v of b.voices) {
-                      for (const bt of v.beats || []) {
-                        beats.push({
-                          where: `bar${b.index}.v${v.index}.b${beats.length}`,
-                          dur: bt.duration,
-                          start: bt.playbackStart,
-                          plDur: bt.playbackDuration,
-                        });
-                        if (beats.length >= 8) break outer;
-                      }
-                    }
-                  }
-                }
+          // Custom fractional swing override (e.g. 0.57 for a typical blues feel) — applied directly to
+          // Beat.playbackStart/playbackDuration. 0.5 (default for songs without a swing_ratio set in
+          // Supabase) is a no-op since applyCustomSwing returns early on exactly 0.5.
+          if (typeof swingRatio === 'number' && swingRatio !== 0.5) {
+            try {
+              const pairs = applyCustomSwing(alphaTab, score, swingRatio);
+              if (pairs > 0) {
+                touched = true;
+                // alphaTab generates MIDI before scoreLoaded fires; loadMidiForScore re-emits MIDI
+                // from the modified score so the player actually hears the swing.
+                try { api.loadMidiForScore?.(); } catch (_) {}
               }
-              return { label, beats };
-            };
-            const before = sample('before');
-            let pairs = 0;
-            let mutateError = null;
-            const debugTrace = [];
-            try {
-              pairs = applyCustomSwing(alphaTab, score, liveSwing, debugTrace);
-            } catch (e) { mutateError = e?.message || String(e); }
-            const after = sample('after');
-            const tripletFeels = (score.masterBars || []).slice(0, 4).map((mb) => ({ idx: mb.index, tf: mb.tripletFeel }));
-            const apiHasMethod = typeof api?.loadMidiForScore === 'function';
-            try {
-              fetch('/api/debug-log?tag=swing-diag', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                  liveSwing,
-                  pairs,
-                  mutateError,
-                  apiHasLoadMidiForScore: apiHasMethod,
-                  playTripletFeelSetting: api?.settings?.player?.playTripletFeel,
-                  durationEnumEighth: alphaTab.model?.Duration?.Eighth,
-                  durationEnumSixteenth: alphaTab.model?.Duration?.Sixteenth,
-                  tripletFeelOnFirstBars: tripletFeels,
-                  beatsBefore: before.beats,
-                  beatsAfter: after.beats,
-                  trace: debugTrace,
-                }),
-                keepalive: true,
-              }).catch(() => {});
             } catch (_) {}
-            if (pairs > 0) {
-              touched = true;
-              try { api.loadMidiForScore?.(); } catch (_) {}
-            }
           }
           collectRestBeatVoices(score);
           if (touched) api.render();
@@ -498,18 +439,61 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl, swingRatio }) {
             centered.sort((a, b) => a.y - b.y);
             const subRows = centered.slice(1).filter((r) => !r.el.classList.contains('header-relayout'));
             const STACK_GAP = isMobile ? 16 : 22;
+            let titleWrapShift = 0;
             if (subRows.length > 0) {
               const svgWidth = parseInt(titleSvg.getAttribute('width'), 10) || 1200;
               newY = subRows[0].y + HEADER_TOP_MARGIN;
               // Each subtitle/composer line on its own row, centered. Mobile additionally shrinks the title and sub-row text.
-              if (isMobile && centered[0]) centered[0].el.style.fontSize = '24px';
+              let titleWrappedExtraLines = 0;
+              if (isMobile && centered[0]) {
+                const titleEl = centered[0].el;
+                titleEl.style.fontSize = '24px';
+                // SVG <text> doesn't wrap. On a narrow viewport long titles run off-screen, so split into
+                // two roughly-balanced lines using tspans when the rendered width exceeds the available space.
+                try {
+                  const containerWidth = containerRef.current?.offsetWidth || svgWidth;
+                  const available = Math.max(120, containerWidth - 32);
+                  const measured = titleEl.getComputedTextLength?.() ?? 0;
+                  const text = (titleEl.textContent || '').trim();
+                  const words = text.split(/\s+/);
+                  if (measured > available && words.length > 1 && !titleEl.classList.contains('title-wrapped')) {
+                    // Find the split index whose first half is closest to half the total character count.
+                    const totalChars = text.length;
+                    let acc = 0, splitIdx = 1, bestDiff = Infinity;
+                    for (let i = 0; i < words.length - 1; i++) {
+                      acc += words[i].length + (i > 0 ? 1 : 0);
+                      const diff = Math.abs(acc - totalChars / 2);
+                      if (diff < bestDiff) { bestDiff = diff; splitIdx = i + 1; }
+                    }
+                    const line1 = words.slice(0, splitIdx).join(' ');
+                    const line2 = words.slice(splitIdx).join(' ');
+                    const x = titleEl.getAttribute('x') || String(svgWidth / 2);
+                    while (titleEl.firstChild) titleEl.removeChild(titleEl.firstChild);
+                    const ns = 'http://www.w3.org/2000/svg';
+                    const t1 = document.createElementNS(ns, 'tspan');
+                    t1.setAttribute('x', x);
+                    t1.textContent = line1;
+                    const t2 = document.createElementNS(ns, 'tspan');
+                    t2.setAttribute('x', x);
+                    t2.setAttribute('dy', '1.1em');
+                    t2.textContent = line2;
+                    titleEl.appendChild(t1);
+                    titleEl.appendChild(t2);
+                    titleEl.classList.add('title-wrapped');
+                    titleWrappedExtraLines = 1;
+                  }
+                } catch (_) {}
+              }
+              // Push sub-rows down by an extra line-height when the title wrapped to two lines.
+              titleWrapShift = titleWrappedExtraLines * 28;
               subRows.forEach((r, idx) => {
                 if (isMobile) r.el.style.fontSize = '13px';
-                r.el.setAttribute('y', String(newY + idx * STACK_GAP));
+                r.el.setAttribute('y', String(newY + titleWrapShift + idx * STACK_GAP));
                 r.el.setAttribute('x', String(svgWidth / 2));
                 r.el.setAttribute('text-anchor', 'middle');
                 r.el.classList.add('header-relayout');
               });
+              if (titleWrapShift) newY += titleWrapShift;
             }
             // Tuning sits BELOW the stacked sub-rows on its own row.
             const subRowsBottomY = (newY ?? 0) + Math.max(0, subRows.length - 1) * STACK_GAP + STACK_GAP;
@@ -555,6 +539,23 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl, swingRatio }) {
                 placeholder.style.transform = `translate(${dx}px, ${dy}px) scale(${SCALE})`;
                 placeholder.style.transformOrigin = 'top left';
               }
+            }
+            // Shift music-system placeholders down to (a) clear a wrapped-title second line and (b) leave
+            // a base 20px gap below the tuning / composer row on mobile so the first staff has breathing
+            // room. Tuning is excluded because its custom transform already places it correctly via newY.
+            const mobileHeaderMusicGap = isMobile ? 20 : 0;
+            const musicPlaceholderShift = titleWrapShift + mobileHeaderMusicGap;
+            if (musicPlaceholderShift > 0 && titleSvg) {
+              const titlePlaceholder = titleSvg.parentElement;
+              const tuningPlaceholder = tuningSvg?.parentElement;
+              const placeholders = root.querySelectorAll('.at-surface > div');
+              placeholders.forEach((ph) => {
+                if (ph === titlePlaceholder || ph === tuningPlaceholder) return;
+                if (ph.dataset.musicShifted === 'true') return;
+                const existing = ph.style.transform || '';
+                ph.style.transform = `translateY(${musicPlaceholderShift}px) ${existing}`.trim();
+                ph.dataset.musicShifted = 'true';
+              });
             }
           }
 
@@ -646,18 +647,6 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl, swingRatio }) {
     if (apiRef.current) apiRef.current.playbackSpeed = v;
   }
 
-  function handleSwingChange(e) {
-    const v = parseFloat(e.target.value);
-    setSwing(v);
-    swingRef.current = v;
-    // Reload the score from the cached buffer so alphaTab regenerates MIDI with the new beat timings —
-    // mutating Beat.playbackStart/playbackDuration alone doesn't propagate to already-generated MIDI.
-    const api = apiRef.current;
-    const buf = bufRef.current;
-    if (api && buf) {
-      try { api.load(new Uint8Array(buf)); } catch (_) {}
-    }
-  }
   function handleScrubStart() { scrubbingRef.current = true; setScrubbing(true); }
   function handleScrubChange(e) { setPosition(parseFloat(e.target.value)); }
   function handleScrubEnd(e) {
@@ -708,6 +697,9 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl, swingRatio }) {
           .ploddings-at-toolbar .ploddings-at-play { width: 88px !important; padding: 10px 0 !important; }
           .ploddings-at-toolbar .ploddings-at-tempo input[type="range"] { width: 100px !important; }
           .ploddings-at-area { padding: 8px 4px !important; min-height: 320px !important; }
+          /* While the score is still loading on mobile, fill 90vh so the shimmer card matches the
+             iframe's eventual cap and the user doesn't see a sudden size jump on first paint. */
+          .ploddings-at-area.is-loading { min-height: 90vh !important; }
         }
       ` }} />
       {error && (
@@ -784,26 +776,8 @@ export default function PloddingsAlphaTabEmbed({ musicXMLUrl, swingRatio }) {
               {Math.round(tempo * 100)}%
             </span>
           </label>
-          {swing != null && (
-            <label className="ploddings-at-swing" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#fff', marginLeft: '8px' }}>
-              <span>Swing</span>
-              <input
-                type="range"
-                min="0.5"
-                max="0.7"
-                step="0.01"
-                value={swing}
-                onChange={handleSwingChange}
-                disabled={!audioReady}
-                style={{ width: '110px', accentColor: '#f07820' }}
-              />
-              <span style={{ width: '38px', textAlign: 'right', fontVariantNumeric: 'tabular-nums' }}>
-                {Math.round(swing * 100)}%
-              </span>
-            </label>
-          )}
         </div>
-        <div className="ploddings-at-area ploddings-at" style={{ padding: '12px', minHeight: loading ? '700px' : '500px', position: 'relative', background: '#2a2a2e' }}>
+        <div className={`ploddings-at-area ploddings-at${loading ? ' is-loading' : ''}`} style={{ padding: '12px', minHeight: loading ? '700px' : '500px', position: 'relative', background: '#2a2a2e' }}>
           <div ref={containerRef} style={{ maxWidth: '980px', margin: '0 auto', background: '#fff' }} />
           {loading && (
             <div className="ploddings-at-shimmer" aria-hidden="true">

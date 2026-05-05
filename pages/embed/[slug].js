@@ -62,7 +62,10 @@ export default function EmbedPage({ songData, threadData }) {
         `}</style>
       </Head>
       {/* No surrounding chrome — the iframe IS the embed; the footer renders on the parent /songs page below the iframe. */}
-      <PloddingsAlphaTabEmbed musicXMLUrl={`/api/score/${SONG_SLUG}`} />
+      <PloddingsAlphaTabEmbed
+        musicXMLUrl={`/api/score/${SONG_SLUG}`}
+        swingRatio={typeof songData.swing_ratio === 'number' ? songData.swing_ratio : 0.5}
+      />
     </>
   );
 }

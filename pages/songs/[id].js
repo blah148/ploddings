@@ -42,7 +42,9 @@ export default function Song({ userId = null, ip, threadData, songData }) {
       stopLoading();
       // Apply reported height (clamped to a sensible range) so the iframe fits the whole score —
       // mobile especially needs this since 2 bars per system makes the score much taller.
-      if (typeof e.data.height === 'number' && e.data.height >= 400 && e.data.height <= 10000) {
+      // No upper clamp — long scores on mobile (2 bars/system) can produce content well past 10000px.
+      // Lower floor stays at 400 so a mid-render partial measurement can't shrink the iframe to nothing.
+      if (typeof e.data.height === 'number' && e.data.height >= 400) {
         setIframeHeight(Math.ceil(e.data.height));
       }
     };
@@ -98,6 +100,16 @@ export default function Song({ userId = null, ip, threadData, songData }) {
 				description={`Click play to listen to interactive guitar tablature for ${songData.name} by ${threadData.name}.`}
       />
       <Head>
+        {/* On mobile, cap the score iframe at 80vh so super-long scores scroll internally
+            instead of clipping when the auto-height postMessage under-reports. */}
+        <style dangerouslySetInnerHTML={{ __html: `
+          @media (max-width: 640px) {
+            .ploddings-score-iframe {
+              max-height: 90vh !important;
+              overflow: auto !important;
+            }
+          }
+        ` }} />
         {/* Preload the MusicXML so the score downloads in parallel with JS bundles
             instead of waiting until the embed component mounts and starts fetching. */}
         {/* Preload removed: the embed lives inside an iframe, which has its own preload tag —
@@ -183,10 +195,10 @@ export default function Song({ userId = null, ip, threadData, songData }) {
                     {/* Iframed so the heavy alphaTab load happens in its own document
                         and doesn't block the rest of the song page from painting. */}
                     <iframe
+                      className="ploddings-score-iframe"
                       src={`/embed/${songData.slug}`}
                       title={`${songData.name} — interactive score`}
                       loading="lazy"
-                      scrolling="no"
                       style={{
                         width: '100%',
                         height: `${iframeHeight}px`,
@@ -232,7 +244,10 @@ export default function Song({ userId = null, ip, threadData, songData }) {
 export async function getServerSideProps({ params, req }) {
   // const userSession = verifyUserSession(req);
   const songData = await fetchSongData(params.id);
-  const threadData = await getParentObject(songData.thread_id);
+  if (!songData) {
+    return { notFound: true };
+  }
+  const threadData = songData.thread_id ? await getParentObject(songData.thread_id) : null;
 
   const forwardedFor = req.headers['x-forwarded-for'];
   const ip = forwardedFor ? forwardedFor.split(',')[0] : req.connection.remoteAddress;
