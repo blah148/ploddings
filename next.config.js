@@ -1,71 +1,62 @@
-// next.config.js
-
-const { AlphaTabWebPackPlugin } = require('@coderline/alphatab-webpack');
-
+// /home/owner/ploddings/next.config.js
+// Redirect-only deployment. Every request gets a 308 to blahnok.com.
+// Specific patterns translate content URLs (preserves SEO equity from the 514
+// ranked pages); the catch-all at the end sweeps everything else
+// (incl. /api/* and account/auth pages) to blahnok home.
 module.exports = {
-  webpack: (config, { isServer }) => {
-    // alphaTab is browser-only; only wire the plugin into the client bundle.
-    // assetOutputDir:false — we already serve fonts + soundfont from /public/alphatab/.
-    if (!isServer) {
-      config.plugins.push(new AlphaTabWebPackPlugin({ assetOutputDir: false }));
-    }
-    return config;
-  },
-  images: {
-    remotePatterns: [
-      { hostname: 'ploddings-threads.s3.us-east-005.backblazeb2.com' },
-      { hostname: 'f005.backblazeb2.com' },
-      { hostname: 'bmvuqgfxczoytjwjpvcn.supabase.co' },
-      { hostname: 'th.bing.com' } // Includes th.bing.com for image optimization
-    ],
-  },
-  async rewrites() {
-    return [
-      {
-        source: '/sitemap.xml',
-        destination: '/api/sitemap.xml',
-      },
-    ];
-  },
   async redirects() {
     return [
+      // Preserve existing internal redirects, flattened to land directly on blahnok
       {
         source: '/join-ploddings',
-        destination: '/about',
-        permanent: true, // Makes this a 301 redirect
+        destination: 'https://blahnok.com/words',
+        permanent: true,
       },
       {
         source: '/blog/an-archive-of-blues-and-other-style-song-walk-throughs',
-        destination: '/blog/youtube-video-and-tab-directory',
+        destination: 'https://blahnok.com/posts/youtube-video-and-tab-directory',
         permanent: true,
       },
-    ];
-  },
-  async headers() {
-    return [
+
+      // Per-slug content URL translations — the SEO core
       {
-        // /embed/* is meant to be iframed externally — allow framing from any origin.
-        source: '/embed/:path*',
-        headers: [
-          {
-            key: 'Content-Security-Policy',
-            value: 'frame-ancestors *',
-          },
-        ],
+        source: '/songs/:slug',
+        destination: 'https://blahnok.com/transcriptions/:slug',
+        permanent: true,
       },
       {
-        // Everything else stays restricted to same-origin framing for clickjacking protection.
-        // Negative-lookahead source so this rule does NOT apply to /embed/* (avoids two conflicting
-        // CSP headers being merged restrictively by the browser).
-        source: '/((?!embed/).*)',
-        headers: [
-          {
-            key: 'Content-Security-Policy',
-            value: "frame-ancestors 'self'",
-          },
-        ],
+        source: '/threads/:slug',
+        destination: 'https://blahnok.com/artists/:slug',
+        permanent: true,
       },
+      {
+        source: '/blog/:slug',
+        destination: 'https://blahnok.com/posts/:slug',
+        permanent: true,
+      },
+      {
+        source: '/embed/:slug',
+        destination: 'https://blahnok.com/transcriptions/:slug',
+        permanent: true,
+      },
+
+      // Index pages
+      { source: '/songs',   destination: 'https://blahnok.com/transcriptions', permanent: true },
+      { source: '/threads', destination: 'https://blahnok.com/transcriptions', permanent: true },
+      { source: '/blog',    destination: 'https://blahnok.com/blog',           permanent: true },
+
+      // Static pages
+      { source: '/about',          destination: 'https://blahnok.com/words',          permanent: true },
+      { source: '/contact',        destination: 'https://blahnok.com/write',          permanent: true },
+      { source: '/privacy-policy', destination: 'https://blahnok.com/privacy-policy', permanent: true },
+      { source: '/slow-downer',    destination: 'https://blahnok.com/slow-downer',    permanent: true },
+      { source: '/sitemap.xml',    destination: 'https://blahnok.com/sitemap.xml',    permanent: true },
+
+      // Homepage
+      { source: '/', destination: 'https://blahnok.com/transcriptions', permanent: true },
+
+      // Catch-all — anything else (account, login, /api/*, etc.) → portfolio home
+      { source: '/:path*', destination: 'https://blahnok.com/', permanent: true },
     ];
   },
 };
-
