@@ -26,7 +26,7 @@ module.exports = {
       },
       {
         source: '/threads/:slug',
-        destination: 'https://blahnok.com/artists/:slug',
+        destination: 'https://blahnok.com/transcriptions/:slug',
         permanent: true,
       },
       {
