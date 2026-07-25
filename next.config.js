@@ -14,7 +14,7 @@ module.exports = {
       },
       {
         source: '/blog/an-archive-of-blues-and-other-style-song-walk-throughs',
-        destination: 'https://blahnok.com/posts/youtube-video-and-tab-directory',
+        destination: 'https://blahnok.com/notes/youtube-video-and-tab-directory',
         permanent: true,
       },
 
@@ -31,7 +31,7 @@ module.exports = {
       },
       {
         source: '/blog/:slug',
-        destination: 'https://blahnok.com/posts/:slug',
+        destination: 'https://blahnok.com/notes/:slug',
         permanent: true,
       },
       {
@@ -43,7 +43,7 @@ module.exports = {
       // Index pages
       { source: '/songs',   destination: 'https://blahnok.com/transcriptions', permanent: true },
       { source: '/threads', destination: 'https://blahnok.com/transcriptions', permanent: true },
-      { source: '/blog',    destination: 'https://blahnok.com/blog',           permanent: true },
+      { source: '/blog',    destination: 'https://blahnok.com/notes',           permanent: true },
 
       // Static pages
       { source: '/about',          destination: 'https://blahnok.com/words',          permanent: true },
